@@ -1,5 +1,5 @@
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import _m0 from "protobufjs/minimal";
 import { SPerk, SSkill, SSpell } from "./_Item";
 
 export const protobufPackage = "DC.Packet";

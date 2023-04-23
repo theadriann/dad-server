@@ -1,6 +1,6 @@
 /* eslint-disable */
-import * as Long from "long";
-import * as _m0 from "protobufjs/minimal";
+import Long from "long";
+import _m0 from "protobufjs/minimal";
 import { saccountNickname } from "./_Character";
 import { SDownItem, SEMOTE, SItem, SPerk, SSkill, SSpell } from "./_Item";
 
@@ -8,8 +8,8 @@ export const protobufPackage = "DC.Packet";
 
 export interface S2CGameEnterUserJson {
   restUrl: string;
-  nickName: Uint8Array;
-  streamingNickName: Uint8Array;
+  nickName: Buffer;
+  streamingNickName: Buffer;
   characterClass: string;
   characterId: string;
   gender: number;
@@ -301,8 +301,8 @@ export interface S2CGameDownUserPartyGET {
 function createBaseS2CGameEnterUserJson(): S2CGameEnterUserJson {
   return {
     restUrl: "",
-    nickName: new Uint8Array(),
-    streamingNickName: new Uint8Array(),
+    nickName: Buffer.alloc(0),
+    streamingNickName: Buffer.alloc(0),
     characterClass: "",
     characterId: "",
     gender: 0,
@@ -363,14 +363,14 @@ export const S2CGameEnterUserJson = {
             break;
           }
 
-          message.nickName = reader.bytes();
+          message.nickName = reader.bytes() as Buffer;
           continue;
         case 3:
           if (tag != 26) {
             break;
           }
 
-          message.streamingNickName = reader.bytes();
+          message.streamingNickName = reader.bytes() as Buffer;
           continue;
         case 4:
           if (tag != 34) {
@@ -426,8 +426,10 @@ export const S2CGameEnterUserJson = {
   fromJSON(object: any): S2CGameEnterUserJson {
     return {
       restUrl: isSet(object.restUrl) ? String(object.restUrl) : "",
-      nickName: isSet(object.nickName) ? bytesFromBase64(object.nickName) : new Uint8Array(),
-      streamingNickName: isSet(object.streamingNickName) ? bytesFromBase64(object.streamingNickName) : new Uint8Array(),
+      nickName: isSet(object.nickName) ? Buffer.from(bytesFromBase64(object.nickName)) : Buffer.alloc(0),
+      streamingNickName: isSet(object.streamingNickName)
+        ? Buffer.from(bytesFromBase64(object.streamingNickName))
+        : Buffer.alloc(0),
       characterClass: isSet(object.characterClass) ? String(object.characterClass) : "",
       characterId: isSet(object.characterId) ? String(object.characterId) : "",
       gender: isSet(object.gender) ? Number(object.gender) : 0,
@@ -441,10 +443,10 @@ export const S2CGameEnterUserJson = {
     const obj: any = {};
     message.restUrl !== undefined && (obj.restUrl = message.restUrl);
     message.nickName !== undefined &&
-      (obj.nickName = base64FromBytes(message.nickName !== undefined ? message.nickName : new Uint8Array()));
+      (obj.nickName = base64FromBytes(message.nickName !== undefined ? message.nickName : Buffer.alloc(0)));
     message.streamingNickName !== undefined &&
       (obj.streamingNickName = base64FromBytes(
-        message.streamingNickName !== undefined ? message.streamingNickName : new Uint8Array(),
+        message.streamingNickName !== undefined ? message.streamingNickName : Buffer.alloc(0),
       ));
     message.characterClass !== undefined && (obj.characterClass = message.characterClass);
     message.characterId !== undefined && (obj.characterId = message.characterId);
@@ -462,8 +464,8 @@ export const S2CGameEnterUserJson = {
   fromPartial<I extends Exact<DeepPartial<S2CGameEnterUserJson>, I>>(object: I): S2CGameEnterUserJson {
     const message = createBaseS2CGameEnterUserJson();
     message.restUrl = object.restUrl ?? "";
-    message.nickName = object.nickName ?? new Uint8Array();
-    message.streamingNickName = object.streamingNickName ?? new Uint8Array();
+    message.nickName = object.nickName ?? Buffer.alloc(0);
+    message.streamingNickName = object.streamingNickName ?? Buffer.alloc(0);
     message.characterClass = object.characterClass ?? "";
     message.characterId = object.characterId ?? "";
     message.gender = object.gender ?? 0;
@@ -4178,8 +4180,6 @@ function longToNumber(long: Long): number {
   return long.toNumber();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
 if (_m0.util.Long !== Long) {
   _m0.util.Long = Long as any;
   _m0.configure();
