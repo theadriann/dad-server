@@ -1,3 +1,4 @@
 node_modules
 logs
 prisma/dev.db
+playground.ts
