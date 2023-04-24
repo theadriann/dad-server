@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int         @id @default(autoincrement())
+  username      String
+  password      String
+  hwids         String
+  build_version String
+  is_banned     Int // 12 = ban user, 13 = ban cheater, 14 = ban inappropriate name, 15 = ban etc, 16 = hwid ban
+  secret        String
+  Character     Character[]
+}
+
+model Character {
+  id         Int         @id @default(autoincrement())
+  user_id    Int
+  nickname   String
+  class      String
+  level      Int
+  gender     Int
+  last_login DateTime    @default(now())
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  user       User        @relation(fields: [user_id], references: [id])
+  inventory  Inventory[]
+}
+
+model Inventory {
+  id         Int    @id @default(autoincrement())
+  item_id    String
+  item_count Int
+  slot_id    Int
+
+  properties String
+
+  inventory_id Int
+  character_id Int
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  character Character @relation(fields: [character_id], references: [id])
+}

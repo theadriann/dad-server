@@ -10,10 +10,13 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@prisma/client": "4.13.0",
         "binary-parser": "^2.2.1",
         "cuid": "^3.0.0",
         "express": "^4.18.2",
+        "long": "^5.2.3",
         "parser": "^0.1.4",
+        "protobufjs": "^7.2.3",
         "tsx": "^3.12.6",
         "typescript": "^5.0.4"
     },
@@ -21,6 +24,7 @@
         "@types/express": "^4.17.17",
         "@types/fs-extra": "^11.0.1",
         "@types/node": "^18.15.13",
-        "fs-extra": "^11.1.1"
+        "fs-extra": "^11.1.1",
+        "prisma": "^4.13.0"
     }
 }
