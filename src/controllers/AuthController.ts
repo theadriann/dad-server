@@ -5,11 +5,8 @@ import {
     ss2cAccountLoginRes,
     ss2cAccountLoginRes_RESULT,
 } from "../protos/ts/Account";
-import { Reader } from "protobufjs";
 import { bufferReader } from "../utils/bufferReader";
-import { db } from "../lib/db";
-import { ss2cReLoginRes } from "../protos/ts/Common";
-import cuid from "cuid";
+import { db } from "../services/db";
 import { socketContextManager } from "../utils/SocketContextManager";
 
 export const login = async (data: Buffer, socket: net.Socket) => {

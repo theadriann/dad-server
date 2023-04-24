@@ -1,22 +1,14 @@
+// controllers
+import { processPacket } from "./controllers/packets/processPacket";
+
+// utils
+import "./discoveryServer";
 import net from "net";
-import "./helloWorld";
-import { scopedLogger } from "./utils/FileLogger";
-import cuid from "cuid";
-import { Parser } from "binary-parser";
-import {
-    PacketCommand,
-    packetCommandFromJSON,
-    ss2cAliveRes,
-} from "./protos/ts/_PacketCommand";
-import {
-    ss2cAccountCharacterCreateRes,
-    ss2cAccountCharacterListRes,
-    ss2cAccountLoginRes,
-} from "./protos/ts/Account";
+import { buffer2HexSpacedString } from "./utils/hex";
 import { socketContextManager } from "./utils/SocketContextManager";
-import { login } from "./controllers/login_controller";
-import { createCharacter } from "./controllers/character_creation_controller";
-import { listCharacters } from "./controllers/character_list_controller";
+
+// types
+import { packetCommandFromJSON } from "./protos/ts/_PacketCommand";
 
 export const makeHeader = (
     packet: Buffer | Uint8Array,
@@ -41,7 +33,6 @@ export const sendPacket = (
     }
 
     // console.log(header, packet);
-
     const packetToSend = Buffer.from([...header, ...packet]);
 
     socket.write(packetToSend);
@@ -49,121 +40,55 @@ export const sendPacket = (
 
 const tcpServer = net.createServer((socket) => {
     //
-    socketContextManager.create(socket);
-
-    let clientId = cuid();
-    let dataNumber = 0;
+    const context = socketContextManager.create(socket);
 
     //
-    console.log(`${clientId} client connected`);
+    console.log(`${context.id} client connected`);
 
     socket.on("end", () => {
         console.log("client disconnected");
+        socket.destroy();
     });
 
     socket.on("error", (err) => {
         console.log("client error", err);
+        socket.destroy();
     });
 
     socket.on("data", async (data) => {
-        console.log("\n\nClient Data Received");
+        console.log(`\n\ndata received from ${context.id}`);
 
         //
-        dataNumber++;
-        const logger = scopedLogger(`${clientId}/${dataNumber}`);
+        console.log("[HEX]\n", buffer2HexSpacedString(data));
 
-        // show every hex byte
-        const hex = data.toString("hex");
+        //
+        context.appendData(data);
 
-        const dataArr: any[] = [];
-        for (let i = 0; i < hex.length; i += 2) {
-            dataArr.push(hex.substr(i, 2));
+        if (context.processLock) {
+            console.log("Socket is locked, skipping packet processing");
+            return;
         }
 
-        // ASCII
-        // console.log(`Length: ${data.length}`);
-        // console.log("ASCII\n", data.toString("ascii"));
-        console.log("HEX:\n", dataArr.join(" "));
-        logger.log(data.toString("ascii"));
+        context.setProcessLock(true);
+        context.deleteDataCleaningTimeout();
 
-        const parser = new Parser()
-            .uint8("totalLength")
-            .uint8("pad1")
-            .uint8("pad2")
-            .uint8("pad3")
-            .uint8("type");
+        while (context.hasCompleteData()) {
+            const { data, rest } = context.getCompleteData();
 
-        const parsed = parser.parse(data);
+            // set the rest of the data back into the context
+            console.log("[HEX-DATA]\n", buffer2HexSpacedString(data));
+            console.log("[HEX-REMAINING]\n", buffer2HexSpacedString(rest));
 
-        switch (packetCommandFromJSON(parsed.type)) {
-            case PacketCommand.C2S_ACCOUNT_LOGIN_REQ: {
-                console.log(`Login REQUEST`);
+            context.setData(rest);
 
-                const loginRes = await login(data, socket);
-
-                sendPacket(
-                    socket,
-                    ss2cAccountLoginRes.encode(loginRes).finish(),
-                    PacketCommand.S2C_ACCOUNT_LOGIN_RES
-                );
-
-                break;
-            }
-
-            case PacketCommand.C2S_ALIVE_REQ: {
-                console.log(`Keep Alive REQUEST`);
-
-                sendPacket(
-                    socket,
-                    ss2cAliveRes.encode(ss2cAliveRes.create({})).finish(),
-                    PacketCommand.S2C_ALIVE_RES
-                );
-
-                break;
-            }
-
-            case PacketCommand.C2S_ACCOUNT_CHARACTER_LIST_REQ: {
-                console.log(`Character List REQUEST`);
-
-                const characterListResData = await listCharacters(data, socket);
-
-                sendPacket(
-                    socket,
-                    ss2cAccountCharacterListRes
-                        .encode(characterListResData)
-                        .finish(),
-                    PacketCommand.S2C_ACCOUNT_CHARACTER_LIST_RES
-                );
-
-                break;
-            }
-
-            case PacketCommand.C2S_ACCOUNT_CHARACTER_CREATE_REQ: {
-                console.log(`Character Create REQUEST`);
-
-                const characterResponseData = await createCharacter(
-                    data,
-                    socket
-                );
-
-                console.log(`Sending RESPONSE`);
-                sendPacket(
-                    socket,
-                    ss2cAccountCharacterCreateRes
-                        .encode(characterResponseData)
-                        .finish(),
-                    PacketCommand.S2C_ACCOUNT_CHARACTER_CREATE_RES
-                );
-
-                break;
-            }
-
-            default: {
-                console.log(`Unknown Packet`);
-                console.log(`Packet Type: ${parsed.type}`);
-                break;
-            }
+            await processPacket(data, socket);
         }
+
+        if (context.remainingData?.length) {
+            context.queueDataCleaningTimeout();
+        }
+
+        context.setProcessLock(false);
     });
 
     socket.pipe(socket);
@@ -173,6 +98,6 @@ tcpServer.on("error", (err) => {
     throw err;
 });
 
-tcpServer.listen(30001, () => {
+tcpServer.listen(process.env.LOBBY_PORT || 30001, () => {
     console.log("Starting Dark and Darker Login Server");
 });
