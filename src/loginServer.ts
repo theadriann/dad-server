@@ -195,7 +195,7 @@ tcpServer.on("error", (err) => {
     throw err;
 });
 
-export const startTcpServer = () => {
+export const startLoginServer = () => {
     tcpServer.listen(process.env.LOBBY_PORT || 30001, () => {
         logger.info("Starting Dark and Darker Login Server");
     });

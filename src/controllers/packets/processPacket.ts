@@ -6,7 +6,7 @@ import {
 import { Parser } from "binary-parser";
 import { PacketHandlersMap } from "./PacketHandlers";
 import { logger } from "@/utils/loggers";
-import { sendPacket } from "@/tcpServer";
+import { sendPacket } from "@/loginServer";
 
 //
 export const processPacket = async (data: Buffer, socket: net.Socket) => {

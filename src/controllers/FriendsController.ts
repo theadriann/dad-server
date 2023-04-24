@@ -31,7 +31,7 @@ import {
     ss2cPartyInviteNot,
     ss2cPartyInviteRes,
 } from "@/protos/ts/Party";
-import { sendPacket } from "@/tcpServer";
+import { sendPacket } from "@/loginServer";
 
 export const listFriends = async (data: Buffer, socket: net.Socket) => {
     const socketContext = socketContextManager.getBySocket(socket);

@@ -1,9 +1,9 @@
 // utils
 import { startDiscoveryServer } from "./discoveryServer";
-import { startTcpServer } from "./tcpServer";
+import { startLoginServer } from "./loginServer";
 
 // fast-refresh debugging purposes
 setTimeout(() => {
     startDiscoveryServer();
-    startTcpServer();
+    startLoginServer();
 }, 400);

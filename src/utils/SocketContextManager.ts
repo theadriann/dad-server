@@ -2,7 +2,7 @@
 import net from "net";
 import { SocketContext } from "./SocketContext";
 
-class SocketContextManager {
+export class SocketContextManager {
     private _socketContexts: SocketContext[] = [];
 
     create(socket: net.Socket) {
