@@ -118,8 +118,8 @@ export const listCharacters = async (data: Buffer, socket: net.Socket) => {
                 characterId: character_db.id.toString(),
                 gender: character_db.gender,
                 level: character_db.level,
-                createAt: character_db.created_at.getTime() / 1000,
-                lastloginDate: character_db.last_login.getTime() / 1000,
+                createAt: character_db.created_at.getTime(),
+                lastloginDate: character_db.last_login.getTime(),
                 nickName: saccountNickname.create({
                     originalNickName: character_db.nickname,
                     streamingModeNickName: streamingNickname,
