@@ -56,7 +56,7 @@ export const listAllFriends = async (data: Buffer, socket: net.Socket) => {
 
     const char = await getCharacterFriendInfoById(9);
     if (char) {
-        res.friendInfoList.push(char);
+        res.friendInfoList = [char];
         res.lobbyLocateCount++;
         res.totalUserCount++;
     }
@@ -76,7 +76,7 @@ export const listAllFriendsContinue = async (
 
     let res = ss2cFriendListAllRes.create({});
 
-    res.loopFlag = DefineMessage_LoopFlag.UNRECOGNIZED;
+    res.loopFlag = DefineMessage_LoopFlag.END;
     res.friendInfoList = [];
     res.dungeonLocateCount = 0;
     res.lobbyLocateCount = 0;
@@ -84,7 +84,7 @@ export const listAllFriendsContinue = async (
 
     const char = await getCharacterFriendInfoById(9);
     if (char) {
-        res.friendInfoList.push(char);
+        res.friendInfoList = [char];
         res.lobbyLocateCount++;
         res.totalUserCount++;
     }

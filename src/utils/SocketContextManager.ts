@@ -37,6 +37,12 @@ class SocketContextManager {
     getSocketContexts() {
         return this._socketContexts;
     }
+
+    getByAddress(address: string) {
+        return this._socketContexts.find(
+            (socketContext) => socketContext.address === address
+        );
+    }
 }
 
 export const socketContextManager = new SocketContextManager();

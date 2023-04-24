@@ -21,6 +21,8 @@ app.get("*", (req, res) => {
     res.json({});
 });
 
-app.listen(process.env.DISCOVERY_PORT || 30000, () => {
-    logger.info("Starting Dark and Darker Discovery Server");
-});
+export const startDiscoveryServer = () => {
+    app.listen(process.env.DISCOVERY_PORT || 30000, () => {
+        logger.info("Starting Dark and Darker Discovery Server");
+    });
+};

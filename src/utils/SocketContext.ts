@@ -11,6 +11,7 @@ export class SocketContext {
     dataNumber: number;
     keepAliveNumber: number;
     loggedIn: boolean = false;
+    address: string = "";
 
     userId: number | null = null;
     characterId: number | null = null;
@@ -25,6 +26,12 @@ export class SocketContext {
         this.sessionId = cuid();
         this.dataNumber = 0;
         this.keepAliveNumber = 0;
+        this.address = socket.remoteAddress || "";
+    }
+
+    setSocket(socket: net.Socket) {
+        this.socket = socket;
+        this.address = socket.remoteAddress || "";
     }
 
     setLoggedIn(value: boolean) {

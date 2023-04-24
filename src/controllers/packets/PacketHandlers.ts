@@ -69,6 +69,8 @@ import {
     ss2cBlockCharacterListRes,
     ss2cMetaLocationRes,
 } from "../../protos/ts/Common";
+import { ss2cInventorySingleUpdateRes } from "@/protos/ts/Inventory";
+import { singleInventoryUpdate } from "../InventoryController";
 
 export type PacketHandler = {
     label: string;
@@ -260,34 +262,34 @@ export const PacketHandlers: PacketHandler[] = [
         label: "ListAllFriends",
         requestCommand: PacketCommand.C2S_FRIEND_LIST_ALL_REQ,
         res: [
-            {
-                command: PacketCommand.S2C_FRIEND_LIST_RES,
-                handler: listFriends,
-                type: ss2cFriendListRes,
-            },
+            // {
+            //     command: PacketCommand.S2C_FRIEND_LIST_RES,
+            //     handler: listFriends,
+            //     type: ss2cFriendListRes,
+            // },
             {
                 command: PacketCommand.S2C_FRIEND_LIST_ALL_RES,
                 handler: listAllFriends,
                 type: ss2cFriendListAllRes,
             },
-            // {
-            //     command: PacketCommand.S2C_FRIEND_LIST_ALL_RES,
-            //     handler: listAllFriendsContinue,
-            //     type: ss2cFriendListAllRes,
-            // },
+            {
+                command: PacketCommand.S2C_FRIEND_LIST_ALL_RES,
+                handler: listAllFriendsContinue,
+                type: ss2cFriendListAllRes,
+            },
         ],
     },
-    // {
-    //     label: "BlockCharacterListReq",
-    //     requestCommand: PacketCommand.C2S_BLOCK_CHARACTER_LIST_REQ,
-    //     res: [
-    //         {
-    //             command: PacketCommand.S2C_BLOCK_CHARACTER_LIST_RES,
-    //             type: ss2cBlockCharacterListRes,
-    //             handler: getBlockCharacterList,
-    //         },
-    //     ],
-    // },
+    {
+        label: "BlockCharacterListReq",
+        requestCommand: PacketCommand.C2S_BLOCK_CHARACTER_LIST_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_BLOCK_CHARACTER_LIST_RES,
+                type: ss2cBlockCharacterListRes,
+                handler: getBlockCharacterList,
+            },
+        ],
+    },
 
     // -----------------------
     // Character Customization
@@ -381,6 +383,22 @@ export const PacketHandlers: PacketHandler[] = [
                 command: PacketCommand.S2C_META_LOCATION_RES,
                 type: ss2cMetaLocationRes,
                 handler: getPlayerLobbyLocation,
+            },
+        ],
+    },
+
+    // -----------------------
+    // Inventory & Equipment
+    // -----------------------
+
+    {
+        label: "Inventory Single Update",
+        requestCommand: PacketCommand.C2S_INVENTORY_SINGLE_UPDATE_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_INVENTORY_SINGLE_UPDATE_RES,
+                type: ss2cInventorySingleUpdateRes,
+                handler: singleInventoryUpdate,
             },
         ],
     },
