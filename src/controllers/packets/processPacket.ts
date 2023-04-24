@@ -30,8 +30,8 @@ export const processPacket = async (data: Buffer, socket: net.Socket) => {
     }
 
     if (handler) {
-        logger.info(`Packet-Type: ${packetCommandToJSON(command)}`);
-        logger.info(`Handler: ${handler.label}`);
+        logger.debug(`Packet-Type: ${packetCommandToJSON(command)}`);
+        logger.debug(`Handler: ${handler.label}`);
         for (let res of handler.res) {
             const responseData = await res.handler(data, socket);
 
@@ -45,8 +45,8 @@ export const processPacket = async (data: Buffer, socket: net.Socket) => {
         return;
     }
 
-    logger.info(`Unknown Packet`);
-    logger.info(`Packet-Type: ${parsed.type}`);
-    logger.info(`Packet-Type: ${packetCommandToJSON(command)}`);
-    logger.info(`=========================================================`);
+    logger.debug(`Unknown Packet`);
+    logger.debug(`Packet-Type: ${parsed.type}`);
+    logger.debug(`Packet-Type: ${packetCommandToJSON(command)}`);
+    logger.debug(`=========================================================`);
 };

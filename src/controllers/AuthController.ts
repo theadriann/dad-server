@@ -73,7 +73,7 @@ export const login = async (data: Buffer, socket: net.Socket) => {
     res.accountId = db_user.id.toString();
     res.sessionId = socketContext!.sessionId;
 
-    logger.info(JSON.stringify(res, null, 2));
+    logger.debug(JSON.stringify(res, null, 2));
 
     return res;
 };

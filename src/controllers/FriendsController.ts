@@ -36,8 +36,8 @@ export const listFriends = async (data: Buffer, socket: net.Socket) => {
         res.totalFriendCount++;
     }
 
-    logger.info("listFriends");
-    logger.info(JSON.stringify(res, null, 2));
+    logger.debug("listFriends");
+    logger.debug(JSON.stringify(res, null, 2));
 
     return res;
 };
@@ -61,8 +61,8 @@ export const listAllFriends = async (data: Buffer, socket: net.Socket) => {
         res.totalUserCount++;
     }
 
-    logger.info("listAllFriends");
-    logger.info(JSON.stringify(res, null, 2));
+    logger.debug("listAllFriends");
+    logger.debug(JSON.stringify(res, null, 2));
 
     return res;
 };
@@ -89,8 +89,8 @@ export const listAllFriendsContinue = async (
         res.totalUserCount++;
     }
 
-    logger.info("listAllFriends");
-    logger.info(JSON.stringify(res, null, 2));
+    logger.debug("listAllFriends");
+    logger.debug(JSON.stringify(res, null, 2));
 
     return res;
 };
@@ -115,8 +115,8 @@ export const getBlockCharacterList = async (
         ],
     });
 
-    logger.info("getBlockCharacterList");
-    logger.info(JSON.stringify(res, null, 2));
+    logger.debug("getBlockCharacterList");
+    logger.debug(JSON.stringify(res, null, 2));
 
     return res;
 };

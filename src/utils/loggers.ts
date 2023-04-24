@@ -7,4 +7,5 @@ export const logger = pino({
             colorize: true,
         },
     },
+    level: "debug",
 });

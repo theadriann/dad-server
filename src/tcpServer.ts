@@ -74,7 +74,7 @@ export const sendPacket = (
     packet: Buffer | Uint8Array,
     packetType: string | number
 ) => {
-    logger.info(`==================== Sending Packet ====================`);
+    logger.debug(`==================== Sending Packet ====================`);
 
     const header = makeHeader(packet, packetType);
 
@@ -82,19 +82,19 @@ export const sendPacket = (
         packet = Buffer.from(packet);
     }
 
-    logger.info(
+    logger.debug(
         `Message-Type ${packetCommandToJSON(
             packetCommandFromJSON(packetType)
         )} (${packetType})`
     );
-    logger.info("Header:");
-    logger.info(buffer2HexSpacedString(header as Buffer));
-    logger.info("Cotents:");
-    logger.info(buffer2HexSpacedString(packet as Buffer));
+    logger.debug("Header:");
+    logger.debug(buffer2HexSpacedString(header as Buffer));
+    logger.debug("Cotents:");
+    logger.debug(buffer2HexSpacedString(packet as Buffer));
     const packetToSend = Buffer.from([...header, ...packet]);
 
     socket.write(packetToSend);
-    logger.info(`=========================================================`);
+    logger.debug(`=========================================================`);
 };
 
 const tcpServer = net.createServer((socket) => {
@@ -149,13 +149,13 @@ const tcpServer = net.createServer((socket) => {
             return;
         }
 
-        logger.info(
+        logger.debug(
             `==================== Received Packet ====================`
         );
-        logger.info(`=============== ${context.id} ===============`);
+        logger.debug(`=============== ${context.id} ===============`);
 
         //
-        logger.info("[HEX]", buffer2HexSpacedString(data));
+        logger.debug("[HEX]", buffer2HexSpacedString(data));
 
         //
         context.appendData(data);
@@ -172,8 +172,8 @@ const tcpServer = net.createServer((socket) => {
             const { data, rest } = context.getCompleteData();
 
             // set the rest of the data back into the context
-            logger.info("[HEX-DATA]", buffer2HexSpacedString(data));
-            logger.info("[HEX-REMAINING]", buffer2HexSpacedString(rest));
+            logger.debug("[HEX-DATA]", buffer2HexSpacedString(data));
+            logger.debug("[HEX-REMAINING]", buffer2HexSpacedString(rest));
 
             context.setData(rest);
 

@@ -47,7 +47,7 @@ export class SocketContext {
     // -----------------------
 
     setCharacterId(value: number) {
-        logger.info(`Setting character id to ${value}`);
+        logger.debug(`Setting character id to ${value}`);
         this.characterId = value;
     }
 
@@ -123,9 +123,9 @@ export class SocketContext {
 
     queueDataCleaningTimeout() {
         this.dataCleaningTimeout = setTimeout(async () => {
-            logger.info(`[${this.id}] Remaining Data Timeout`);
+            logger.debug(`[${this.id}] Remaining Data Timeout`);
             if (!this.hasCompleteData()) {
-                logger.info(`Removing Remaining Data`);
+                logger.debug(`Removing Remaining Data`);
                 this.setData(null);
             }
         }, 1000 * 10);

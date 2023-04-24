@@ -8,7 +8,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/dc/helloWorld", (req, res) => {
-    logger.info(`[discovery] Requested ${req.url}`);
+    logger.debug(`[discovery] Requested ${req.url}`);
 
     res.json({
         ipAddress: process.env.SERVER_IP || "127.0.0.1",
@@ -17,7 +17,7 @@ app.get("/dc/helloWorld", (req, res) => {
 });
 
 app.get("*", (req, res) => {
-    logger.info(`[discovery] Requested ${req.url}`);
+    logger.debug(`[discovery] Requested ${req.url}`);
     res.json({});
 });
 

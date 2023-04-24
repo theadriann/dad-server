@@ -144,7 +144,7 @@ export const listCharacters = async (data: Buffer, socket: net.Socket) => {
     res.characterList = characters;
     res.totalCharacterCount = characters.length;
 
-    logger.info(JSON.stringify(res, null, 2));
+    logger.debug(JSON.stringify(res, null, 2));
 
     return res;
 };

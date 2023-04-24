@@ -38,7 +38,7 @@ export const enterLobby = async (data: Buffer, socket: net.Socket) => {
 
     socketContext.setCharacterId(Number(reqData.characterId));
 
-    logger.info(res);
+    logger.debug(res);
 
     return res;
 };
