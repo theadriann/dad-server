@@ -8,6 +8,7 @@ import {
 import { bufferReader } from "../utils/bufferReader";
 import { db } from "../services/db";
 import { socketContextManager } from "../utils/SocketContextManager";
+import { DefineCommon_ServerLocation } from "../protos/ts/_Defins";
 
 export const login = async (data: Buffer, socket: net.Socket) => {
     const socketContext = socketContextManager.getBySocket(socket);
@@ -21,7 +22,7 @@ export const login = async (data: Buffer, socket: net.Socket) => {
     });
 
     if (userInfo.loginId.length <= 2 || userInfo.password.length <= 2) {
-        res.Result = 5;
+        res.Result = ss2cAccountLoginRes_RESULT.FAIL_SHORT_ID_OR_PASSWORD;
         res.AccountInfo = sloginAccountInfo.create({
             AccountID: "",
         });
@@ -29,7 +30,7 @@ export const login = async (data: Buffer, socket: net.Socket) => {
     }
 
     if (userInfo.loginId.length > 20) {
-        res.Result = 6;
+        res.Result = ss2cAccountLoginRes_RESULT.FAIL_OVERFLOW_ID_OR_PASSWORD;
         res.AccountInfo = sloginAccountInfo.create({
             AccountID: "",
         });
@@ -48,11 +49,7 @@ export const login = async (data: Buffer, socket: net.Socket) => {
 
         return res;
     } else if (db_user.password != userInfo.password) {
-        console.log("wrong password");
-        res.Result = 3;
-        // res.AccountInfo = sloginAccountInfo.create({
-        //     AccountID: db_user.id.toString(),
-        // });
+        res.Result = ss2cAccountLoginRes_RESULT.FAIL_PASSWORD;
 
         return res;
     }
@@ -60,7 +57,10 @@ export const login = async (data: Buffer, socket: net.Socket) => {
     socketContext?.setLoggedIn(true);
     socketContext?.setUserId(db_user.id);
 
-    res.serverLocation = 1;
+    const serverLocation: DefineCommon_ServerLocation =
+        DefineCommon_ServerLocation.LOCAL;
+
+    res.serverLocation = serverLocation;
     res.AccountInfo = sloginAccountInfo.create({
         AccountID: db_user.id.toString(),
     });

@@ -1,8 +1,15 @@
 // controllers
-import { createCharacter, listCharacters } from "../CharacterController";
+import {
+    createCharacter,
+    getCharacterInfo,
+    getClassEquipInfo,
+    listCharacters,
+} from "../CharacterController";
 import { login } from "../AuthController";
 import {
+    backToCharacterSelect,
     enterLobby,
+    getPlayerLobbyLocation,
     lobbyEnterFromGame,
     selectGameDifficulty,
     selectRegion,
@@ -23,7 +30,9 @@ import {
     ss2cLobbyEnterRes,
 } from "../../protos/ts/Account";
 import {
+    ss2cCharacterSelectEnterRes,
     ss2cLobbyAccountCurrencyListNot,
+    ss2cLobbyCharacterInfoRes,
     ss2cLobbyEnterFromGameRes,
     ss2cLobbyGameDifficultySelectRes,
     ss2cLobbyRegionSelectRes,
@@ -31,6 +40,24 @@ import {
     ss2cOpenLobbyMapRes,
 } from "../../protos/ts/Lobby";
 import { DefineAccount_CurrencyType } from "../../protos/ts/_Defins";
+import {
+    ss2cCustomizeActionInfoRes,
+    ss2cCustomizeCharacterInfoRes,
+    ss2cCustomizeEmoteInfoRes,
+    ss2cCustomizeItemInfoRes,
+    ss2cCustomizeLobbyEmoteInfoRes,
+} from "../../protos/ts/Customize";
+import { listAllFriends } from "../FriendsController";
+import { ss2cFriendListAllRes } from "../../protos/ts/Friend";
+import {
+    customizeCharacterInfo,
+    getCustomizeActionInfo,
+    getCustomizeItemInfo,
+    getEmoteInfo,
+    getLobbyEmoteInfo,
+} from "../CustomizeController";
+import { ss2cClassEquipInfoRes } from "../../protos/ts/CharacterClass";
+import { ss2cMetaLocationRes } from "../../protos/ts/Common";
 
 export type PacketHandler = {
     label: string;
@@ -43,17 +70,10 @@ export type PacketHandler = {
 };
 
 export const PacketHandlers: PacketHandler[] = [
-    {
-        label: "Login",
-        requestCommand: PacketCommand.C2S_ACCOUNT_LOGIN_REQ,
-        res: [
-            {
-                type: ss2cAccountLoginRes,
-                handler: login,
-                command: PacketCommand.S2C_ACCOUNT_LOGIN_RES,
-            },
-        ],
-    },
+    // -----------------------
+    // Connection
+    // -----------------------
+
     {
         label: "KeepAlive",
         requestCommand: PacketCommand.C2S_ALIVE_REQ,
@@ -66,6 +86,27 @@ export const PacketHandlers: PacketHandler[] = [
             },
         ],
     },
+
+    // -----------------------
+    // Account
+    // -----------------------
+
+    {
+        label: "Login",
+        requestCommand: PacketCommand.C2S_ACCOUNT_LOGIN_REQ,
+        res: [
+            {
+                type: ss2cAccountLoginRes,
+                handler: login,
+                command: PacketCommand.S2C_ACCOUNT_LOGIN_RES,
+            },
+        ],
+    },
+
+    // -----------------------
+    // Character
+    // -----------------------
+
     {
         label: "FetchCharacterList",
         requestCommand: PacketCommand.C2S_ACCOUNT_CHARACTER_LIST_REQ,
@@ -88,6 +129,11 @@ export const PacketHandlers: PacketHandler[] = [
             },
         ],
     },
+
+    // -----------------------
+    // Lobby
+    // -----------------------
+
     {
         label: "LobbyEnter",
         requestCommand: PacketCommand.C2S_LOBBY_ENTER_REQ,
@@ -183,6 +229,133 @@ export const PacketHandlers: PacketHandler[] = [
             },
         ],
     },
+
+    // -----------------------
+    // Friends
+    // -----------------------
+
+    {
+        label: "ListAllFriends",
+        requestCommand: PacketCommand.C2S_FRIEND_LIST_ALL_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_FRIEND_LIST_ALL_RES,
+                handler: listAllFriends,
+                type: ss2cFriendListAllRes,
+            },
+        ],
+    },
+    {
+        label: "BackCharacterSelect",
+        requestCommand: PacketCommand.C2S_CHARACTER_SELECT_ENTER_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_CHARACTER_SELECT_ENTER_RES,
+                type: ss2cCharacterSelectEnterRes,
+                handler: backToCharacterSelect,
+            },
+        ],
+    },
+
+    // -----------------------
+    // Character Customization
+    // -----------------------
+
+    // C2S_LOBBY_CHARACTER_INFO_REQ
+
+    {
+        label: "CustomizeCharacterInfo",
+        requestCommand: PacketCommand.C2S_CUSTOMIZE_CHARACTER_INFO_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_LOBBY_CHARACTER_INFO_RES,
+                handler: getCharacterInfo,
+                type: ss2cLobbyCharacterInfoRes,
+            },
+            {
+                command: PacketCommand.S2C_CUSTOMIZE_CHARACTER_INFO_RES,
+                handler: customizeCharacterInfo,
+                type: ss2cCustomizeCharacterInfoRes,
+            },
+        ],
+    },
+    {
+        label: "EmoteInfo",
+        requestCommand: PacketCommand.C2S_CUSTOMIZE_EMOTE_INFO_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_CUSTOMIZE_EMOTE_INFO_RES,
+                type: ss2cCustomizeEmoteInfoRes,
+                handler: getEmoteInfo,
+            },
+        ],
+    },
+    {
+        label: "LobbyEmoteInfo",
+        requestCommand: PacketCommand.C2S_CUSTOMIZE_LOBBY_EMOTE_INFO_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_CUSTOMIZE_LOBBY_EMOTE_INFO_RES,
+                type: ss2cCustomizeLobbyEmoteInfoRes,
+                handler: getLobbyEmoteInfo,
+            },
+        ],
+    },
+    {
+        label: "CustomizeItemInfo",
+        requestCommand: PacketCommand.C2S_CUSTOMIZE_ITEM_INFO_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_CUSTOMIZE_ITEM_INFO_RES,
+                type: ss2cCustomizeItemInfoRes,
+                handler: getCustomizeItemInfo,
+            },
+        ],
+    },
+    {
+        label: "CustomizeActionInfo",
+        requestCommand: PacketCommand.C2S_CUSTOMIZE_ACTION_INFO_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_CUSTOMIZE_ACTION_INFO_RES,
+                type: ss2cCustomizeActionInfoRes,
+                handler: getCustomizeActionInfo,
+            },
+        ],
+    },
+
+    // -----------------------
+    //
+    // -----------------------
+
+    // TODO: This crashes, has to be non-empty
+    // {
+    //     label: "ClassEquipInfo",
+    //     requestCommand: PacketCommand.C2S_CLASS_EQUIP_INFO_REQ,
+    //     res: [
+    //         {
+    //             command: PacketCommand.S2C_CLASS_EQUIP_INFO_RES,
+    //             type: ss2cClassEquipInfoRes,
+    //             handler: getClassEquipInfo,
+    //         },
+    //     ],
+    // },
+
+    {
+        label: "MetaLocationReq",
+        requestCommand: PacketCommand.C2S_META_LOCATION_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_META_LOCATION_RES,
+                type: ss2cMetaLocationRes,
+                handler: getPlayerLobbyLocation,
+            },
+        ],
+    },
+
+    // Unknown Packet
+    // Packet-Type: 10001
+    // Packet-Type: C2S_META_LOCATION_REQ
 ];
 
 export const PacketHandlersMap = new Map<number, PacketHandler>();

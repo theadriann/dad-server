@@ -19,6 +19,15 @@ import {
     generateTunic,
 } from "../lib/items/test";
 import { PacketResult } from "../protos/ts/_PacketCommand";
+import {
+    sc2sClassEquipInfoReq,
+    ss2cClassEquipInfoRes,
+} from "../protos/ts/CharacterClass";
+import { saccountNickname, scharacterInfo } from "../protos/ts/_Character";
+import {
+    sc2sLobbyCharacterInfoReq,
+    ss2cLobbyCharacterInfoRes,
+} from "../protos/ts/Lobby";
 
 export const createCharacter = async (data: Buffer, socket: net.Socket) => {
     const socketContext = socketContextManager.getBySocket(socket);
@@ -78,11 +87,11 @@ export const createCharacter = async (data: Buffer, socket: net.Socket) => {
 export const listCharacters = async (data: Buffer, socket: net.Socket) => {
     //
     const socketContext = socketContextManager.getBySocket(socket);
-    const characterListReq = sc2sAccountCharacterListReq.decode(
-        bufferReader(data)
-    );
+    const req = sc2sAccountCharacterListReq.decode(bufferReader(data));
 
-    let res = ss2cAccountCharacterListRes.create({});
+    let res = ss2cAccountCharacterListRes.create({
+        pageIndex: req.pageIndex,
+    });
 
     if (!socketContext || !socketContext.userId) {
         return res;
@@ -102,27 +111,108 @@ export const listCharacters = async (data: Buffer, socket: net.Socket) => {
             Math.random() * (1700000 - 1000000) + 1000000
         )}`;
 
-        characters.push({
-            characterClass: character_db.class,
-            characterId: character_db.id.toString(),
-            gender: character_db.gender,
-            level: character_db.level,
-            createAt: character_db.created_at.getTime(),
-            lastloginDate: character_db.last_login.getTime(),
-            nickName: {
-                karmaRating: 0,
-                originalNickName: character_db.nickname,
-                streamingModeNickName: streamingNickname,
-            },
-            equipCharacterSkinList: [],
-            equipItemList: [],
-            equipItemSkinList: [],
-        });
+        characters.push(
+            sloginCharacterInfo.create({
+                characterClass: character_db.class,
+                characterId: character_db.id.toString(),
+                gender: character_db.gender,
+                level: character_db.level,
+                createAt: character_db.created_at.getTime() / 1000,
+                lastloginDate: character_db.last_login.getTime() / 1000,
+                nickName: saccountNickname.create({
+                    originalNickName: character_db.nickname,
+                    streamingModeNickName: streamingNickname,
+                    karmaRating: 0,
+                }),
+                equipItemList: [
+                    generateTorch(),
+                    generateRoundShield(),
+                    generateLantern(),
+                    generateSword(),
+                    generatePants(),
+                    generateTunic(),
+                    generateBandage(),
+                ],
+                equipItemSkinList: [],
+                equipCharacterSkinList: [],
+            })
+        );
     }
 
-    res.pageIndex = characterListReq.pageIndex;
+    res.pageIndex = req.pageIndex;
     res.characterList = characters;
     res.totalCharacterCount = characters.length;
+
+    console.log(JSON.stringify(res, null, 2));
+
+    return res;
+};
+
+export const getCharacterInfo = async (data: Buffer, socket: net.Socket) => {
+    //
+    const socketContext = socketContextManager.getBySocket(socket);
+    const req = sc2sLobbyCharacterInfoReq.decode(bufferReader(data));
+
+    let res = ss2cLobbyCharacterInfoRes.create({});
+    res.result = PacketResult.FAIL_GENERAL;
+
+    if (!socketContext || !socketContext.userId || !socketContext.characterId) {
+        return res;
+    }
+
+    const character_db = await db.character.findFirst({
+        where: {
+            id: socketContext.characterId,
+        },
+    });
+
+    if (!character_db) {
+        return res;
+    }
+
+    const streamingNickname = `Fighter#${Math.floor(
+        Math.random() * (1700000 - 1000000) + 1000000
+    )}`;
+
+    res.result = PacketResult.SUCCESS;
+    res.characterDataBase = scharacterInfo.create({
+        accountId: socketContext.userId.toString(),
+        characterId: socketContext.characterId.toString(),
+        characterClass: character_db.class,
+        gender: character_db.gender,
+        level: character_db.level,
+        nickName: saccountNickname.create({
+            originalNickName: character_db.nickname,
+            streamingModeNickName: streamingNickname,
+            karmaRating: 0,
+        }),
+        CharacterItemList: [
+            generateTorch(),
+            generateRoundShield(),
+            generateLantern(),
+            generateSword(),
+            generatePants(),
+            generateTunic(),
+            generateBandage(),
+        ],
+        CharacterStorageItemList: [],
+    });
+
+    return res;
+};
+
+export const getClassEquipInfo = async (data: Buffer, socket: net.Socket) => {
+    //
+    const socketContext = socketContextManager.getBySocket(socket);
+    const req = sc2sClassEquipInfoReq.decode(bufferReader(data));
+
+    let res = ss2cClassEquipInfoRes.create({});
+
+    res.equips = [];
+
+    if (!socketContext || !socketContext.userId) {
+        return res;
+    }
 
     return res;
 };

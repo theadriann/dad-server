@@ -4,13 +4,17 @@ import { bufferReader } from "../utils/bufferReader";
 import { socketContextManager } from "../utils/SocketContextManager";
 import { PacketResult } from "../protos/ts/_PacketCommand";
 import {
+    sc2sCharacterSelectEnterReq,
     sc2sLobbyEnterFromGameReq,
     sc2sLobbyGameDifficultySelectReq,
     sc2sLobbyRegionSelectReq,
+    ss2cCharacterSelectEnterRes,
     ss2cLobbyEnterFromGameRes,
     ss2cLobbyGameDifficultySelectRes,
     ss2cLobbyRegionSelectRes,
 } from "../protos/ts/Lobby";
+import { sc2sMetaLocationReq, ss2cMetaLocationRes } from "../protos/ts/Common";
+import { DefineCommon_MetaLocation } from "../protos/ts/_Defins";
 
 export const enterLobby = async (data: Buffer, socket: net.Socket) => {
     //
@@ -26,6 +30,10 @@ export const enterLobby = async (data: Buffer, socket: net.Socket) => {
 
     res.result = PacketResult.SUCCESS;
     res.accountId = socketContext.userId.toString();
+
+    socketContext.setCharacterId(Number(reqData.characterId));
+
+    console.log(res);
 
     return res;
 };
@@ -82,6 +90,46 @@ export const selectRegion = async (data: Buffer, socket: net.Socket) => {
 
     res.result = PacketResult.SUCCESS;
     res.region = reqData.region;
+
+    return res;
+};
+
+export const getPlayerLobbyLocation = async (
+    data: Buffer,
+    socket: net.Socket
+) => {
+    //
+    const socketContext = socketContextManager.getBySocket(socket);
+    const reqData = sc2sMetaLocationReq.decode(bufferReader(data));
+
+    let res = ss2cMetaLocationRes.create({});
+
+    if (!socketContext || !socketContext.characterId) {
+        return res;
+    }
+
+    const location: DefineCommon_MetaLocation = reqData.location;
+    res.location = location;
+
+    return res;
+};
+
+export const backToCharacterSelect = async (
+    data: Buffer,
+    socket: net.Socket
+) => {
+    //
+    const socketContext = socketContextManager.getBySocket(socket);
+    const reqData = sc2sCharacterSelectEnterReq.decode(bufferReader(data));
+
+    let res = ss2cCharacterSelectEnterRes.create({});
+
+    if (!socketContext || !socketContext.characterId) {
+        res.result = PacketResult.FAIL_GENERAL;
+        return;
+    }
+
+    res.result = PacketResult.SUCCESS;
 
     return res;
 };

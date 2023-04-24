@@ -12,6 +12,7 @@ export class SocketContext {
     loggedIn: boolean = false;
 
     userId: number | null = null;
+    characterId: number | null = null;
 
     processLock: boolean = false;
     remainingData: Buffer | null = null;
@@ -31,6 +32,15 @@ export class SocketContext {
 
     setUserId(value: number) {
         this.userId = value;
+    }
+
+    // -----------------------
+    // Character
+    // -----------------------
+
+    setCharacterId(value: number) {
+        console.log(`Setting character id to ${value}`);
+        this.characterId = value;
     }
 
     // -----------------------

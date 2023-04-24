@@ -29,6 +29,8 @@ export const processPacket = async (data: Buffer, socket: net.Socket) => {
     }
 
     if (handler) {
+        console.log(`Packet-Type: ${packetCommandToJSON(command)}`);
+        console.log(`Handler: ${handler.label}`);
         for (let res of handler.res) {
             const responseData = await res.handler(data, socket);
 

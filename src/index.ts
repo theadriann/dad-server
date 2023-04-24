@@ -4,7 +4,7 @@ import { processPacket } from "./controllers/packets/processPacket";
 // utils
 import "./discoveryServer";
 import net from "net";
-import { buffer2HexSpacedString } from "./utils/hex";
+import { buffer2HexSpacedString, numberToHex } from "./utils/hex";
 import { socketContextManager } from "./utils/SocketContextManager";
 
 // types
@@ -16,9 +16,26 @@ export const makeHeader = (
 ) => {
     const type = packetCommandFromJSON(packetType);
     const totalLength = packet.length + 8;
-    const header = [totalLength, 0x00, 0x00, 0x00, type, 0x00, 0x00, 0x00];
+    const totalLengthHex = numberToHex(totalLength);
 
-    return Buffer.from(header);
+    let lengthComponents = Buffer.from([totalLength]);
+    let headerRest = [];
+
+    console.log(`Header: ${totalLength}`);
+    console.log(`Header Length: ${totalLengthHex.length}`);
+
+    if (totalLengthHex.length <= 2) {
+        headerRest.push(0x00);
+    } else {
+        lengthComponents = Buffer.from(
+            numberToHex(totalLength).match(/.{2}/g)!.reverse().join(""),
+            "hex"
+        );
+    }
+
+    headerRest = [...headerRest, 0x00, 0x00, type, 0x00, 0x00, 0x00];
+
+    return Buffer.from([...lengthComponents, ...headerRest]);
 };
 
 export const sendPacket = (
@@ -32,7 +49,8 @@ export const sendPacket = (
         packet = Buffer.from(packet);
     }
 
-    // console.log(header, packet);
+    console.log(`Sending Packet ${packetType}`);
+    console.log(header, packet);
     const packetToSend = Buffer.from([...header, ...packet]);
 
     socket.write(packetToSend);
