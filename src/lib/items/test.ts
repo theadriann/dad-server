@@ -1,3 +1,4 @@
+import { EffectTypes } from "@/models/enums";
 import { SItemProperty } from "../../protos/_Item";
 import {
     DefineEquipment_SlotId,
@@ -35,21 +36,19 @@ import { SItem } from "../../protos/ts/_Item";
 export const generateTorch = () => {
     const torch = SItem.create({
         itemUniqueId: 6646818918302105,
-        itemId: "DesignDataItem:Id_Item_Torch_0001",
+        itemId: "DesignDataItem:Id_Item_Torch_6001",
         itemCount: 1,
         inventoryId: DefineItem_InventoryId.EQUIPMENT,
         slotId: DefineEquipment_SlotId.SECONDARY_B,
 
         primaryPropertyArray: [
             SItemProperty.create({
-                propertyTypeId:
-                    "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_MoveSpeed",
-                propertyValue: -10,
+                propertyTypeId: EffectTypes.MOVESPEED,
+                propertyValue: 20,
             }),
             SItemProperty.create({
-                propertyTypeId:
-                    "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_PhysicalWeaponDamage",
-                propertyValue: 13,
+                propertyTypeId: EffectTypes.PHYSICAL_WEAPON_DAMAGE,
+                propertyValue: 1000,
             }),
         ],
     });
@@ -93,10 +92,14 @@ export const generateLantern = () => {
         primaryPropertyArray: [
             SItemProperty.create({
                 propertyTypeId:
+                    "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_Primitive",
+                propertyValue: 10,
+            }),
+            SItemProperty.create({
+                propertyTypeId:
                     "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_MoveSpeed",
                 propertyValue: -10,
             }),
-
             SItemProperty.create({
                 propertyTypeId:
                     "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_PhysicalWeaponDamage",
