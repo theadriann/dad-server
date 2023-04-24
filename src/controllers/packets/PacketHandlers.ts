@@ -47,7 +47,11 @@ import {
     ss2cCustomizeItemInfoRes,
     ss2cCustomizeLobbyEmoteInfoRes,
 } from "../../protos/ts/Customize";
-import { listAllFriends } from "../FriendsController";
+import {
+    getBlockCharacterList,
+    listAllFriends,
+    listAllFriendsContinue,
+} from "../FriendsController";
 import { ss2cFriendListAllRes } from "../../protos/ts/Friend";
 import {
     customizeCharacterInfo,
@@ -57,7 +61,10 @@ import {
     getLobbyEmoteInfo,
 } from "../CustomizeController";
 import { ss2cClassEquipInfoRes } from "../../protos/ts/CharacterClass";
-import { ss2cMetaLocationRes } from "../../protos/ts/Common";
+import {
+    ss2cBlockCharacterListRes,
+    ss2cMetaLocationRes,
+} from "../../protos/ts/Common";
 
 export type PacketHandler = {
     label: string;
@@ -229,6 +236,17 @@ export const PacketHandlers: PacketHandler[] = [
             },
         ],
     },
+    {
+        label: "BackCharacterSelect",
+        requestCommand: PacketCommand.C2S_CHARACTER_SELECT_ENTER_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_CHARACTER_SELECT_ENTER_RES,
+                type: ss2cCharacterSelectEnterRes,
+                handler: backToCharacterSelect,
+            },
+        ],
+    },
 
     // -----------------------
     // Friends
@@ -243,19 +261,24 @@ export const PacketHandlers: PacketHandler[] = [
                 handler: listAllFriends,
                 type: ss2cFriendListAllRes,
             },
+            // {
+            //     command: PacketCommand.S2C_FRIEND_LIST_ALL_RES,
+            //     handler: listAllFriendsContinue,
+            //     type: ss2cFriendListAllRes,
+            // },
         ],
     },
-    {
-        label: "BackCharacterSelect",
-        requestCommand: PacketCommand.C2S_CHARACTER_SELECT_ENTER_REQ,
-        res: [
-            {
-                command: PacketCommand.S2C_CHARACTER_SELECT_ENTER_RES,
-                type: ss2cCharacterSelectEnterRes,
-                handler: backToCharacterSelect,
-            },
-        ],
-    },
+    // {
+    //     label: "BlockCharacterListReq",
+    //     requestCommand: PacketCommand.C2S_BLOCK_CHARACTER_LIST_REQ,
+    //     res: [
+    //         {
+    //             command: PacketCommand.S2C_BLOCK_CHARACTER_LIST_RES,
+    //             type: ss2cBlockCharacterListRes,
+    //             handler: getBlockCharacterList,
+    //         },
+    //     ],
+    // },
 
     // -----------------------
     // Character Customization
@@ -352,10 +375,6 @@ export const PacketHandlers: PacketHandler[] = [
             },
         ],
     },
-
-    // Unknown Packet
-    // Packet-Type: 10001
-    // Packet-Type: C2S_META_LOCATION_REQ
 ];
 
 export const PacketHandlersMap = new Map<number, PacketHandler>();

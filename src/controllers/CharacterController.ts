@@ -216,3 +216,16 @@ export const getClassEquipInfo = async (data: Buffer, socket: net.Socket) => {
 
     return res;
 };
+
+export const createCharacterNickname = async (nickname: string) => {
+    //
+    const streamingNickname = `Fighter#${Math.floor(
+        Math.random() * (1700000 - 1000000) + 1000000
+    )}`;
+
+    return saccountNickname.create({
+        originalNickName: nickname,
+        streamingModeNickName: streamingNickname,
+        karmaRating: 0,
+    });
+};

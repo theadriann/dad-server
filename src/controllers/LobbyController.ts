@@ -14,7 +14,11 @@ import {
     ss2cLobbyRegionSelectRes,
 } from "../protos/ts/Lobby";
 import { sc2sMetaLocationReq, ss2cMetaLocationRes } from "../protos/ts/Common";
-import { DefineCommon_MetaLocation } from "../protos/ts/_Defins";
+import {
+    DefineCommon_MetaLocation,
+    DefineGame_DifficultyType,
+    DefineMatch_MatchRegion,
+} from "../protos/ts/_Defins";
 
 export const enterLobby = async (data: Buffer, socket: net.Socket) => {
     //
@@ -53,7 +57,14 @@ export const selectGameDifficulty = async (
         return res;
     }
 
-    res.gameDifficultyTypeIndex = reqData.gameDifficultyTypeIndex;
+    const difficulty: DefineGame_DifficultyType =
+        reqData.gameDifficultyTypeIndex;
+
+    if (difficulty === DefineGame_DifficultyType.HIGH_ROLLER) {
+        // check money
+    }
+
+    res.gameDifficultyTypeIndex = difficulty;
     res.result = PacketResult.SUCCESS;
 
     return res;
@@ -89,7 +100,9 @@ export const selectRegion = async (data: Buffer, socket: net.Socket) => {
     }
 
     res.result = PacketResult.SUCCESS;
-    res.region = reqData.region;
+
+    const region: DefineMatch_MatchRegion = reqData.region;
+    res.region = region;
 
     return res;
 };
