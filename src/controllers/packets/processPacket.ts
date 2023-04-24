@@ -6,6 +6,7 @@ import {
 import { Parser } from "binary-parser";
 import { sendPacket } from "../..";
 import { PacketHandlersMap } from "./PacketHandlers";
+import { logger } from "@/utils/loggers";
 
 //
 export const processPacket = async (data: Buffer, socket: net.Socket) => {
@@ -29,8 +30,8 @@ export const processPacket = async (data: Buffer, socket: net.Socket) => {
     }
 
     if (handler) {
-        console.log(`Packet-Type: ${packetCommandToJSON(command)}`);
-        console.log(`Handler: ${handler.label}`);
+        logger.info(`Packet-Type: ${packetCommandToJSON(command)}`);
+        logger.info(`Handler: ${handler.label}`);
         for (let res of handler.res) {
             const responseData = await res.handler(data, socket);
 
@@ -44,7 +45,8 @@ export const processPacket = async (data: Buffer, socket: net.Socket) => {
         return;
     }
 
-    console.log(`Unknown Packet`);
-    console.log(`Packet-Type: ${parsed.type}`);
-    console.log(`Packet-Type: ${packetCommandToJSON(command)}`);
+    logger.info(`Unknown Packet`);
+    logger.info(`Packet-Type: ${parsed.type}`);
+    logger.info(`Packet-Type: ${packetCommandToJSON(command)}`);
+    logger.info(`=========================================================`);
 };

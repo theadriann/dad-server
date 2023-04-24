@@ -28,6 +28,7 @@ import {
     sc2sLobbyCharacterInfoReq,
     ss2cLobbyCharacterInfoRes,
 } from "../protos/ts/Lobby";
+import { logger } from "@/utils/loggers";
 
 export const createCharacter = async (data: Buffer, socket: net.Socket) => {
     const socketContext = socketContextManager.getBySocket(socket);
@@ -143,7 +144,7 @@ export const listCharacters = async (data: Buffer, socket: net.Socket) => {
     res.characterList = characters;
     res.totalCharacterCount = characters.length;
 
-    console.log(JSON.stringify(res, null, 2));
+    logger.info(JSON.stringify(res, null, 2));
 
     return res;
 };

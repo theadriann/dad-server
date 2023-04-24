@@ -9,6 +9,7 @@ import { bufferReader } from "../utils/bufferReader";
 import { db } from "../services/db";
 import { socketContextManager } from "../utils/SocketContextManager";
 import { DefineCommon_ServerLocation } from "../protos/ts/_Defins";
+import { logger } from "@/utils/loggers";
 
 export const login = async (data: Buffer, socket: net.Socket) => {
     const socketContext = socketContextManager.getBySocket(socket);
@@ -38,7 +39,6 @@ export const login = async (data: Buffer, socket: net.Socket) => {
     }
 
     if (!db_user) {
-        console.log("user not found, registering...");
         db_user = await register(data, socket);
         res.Result = ss2cAccountLoginRes_RESULT.SUCCESS_FIRST;
     } else if (db_user.is_banned) {
@@ -73,7 +73,7 @@ export const login = async (data: Buffer, socket: net.Socket) => {
     res.accountId = db_user.id.toString();
     res.sessionId = socketContext!.sessionId;
 
-    console.log(res);
+    logger.info(JSON.stringify(res, null, 2));
 
     return res;
 };

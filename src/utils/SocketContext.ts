@@ -1,5 +1,6 @@
 import cuid from "cuid";
 import net from "net";
+import { logger } from "./loggers";
 
 //
 export class SocketContext {
@@ -39,7 +40,7 @@ export class SocketContext {
     // -----------------------
 
     setCharacterId(value: number) {
-        console.log(`Setting character id to ${value}`);
+        logger.info(`Setting character id to ${value}`);
         this.characterId = value;
     }
 
@@ -115,9 +116,9 @@ export class SocketContext {
 
     queueDataCleaningTimeout() {
         this.dataCleaningTimeout = setTimeout(async () => {
-            console.log(`[${this.id}] Remaining Data Timeout`);
+            logger.info(`[${this.id}] Remaining Data Timeout`);
             if (!this.hasCompleteData()) {
-                console.log(`Removing Remaining Data`);
+                logger.info(`Removing Remaining Data`);
                 this.setData(null);
             }
         }, 1000 * 10);

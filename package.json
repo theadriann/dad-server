@@ -16,6 +16,8 @@
         "express": "^4.18.2",
         "long": "^5.2.3",
         "parser": "^0.1.4",
+        "pino": "^8.11.0",
+        "pino-pretty": "^10.0.0",
         "protobufjs": "^7.2.3",
         "tsx": "^3.12.6",
         "typescript": "^5.0.4"

@@ -1,4 +1,5 @@
 import express from "express";
+import { logger } from "./utils/loggers";
 
 const app = express();
 
@@ -7,7 +8,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/dc/helloWorld", (req, res) => {
-    console.log(`[discovery] Requested ${req.url}`);
+    logger.info(`[discovery] Requested ${req.url}`);
 
     res.json({
         ipAddress: process.env.SERVER_IP || "127.0.0.1",
@@ -16,10 +17,10 @@ app.get("/dc/helloWorld", (req, res) => {
 });
 
 app.get("*", (req, res) => {
-    console.log(`[discovery] Requested ${req.url}`);
+    logger.info(`[discovery] Requested ${req.url}`);
     res.json({});
 });
 
 app.listen(process.env.DISCOVERY_PORT || 30000, () => {
-    console.log("Starting Dark and Darker Discovery Server");
+    logger.info("Starting Dark and Darker Discovery Server");
 });

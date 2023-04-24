@@ -3,7 +3,9 @@ import { bufferReader } from "../utils/bufferReader";
 import { socketContextManager } from "../utils/SocketContextManager";
 import {
     sc2sFriendListAllReq,
+    sc2sFriendListReq,
     ss2cFriendListAllRes,
+    ss2cFriendListRes,
 } from "../protos/ts/Friend";
 import { getCharacterFriendInfoById } from "@/services/CharacterService";
 import { DefineMessage_LoopFlag } from "@/protos/ts/_Defins";
@@ -13,6 +15,32 @@ import {
 } from "@/protos/ts/Common";
 import { sblockCharacter } from "@/protos/ts/_Character";
 import { createCharacterNickname } from "./CharacterController";
+import { logger } from "@/utils/loggers";
+
+export const listFriends = async (data: Buffer, socket: net.Socket) => {
+    const socketContext = socketContextManager.getBySocket(socket);
+    const req = sc2sFriendListReq.decode(bufferReader(data));
+
+    let res = ss2cFriendListRes.create({});
+
+    res.friendInfoList = [];
+    res.dungeonLocateCount = 0;
+    res.lobbyLocateCount = 0;
+    res.pageIndex = 1;
+    res.totalFriendCount = 0;
+
+    const char = await getCharacterFriendInfoById(9);
+    if (char) {
+        res.friendInfoList.push(char);
+        res.lobbyLocateCount++;
+        res.totalFriendCount++;
+    }
+
+    logger.info("listFriends");
+    logger.info(JSON.stringify(res, null, 2));
+
+    return res;
+};
 
 export const listAllFriends = async (data: Buffer, socket: net.Socket) => {
     const socketContext = socketContextManager.getBySocket(socket);
@@ -33,13 +61,16 @@ export const listAllFriends = async (data: Buffer, socket: net.Socket) => {
         res.totalUserCount++;
     }
 
-    console.log("listAllFriends");
-    console.log(JSON.stringify(res, null, 2));
+    logger.info("listAllFriends");
+    logger.info(JSON.stringify(res, null, 2));
 
     return res;
 };
 
-export const listAllFriendsContinue = async (data: Buffer, socket: net.Socket) => {
+export const listAllFriendsContinue = async (
+    data: Buffer,
+    socket: net.Socket
+) => {
     const socketContext = socketContextManager.getBySocket(socket);
     const req = sc2sFriendListAllReq.decode(bufferReader(data));
 
@@ -58,8 +89,8 @@ export const listAllFriendsContinue = async (data: Buffer, socket: net.Socket) =
         res.totalUserCount++;
     }
 
-    console.log("listAllFriends");
-    console.log(JSON.stringify(res, null, 2));
+    logger.info("listAllFriends");
+    logger.info(JSON.stringify(res, null, 2));
 
     return res;
 };
@@ -84,8 +115,8 @@ export const getBlockCharacterList = async (
         ],
     });
 
-    console.log("getBlockCharacterList");
-    console.log(JSON.stringify(res, null, 2));
+    logger.info("getBlockCharacterList");
+    logger.info(JSON.stringify(res, null, 2));
 
     return res;
 };

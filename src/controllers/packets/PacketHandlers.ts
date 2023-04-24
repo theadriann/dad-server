@@ -51,8 +51,12 @@ import {
     getBlockCharacterList,
     listAllFriends,
     listAllFriendsContinue,
+    listFriends,
 } from "../FriendsController";
-import { ss2cFriendListAllRes } from "../../protos/ts/Friend";
+import {
+    ss2cFriendListAllRes,
+    ss2cFriendListRes,
+} from "../../protos/ts/Friend";
 import {
     customizeCharacterInfo,
     getCustomizeActionInfo,
@@ -256,6 +260,11 @@ export const PacketHandlers: PacketHandler[] = [
         label: "ListAllFriends",
         requestCommand: PacketCommand.C2S_FRIEND_LIST_ALL_REQ,
         res: [
+            {
+                command: PacketCommand.S2C_FRIEND_LIST_RES,
+                handler: listFriends,
+                type: ss2cFriendListRes,
+            },
             {
                 command: PacketCommand.S2C_FRIEND_LIST_ALL_RES,
                 handler: listAllFriends,

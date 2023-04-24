@@ -19,6 +19,7 @@ import {
     DefineGame_DifficultyType,
     DefineMatch_MatchRegion,
 } from "../protos/ts/_Defins";
+import { logger } from "@/utils/loggers";
 
 export const enterLobby = async (data: Buffer, socket: net.Socket) => {
     //
@@ -37,7 +38,7 @@ export const enterLobby = async (data: Buffer, socket: net.Socket) => {
 
     socketContext.setCharacterId(Number(reqData.characterId));
 
-    console.log(res);
+    logger.info(res);
 
     return res;
 };
