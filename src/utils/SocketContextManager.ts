@@ -28,6 +28,12 @@ class SocketContextManager {
         );
     }
 
+    getAllActive() {
+        return this._socketContexts.filter(
+            (socketContext) => !socketContext.socket.destroyed
+        );
+    }
+
     getBySocket(socket: net.Socket) {
         return this._socketContexts.find(
             (socketContext) => socketContext.socket === socket
@@ -41,6 +47,18 @@ class SocketContextManager {
     getByAddress(address: string) {
         return this._socketContexts.find(
             (socketContext) => socketContext.address === address
+        );
+    }
+
+    getByUserId(userId: number) {
+        return this._socketContexts.find(
+            (socketContext) => socketContext.userId === userId
+        );
+    }
+
+    getByCharacterId(characterId: number) {
+        return this._socketContexts.find(
+            (socketContext) => socketContext.characterId === characterId
         );
     }
 }

@@ -35,11 +35,21 @@ export const processPacket = async (data: Buffer, socket: net.Socket) => {
         for (let res of handler.res) {
             const responseData = await res.handler(data, socket);
 
-            sendPacket(
-                socket,
-                res.type.encode(responseData).finish(),
-                res.command
-            );
+            if (res.multiple) {
+                for (let rData of responseData) {
+                    sendPacket(
+                        socket,
+                        res.type.encode(rData).finish(),
+                        res.command
+                    );
+                }
+            } else {
+                sendPacket(
+                    socket,
+                    res.type.encode(responseData).finish(),
+                    res.command
+                );
+            }
         }
 
         return;

@@ -25,8 +25,8 @@ export const getCharacterFriendInfoById = async (characterId: number) => {
     return scharacterFriendInfo.create({
         accountId: dbCharacter.user_id.toString(),
         characterId: dbCharacter.id.toString(),
-        // characterClass: dbCharacter.class,
-        characterClass: "DesignDataPlayerCharacter:Id_PlayerCharacter_Fighter",
+        characterClass: dbCharacter.class,
+        // characterClass: "DesignDataPlayerCharacter:Id_PlayerCharacter_Fighter",
         gender: dbCharacter.gender,
         level: dbCharacter.level,
         // locationStatus: DefineCommon_MetaLocation.PLAY,

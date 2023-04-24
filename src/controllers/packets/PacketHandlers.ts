@@ -2,7 +2,6 @@
 import {
     createCharacter,
     getCharacterInfo,
-    getClassEquipInfo,
     listCharacters,
 } from "../CharacterController";
 import { login } from "../AuthController";
@@ -48,14 +47,15 @@ import {
     ss2cCustomizeLobbyEmoteInfoRes,
 } from "../../protos/ts/Customize";
 import {
+    acceptPartyInvite,
     getBlockCharacterList,
-    listAllFriends,
+    inviteFriend,
     listAllFriendsContinue,
-    listFriends,
+    searchFriend,
 } from "../FriendsController";
 import {
+    ss2cFriendFindRes,
     ss2cFriendListAllRes,
-    ss2cFriendListRes,
 } from "../../protos/ts/Friend";
 import {
     customizeCharacterInfo,
@@ -64,7 +64,6 @@ import {
     getEmoteInfo,
     getLobbyEmoteInfo,
 } from "../CustomizeController";
-import { ss2cClassEquipInfoRes } from "../../protos/ts/CharacterClass";
 import {
     ss2cBlockCharacterListRes,
     ss2cMetaLocationRes,
@@ -73,6 +72,10 @@ import { ss2cInventorySingleUpdateRes } from "@/protos/ts/Inventory";
 import { singleInventoryUpdate } from "../InventoryController";
 import { ss2cAutoMatchRegRes } from "@/protos/ts/InGame";
 import { startAutoMatchMaking } from "../MatchMakingController";
+import {
+    ss2cPartyInviteAnswerRes,
+    ss2cPartyInviteRes,
+} from "@/protos/ts/Party";
 
 export type PacketHandler = {
     label: string;
@@ -81,6 +84,7 @@ export type PacketHandler = {
         type: any;
         handler: (data: Buffer, socket: net.Socket) => Promise<any>;
         command: PacketCommand;
+        multiple?: boolean;
     }[];
 };
 
@@ -265,20 +269,20 @@ export const PacketHandlers: PacketHandler[] = [
         requestCommand: PacketCommand.C2S_FRIEND_LIST_ALL_REQ,
         res: [
             // {
-            //     command: PacketCommand.S2C_FRIEND_LIST_RES,
-            //     handler: listFriends,
-            //     type: ss2cFriendListRes,
+            //     command: PacketCommand.S2C_FRIEND_LIST_ALL_RES,
+            //     handler: listAllFriends,
+            //     type: ss2cFriendListAllRes,
             // },
-            {
-                command: PacketCommand.S2C_FRIEND_LIST_ALL_RES,
-                handler: listAllFriends,
-                type: ss2cFriendListAllRes,
-            },
             {
                 command: PacketCommand.S2C_FRIEND_LIST_ALL_RES,
                 handler: listAllFriendsContinue,
                 type: ss2cFriendListAllRes,
             },
+            // {
+            //     command: PacketCommand.S2C_FRIEND_LIST_RES,
+            //     handler: listFriends,
+            //     type: ss2cFriendListRes,
+            // },
         ],
     },
     {
@@ -289,6 +293,39 @@ export const PacketHandlers: PacketHandler[] = [
                 command: PacketCommand.S2C_BLOCK_CHARACTER_LIST_RES,
                 type: ss2cBlockCharacterListRes,
                 handler: getBlockCharacterList,
+            },
+        ],
+    },
+    {
+        label: "SearchFriend",
+        requestCommand: PacketCommand.C2S_FRIEND_FIND_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_FRIEND_FIND_RES,
+                type: ss2cFriendFindRes,
+                handler: searchFriend,
+            },
+        ],
+    },
+    {
+        label: "Invite Friend",
+        requestCommand: PacketCommand.C2S_PARTY_INVITE_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_PARTY_INVITE_RES,
+                type: ss2cPartyInviteRes,
+                handler: inviteFriend,
+            },
+        ],
+    },
+    {
+        label: "Accept Party Invite",
+        requestCommand: PacketCommand.C2S_PARTY_INVITE_ANSWER_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_PARTY_INVITE_ANSWER_RES,
+                type: ss2cPartyInviteAnswerRes,
+                handler: acceptPartyInvite,
             },
         ],
     },
@@ -364,7 +401,6 @@ export const PacketHandlers: PacketHandler[] = [
     //
     // -----------------------
 
-    // TODO: This crashes, has to be non-empty
     // {
     //     label: "ClassEquipInfo",
     //     requestCommand: PacketCommand.C2S_CLASS_EQUIP_INFO_REQ,
