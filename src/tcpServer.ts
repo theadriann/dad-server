@@ -100,18 +100,19 @@ export const sendPacket = (
 const tcpServer = net.createServer((socket) => {
     //
     let socketAddress = socket.remoteAddress || "";
-    let context = socketContextManager.getByAddress(socketAddress);
+    let context = socketContextManager.create(socket);
+    // let context = socketContextManager.getByAddress(socketAddress);
 
-    if (!context) {
-        context = socketContextManager.create(socket);
-    } else {
-        logger.info(`Reconnected ${context.id}`);
-        context.setSocket(socket);
+    // if (!context) {
+    //     context = socketContextManager.create(socket);
+    // } else {
+    //     logger.info(`Reconnected ${context.id}`);
+    //     context.setSocket(socket);
 
-        if (context.userId && context.characterId) {
-            // TODO: hacky way to handle fast custom reconnection
-        }
-    }
+    //     if (context.userId && context.characterId) {
+    //         // TODO: hacky way to handle fast custom reconnection
+    //     }
+    // }
 
     if (!context) {
         logger.error("Failed to create socket context");
