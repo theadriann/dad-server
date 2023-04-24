@@ -71,6 +71,8 @@ import {
 } from "../../protos/ts/Common";
 import { ss2cInventorySingleUpdateRes } from "@/protos/ts/Inventory";
 import { singleInventoryUpdate } from "../InventoryController";
+import { ss2cAutoMatchRegRes } from "@/protos/ts/InGame";
+import { startAutoMatchMaking } from "../MatchMakingController";
 
 export type PacketHandler = {
     label: string;
@@ -399,6 +401,22 @@ export const PacketHandlers: PacketHandler[] = [
                 command: PacketCommand.S2C_INVENTORY_SINGLE_UPDATE_RES,
                 type: ss2cInventorySingleUpdateRes,
                 handler: singleInventoryUpdate,
+            },
+        ],
+    },
+
+    // -----------------------
+    // Matchmaking
+    // -----------------------
+
+    {
+        label: "Auto Match Registration",
+        requestCommand: PacketCommand.C2S_AUTO_MATCH_REG_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_AUTO_MATCH_REG_RES,
+                type: ss2cAutoMatchRegRes,
+                handler: startAutoMatchMaking,
             },
         ],
     },
