@@ -7,6 +7,7 @@ specifiers:
   '@types/node': ^18.15.13
   binary-parser: ^2.2.1
   cuid: ^3.0.0
+  dotenv: ^16.0.3
   express: ^4.18.2
   fs-extra: ^11.1.1
   long: ^5.2.3
@@ -22,6 +23,7 @@ dependencies:
   '@prisma/client': 4.13.0_prisma@4.13.0
   binary-parser: 2.2.1
   cuid: 3.0.0
+  dotenv: 16.0.3
   express: 4.18.2
   long: 5.2.3
   parser: 0.1.4
@@ -532,6 +534,11 @@ packages:
 
   /disect/1.1.1:
     resolution: {integrity: sha512-rr2Ym8FSAoqAJ1KfpUiQ/Io01HP0LZPHBuppbFsHozmSNf+YwrvyD5pm5tMTUApJFNwD7HeWJ5DGldSugScukA==}
+    dev: false
+
+  /dotenv/16.0.3:
+    resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
+    engines: {node: '>=12'}
     dev: false
 
   /ee-first/1.1.1:

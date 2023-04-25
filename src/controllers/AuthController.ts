@@ -10,6 +10,8 @@ import { db } from "../services/db";
 import { socketContextManager } from "../utils/SocketContextManager";
 import { DefineCommon_ServerLocation } from "../protos/ts/_Defins";
 import { logger } from "@/utils/loggers";
+import { ss2cReLoginRes } from "@/protos/ts/Common";
+import { LOBBY_PORT, SERVER_IP } from "@/utils/info";
 
 export const login = async (data: Buffer, socket: net.Socket) => {
     const socketContext = socketContextManager.getBySocket(socket);
@@ -93,4 +95,24 @@ const register = async (data: Buffer, socket: net.Socket) => {
     });
 
     return db_user;
+};
+
+export const relogin = async (data: Buffer, socket: net.Socket) => {
+    //
+    const socketContext = socketContextManager.getBySocket(socket);
+
+    if (!socketContext || !socketContext.userId) {
+        return ss2cReLoginRes.create({
+            accountId: "",
+        });
+    }
+
+    const res = ss2cReLoginRes.create({
+        accountId: socketContext.userId.toString(),
+        isReconnect: 0,
+        sessionId: socketContext.sessionId,
+        address: `${SERVER_IP}:${LOBBY_PORT}`,
+    });
+
+    return res;
 };

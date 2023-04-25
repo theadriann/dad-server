@@ -48,6 +48,7 @@ export const makeHeader = (
     }
 
     header.push(Buffer.from([0x00, 0x00]));
+    // header.push(Buffer.from([0xff, 0xff]));
 
     // let lengthComponents = Buffer.from([totalLength]);
     // let headerRest = [];
@@ -156,7 +157,8 @@ const tcpServer = net.createServer((socket) => {
         logger.debug(`=============== ${context.id} ===============`);
 
         //
-        logger.debug("[HEX]", buffer2HexSpacedString(data));
+        logger.debug("[HEX]");
+        logger.debug(buffer2HexSpacedString(data));
 
         //
         context.appendData(data);
@@ -173,8 +175,10 @@ const tcpServer = net.createServer((socket) => {
             const { data, rest } = context.getCompleteData();
 
             // set the rest of the data back into the context
-            logger.debug("[HEX-DATA]", buffer2HexSpacedString(data));
-            logger.debug("[HEX-REMAINING]", buffer2HexSpacedString(rest));
+            logger.debug("[HEX-DATA]");
+            logger.debug(buffer2HexSpacedString(data));
+            logger.debug("[HEX-REMAINING]");
+            logger.debug(buffer2HexSpacedString(rest));
 
             context.setData(rest);
 
@@ -196,7 +200,8 @@ tcpServer.on("error", (err) => {
 });
 
 export const startLoginServer = () => {
-    tcpServer.listen(process.env.LOBBY_PORT || 30001, () => {
-        logger.info("Starting Dark and Darker Login Server");
+    const port = process.env.LOBBY_PORT || 30001;
+    tcpServer.listen(port, () => {
+        logger.info(`Starting Dark and Darker Login Server on port ${port}`);
     });
 };

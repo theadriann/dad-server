@@ -4,7 +4,7 @@ import {
     getCharacterInfo,
     listCharacters,
 } from "../CharacterController";
-import { login } from "../AuthController";
+import { login, relogin } from "../AuthController";
 import {
     backToCharacterSelect,
     enterLobby,
@@ -30,15 +30,12 @@ import {
 } from "../../protos/ts/Account";
 import {
     ss2cCharacterSelectEnterRes,
-    ss2cLobbyAccountCurrencyListNot,
     ss2cLobbyCharacterInfoRes,
     ss2cLobbyEnterFromGameRes,
     ss2cLobbyGameDifficultySelectRes,
     ss2cLobbyRegionSelectRes,
-    ss2cLobbyReportPunishListNot,
     ss2cOpenLobbyMapRes,
 } from "../../protos/ts/Lobby";
-import { DefineAccount_CurrencyType } from "../../protos/ts/_Defins";
 import {
     ss2cCustomizeActionInfoRes,
     ss2cCustomizeCharacterInfoRes,
@@ -67,6 +64,7 @@ import {
 import {
     ss2cBlockCharacterListRes,
     ss2cMetaLocationRes,
+    ss2cReLoginRes,
 } from "../../protos/ts/Common";
 import { ss2cInventorySingleUpdateRes } from "@/protos/ts/Inventory";
 import { singleInventoryUpdate } from "../InventoryController";
@@ -205,46 +203,6 @@ export const PacketHandlers: PacketHandler[] = [
                 type: ss2cLobbyGameDifficultySelectRes,
                 handler: selectGameDifficulty,
                 command: PacketCommand.S2C_LOBBY_GAME_DIFFICULTY_SELECT_RES,
-            },
-        ],
-    },
-    {
-        label: "LobbyAccountCurrencyListNot",
-        requestCommand: PacketCommand.S2C_LOBBY_ACCOUNT_CURRENCY_LIST_NOT,
-        res: [
-            {
-                type: ss2cLobbyAccountCurrencyListNot,
-                command: PacketCommand.S2C_LOBBY_ACCOUNT_CURRENCY_LIST_NOT,
-                handler: async (data: Buffer, socket: net.Socket) => {
-                    return ss2cLobbyAccountCurrencyListNot.create({
-                        currencyInfos: [
-                            {
-                                currencyType:
-                                    DefineAccount_CurrencyType.ADVENTURE,
-                                currencyValue: 1000,
-                            },
-                            {
-                                currencyType:
-                                    DefineAccount_CurrencyType.CURRENCY_NONE,
-                                currencyValue: 100,
-                            },
-                        ],
-                    });
-                },
-            },
-        ],
-    },
-    {
-        label: "LobbyReportPunishListNot",
-        requestCommand: PacketCommand.S2C_LOBBY_REPORT_PUNISH_LIST_NOT,
-        res: [
-            {
-                command: PacketCommand.S2C_LOBBY_REPORT_PUNISH_LIST_NOT,
-                type: ss2cLobbyReportPunishListNot,
-                handler: async (data: Buffer, socket: net.Socket) =>
-                    ss2cLobbyReportPunishListNot.create({
-                        infos: [],
-                    }),
             },
         ],
     },
@@ -456,6 +414,24 @@ export const PacketHandlers: PacketHandler[] = [
             },
         ],
     },
+
+    // -----------------------
+    //
+    // -----------------------
+
+    {
+        label: "Re-Login",
+        requestCommand: PacketCommand.C2S_RE_LOGIN_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_RE_LOGIN_RES,
+                type: ss2cReLoginRes,
+                handler: relogin,
+            },
+        ],
+    },
+
+    // C2S_RE_LOGIN_REQ
 ];
 
 export const PacketHandlersMap = new Map<number, PacketHandler>();

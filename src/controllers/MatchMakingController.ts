@@ -2,10 +2,23 @@ import net from "net";
 import { bufferReader } from "../utils/bufferReader";
 import { socketContextManager } from "../utils/SocketContextManager";
 import { PacketResult } from "../protos/ts/_PacketCommand";
-import { sc2sAutoMatchRegReq, ss2cAutoMatchRegRes } from "@/protos/ts/InGame";
-import { DefineGame_Floor } from "@/protos/ts/_Defins";
+import {
+    sc2sAutoMatchRegReq,
+    sc2sAutoMatchRegReq_MODE,
+    ss2cAutoMatchRegRes,
+    ss2cAutoMatchRegRes_RESULT,
+} from "@/protos/ts/InGame";
+import {
+    DefineGame_DifficultyType,
+    DefineGame_Floor,
+} from "@/protos/ts/_Defins";
 import { logger } from "@/utils/loggers";
 import { gameServersManager } from "@/state/GameServersManager";
+import {
+    announceGameEnterComplete,
+    announceGameServerReady,
+} from "@/services/GameServerNotifier";
+import { getDbCharacterById } from "@/services/CharacterService";
 
 export const startAutoMatchMaking = async (
     data: Buffer,
@@ -18,12 +31,12 @@ export const startAutoMatchMaking = async (
 
     let res = ss2cAutoMatchRegRes.create({});
 
-    if (!socketContext || !socketContext.userId) {
-        res.result = PacketResult.FAIL_GENERAL;
+    if (!socketContext || !socketContext.userId || !socketContext.characterId) {
+        res.result = ss2cAutoMatchRegRes_RESULT.FAIL;
         return res;
     }
 
-    if (req.mode === 2) {
+    if (req.mode === sc2sAutoMatchRegReq_MODE.CANCEL) {
         return cancelAutoMatchMaking(data, socket);
     }
 
@@ -31,9 +44,27 @@ export const startAutoMatchMaking = async (
 
     if (game) {
         return ss2cAutoMatchRegRes.create({
-            result: PacketResult.FAIL_GENERAL,
+            result: ss2cAutoMatchRegRes_RESULT.FAIL_ALREADY_TRYING,
         });
     }
+
+    // if (
+    //     partyCount > 1 &&
+    //     req.difficultyType === DefineGame_DifficultyType.GOBLIN
+    // ) {
+    //     return ss2cAutoMatchRegRes.create({
+    //         result: ss2cAutoMatchRegRes_RESULT.FAIL_SOLO_ONLY,
+    //     });
+    // }
+
+    // if (
+    //     req.difficultyType === DefineGame_DifficultyType.HIGH_ROLLER &&
+    //     money < 150
+    // ) {
+    //     return ss2cAutoMatchRegRes.create({
+    //         result: ss2cAutoMatchRegRes_RESULT.FAIL_SHORTAGE_ENTRANCE_FEE,
+    //     });
+    // }
 
     game = gameServersManager.requestServer({
         floor: DefineGame_Floor.UNRECOGNIZED,
@@ -44,16 +75,48 @@ export const startAutoMatchMaking = async (
 
     if (!game) {
         return ss2cAutoMatchRegRes.create({
-            result: PacketResult.FAIL_GENERAL,
+            result: ss2cAutoMatchRegRes_RESULT.FAIL_SERVER_DISABLE,
         });
     }
+
+    setTimeout(async () => {
+        if (!game || !socketContext?.userId || !socketContext?.characterId) {
+            logger.error("wtf?!");
+            return;
+        }
+
+        announceGameServerReady(
+            {
+                game,
+                accountId: socketContext.userId,
+                nickName: (await getDbCharacterById(socketContext.characterId))!
+                    .nickname,
+            },
+            socket
+        );
+    }, 5000);
+
+    // setTimeout(async () => {
+    //     if (!game) {
+    //         logger.error("wtf?!");
+    //         return;
+    //     }
+
+    //     announceGameEnterComplete(
+    //         {
+    //             game,
+    //             isSuccess: 0,
+    //         },
+    //         socket
+    //     );
+    // }, 4000);
 
     // TODO: actually join all the players in the party
     game.join(socketContext.userId);
 
     logger.debug(game);
 
-    res.result = PacketResult.SUCCESS;
+    res.result = ss2cAutoMatchRegRes_RESULT.SUCCESS;
 
     return res;
 };
@@ -66,7 +129,7 @@ export const cancelAutoMatchMaking = async (
 
     if (!socketContext || !socketContext.userId) {
         return ss2cAutoMatchRegRes.create({
-            result: PacketResult.FAIL_GENERAL,
+            result: ss2cAutoMatchRegRes_RESULT.FAIL,
         });
     }
 
@@ -77,11 +140,11 @@ export const cancelAutoMatchMaking = async (
         game.leave(socketContext.userId);
 
         return ss2cAutoMatchRegRes.create({
-            result: PacketResult.SUCCESS,
+            result: ss2cAutoMatchRegRes_RESULT.SUCCESS,
         });
     }
 
     return ss2cAutoMatchRegRes.create({
-        result: PacketResult.FAIL_GENERAL,
+        result: ss2cAutoMatchRegRes_RESULT.FAIL,
     });
 };

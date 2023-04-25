@@ -1,5 +1,7 @@
 // utils
+import net from "net";
 import cuid from "cuid";
+import { logger } from "@/utils/loggers";
 import { SocketContextManager } from "@/utils/SocketContextManager";
 
 // types
@@ -8,6 +10,65 @@ import {
     DefineGame_Floor,
     DefineMatch_MatchRegion,
 } from "@/protos/ts/_Defins";
+
+class GameServerTcpServer {
+    //
+    game: GameServer;
+    instance: net.Server | null = null;
+
+    constructor(game: GameServer) {
+        this.game = game;
+    }
+
+    start = () => {
+        this.instance = net.createServer(this.onConnection);
+        this.instance.on("error", (err) => {
+            throw err;
+        });
+
+        this.instance.listen(this.game.port, () => {
+            logger.info(
+                `Starting Dark and Darker Game Server at port ${this.game.port}`
+            );
+        });
+    };
+
+    // -----------------------
+    //
+    // -----------------------
+
+    onConnection = (socket: net.Socket) => {
+        //
+        let socketAddress = socket.remoteAddress || "";
+
+        logger.info(`${socketAddress} connected to game ${this.game.id}.`);
+
+        socket.on("end", () => this.onConnectionEnd(socket));
+        socket.on("error", (err) => this.onConnectionError(socket, err));
+        socket.on("data", (data) => this.onConnectionData(socket, data));
+
+        socket.pipe(socket);
+    };
+
+    onConnectionEnd = (socket: net.Socket) => {
+        //
+        let socketAddress = socket.remoteAddress || "";
+
+        logger.info(`${socketAddress} disconnected.`);
+    };
+
+    onConnectionError = (socket: net.Socket, err: Error) => {
+        //
+        logger.error(err);
+    };
+
+    onConnectionData = (socket: net.Socket, data: Buffer) => {
+        //
+        let socketAddress = socket.remoteAddress || "";
+
+        logger.info(`${socketAddress} sent data: ${data.toString()}`);
+    };
+}
 
 //
 export class GameServer {
@@ -19,6 +80,7 @@ export class GameServer {
     region: DefineMatch_MatchRegion = DefineMatch_MatchRegion.EU_CENTRAL;
     difficulty: DefineGame_DifficultyType = DefineGame_DifficultyType.NORMAL;
 
+    server: GameServerTcpServer;
     socketContextManager = new SocketContextManager();
 
     phase: "waiting-players" | "lobby" | "game" = "waiting-players";
@@ -34,13 +96,16 @@ export class GameServer {
         this.floor = config.floor;
         this.region = config.region;
         this.difficulty = config.difficulty;
+        this.server = new GameServerTcpServer(this);
     }
 
     // -----------------------
     //
     // -----------------------
 
-    start = () => {};
+    start = () => {
+        this.server.start();
+    };
 
     join = (userId: number) => {
         // TODO: add socket context to game server
@@ -103,6 +168,8 @@ export class GameServersManager {
         });
 
         this.addServer(server);
+
+        server.start();
 
         return server;
     }
