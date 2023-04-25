@@ -4,3 +4,4 @@ prisma/dev.db
 prisma/dev.db-journal
 playground.ts
 .env
+packet_dumps
