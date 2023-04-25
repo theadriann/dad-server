@@ -29,6 +29,7 @@ import {
     ss2cLobbyCharacterInfoRes,
 } from "../protos/ts/Lobby";
 import { logger } from "@/utils/loggers";
+import { FighterClassSkills } from "@/models/enums/ClassSkills";
 
 export const createCharacter = async (data: Buffer, socket: net.Socket) => {
     const socketContext = socketContextManager.getBySocket(socket);
@@ -209,7 +210,50 @@ export const getClassEquipInfo = async (data: Buffer, socket: net.Socket) => {
 
     let res = ss2cClassEquipInfoRes.create({});
 
-    res.equips = [];
+    res.equips = [
+        {
+            index: 1,
+            isAvailableSlot: 1,
+            requiredLevel: 1,
+            type: 1,
+            equipId: "", // Perk #1
+        },
+        {
+            index: 2,
+            isAvailableSlot: 0, // is level 5
+            requiredLevel: 5,
+            type: 1,
+            equipId: "", // Perk #2
+        },
+        {
+            index: 3,
+            isAvailableSlot: 0, // is level 10
+            requiredLevel: 10,
+            type: 1,
+            equipId: "", // Perk #3
+        },
+        {
+            index: 4,
+            isAvailableSlot: 0,
+            requiredLevel: 15,
+            type: 1,
+            equipId: "", // Perk #4
+        },
+        {
+            index: 5,
+            isAvailableSlot: 1,
+            requiredLevel: 1,
+            type: 2,
+            equipId: FighterClassSkills.SPRINT, // Skill #1
+        },
+        {
+            index: 6,
+            isAvailableSlot: 1,
+            requiredLevel: 1,
+            type: 2,
+            equipId: FighterClassSkills.SECOND_WIND, // Skill #2
+        },
+    ];
 
     if (!socketContext || !socketContext.userId) {
         return res;

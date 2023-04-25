@@ -2,6 +2,7 @@
 import {
     createCharacter,
     getCharacterInfo,
+    getClassEquipInfo,
     listCharacters,
 } from "../CharacterController";
 import { login, relogin } from "../AuthController";
@@ -74,6 +75,7 @@ import {
     ss2cPartyInviteAnswerRes,
     ss2cPartyInviteRes,
 } from "@/protos/ts/Party";
+import { ss2cClassEquipInfoRes } from "@/protos/ts/CharacterClass";
 
 export type PacketHandler = {
     label: string;
@@ -303,11 +305,11 @@ export const PacketHandlers: PacketHandler[] = [
                 handler: getCharacterInfo,
                 type: ss2cLobbyCharacterInfoRes,
             },
-            {
-                command: PacketCommand.S2C_CUSTOMIZE_CHARACTER_INFO_RES,
-                handler: customizeCharacterInfo,
-                type: ss2cCustomizeCharacterInfoRes,
-            },
+            // {
+            //     command: PacketCommand.S2C_CUSTOMIZE_CHARACTER_INFO_RES,
+            //     handler: customizeCharacterInfo,
+            //     type: ss2cCustomizeCharacterInfoRes,
+            // },
         ],
     },
     {
@@ -359,17 +361,17 @@ export const PacketHandlers: PacketHandler[] = [
     //
     // -----------------------
 
-    // {
-    //     label: "ClassEquipInfo",
-    //     requestCommand: PacketCommand.C2S_CLASS_EQUIP_INFO_REQ,
-    //     res: [
-    //         {
-    //             command: PacketCommand.S2C_CLASS_EQUIP_INFO_RES,
-    //             type: ss2cClassEquipInfoRes,
-    //             handler: getClassEquipInfo,
-    //         },
-    //     ],
-    // },
+    {
+        label: "ClassEquipInfo",
+        requestCommand: PacketCommand.C2S_CLASS_EQUIP_INFO_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_CLASS_EQUIP_INFO_RES,
+                type: ss2cClassEquipInfoRes,
+                handler: getClassEquipInfo,
+            },
+        ],
+    },
 
     {
         label: "MetaLocationReq",
