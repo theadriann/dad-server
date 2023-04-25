@@ -1,54 +1,29 @@
+//
+import { logger } from "@/utils/loggers";
 import cuid from "cuid";
 import net from "net";
-import { logger } from "./loggers";
+import { LobbyUser } from "./User";
 
-//
 export class SocketContext {
     //
-    id: string;
-    socket: net.Socket;
-    sessionId: string;
-    dataNumber: number;
-    keepAliveNumber: number;
-    loggedIn: boolean = false;
-    address: string = "";
+    user: LobbyUser;
+    active: boolean = false;
 
-    userId: number | null = null;
-    characterId: number | null = null;
-
+    //
     processLock: boolean = false;
     remainingData: Buffer | null = null;
     dataCleaningTimeout: NodeJS.Timeout | null = null;
 
-    constructor(socket: net.Socket) {
-        this.id = cuid();
-        this.socket = socket;
-        this.sessionId = cuid();
-        this.dataNumber = 0;
-        this.keepAliveNumber = 0;
-        this.address = socket.remoteAddress || "";
-    }
-
-    setSocket(socket: net.Socket) {
-        this.socket = socket;
-        this.address = socket.remoteAddress || "";
-    }
-
-    setLoggedIn(value: boolean) {
-        this.loggedIn = value;
-    }
-
-    setUserId(value: number) {
-        this.userId = value;
+    constructor(user: LobbyUser) {
+        this.user = user;
     }
 
     // -----------------------
-    // Character
+    // State Methods
     // -----------------------
 
-    setCharacterId(value: number) {
-        logger.debug(`Setting character id to ${value}`);
-        this.characterId = value;
+    setActive(active: boolean) {
+        this.active = active;
     }
 
     // -----------------------
@@ -123,7 +98,7 @@ export class SocketContext {
 
     queueDataCleaningTimeout() {
         this.dataCleaningTimeout = setTimeout(async () => {
-            logger.debug(`[${this.id}] Remaining Data Timeout`);
+            logger.debug(`[${this.user.sessionId}] Remaining Data Timeout`);
             if (!this.hasCompleteData()) {
                 logger.debug(`Removing Remaining Data`);
                 this.setData(null);

@@ -1,6 +1,5 @@
 import net from "net";
 import { bufferReader } from "../utils/bufferReader";
-import { socketContextManager } from "../utils/SocketContextManager";
 import {
     sc2sCustomizeActionInfoReq,
     sc2sCustomizeCharacterInfoReq,
@@ -14,26 +13,27 @@ import {
     ss2cCustomizeLobbyEmoteInfoRes,
 } from "../protos/ts/Customize";
 import { db } from "../services/db";
+import { lobbyState } from "@/state/LobbyManager";
 
 export const customizeCharacterInfo = async (
     data: Buffer,
     socket: net.Socket
 ) => {
     //
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const characterListReq = sc2sCustomizeCharacterInfoReq.decode(
         bufferReader(data)
     );
 
     let res = ss2cCustomizeCharacterInfoRes.create({});
 
-    if (!socketContext || !socketContext.userId || !socketContext.characterId) {
+    if (!lobbyUser?.hasCharacterLoaded) {
         return res;
     }
 
     const character_db = await db.character.findFirst({
         where: {
-            id: socketContext.characterId,
+            id: lobbyUser.characterId!,
         },
     });
 
@@ -54,7 +54,7 @@ export const customizeCharacterInfo = async (
 };
 
 export const getEmoteInfo = async (data: Buffer, socket: net.Socket) => {
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sCustomizeEmoteInfoReq.decode(bufferReader(data));
 
     let res = ss2cCustomizeEmoteInfoRes.create({});
@@ -62,7 +62,7 @@ export const getEmoteInfo = async (data: Buffer, socket: net.Socket) => {
     res.loopFlag = 0;
     res.emotes = [];
 
-    if (!socketContext || !socketContext.userId) {
+    if (!lobbyUser || !lobbyUser.userId) {
         return res;
     }
 
@@ -73,7 +73,7 @@ export const getCustomizeItemInfo = async (
     data: Buffer,
     socket: net.Socket
 ) => {
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sCustomizeItemInfoReq.decode(bufferReader(data));
 
     let res = ss2cCustomizeItemInfoRes.create({});
@@ -81,7 +81,7 @@ export const getCustomizeItemInfo = async (
     res.loopFlag = 0;
     res.customizeItems = [];
 
-    if (!socketContext || !socketContext.userId) {
+    if (!lobbyUser || !lobbyUser.userId) {
         return res;
     }
 
@@ -89,7 +89,7 @@ export const getCustomizeItemInfo = async (
 };
 
 export const getLobbyEmoteInfo = async (data: Buffer, socket: net.Socket) => {
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sCustomizeLobbyEmoteInfoReq.decode(bufferReader(data));
 
     let res = ss2cCustomizeLobbyEmoteInfoRes.create({});
@@ -97,7 +97,7 @@ export const getLobbyEmoteInfo = async (data: Buffer, socket: net.Socket) => {
     res.loopFlag = 0;
     res.customizeLobbyEmoteIds = [];
 
-    if (!socketContext || !socketContext.userId) {
+    if (!lobbyUser || !lobbyUser.userId) {
         return res;
     }
 
@@ -108,7 +108,7 @@ export const getCustomizeActionInfo = async (
     data: Buffer,
     socket: net.Socket
 ) => {
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sCustomizeActionInfoReq.decode(bufferReader(data));
 
     let res = ss2cCustomizeActionInfoRes.create({});
@@ -116,7 +116,7 @@ export const getCustomizeActionInfo = async (
     res.loopFlag = 0;
     res.customizeActionIds = [];
 
-    if (!socketContext || !socketContext.userId) {
+    if (!lobbyUser || !lobbyUser.userId) {
         return res;
     }
 

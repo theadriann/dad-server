@@ -4,15 +4,16 @@ import { processPacket } from "./controllers/packets/processPacket";
 // utils
 import net from "net";
 import { buffer2HexSpacedString } from "./utils/hex";
-import { socketContextManager } from "./utils/SocketContextManager";
 
 // types
 import { logger } from "./utils/loggers";
+import { lobbyState } from "./state/LobbyManager";
 
 const tcpServer = net.createServer((socket) => {
     //
     let socketAddress = socket.remoteAddress || "";
-    let context = socketContextManager.create(socket);
+    const lobbyUser = lobbyState.create(socket);
+    // let context = socketContextManager.create(socket);
     // let context = socketContextManager.getByAddress(socketAddress);
 
     // if (!context) {
@@ -26,64 +27,54 @@ const tcpServer = net.createServer((socket) => {
     //     }
     // }
 
-    if (!context) {
-        logger.error("Failed to create socket context");
+    if (!lobbyUser) {
+        logger.error("Failed to create a lobby user");
         return;
     }
 
     //
-    logger.info(
-        `${(socket.address() as any)?.address} connected as ${context.id}`
-    );
+    logger.info(`${socketAddress} connected as ${lobbyUser.sessionId}`);
 
     socket.on("end", () => {
-        if (!context) {
-            logger.error("Socket context is null");
-            return;
-        }
-
-        logger.info(`${context.id} disconnected`);
-        // socket.destroy();
+        lobbyUser.socketContext.setActive(false);
+        logger.info(`${lobbyUser?.sessionId} disconnected`);
+        socket.destroy();
     });
 
     socket.on("error", (err) => {
-        if (!context) {
-            logger.error("Socket context is null");
-            return;
-        }
-
-        logger.info(`${context.id} errored`, err);
+        lobbyUser.socketContext.setActive(false);
+        logger.info(`${lobbyUser?.sessionId} errored`, err);
         socket.destroy();
     });
 
     socket.on("data", async (data) => {
-        if (!context) {
-            logger.error("Socket context is null");
+        if (!lobbyUser) {
+            logger.error("No lobby user found");
             return;
         }
 
         logger.debug(
             `==================== Received Packet ====================`
         );
-        logger.debug(`=============== ${context.id} ===============`);
+        logger.debug(`=============== ${lobbyUser.sessionId} ===============`);
 
         //
         logger.debug("[HEX]");
         logger.debug(buffer2HexSpacedString(data));
 
         //
-        context.appendData(data);
+        lobbyUser.socketContext.appendData(data);
 
-        if (context.processLock) {
+        if (lobbyUser.socketContext.processLock) {
             logger.warn("Socket is locked, skipping packet processing");
             return;
         }
 
-        context.setProcessLock(true);
-        context.deleteDataCleaningTimeout();
+        lobbyUser.socketContext.setProcessLock(true);
+        lobbyUser.socketContext.deleteDataCleaningTimeout();
 
-        while (context.hasCompleteData()) {
-            const { data, rest } = context.getCompleteData();
+        while (lobbyUser.socketContext.hasCompleteData()) {
+            const { data, rest } = lobbyUser.socketContext.getCompleteData();
 
             // set the rest of the data back into the context
             logger.debug("[HEX-DATA]");
@@ -91,16 +82,16 @@ const tcpServer = net.createServer((socket) => {
             logger.debug("[HEX-REMAINING]");
             logger.debug(buffer2HexSpacedString(rest));
 
-            context.setData(rest);
+            lobbyUser.socketContext.setData(rest);
 
             await processPacket(data, socket);
         }
 
-        if (context.remainingData?.length) {
-            context.queueDataCleaningTimeout();
+        if (lobbyUser.socketContext.remainingData?.length) {
+            lobbyUser.socketContext.queueDataCleaningTimeout();
         }
 
-        context.setProcessLock(false);
+        lobbyUser.socketContext.setProcessLock(false);
     });
 
     socket.pipe(socket);

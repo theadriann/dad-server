@@ -8,7 +8,6 @@ import {
 } from "../protos/ts/Account";
 import { bufferReader } from "../utils/bufferReader";
 import { db } from "../services/db";
-import { socketContextManager } from "../utils/SocketContextManager";
 import {
     generateBandage,
     generateLantern,
@@ -29,17 +28,18 @@ import {
     ss2cLobbyCharacterInfoRes,
 } from "../protos/ts/Lobby";
 import { logger } from "@/utils/loggers";
-import { FighterClassSkills } from "@/models/enums/ClassSkills";
+import { FighterClassSkills } from "@/models/game/enums/ClassSkills";
+import { lobbyState } from "@/state/LobbyManager";
 
 export const createCharacter = async (data: Buffer, socket: net.Socket) => {
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const characterData = sc2sAccountCharacterCreateReq.decode(
         bufferReader(data)
     );
 
     let res = ss2cAccountCharacterCreateRes.create({});
 
-    if (!socketContext || !socketContext.userId) {
+    if (!lobbyUser || !lobbyUser.userId) {
         res.result = PacketResult.FAIL_GENERAL;
         return res;
     }
@@ -47,7 +47,7 @@ export const createCharacter = async (data: Buffer, socket: net.Socket) => {
     const character_db = await db.character.create({
         data: {
             nickname: characterData.nickName,
-            user_id: socketContext.userId,
+            user_id: lobbyUser.userId,
             class: characterData.characterClass,
             gender: characterData.gender,
             level: 1,
@@ -88,14 +88,14 @@ export const createCharacter = async (data: Buffer, socket: net.Socket) => {
 
 export const listCharacters = async (data: Buffer, socket: net.Socket) => {
     //
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sAccountCharacterListReq.decode(bufferReader(data));
 
     let res = ss2cAccountCharacterListRes.create({
         pageIndex: req.pageIndex,
     });
 
-    if (!socketContext || !socketContext.userId) {
+    if (!lobbyUser || !lobbyUser.userId) {
         return res;
     }
 
@@ -103,7 +103,7 @@ export const listCharacters = async (data: Buffer, socket: net.Socket) => {
 
     const characters_db = await db.character.findMany({
         where: {
-            user_id: socketContext.userId,
+            user_id: lobbyUser.userId,
         },
     });
 
@@ -152,19 +152,19 @@ export const listCharacters = async (data: Buffer, socket: net.Socket) => {
 
 export const getCharacterInfo = async (data: Buffer, socket: net.Socket) => {
     //
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sLobbyCharacterInfoReq.decode(bufferReader(data));
 
     let res = ss2cLobbyCharacterInfoRes.create({});
     res.result = PacketResult.FAIL_GENERAL;
 
-    if (!socketContext || !socketContext.userId || !socketContext.characterId) {
+    if (!lobbyUser?.hasCharacterLoaded) {
         return res;
     }
 
     const character_db = await db.character.findFirst({
         where: {
-            id: socketContext.characterId,
+            id: lobbyUser.characterId!,
         },
     });
 
@@ -178,8 +178,8 @@ export const getCharacterInfo = async (data: Buffer, socket: net.Socket) => {
 
     res.result = PacketResult.SUCCESS;
     res.characterDataBase = scharacterInfo.create({
-        accountId: socketContext.userId.toString(),
-        characterId: socketContext.characterId.toString(),
+        accountId: lobbyUser.userId!.toString(),
+        characterId: lobbyUser.characterId!.toString(),
         characterClass: character_db.class,
         gender: character_db.gender,
         level: character_db.level,
@@ -205,7 +205,7 @@ export const getCharacterInfo = async (data: Buffer, socket: net.Socket) => {
 
 export const getClassEquipInfo = async (data: Buffer, socket: net.Socket) => {
     //
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sClassEquipInfoReq.decode(bufferReader(data));
 
     let res = ss2cClassEquipInfoRes.create({});
@@ -255,7 +255,7 @@ export const getClassEquipInfo = async (data: Buffer, socket: net.Socket) => {
         },
     ];
 
-    if (!socketContext || !socketContext.userId) {
+    if (!lobbyUser || !lobbyUser.userId) {
         return res;
     }
 

@@ -1,6 +1,5 @@
 import net from "net";
 import { bufferReader } from "../utils/bufferReader";
-import { socketContextManager } from "../utils/SocketContextManager";
 import { PacketResult } from "../protos/ts/_PacketCommand";
 import {
     sc2sAutoMatchRegReq,
@@ -19,19 +18,20 @@ import {
     announceGameServerReady,
 } from "@/services/GameServerNotifier";
 import { getDbCharacterById } from "@/services/CharacterService";
+import { lobbyState } from "@/state/LobbyManager";
 
 export const startAutoMatchMaking = async (
     data: Buffer,
     socket: net.Socket
 ) => {
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sAutoMatchRegReq.decode(bufferReader(data));
 
     logger.debug(req);
 
     let res = ss2cAutoMatchRegRes.create({});
 
-    if (!socketContext || !socketContext.userId || !socketContext.characterId) {
+    if (!lobbyUser || !lobbyUser.userId || !lobbyUser.characterId) {
         res.result = ss2cAutoMatchRegRes_RESULT.FAIL;
         return res;
     }
@@ -40,7 +40,7 @@ export const startAutoMatchMaking = async (
         return cancelAutoMatchMaking(data, socket);
     }
 
-    let game = gameServersManager.getUserGameServer(socketContext.userId);
+    let game = gameServersManager.getUserGameServer(lobbyUser.userId);
 
     if (game) {
         return ss2cAutoMatchRegRes.create({
@@ -80,7 +80,7 @@ export const startAutoMatchMaking = async (
     }
 
     setTimeout(async () => {
-        if (!game || !socketContext?.userId || !socketContext?.characterId) {
+        if (!game || !lobbyUser?.userId || !lobbyUser?.characterId) {
             logger.error("wtf?!");
             return;
         }
@@ -88,10 +88,10 @@ export const startAutoMatchMaking = async (
         announceGameServerReady(
             {
                 game,
-                accountId: socketContext.userId,
-                nickName: (await getDbCharacterById(socketContext.characterId))!
+                accountId: lobbyUser.userId,
+                nickName: (await getDbCharacterById(lobbyUser.characterId))!
                     .nickname,
-                sessionId: socketContext.sessionId,
+                sessionId: lobbyUser.sessionId,
             },
             socket
         );
@@ -113,7 +113,7 @@ export const startAutoMatchMaking = async (
     // }, 4000);
 
     // TODO: actually join all the players in the party
-    game.join(socketContext.userId);
+    game.join(lobbyUser.userId);
 
     logger.debug(game);
 
@@ -126,19 +126,19 @@ export const cancelAutoMatchMaking = async (
     data: Buffer,
     socket: net.Socket
 ) => {
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
 
-    if (!socketContext || !socketContext.userId) {
+    if (!lobbyUser || !lobbyUser.userId) {
         return ss2cAutoMatchRegRes.create({
             result: ss2cAutoMatchRegRes_RESULT.FAIL,
         });
     }
 
-    let game = gameServersManager.getUserGameServer(socketContext.userId);
+    let game = gameServersManager.getUserGameServer(lobbyUser.userId);
 
-    if (game && game.userCanLeaveMatchmaking(socketContext.userId)) {
+    if (game && game.userCanLeaveMatchmaking(lobbyUser.userId)) {
         //
-        game.leave(socketContext.userId);
+        game.leave(lobbyUser.userId);
 
         return ss2cAutoMatchRegRes.create({
             result: ss2cAutoMatchRegRes_RESULT.SUCCESS,

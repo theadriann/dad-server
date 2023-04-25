@@ -1,7 +1,6 @@
 import net from "net";
 import { sc2sLobbyEnterReq, ss2cLobbyEnterRes } from "../protos/ts/Account";
 import { bufferReader } from "../utils/bufferReader";
-import { socketContextManager } from "../utils/SocketContextManager";
 import { PacketResult } from "../protos/ts/_PacketCommand";
 import {
     sc2sCharacterSelectEnterReq,
@@ -20,23 +19,24 @@ import {
     DefineMatch_MatchRegion,
 } from "../protos/ts/_Defins";
 import { logger } from "@/utils/loggers";
+import { lobbyState } from "@/state/LobbyManager";
 
 export const enterLobby = async (data: Buffer, socket: net.Socket) => {
     //
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const reqData = sc2sLobbyEnterReq.decode(bufferReader(data));
 
     let res = ss2cLobbyEnterRes.create({});
 
-    if (!socketContext || !socketContext.userId) {
+    if (!lobbyUser || !lobbyUser.userId) {
         res.result = PacketResult.FAIL_LOBBY_ENTER_COUPON_CODE_INVALID;
         return res;
     }
 
     res.result = PacketResult.SUCCESS;
-    res.accountId = socketContext.userId.toString();
+    res.accountId = lobbyUser.userId.toString();
 
-    socketContext.setCharacterId(Number(reqData.characterId));
+    lobbyUser.setCharacterId(Number(reqData.characterId));
 
     logger.debug(res);
 
@@ -48,12 +48,12 @@ export const selectGameDifficulty = async (
     socket: net.Socket
 ) => {
     //
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const reqData = sc2sLobbyGameDifficultySelectReq.decode(bufferReader(data));
 
     let res = ss2cLobbyGameDifficultySelectRes.create({});
 
-    if (!socketContext || !socketContext.userId) {
+    if (!lobbyUser || !lobbyUser.userId) {
         res.result = PacketResult.FAIL_GENERAL;
         return res;
     }
@@ -73,12 +73,12 @@ export const selectGameDifficulty = async (
 
 export const lobbyEnterFromGame = async (data: Buffer, socket: net.Socket) => {
     //
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const reqData = sc2sLobbyEnterFromGameReq.decode(bufferReader(data));
 
     let res = ss2cLobbyEnterFromGameRes.create({});
 
-    if (!socketContext || !socketContext.userId) {
+    if (!lobbyUser || !lobbyUser.userId) {
         res.result = PacketResult.FAIL_GENERAL;
         return res;
     }
@@ -90,12 +90,12 @@ export const lobbyEnterFromGame = async (data: Buffer, socket: net.Socket) => {
 
 export const selectRegion = async (data: Buffer, socket: net.Socket) => {
     //
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const reqData = sc2sLobbyRegionSelectReq.decode(bufferReader(data));
 
     let res = ss2cLobbyRegionSelectRes.create({});
 
-    if (!socketContext || !socketContext.userId) {
+    if (!lobbyUser || !lobbyUser.userId) {
         res.result = PacketResult.FAIL_GENERAL;
         return res;
     }
@@ -113,12 +113,12 @@ export const getPlayerLobbyLocation = async (
     socket: net.Socket
 ) => {
     //
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const reqData = sc2sMetaLocationReq.decode(bufferReader(data));
 
     let res = ss2cMetaLocationRes.create({});
 
-    if (!socketContext || !socketContext.characterId) {
+    if (!lobbyUser || !lobbyUser.characterId) {
         return res;
     }
 
@@ -133,12 +133,12 @@ export const backToCharacterSelect = async (
     socket: net.Socket
 ) => {
     //
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const reqData = sc2sCharacterSelectEnterReq.decode(bufferReader(data));
 
     let res = ss2cCharacterSelectEnterRes.create({});
 
-    if (!socketContext || !socketContext.characterId) {
+    if (!lobbyUser || !lobbyUser.characterId) {
         res.result = PacketResult.FAIL_GENERAL;
         return;
     }

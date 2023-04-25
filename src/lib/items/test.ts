@@ -1,4 +1,4 @@
-import { EffectTypes } from "@/models/enums";
+import { EffectTypes } from "@/models/game/enums";
 import { SItemProperty } from "../../protos/_Item";
 import {
     DefineEquipment_SlotId,

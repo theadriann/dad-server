@@ -1,6 +1,5 @@
 import net from "net";
 import { bufferReader } from "../utils/bufferReader";
-import { socketContextManager } from "../utils/SocketContextManager";
 import {
     sc2sFriendFindReq,
     sc2sFriendListAllReq,
@@ -32,9 +31,10 @@ import {
     ss2cPartyInviteRes,
 } from "@/protos/ts/Party";
 import { sendPacket } from "@/utils/packets";
+import { lobbyState } from "@/state/LobbyManager";
 
 export const listFriends = async (data: Buffer, socket: net.Socket) => {
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sFriendListReq.decode(bufferReader(data));
 
     let res = ss2cFriendListRes.create({});
@@ -59,7 +59,7 @@ export const listFriends = async (data: Buffer, socket: net.Socket) => {
 };
 
 export const listAllFriends = async (data: Buffer, socket: net.Socket) => {
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sFriendListAllReq.decode(bufferReader(data));
 
     let res = ss2cFriendListAllRes.create({});
@@ -87,7 +87,7 @@ export const listAllFriendsContinue = async (
     data: Buffer,
     socket: net.Socket
 ) => {
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sFriendListAllReq.decode(bufferReader(data));
 
     let res = ss2cFriendListAllRes.create({});
@@ -111,7 +111,7 @@ export const getBlockCharacterList = async (
     data: Buffer,
     socket: net.Socket
 ) => {
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sBlockCharacterListReq.decode(bufferReader(data));
 
     let res = ss2cBlockCharacterListRes.create({
@@ -134,7 +134,7 @@ export const getBlockCharacterList = async (
 };
 
 export const searchFriend = async (data: Buffer, socket: net.Socket) => {
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sFriendFindReq.decode(bufferReader(data));
 
     logger.debug(req);
@@ -151,19 +151,19 @@ export const searchFriend = async (data: Buffer, socket: net.Socket) => {
 };
 
 export const inviteFriend = async (data: Buffer, socket: net.Socket) => {
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sPartyInviteReq.decode(bufferReader(data));
 
     logger.debug(req);
 
-    if (!socketContext || !socketContext.userId || !socketContext.characterId) {
+    if (!lobbyUser || !lobbyUser.userId || !lobbyUser.characterId) {
         logger.warn("inviteFriend: socketContext not found");
         return ss2cPartyInviteRes.create({
             result: PacketResult.FAIL_GENERAL,
         });
     }
 
-    const otherSocketContext = socketContextManager.getByCharacterId(
+    const otherSocketContext = lobbyState.getByCharacterId(
         Number(req.findCharacterId)
     );
 
@@ -177,11 +177,10 @@ export const inviteFriend = async (data: Buffer, socket: net.Socket) => {
     // no need to await
     sendInvitePartyNotification(
         {
-            InviteeAccountId: socketContext.userId.toString(),
-            InviteeCharacterId: socketContext.characterId.toString(),
-            InviteeNickName: (await getDbCharacterById(
-                socketContext.characterId
-            ))!.nickname,
+            InviteeAccountId: lobbyUser.userId.toString(),
+            InviteeCharacterId: lobbyUser.characterId.toString(),
+            InviteeNickName: (await getDbCharacterById(lobbyUser.characterId))!
+                .nickname,
         },
         otherSocketContext.socket
     );
@@ -192,7 +191,7 @@ export const inviteFriend = async (data: Buffer, socket: net.Socket) => {
 };
 
 export const acceptPartyInvite = async (data: Buffer, socket: net.Socket) => {
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sPartyInviteAnswerReq.decode(bufferReader(data));
 
     logger.debug(req);
@@ -200,16 +199,14 @@ export const acceptPartyInvite = async (data: Buffer, socket: net.Socket) => {
     const inviteResult: partyInviteAnswer = req.inviteResult;
     const toAccountId = req.returnAccountId;
 
-    if (!socketContext || !socketContext.userId || !socketContext.characterId) {
+    if (!lobbyUser || !lobbyUser.userId || !lobbyUser.characterId) {
         logger.warn("acceptPartyInvite: socketContext not found");
         return ss2cPartyInviteAnswerRes.create({
             result: PacketResult.FAIL_GENERAL,
         });
     }
 
-    const otherSocketContext = socketContextManager.getByUserId(
-        Number(toAccountId)
-    );
+    const otherSocketContext = lobbyState.getByUserId(Number(toAccountId));
 
     if (!otherSocketContext || otherSocketContext.socket.destroyed) {
         logger.warn("acceptPartyInvite: otherSocketContext not found");
@@ -222,7 +219,7 @@ export const acceptPartyInvite = async (data: Buffer, socket: net.Socket) => {
     sendAcceptInvitePartyNotification(
         {
             inviteResult,
-            nickName: (await getDbCharacterById(socketContext.characterId))!
+            nickName: (await getDbCharacterById(lobbyUser.characterId))!
                 .nickname,
         },
         otherSocketContext.socket

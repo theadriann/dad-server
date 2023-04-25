@@ -2,7 +2,6 @@
 import dgram from "dgram";
 import cuid from "cuid";
 import { logger } from "@/utils/loggers";
-import { SocketContextManager } from "@/utils/SocketContextManager";
 
 // types
 import {
@@ -62,7 +61,6 @@ export class GameServer {
     difficulty: DefineGame_DifficultyType = DefineGame_DifficultyType.NORMAL;
 
     server: GameServerUdpServer;
-    socketContextManager = new SocketContextManager();
 
     phase: "waiting-players" | "lobby" | "game" = "waiting-players";
 

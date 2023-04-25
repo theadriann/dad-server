@@ -7,14 +7,14 @@ import {
 } from "../protos/ts/Account";
 import { bufferReader } from "../utils/bufferReader";
 import { db } from "../services/db";
-import { socketContextManager } from "../utils/SocketContextManager";
 import { DefineCommon_ServerLocation } from "../protos/ts/_Defins";
 import { logger } from "@/utils/loggers";
 import { ss2cReLoginRes } from "@/protos/ts/Common";
 import { LOBBY_PORT, SERVER_IP } from "@/utils/info";
+import { lobbyState } from "@/state/LobbyManager";
 
 export const login = async (data: Buffer, socket: net.Socket) => {
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
     let userInfo = sc2sAccountLoginReq.decode(bufferReader(data));
     let res = ss2cAccountLoginRes.create({});
 
@@ -56,8 +56,7 @@ export const login = async (data: Buffer, socket: net.Socket) => {
         return res;
     }
 
-    socketContext?.setLoggedIn(true);
-    socketContext?.setUserId(db_user.id);
+    lobbyUser?.setUserId(db_user.id);
 
     const serverLocation: DefineCommon_ServerLocation =
         DefineCommon_ServerLocation.LOCAL;
@@ -73,7 +72,7 @@ export const login = async (data: Buffer, socket: net.Socket) => {
     }
 
     res.accountId = db_user.id.toString();
-    res.sessionId = socketContext!.sessionId;
+    res.sessionId = lobbyUser!.sessionId;
 
     logger.debug(JSON.stringify(res, null, 2));
 
@@ -99,18 +98,18 @@ const register = async (data: Buffer, socket: net.Socket) => {
 
 export const relogin = async (data: Buffer, socket: net.Socket) => {
     //
-    const socketContext = socketContextManager.getBySocket(socket);
+    const lobbyUser = lobbyState.getBySocket(socket);
 
-    if (!socketContext || !socketContext.userId) {
+    if (!lobbyUser || !lobbyUser.userId) {
         return ss2cReLoginRes.create({
             accountId: "",
         });
     }
 
     const res = ss2cReLoginRes.create({
-        accountId: socketContext.userId.toString(),
+        accountId: lobbyUser.userId.toString(),
         isReconnect: 0,
-        sessionId: socketContext.sessionId,
+        sessionId: lobbyUser.sessionId,
         address: `http://${SERVER_IP}:${LOBBY_PORT}/`, // from packet
     });
 
