@@ -3,6 +3,8 @@ import { logger } from "@/utils/loggers";
 import cuid from "cuid";
 import net from "net";
 import { SocketContext } from "./SocketContext";
+import { getDbCharacterById } from "@/services/CharacterService";
+import { saccountNickname } from "@/protos/ts/_Character";
 
 //
 export class LobbyUser {
@@ -17,6 +19,10 @@ export class LobbyUser {
 
     //
     socketContext: SocketContext;
+
+    characterData: {
+        nickname: string;
+    } | null = null;
 
     constructor(socket: net.Socket) {
         this.socket = socket;
@@ -41,7 +47,27 @@ export class LobbyUser {
 
     setCharacterId(value: number) {
         this.characterId = value;
+
+        this.loadCharacterData();
     }
+
+    loadCharacterData = async () => {
+        if (!this.characterId) {
+            this.characterData = null;
+            return;
+        }
+
+        const dbCharacter = await getDbCharacterById(this.characterId);
+
+        if (!dbCharacter) {
+            this.characterData = null;
+            return;
+        }
+
+        this.characterData = {
+            nickname: dbCharacter.nickname,
+        };
+    };
 
     // -----------------------
     //
@@ -53,5 +79,21 @@ export class LobbyUser {
 
     get hasCharacterLoaded() {
         return this.isLoggedIn && this.characterId !== null;
+    }
+
+    get characterNickname() {
+        return this.characterData?.nickname;
+    }
+
+    get characterNicknameObject() {
+        const streamingNickname = `Fighter#${Math.floor(
+            Math.random() * (1700000 - 1000000) + 1000000
+        )}`;
+
+        return saccountNickname.create({
+            originalNickName: this.characterNickname,
+            streamingModeNickName: streamingNickname,
+            karmaRating: 0,
+        });
     }
 }

@@ -146,10 +146,30 @@ export const searchFriend = async (data: Buffer, socket: net.Socket) => {
 
     logger.debug(req);
 
-    let res = ss2cFriendFindRes.create({});
+    if (!req.nickName?.originalNickName) {
+        return ss2cFriendFindRes.create({
+            result: PacketResult.FAIL_GENERAL,
+        });
+    }
 
-    res.friendInfo = await getCharacterFriendInfoById(9);
-    res.result = PacketResult.SUCCESS;
+    const foundUser = lobbyState
+        .getAllActive()
+        .find((user) =>
+            user.characterNickname?.startsWith(
+                req.nickName?.originalNickName || ""
+            )
+        );
+
+    if (!foundUser) {
+        return ss2cFriendFindRes.create({
+            result: PacketResult.FAIL_GENERAL,
+        });
+    }
+
+    let res = ss2cFriendFindRes.create({
+        result: PacketResult.SUCCESS,
+        friendInfo: await getCharacterFriendInfoById(foundUser.characterId!),
+    });
 
     logger.debug("searchFriend");
     logger.debug(JSON.stringify(res, null, 2));
