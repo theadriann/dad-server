@@ -8,15 +8,7 @@ import {
 } from "../protos/ts/Account";
 import { bufferReader } from "../utils/bufferReader";
 import { db } from "../services/db";
-import {
-    generateBandage,
-    generateLantern,
-    generatePants,
-    generateRoundShield,
-    generateSword,
-    generateTorch,
-    generateTunic,
-} from "../lib/items/test";
+import { generateStartItems } from "../lib/items/test";
 import { PacketResult } from "../protos/ts/_PacketCommand";
 import {
     sc2sClassEquipInfoReq,
@@ -30,6 +22,8 @@ import {
 import { logger } from "@/utils/loggers";
 import { FighterClassSkills } from "@/models/game/enums/ClassSkills";
 import { lobbyState } from "@/state/LobbyManager";
+import { characterClassFromClient } from "@/models/game/enums/CharacterClass";
+import { Item } from "@/models/Item";
 
 export const createCharacter = async (data: Buffer, socket: net.Socket) => {
     const lobbyUser = lobbyState.getBySocket(socket);
@@ -54,15 +48,9 @@ export const createCharacter = async (data: Buffer, socket: net.Socket) => {
         },
     });
 
-    const items = [
-        generateTorch(),
-        generateRoundShield(),
-        generateLantern(),
-        generateSword(),
-        generatePants(),
-        generateTunic(),
-        generateBandage(),
-    ];
+    const items = generateStartItems(
+        characterClassFromClient(characterData.characterClass)
+    );
 
     let db_items = [];
 
@@ -70,12 +58,8 @@ export const createCharacter = async (data: Buffer, socket: net.Socket) => {
         db_items.push(
             await db.inventory.create({
                 data: {
+                    ...item.toDB(),
                     character_id: character_db.id,
-                    inventory_id: item.inventoryId,
-                    item_count: item.itemCount,
-                    item_id: item.itemId,
-                    properties: JSON.stringify(item.primaryPropertyArray),
-                    slot_id: item.slotId,
                 },
             })
         );
@@ -100,18 +84,20 @@ export const listCharacters = async (data: Buffer, socket: net.Socket) => {
     }
 
     const characters: sloginCharacterInfo[] = [];
-
     const characters_db = await db.character.findMany({
         where: {
             user_id: lobbyUser.userId,
+        },
+        include: {
+            inventory: true,
         },
     });
 
     for (let character_db of characters_db) {
         //
-        const streamingNickname = `Fighter#${Math.floor(
-            Math.random() * (1700000 - 1000000) + 1000000
-        )}`;
+        const character_items = character_db.inventory.map((item) =>
+            new Item().fromDB(item).toJSON()
+        );
 
         characters.push(
             sloginCharacterInfo.create({
@@ -121,20 +107,8 @@ export const listCharacters = async (data: Buffer, socket: net.Socket) => {
                 level: character_db.level,
                 createAt: character_db.created_at.getTime(),
                 lastloginDate: character_db.last_login.getTime(),
-                nickName: saccountNickname.create({
-                    originalNickName: character_db.nickname,
-                    streamingModeNickName: streamingNickname,
-                    karmaRating: 0,
-                }),
-                equipItemList: [
-                    generateTorch(),
-                    generateRoundShield(),
-                    generateLantern(),
-                    generateSword(),
-                    generatePants(),
-                    generateTunic(),
-                    generateBandage(),
-                ],
+                nickName: await createCharacterNickname(character_db.nickname),
+                equipItemList: character_items,
                 equipItemSkinList: [],
                 equipCharacterSkinList: [],
             })
@@ -166,15 +140,18 @@ export const getCharacterInfo = async (data: Buffer, socket: net.Socket) => {
         where: {
             id: lobbyUser.characterId!,
         },
+        include: {
+            inventory: true,
+        },
     });
 
     if (!character_db) {
         return res;
     }
 
-    const streamingNickname = `Fighter#${Math.floor(
-        Math.random() * (1700000 - 1000000) + 1000000
-    )}`;
+    const character_items = character_db.inventory.map((item) =>
+        new Item().fromDB(item).toJSON()
+    );
 
     res.result = PacketResult.SUCCESS;
     res.characterDataBase = scharacterInfo.create({
@@ -183,20 +160,8 @@ export const getCharacterInfo = async (data: Buffer, socket: net.Socket) => {
         characterClass: character_db.class,
         gender: character_db.gender,
         level: character_db.level,
-        nickName: saccountNickname.create({
-            originalNickName: character_db.nickname,
-            streamingModeNickName: streamingNickname,
-            karmaRating: 0,
-        }),
-        CharacterItemList: [
-            generateTorch(),
-            generateRoundShield(),
-            generateLantern(),
-            generateSword(),
-            generatePants(),
-            generateTunic(),
-            generateBandage(),
-        ],
+        nickName: await createCharacterNickname(character_db.nickname),
+        CharacterItemList: character_items,
         CharacterStorageItemList: [],
     });
 

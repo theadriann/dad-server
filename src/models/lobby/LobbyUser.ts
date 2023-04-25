@@ -7,6 +7,7 @@ import { getDbCharacterById } from "@/services/CharacterService";
 import { saccountNickname } from "@/protos/ts/_Character";
 import { Character } from "@prisma/client";
 import { LobbyState } from "@/state/LobbyManager";
+import { Item } from "../Item";
 
 //
 export class LobbyUser {
@@ -30,6 +31,7 @@ export class LobbyUser {
     } | null = null;
 
     characterDb: Character | null = null;
+    characterItems: Item[] = [];
 
     partyId: string | null = null;
 
@@ -76,6 +78,10 @@ export class LobbyUser {
             this.characterDb = null;
             return;
         }
+
+        this.characterItems = dbCharacter.inventory.map((item) =>
+            new Item().fromDB(item)
+        );
 
         this.characterDb = dbCharacter;
         this.characterData = {

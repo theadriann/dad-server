@@ -3,16 +3,6 @@ import { LobbyState } from "@/state/LobbyManager";
 import cuid from "cuid";
 import { LobbyUser } from "./LobbyUser";
 import { announcePartyMembersInfo } from "@/services/PartyNotifier";
-import { logger } from "@/utils/loggers";
-import {
-    generateBandage,
-    generateLantern,
-    generatePants,
-    generateRoundShield,
-    generateSword,
-    generateTorch,
-    generateTunic,
-} from "@/lib/items/test";
 
 //
 export class Party {
@@ -89,15 +79,9 @@ export class Party {
                     level: user.characterDb!.level,
                     nickName: user.characterNicknameObject,
                     partyIdx: index + 1,
-                    equipItemList: [
-                        generateTorch(),
-                        generateRoundShield(),
-                        generateLantern(),
-                        generateSword(),
-                        generatePants(),
-                        generateTunic(),
-                        generateBandage(),
-                    ],
+                    equipItemList: user.characterItems.map((item) =>
+                        item.toJSON()
+                    ),
                 };
 
                 return infoData;

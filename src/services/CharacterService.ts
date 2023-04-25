@@ -10,6 +10,9 @@ export const getDbCharacterById = async (chracterId: number) => {
         where: {
             id: chracterId,
         },
+        include: {
+            inventory: true,
+        },
     });
 };
 

@@ -6,6 +6,11 @@ import {
 } from "../../protos/ts/_Defins";
 import { SItem } from "../../protos/ts/_Item";
 import { Items } from "@/models/game/enums/Items";
+import {
+    CharacterClassKey,
+    CharacterClassKeys,
+} from "@/models/game/enums/CharacterClass";
+import { Item } from "@/models/Item";
 
 // export enum DefineEquipment_SlotId {
 //     NONE = 0,
@@ -34,175 +39,205 @@ import { Items } from "@/models/game/enums/Items";
 //     UNRECOGNIZED = -1,
 //   }
 
-export const generateTorch = () => {
-    const torch = SItem.create({
-        itemUniqueId: 6646818918302105,
+export const generateFighterStartItems = () => {
+    return [
+        Item.fromJSON({
+            inventoryId: DefineItem_InventoryId.EQUIPMENT,
+            slotId: DefineEquipment_SlotId.PRIMARY_A,
+            itemId: Items.ARMING_SWORD.RARE,
+            itemCount: 1,
+            primaryPropertyArray: [
+                SItemProperty.create({
+                    propertyTypeId: EffectTypes.MOVESPEED,
+                    propertyValue: -20,
+                }),
 
-        itemId: "DesignDataItem:Id_Item_Torch_6001",
-        itemCount: 1,
-        inventoryId: DefineItem_InventoryId.EQUIPMENT,
-        slotId: DefineEquipment_SlotId.SECONDARY_B,
+                SItemProperty.create({
+                    propertyTypeId: EffectTypes.PHYSICAL_WEAPON_DAMAGE,
+                    propertyValue: 23,
+                }),
+            ],
+        }),
+        Item.fromJSON({
+            inventoryId: DefineItem_InventoryId.EQUIPMENT,
+            slotId: DefineEquipment_SlotId.SECONDARY_A,
+            itemId: Items.ROUND_SHIELD.JUNK,
+            itemCount: 1,
+            primaryPropertyArray: [
+                SItemProperty.create({
+                    propertyTypeId: EffectTypes.ARMOR_RATING,
+                    propertyValue: 13,
+                }),
 
-        primaryPropertyArray: [
-            SItemProperty.create({
-                propertyTypeId: EffectTypes.MOVESPEED,
-                propertyValue: 20,
-            }),
-            SItemProperty.create({
-                propertyTypeId: EffectTypes.PHYSICAL_WEAPON_DAMAGE,
-                propertyValue: 1000,
-            }),
-        ],
-    });
+                SItemProperty.create({
+                    propertyTypeId: EffectTypes.MOVESPEED,
+                    propertyValue: -12,
+                }),
+            ],
+        }),
+        Item.fromJSON({
+            inventoryId: DefineItem_InventoryId.EQUIPMENT,
+            slotId: DefineEquipment_SlotId.CHEST,
+            itemId: Items.ADVENTURER_TUNIC.JUNK,
+            itemCount: 1,
+            primaryPropertyArray: [
+                SItemProperty.create({
+                    propertyTypeId: EffectTypes.ARMOR_RATING,
+                    propertyValue: 41,
+                }),
 
-    return torch;
+                SItemProperty.create({
+                    propertyTypeId: EffectTypes.MOVESPEED,
+                    propertyValue: -5,
+                }),
+            ],
+        }),
+        Item.fromJSON({
+            inventoryId: DefineItem_InventoryId.EQUIPMENT,
+            slotId: DefineEquipment_SlotId.LEGS,
+            itemId: Items.CLOTH_PANTS.JUNK,
+            itemCount: 1,
+            primaryPropertyArray: [
+                SItemProperty.create({
+                    propertyTypeId: EffectTypes.ARMOR_RATING,
+                    propertyValue: 8,
+                }),
+
+                SItemProperty.create({
+                    propertyTypeId: EffectTypes.MOVESPEED,
+                    propertyValue: -5,
+                }),
+            ],
+        }),
+        Item.fromJSON({
+            inventoryId: DefineItem_InventoryId.EQUIPMENT,
+            slotId: DefineEquipment_SlotId.UTILITY_A_2,
+            itemId: Items.BANDAGE.JUNK,
+            itemCount: 1,
+            primaryPropertyArray: [
+                SItemProperty.create({
+                    propertyTypeId: EffectTypes.MOVESPEED,
+                    propertyValue: -20,
+                }),
+            ],
+        }),
+        Item.fromJSON({
+            inventoryId: DefineItem_InventoryId.EQUIPMENT,
+            slotId: DefineEquipment_SlotId.UTILITY_A_1,
+            itemId: Items.LANTERN.JUNK,
+            itemCount: 1,
+            primaryPropertyArray: [
+                SItemProperty.create({
+                    propertyTypeId: EffectTypes.MOVESPEED,
+                    propertyValue: -10,
+                }),
+
+                SItemProperty.create({
+                    propertyTypeId: EffectTypes.PHYSICAL_WEAPON_DAMAGE,
+                    propertyValue: 13,
+                }),
+            ],
+        }),
+        Item.fromJSON({
+            inventoryId: DefineItem_InventoryId.EQUIPMENT,
+            slotId: DefineEquipment_SlotId.SECONDARY_B,
+            itemId: Items.TORCH.JUNK,
+            itemCount: 1,
+            primaryPropertyArray: [
+                SItemProperty.create({
+                    propertyTypeId: EffectTypes.PHYSICAL_WEAPON_DAMAGE,
+                    propertyValue: 15,
+                }),
+
+                SItemProperty.create({
+                    propertyTypeId: EffectTypes.MOVESPEED,
+                    propertyValue: -12,
+                }),
+            ],
+        }),
+    ];
 };
 
-export const generateRoundShield = () => {
-    const shield = SItem.create({
-        itemUniqueId: 6646818918302104,
-        itemId: "DesignDataItem:Id_Item_RoundShield_0001",
-        itemCount: 1,
-        inventoryId: DefineItem_InventoryId.EQUIPMENT,
-        slotId: DefineEquipment_SlotId.SECONDARY_A,
-
-        primaryPropertyArray: [
-            SItemProperty.create({
-                propertyTypeId:
-                    "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_ArmorRating",
-                propertyValue: 13,
-            }),
-            SItemProperty.create({
-                propertyTypeId:
-                    "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_MoveSpeed",
-                propertyValue: -12,
-            }),
-        ],
-    });
-
-    return shield;
+export const generateRangerStartItems = () => {
+    return [
+        Item.fromJSON({
+            inventoryId: DefineItem_InventoryId.EQUIPMENT,
+            slotId: DefineEquipment_SlotId.PRIMARY_A,
+            itemId: Items.RECURVE_BOW.JUNK,
+            itemCount: 1,
+            primaryPropertyArray: [],
+        }),
+        Item.fromJSON({
+            inventoryId: DefineItem_InventoryId.EQUIPMENT,
+            slotId: DefineEquipment_SlotId.SECONDARY_B,
+            itemId: Items.SHORT_SWORD.JUNK,
+            itemCount: 1,
+            primaryPropertyArray: [],
+        }),
+        Item.fromJSON({
+            inventoryId: DefineItem_InventoryId.EQUIPMENT,
+            slotId: DefineEquipment_SlotId.HEAD,
+            itemId: Items.RANGER_HOOD.JUNK,
+            itemCount: 1,
+            primaryPropertyArray: [],
+        }),
+        Item.fromJSON({
+            inventoryId: DefineItem_InventoryId.EQUIPMENT,
+            slotId: DefineEquipment_SlotId.CHEST,
+            itemId: Items.DOUBLET.JUNK,
+            itemCount: 1,
+            primaryPropertyArray: [],
+        }),
+        Item.fromJSON({
+            inventoryId: DefineItem_InventoryId.EQUIPMENT,
+            slotId: DefineEquipment_SlotId.LEGS,
+            itemId: Items.CLOTH_PANTS.JUNK,
+            itemCount: 1,
+            primaryPropertyArray: [],
+        }),
+        Item.fromJSON({
+            inventoryId: DefineItem_InventoryId.EQUIPMENT,
+            slotId: DefineEquipment_SlotId.UTILITY_A_2,
+            itemId: Items.BANDAGE.JUNK,
+            itemCount: 1,
+            primaryPropertyArray: [],
+        }),
+        Item.fromJSON({
+            inventoryId: DefineItem_InventoryId.EQUIPMENT,
+            slotId: DefineEquipment_SlotId.UTILITY_A_1,
+            itemId: Items.LANTERN.JUNK,
+            itemCount: 1,
+            primaryPropertyArray: [],
+        }),
+        Item.fromJSON({
+            inventoryId: DefineItem_InventoryId.EQUIPMENT,
+            slotId: DefineEquipment_SlotId.UTILITY_A_3,
+            itemId: Items.HUNTING_TRAP.JUNK,
+            itemCount: 1,
+            primaryPropertyArray: [],
+        }),
+        Item.fromJSON({
+            inventoryId: DefineItem_InventoryId.BAG,
+            slotId: DefineEquipment_SlotId.NONE,
+            itemId: Items.TORCH.JUNK,
+            itemCount: 1,
+            primaryPropertyArray: [],
+        }),
+    ];
 };
 
-export const generateLantern = () => {
-    const lantern = SItem.create({
-        itemUniqueId: 6646818918302099,
-        itemId: "DesignDataItem:Id_Item_Lantern_0001",
-        itemCount: 1,
-        inventoryId: DefineItem_InventoryId.EQUIPMENT,
-        slotId: DefineEquipment_SlotId.UTILITY_A_1,
+export const generateStartItems = (characterClass: CharacterClassKey) => {
+    switch (characterClass) {
+        case CharacterClassKeys.FIGHTER:
+            console.log("Generating fighter start items");
+            return generateFighterStartItems();
 
-        primaryPropertyArray: [
-            SItemProperty.create({
-                propertyTypeId:
-                    "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_Primitive",
-                propertyValue: 10,
-            }),
-            SItemProperty.create({
-                propertyTypeId:
-                    "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_MoveSpeed",
-                propertyValue: -10,
-            }),
-            SItemProperty.create({
-                propertyTypeId:
-                    "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_PhysicalWeaponDamage",
-                propertyValue: 13,
-            }),
-        ],
-    });
+        case CharacterClassKeys.RANGER:
+            console.log("Generating ranger start items");
+            return generateRangerStartItems();
 
-    return lantern;
-};
-
-export const generateSword = () => {
-    const sword = SItem.create({
-        itemUniqueId: 6646818918302103,
-        itemId: "DesignDataItem:Id_Item_ArmingSword_0001",
-        itemCount: 1,
-        inventoryId: DefineItem_InventoryId.EQUIPMENT,
-        slotId: DefineEquipment_SlotId.PRIMARY_A,
-
-        primaryPropertyArray: [
-            SItemProperty.create({
-                propertyTypeId:
-                    "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_MoveSpeed",
-                propertyValue: -20,
-            }),
-
-            SItemProperty.create({
-                propertyTypeId:
-                    "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_PhysicalWeaponDamage",
-                propertyValue: 23,
-            }),
-        ],
-    });
-
-    return sword;
-};
-
-export const generatePants = () => {
-    const pants = SItem.create({
-        itemUniqueId: 6646818918302102,
-        itemId: "DesignDataItem:Id_Item_ClothPants_0001",
-        itemCount: 1,
-        inventoryId: DefineItem_InventoryId.EQUIPMENT,
-        slotId: DefineEquipment_SlotId.LEGS,
-
-        primaryPropertyArray: [
-            SItemProperty.create({
-                propertyTypeId:
-                    "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_ArmorRating",
-                propertyValue: 8,
-            }),
-            SItemProperty.create({
-                propertyTypeId:
-                    "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_MoveSpeed",
-                propertyValue: -5,
-            }),
-        ],
-    });
-
-    return pants;
-};
-
-export const generateTunic = () => {
-    const tunic = SItem.create({
-        itemUniqueId: 6646818918302101,
-        itemId: Items.ADVENTURER_TUNIC.EPIC,
-        itemCount: 1,
-        inventoryId: DefineItem_InventoryId.EQUIPMENT,
-        slotId: DefineEquipment_SlotId.CHEST,
-
-        primaryPropertyArray: [
-            SItemProperty.create({
-                propertyTypeId: EffectTypes.ARMOR_RATING,
-                propertyValue: 41,
-            }),
-            SItemProperty.create({
-                propertyTypeId: EffectTypes.MOVESPEED,
-                propertyValue: -5,
-            }),
-        ],
-    });
-
-    return tunic;
-};
-
-export const generateBandage = () => {
-    const bandage = SItem.create({
-        itemUniqueId: 6646818918302100,
-        itemId: "DesignDataItem:Id_Item_Bandage_0001",
-        itemCount: 1,
-        inventoryId: DefineItem_InventoryId.EQUIPMENT,
-        slotId: DefineEquipment_SlotId.UTILITY_A_2,
-
-        primaryPropertyArray: [
-            SItemProperty.create({
-                propertyTypeId:
-                    "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_MoveSpeed",
-                propertyValue: -20,
-            }),
-        ],
-    });
-
-    return bandage;
+        default:
+            console.log("Generating default start items");
+            return generateFighterStartItems();
+    }
 };
