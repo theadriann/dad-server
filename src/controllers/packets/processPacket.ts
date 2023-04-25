@@ -6,16 +6,14 @@ import {
 import { Parser } from "binary-parser";
 import { PacketHandlersMap } from "./PacketHandlers";
 import { logger } from "@/utils/loggers";
-import { sendPacket } from "@/loginServer";
+import { sendPacket } from "@/utils/packets";
 
 //
 export const processPacket = async (data: Buffer, socket: net.Socket) => {
     //
     const parser = new Parser()
         .endianness("little")
-        .uint16("totalLength")
-        .uint8("separator1")
-        .uint8("separator2")
+        .uint32("totalLength")
         .uint16("type");
 
     const parsed = parser.parse(data);

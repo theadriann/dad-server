@@ -1,5 +1,5 @@
 import net from "net";
-import { sendPacket } from "@/loginServer";
+import { sendPacket } from "@/utils/packets";
 import { GameServer } from "@/state/GameServersManager";
 import {
     sc2sGameEnterCompleteNot,

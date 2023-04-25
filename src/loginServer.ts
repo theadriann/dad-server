@@ -3,100 +3,11 @@ import { processPacket } from "./controllers/packets/processPacket";
 
 // utils
 import net from "net";
-import { buffer2HexSpacedString, numberToHex } from "./utils/hex";
+import { buffer2HexSpacedString } from "./utils/hex";
 import { socketContextManager } from "./utils/SocketContextManager";
 
 // types
-import {
-    packetCommandFromJSON,
-    packetCommandToJSON,
-} from "./protos/ts/_PacketCommand";
 import { logger } from "./utils/loggers";
-
-export const makeHeader = (
-    packet: Buffer | Uint8Array,
-    packetType: string | number
-) => {
-    const type = packetCommandFromJSON(packetType);
-    const typeHex = numberToHex(type);
-
-    //
-    const totalLength = packet.length + 8;
-    const totalLengthHex = numberToHex(totalLength);
-
-    let header: Buffer[] = [];
-
-    if (totalLengthHex.length <= 2) {
-        header.push(Buffer.from([totalLength, 0x00]));
-    } else {
-        header.push(
-            Buffer.from(
-                totalLengthHex.match(/.{2}/g)!.reverse().join(""),
-                "hex"
-            )
-        );
-    }
-
-    header.push(Buffer.from([0x00, 0x00]));
-
-    if (typeHex.length <= 2) {
-        header.push(Buffer.from([type, 0x00]));
-    } else {
-        header.push(
-            Buffer.from(typeHex.match(/.{2}/g)!.reverse().join(""), "hex")
-        );
-    }
-
-    header.push(Buffer.from([0x00, 0x00]));
-    // header.push(Buffer.from([0xff, 0xff]));
-
-    // let lengthComponents = Buffer.from([totalLength]);
-    // let headerRest = [];
-
-    // logger.info(`Message Size: ${totalLength}`);
-    // logger.info(`Length Bytes: ${totalLengthHex.length}`);
-
-    // if (totalLengthHex.length <= 2) {
-    //     headerRest.push(0x00);
-    // } else {
-    //     lengthComponents = Buffer.from(
-    //         numberToHex(totalLength).match(/.{2}/g)!.reverse().join(""),
-    //         "hex"
-    //     );
-    // }
-
-    // headerRest = [...headerRest, 0x00, 0x00, type, 0x00, 0x00, 0x00];
-
-    return header.reduce((a, b) => Buffer.concat([a, b]), Buffer.alloc(0));
-};
-
-export const sendPacket = (
-    socket: net.Socket,
-    packet: Buffer | Uint8Array,
-    packetType: string | number
-) => {
-    logger.debug(`==================== Sending Packet ====================`);
-
-    const header = makeHeader(packet, packetType);
-
-    if (packet instanceof Uint8Array) {
-        packet = Buffer.from(packet);
-    }
-
-    logger.debug(
-        `Message-Type ${packetCommandToJSON(
-            packetCommandFromJSON(packetType)
-        )} (${packetType})`
-    );
-    logger.debug("Header:");
-    logger.debug(buffer2HexSpacedString(header as Buffer));
-    logger.debug("Cotents:");
-    logger.debug(buffer2HexSpacedString(packet as Buffer));
-    const packetToSend = Buffer.from([...header, ...packet]);
-
-    socket.write(packetToSend);
-    logger.debug(`=========================================================`);
-};
 
 const tcpServer = net.createServer((socket) => {
     //
