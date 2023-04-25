@@ -58,24 +58,11 @@ export const listFriends = async (data: Buffer, socket: net.Socket) => {
     return res;
 };
 
-export const listAllFriends = async (data: Buffer, socket: net.Socket) => {
-    const lobbyUser = lobbyState.getBySocket(socket);
-    const req = sc2sFriendListAllReq.decode(bufferReader(data));
-
-    let res = ss2cFriendListAllRes.create({});
-
-    res.loopFlag = DefineMessage_LoopFlag.BEGIN;
-    res.friendInfoList = [];
-    res.dungeonLocateCount = 0;
-    res.lobbyLocateCount = 0;
-    res.totalUserCount = 0;
-
-    const char = await getCharacterFriendInfoById(9);
-    if (char) {
-        res.friendInfoList = [char];
-        res.lobbyLocateCount++;
-        res.totalUserCount++;
-    }
+export const listAllFriendsStart = async (data: Buffer, socket: net.Socket) => {
+    //
+    let res = ss2cFriendListAllRes.create({
+        loopFlag: DefineMessage_LoopFlag.BEGIN,
+    });
 
     logger.debug("listAllFriends");
     logger.debug(JSON.stringify(res, null, 2));
@@ -87,21 +74,41 @@ export const listAllFriendsContinue = async (
     data: Buffer,
     socket: net.Socket
 ) => {
-    const lobbyUser = lobbyState.getBySocket(socket);
-    const req = sc2sFriendListAllReq.decode(bufferReader(data));
+    //
+    const res = ss2cFriendListAllRes.create({
+        loopFlag: DefineMessage_LoopFlag.PROGRESS,
+        friendInfoList: await Promise.all(
+            lobbyState
+                .getAllActive()
+                .filter((user) => user.hasCharacterLoaded)
+                .map((user) => getCharacterFriendInfoById(user.characterId!))
+        ),
+    });
 
-    let res = ss2cFriendListAllRes.create({});
+    logger.debug("listAllFriendsContinue");
+    logger.debug(JSON.stringify(res, null, 2));
 
-    res.loopFlag = DefineMessage_LoopFlag.END;
+    return res;
+};
 
-    const char = await getCharacterFriendInfoById(9);
-    if (char) {
-        res.friendInfoList.push(char);
-        res.lobbyLocateCount++;
-        res.totalUserCount++;
-    }
+export const listAllFriendsEnd = async (data: Buffer, socket: net.Socket) => {
+    //
+    const res = ss2cFriendListAllRes.create({
+        loopFlag: DefineMessage_LoopFlag.END,
+        friendInfoList: [],
+    });
 
-    logger.debug("listAllFriends");
+    const active_characters = await Promise.all(
+        lobbyState
+            .getAllActive()
+            .filter((user) => user.hasCharacterLoaded)
+            .map((user) => getCharacterFriendInfoById(user.characterId!))
+    );
+
+    res.lobbyLocateCount = active_characters.length;
+    res.totalUserCount = active_characters.length;
+
+    logger.debug("listAllFriendsEnd");
     logger.debug(JSON.stringify(res, null, 2));
 
     return res;

@@ -32,7 +32,7 @@ export const getCharacterFriendInfoById = async (characterId: number) => {
         // locationStatus: DefineCommon_MetaLocation.PLAY,
         locationStatus: FriendLocation.Friend_Location_LOBBY,
         nickName: await createCharacterNickname(dbCharacter.nickname),
-        PartyMemeberCount: 1,
+        PartyMemeberCount: 0,
         PartyMaxMemeberCount: 3,
     });
 };

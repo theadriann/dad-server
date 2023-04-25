@@ -2,7 +2,7 @@
 import { logger } from "@/utils/loggers";
 import cuid from "cuid";
 import net from "net";
-import { LobbyUser } from "./User";
+import { LobbyUser } from "./LobbyUser";
 
 export class SocketContext {
     //

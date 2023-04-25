@@ -1,5 +1,5 @@
 //
-import { LobbyUser } from "@/models/lobby/User";
+import { LobbyUser } from "@/models/lobby/LobbyUser";
 import { logger } from "@/utils/loggers";
 import cuid from "cuid";
 import net from "net";

@@ -49,6 +49,8 @@ import {
     getBlockCharacterList,
     inviteFriend,
     listAllFriendsContinue,
+    listAllFriendsEnd,
+    listAllFriendsStart,
     searchFriend,
 } from "../FriendsController";
 import {
@@ -228,21 +230,21 @@ export const PacketHandlers: PacketHandler[] = [
         label: "ListAllFriends",
         requestCommand: PacketCommand.C2S_FRIEND_LIST_ALL_REQ,
         res: [
-            // {
-            //     command: PacketCommand.S2C_FRIEND_LIST_ALL_RES,
-            //     handler: listAllFriends,
-            //     type: ss2cFriendListAllRes,
-            // },
+            {
+                command: PacketCommand.S2C_FRIEND_LIST_ALL_RES,
+                handler: listAllFriendsStart,
+                type: ss2cFriendListAllRes,
+            },
             {
                 command: PacketCommand.S2C_FRIEND_LIST_ALL_RES,
                 handler: listAllFriendsContinue,
                 type: ss2cFriendListAllRes,
             },
-            // {
-            //     command: PacketCommand.S2C_FRIEND_LIST_RES,
-            //     handler: listFriends,
-            //     type: ss2cFriendListRes,
-            // },
+            {
+                command: PacketCommand.S2C_FRIEND_LIST_ALL_RES,
+                handler: listAllFriendsEnd,
+                type: ss2cFriendListAllRes,
+            },
         ],
     },
     {
