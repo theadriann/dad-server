@@ -16,6 +16,7 @@
         "cuid": "^3.0.0",
         "dotenv": "^16.0.3",
         "express": "^4.18.2",
+        "lodash": "^4.17.21",
         "long": "^5.2.3",
         "parser": "^0.1.4",
         "pino": "^8.11.0",
@@ -27,6 +28,7 @@
     "devDependencies": {
         "@types/express": "^4.17.17",
         "@types/fs-extra": "^11.0.1",
+        "@types/lodash": "^4.14.194",
         "@types/node": "^18.15.13",
         "fs-extra": "^11.1.1",
         "prisma": "^4.13.0"

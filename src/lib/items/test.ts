@@ -5,6 +5,7 @@ import {
     DefineItem_InventoryId,
 } from "../../protos/ts/_Defins";
 import { SItem } from "../../protos/ts/_Item";
+import { Items } from "@/models/game/enums/Items";
 
 // export enum DefineEquipment_SlotId {
 //     NONE = 0,
@@ -36,6 +37,7 @@ import { SItem } from "../../protos/ts/_Item";
 export const generateTorch = () => {
     const torch = SItem.create({
         itemUniqueId: 6646818918302105,
+
         itemId: "DesignDataItem:Id_Item_Torch_6001",
         itemCount: 1,
         inventoryId: DefineItem_InventoryId.EQUIPMENT,
@@ -165,20 +167,18 @@ export const generatePants = () => {
 export const generateTunic = () => {
     const tunic = SItem.create({
         itemUniqueId: 6646818918302101,
-        itemId: "DesignDataItem:Id_Item_AdventurerTunic_0001",
+        itemId: Items.ADVENTURER_TUNIC.EPIC,
         itemCount: 1,
         inventoryId: DefineItem_InventoryId.EQUIPMENT,
         slotId: DefineEquipment_SlotId.CHEST,
 
         primaryPropertyArray: [
             SItemProperty.create({
-                propertyTypeId:
-                    "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_ArmorRating",
-                propertyValue: 14,
+                propertyTypeId: EffectTypes.ARMOR_RATING,
+                propertyValue: 41,
             }),
             SItemProperty.create({
-                propertyTypeId:
-                    "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_MoveSpeed",
+                propertyTypeId: EffectTypes.MOVESPEED,
                 propertyValue: -5,
             }),
         ],
