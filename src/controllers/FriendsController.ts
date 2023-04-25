@@ -17,7 +17,11 @@ import {
     sc2sBlockCharacterListReq,
     ss2cBlockCharacterListRes,
 } from "@/protos/ts/Common";
-import { sblockCharacter, scharacterFriendInfo } from "@/protos/ts/_Character";
+import {
+    sblockCharacter,
+    scharacterFriendInfo,
+    scharacterPartyInfo,
+} from "@/protos/ts/_Character";
 import { createCharacterNickname } from "./CharacterController";
 import { logger } from "@/utils/loggers";
 import { PacketCommand, PacketResult } from "@/protos/ts/_PacketCommand";
@@ -32,6 +36,7 @@ import {
 } from "@/protos/ts/Party";
 import { sendPacket } from "@/utils/packets";
 import { lobbyState } from "@/state/LobbyManager";
+import { announcePartyMembersInfo } from "@/services/PartyNotifier";
 
 export const listFriends = async (data: Buffer, socket: net.Socket) => {
     const lobbyUser = lobbyState.getBySocket(socket);
@@ -184,32 +189,32 @@ export const inviteFriend = async (data: Buffer, socket: net.Socket) => {
     logger.debug(req);
 
     if (!lobbyUser || !lobbyUser.userId || !lobbyUser.characterId) {
-        logger.warn("inviteFriend: socketContext not found");
+        logger.warn("inviteFriend: lobbyUser not found");
         return ss2cPartyInviteRes.create({
             result: PacketResult.FAIL_GENERAL,
         });
     }
 
-    const otherSocketContext = lobbyState.getByCharacterId(
-        Number(req.findCharacterId)
-    );
+    const otherUser = lobbyState.getByCharacterId(Number(req.findCharacterId));
 
-    if (!otherSocketContext || otherSocketContext.socket.destroyed) {
-        logger.warn("inviteFriend: otherSocketContext not found");
+    if (!otherUser || otherUser.socket.destroyed) {
+        logger.warn("inviteFriend: otherUser not found");
         return ss2cPartyInviteRes.create({
             result: PacketResult.FAIL_GENERAL,
         });
     }
+
+    //
+    lobbyState.ensureUserParty(lobbyUser);
 
     // no need to await
     sendInvitePartyNotification(
         {
             InviteeAccountId: lobbyUser.userId.toString(),
             InviteeCharacterId: lobbyUser.characterId.toString(),
-            InviteeNickName: (await getDbCharacterById(lobbyUser.characterId))!
-                .nickname,
+            InviteeNickName: lobbyUser.characterNickname!,
         },
-        otherSocketContext.socket
+        otherUser.socket
     );
 
     return ss2cPartyInviteRes.create({
@@ -233,10 +238,20 @@ export const acceptPartyInvite = async (data: Buffer, socket: net.Socket) => {
         });
     }
 
-    const otherSocketContext = lobbyState.getByUserId(Number(toAccountId));
+    const otherUser = lobbyState.getByUserId(Number(toAccountId));
 
-    if (!otherSocketContext || otherSocketContext.socket.destroyed) {
-        logger.warn("acceptPartyInvite: otherSocketContext not found");
+    if (!otherUser || !otherUser.getParty()) {
+        logger.warn("acceptPartyInvite: otherUser not found");
+        return ss2cPartyInviteAnswerRes.create({
+            result: PacketResult.FAIL_GENERAL,
+        });
+    }
+
+    //
+    const party = otherUser.getParty();
+
+    if (!party) {
+        logger.warn("acceptPartyInvite: party not found");
         return ss2cPartyInviteAnswerRes.create({
             result: PacketResult.FAIL_GENERAL,
         });
@@ -249,8 +264,11 @@ export const acceptPartyInvite = async (data: Buffer, socket: net.Socket) => {
             nickName: (await getDbCharacterById(lobbyUser.characterId))!
                 .nickname,
         },
-        otherSocketContext.socket
+        otherUser.socket
     );
+
+    party.addCharacter(lobbyUser.characterId);
+    party.announceMembersInfo();
 
     return ss2cPartyInviteAnswerRes.create({
         result: PacketResult.SUCCESS,

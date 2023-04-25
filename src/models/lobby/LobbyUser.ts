@@ -5,6 +5,8 @@ import net from "net";
 import { SocketContext } from "./SocketContext";
 import { getDbCharacterById } from "@/services/CharacterService";
 import { saccountNickname } from "@/protos/ts/_Character";
+import { Character } from "@prisma/client";
+import { LobbyState } from "@/state/LobbyManager";
 
 //
 export class LobbyUser {
@@ -12,6 +14,9 @@ export class LobbyUser {
     socket: net.Socket;
     sessionId: string;
     address: string;
+
+    //
+    lobby: LobbyState;
 
     //
     userId: number | null = null;
@@ -24,10 +29,16 @@ export class LobbyUser {
         nickname: string;
     } | null = null;
 
-    constructor(socket: net.Socket) {
+    characterDb: Character | null = null;
+
+    partyId: string | null = null;
+
+    constructor(socket: net.Socket, lobby: LobbyState) {
         this.socket = socket;
         this.sessionId = cuid();
         this.address = socket.remoteAddress || "";
+
+        this.lobby = lobby;
 
         this.socketContext = new SocketContext(this);
     }
@@ -54,6 +65,7 @@ export class LobbyUser {
     loadCharacterData = async () => {
         if (!this.characterId) {
             this.characterData = null;
+            this.characterDb = null;
             return;
         }
 
@@ -61,9 +73,11 @@ export class LobbyUser {
 
         if (!dbCharacter) {
             this.characterData = null;
+            this.characterDb = null;
             return;
         }
 
+        this.characterDb = dbCharacter;
         this.characterData = {
             nickname: dbCharacter.nickname,
         };
@@ -95,5 +109,22 @@ export class LobbyUser {
             streamingModeNickName: streamingNickname,
             karmaRating: 0,
         });
+    }
+
+    // -----------------------
+    // Party
+    // -----------------------
+
+    setPartyId = (value: string | null) => {
+        this.partyId = value;
+    };
+
+    getParty() {
+        console.log(`party@user: ${this.partyId}`);
+        if (this.partyId) {
+            return this.lobby.parties.get(this.partyId) || null;
+        }
+
+        return null;
     }
 }
