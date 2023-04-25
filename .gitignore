@@ -3,3 +3,4 @@ logs
 prisma/dev.db
 prisma/dev.db-journal
 playground.ts
+.env

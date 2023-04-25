@@ -30,6 +30,9 @@ git clone https://github.com/theadriann/dad-server
 
   </li>
   <li>
+  <li>
+  <p>If there is no `.env` file in your project directory, copy `.env.example` to `.env` and edit the relevant information (like your server ip address).</p>
+  </li>
   <p>You will need to have Node.JS installed. You can installed it from here <a href="https://nodejs.org/en" target="_new">https://nodejs.org/en</a></p>
   </li>
   <li>
@@ -41,12 +44,21 @@ npm install
 
   </li>
   <li>
-  <p>Once you have completed the installation steps above, you can run the project by running the following command in the project directory:</p>
+  <p>Once you have completed the installation steps above, you need to run the migration command in the project directory which will create a local SQLite database:</p>
+
+```bash
+npm run migrate
+```
+
+  </li>
+  <li>
+  <p>Now, you can run the project by running the following command:</p>
 
 ```bash
 npm run dev
 ```
 
+  </li>
 </ol>
 
 <h2 id="contributing">Contributing</h2>
