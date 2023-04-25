@@ -14,6 +14,7 @@ export const announceGameServerReady = async (
     data: {
         game: GameServer;
         accountId: number;
+        sessionId: string;
         nickName: string;
     },
     socket: net.Socket
@@ -27,7 +28,9 @@ export const announceGameServerReady = async (
                     ip: SERVER_IP,
                     port: data.game.port,
                     isReconnect: 0,
-                    nickName: await createCharacterNickname(data.nickName),
+                    nickName: undefined,
+                    sessionId: data.sessionId,
+                    // nickName: await createCharacterNickname(data.nickName),
                 })
             )
             .finish(),

@@ -91,6 +91,7 @@ export const startAutoMatchMaking = async (
                 accountId: socketContext.userId,
                 nickName: (await getDbCharacterById(socketContext.characterId))!
                     .nickname,
+                sessionId: socketContext.sessionId,
             },
             socket
         );
