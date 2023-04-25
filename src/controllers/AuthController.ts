@@ -111,7 +111,7 @@ export const relogin = async (data: Buffer, socket: net.Socket) => {
         accountId: socketContext.userId.toString(),
         isReconnect: 0,
         sessionId: socketContext.sessionId,
-        address: `${SERVER_IP}:${LOBBY_PORT}`,
+        address: `http://${SERVER_IP}:${LOBBY_PORT}/`, // from packet
     });
 
     return res;

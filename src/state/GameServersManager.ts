@@ -1,5 +1,5 @@
 // utils
-import net from "net";
+import dgram from "dgram";
 import cuid from "cuid";
 import { logger } from "@/utils/loggers";
 import { SocketContextManager } from "@/utils/SocketContextManager";
@@ -10,25 +10,38 @@ import {
     DefineGame_Floor,
     DefineMatch_MatchRegion,
 } from "@/protos/ts/_Defins";
+import { buffer2HexSpacedString } from "@/utils/hex";
 
-class GameServerTcpServer {
+class GameServerUdpServer {
     //
     game: GameServer;
-    instance: net.Server | null = null;
+    instance: dgram.Socket | null = null;
 
     constructor(game: GameServer) {
         this.game = game;
     }
 
     start = () => {
-        this.instance = net.createServer(this.onConnection);
+        this.instance = dgram.createSocket("udp4");
+
         this.instance.on("error", (err) => {
             throw err;
         });
 
-        this.instance.listen(this.game.port, () => {
+        this.instance.on("connect", () => {
+            logger.info(`client connected to game ${this.game.id}.`);
+        });
+
+        this.instance.on("message", (msg, rinfo) => {
+            logger.info(`client ${rinfo.address}:${rinfo.port} sent data:`);
+            logger.debug(buffer2HexSpacedString(msg as Buffer));
+            logger.info(msg.toString());
+        });
+
+        this.instance.bind(this.game.port, () => {
+            const address = this.instance?.address();
             logger.info(
-                `Starting Dark and Darker Game Server at port ${this.game.port}`
+                `Starting Dark and Darker Game Server at ${address}${this.game.port}`
             );
         });
     };
@@ -36,38 +49,6 @@ class GameServerTcpServer {
     // -----------------------
     //
     // -----------------------
-
-    onConnection = (socket: net.Socket) => {
-        //
-        let socketAddress = socket.remoteAddress || "";
-
-        logger.info(`${socketAddress} connected to game ${this.game.id}.`);
-
-        socket.on("end", () => this.onConnectionEnd(socket));
-        socket.on("error", (err) => this.onConnectionError(socket, err));
-        socket.on("data", (data) => this.onConnectionData(socket, data));
-
-        socket.pipe(socket);
-    };
-
-    onConnectionEnd = (socket: net.Socket) => {
-        //
-        let socketAddress = socket.remoteAddress || "";
-
-        logger.info(`${socketAddress} disconnected.`);
-    };
-
-    onConnectionError = (socket: net.Socket, err: Error) => {
-        //
-        logger.error(err);
-    };
-
-    onConnectionData = (socket: net.Socket, data: Buffer) => {
-        //
-        let socketAddress = socket.remoteAddress || "";
-
-        logger.info(`${socketAddress} sent data: ${data.toString()}`);
-    };
 }
 
 //
@@ -80,7 +61,7 @@ export class GameServer {
     region: DefineMatch_MatchRegion = DefineMatch_MatchRegion.EU_CENTRAL;
     difficulty: DefineGame_DifficultyType = DefineGame_DifficultyType.NORMAL;
 
-    server: GameServerTcpServer;
+    server: GameServerUdpServer;
     socketContextManager = new SocketContextManager();
 
     phase: "waiting-players" | "lobby" | "game" = "waiting-players";
@@ -96,7 +77,7 @@ export class GameServer {
         this.floor = config.floor;
         this.region = config.region;
         this.difficulty = config.difficulty;
-        this.server = new GameServerTcpServer(this);
+        this.server = new GameServerUdpServer(this);
     }
 
     // -----------------------
