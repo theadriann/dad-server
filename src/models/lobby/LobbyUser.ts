@@ -8,6 +8,7 @@ import { saccountNickname } from "@/protos/ts/_Character";
 import { Character } from "@prisma/client";
 import { LobbyState } from "@/state/LobbyManager";
 import { Item } from "../Item";
+import { DefineCommon_MetaLocation } from "@/protos/ts/_Defins";
 
 //
 export class LobbyUser {
@@ -31,6 +32,8 @@ export class LobbyUser {
     } | null = null;
 
     characterDb: Character | null = null;
+    characterLocation: DefineCommon_MetaLocation =
+        DefineCommon_MetaLocation.PLAY;
     characterItems: Item[] = [];
 
     partyId: string | null = null;
@@ -48,6 +51,11 @@ export class LobbyUser {
     // -----------------------
     //
     // -----------------------
+
+    onDisconnect = () => {
+        this.socketContext.setActive(false);
+        this.characterLocation = DefineCommon_MetaLocation.OFFLINE;
+    };
 
     setSocket(socket: net.Socket) {
         this.socket = socket;
@@ -116,6 +124,14 @@ export class LobbyUser {
             karmaRating: 0,
         });
     }
+
+    // -----------------------
+    // Character
+    // -----------------------
+
+    setLocation = (value: DefineCommon_MetaLocation) => {
+        this.characterLocation = value;
+    };
 
     // -----------------------
     // Party

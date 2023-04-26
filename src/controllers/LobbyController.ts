@@ -124,6 +124,9 @@ export const getPlayerLobbyLocation = async (
 
     const location: DefineCommon_MetaLocation = reqData.location;
     res.location = location;
+    lobbyUser.setLocation(location);
+
+    // notify party members of location change
 
     return res;
 };

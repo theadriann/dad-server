@@ -2,9 +2,12 @@ import net from "net";
 import { lobbyState } from "@/state/LobbyManager";
 import {
     sc2sMerchantStockBuyItemListReq,
+    sc2sMerchantStockSellBackItemListReq,
     smerchantStockBuyItemInfo,
+    smerchantStockSellBackItemInfo,
     ss2cMerchantListRes,
     ss2cMerchantStockBuyItemListRes,
+    ss2cMerchantStockSellBackItemListRes,
 } from "@/protos/ts/Merchant";
 import { allMerchants } from "@/lib/merchants";
 import { bufferReader } from "@/utils/bufferReader";
@@ -95,6 +98,34 @@ export const getMerchantBuyList = async (data: Buffer, socket: net.Socket) => {
             ],
         }),
         ss2cMerchantStockBuyItemListRes.create({
+            result: PacketResult.SUCCESS,
+            loopMessageFlag: DefineMessage_LoopFlag.END,
+        }),
+    ];
+};
+
+export const getMerchantSellList = async (data: Buffer, socket: net.Socket) => {
+    // const lobbyUser = lobbyState.getBySocket(socket);
+    const req = sc2sMerchantStockSellBackItemListReq.decode(bufferReader(data));
+    const merchantId = req.merchantId;
+
+    return [
+        ss2cMerchantStockSellBackItemListRes.create({
+            result: PacketResult.SUCCESS,
+            loopMessageFlag: DefineMessage_LoopFlag.BEGIN,
+        }),
+        ss2cMerchantStockSellBackItemListRes.create({
+            result: PacketResult.SUCCESS,
+            loopMessageFlag: DefineMessage_LoopFlag.PROGRESS,
+            stockList: [
+                smerchantStockSellBackItemInfo.create({
+                    stockSellBackId:
+                        "DesignDataStockSellBack:Id_StockSellBack_Weaponsmith",
+                    stockUniqueId: 215,
+                }),
+            ],
+        }),
+        ss2cMerchantStockSellBackItemListRes.create({
             result: PacketResult.SUCCESS,
             loopMessageFlag: DefineMessage_LoopFlag.END,
         }),

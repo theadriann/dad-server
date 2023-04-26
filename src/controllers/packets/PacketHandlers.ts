@@ -85,8 +85,13 @@ import { ss2cClassEquipInfoRes } from "@/protos/ts/CharacterClass";
 import {
     ss2cMerchantListRes,
     ss2cMerchantStockBuyItemListRes,
+    ss2cMerchantStockSellBackItemListRes,
 } from "@/protos/ts/Merchant";
-import { getMerchantBuyList, getMerchantList } from "../MerchantController";
+import {
+    getMerchantBuyList,
+    getMerchantList,
+    getMerchantSellList,
+} from "../MerchantController";
 import { DefineAccount_CurrencyType } from "@/protos/ts/_Defins";
 
 export type PacketHandler = {
@@ -512,8 +517,21 @@ export const PacketHandlers: PacketHandler[] = [
         ],
     },
 
-    //     pc.C2S_MERCHANT_LIST_REQ: merchant.get_merchant_list,
-    // pc.C2S_MERCHANT_STOCK_BUY_ITEM_LIST_REQ: merchant.get_buy_list,
+    {
+        label: "Merchant Sell Item List",
+        requestCommand:
+            PacketCommand.C2S_MERCHANT_STOCK_SELL_BACK_ITEM_LIST_REQ,
+        res: [
+            {
+                command:
+                    PacketCommand.S2C_MERCHANT_STOCK_SELL_BACK_ITEM_LIST_RES,
+                type: ss2cMerchantStockSellBackItemListRes,
+                handler: getMerchantSellList,
+                multiple: true,
+            },
+        ],
+    },
+
     // pc.C2S_MERCHANT_STOCK_SELL_BACK_ITEM_LIST_REQ: merchant.get_sellback_list,
     // pc.C2S_TRADE_MEMBERSHIP_REQUIREMENT_REQ: trade.get_trade_reqs,
     // pc.C2S_TRADE_MEMBERSHIP_REQ: trade.process_membership,
