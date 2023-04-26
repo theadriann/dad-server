@@ -241,3 +241,23 @@ export const generateStartItems = (characterClass: CharacterClassKey) => {
             return generateFighterStartItems();
     }
 };
+
+export const generateStackOfGoldCoins = (amount: number) => {
+    return Item.fromJSON({
+        inventoryId: DefineItem_InventoryId.STORAGE,
+        itemCount: Math.max(Math.min(amount, 20), 1),
+        itemId: Items.GOLD_COINS.NONE,
+        primaryPropertyArray: [],
+        slotId: DefineEquipment_SlotId.NONE,
+    });
+};
+
+export const generateStackOfGoldCoinPurse = (amount: number) => {
+    return Item.fromJSON({
+        inventoryId: DefineItem_InventoryId.STORAGE,
+        itemCount: Math.max(Math.min(amount, 50), 1),
+        itemId: Items.GOLD_COIN_PURSE.NONE,
+        primaryPropertyArray: [],
+        slotId: DefineEquipment_SlotId.NONE,
+    });
+};

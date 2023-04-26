@@ -33,6 +33,10 @@ export const processPacket = async (data: Buffer, socket: net.Socket) => {
         for (let res of handler.res) {
             const responseData = await res.handler(data, socket);
 
+            if (!res.type) {
+                continue;
+            }
+
             if (res.multiple) {
                 for (let rData of responseData) {
                     sendPacket(

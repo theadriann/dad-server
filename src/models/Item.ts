@@ -4,6 +4,7 @@ import {
 } from "@/protos/ts/_Defins";
 import { SItem, SItemProperty } from "@/protos/ts/_Item";
 import { Inventory } from "@prisma/client";
+import { Items, itemIdToMaxCount } from "./game/enums/Items";
 
 //
 export class Item {
@@ -16,6 +17,19 @@ export class Item {
     primaryPropertyArray: SItemProperty[] = [];
 
     constructor() {}
+
+    assignTempId = () => {
+        this.id = Math.floor(Math.random() * 1000000000);
+        return this;
+    };
+
+    getMaxCount = () => {
+        return itemIdToMaxCount(this.itemId);
+    };
+
+    // -----------------------
+    //
+    // -----------------------
 
     fromDB(obj: Inventory) {
         this.id = obj.id;

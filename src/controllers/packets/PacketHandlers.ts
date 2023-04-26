@@ -1,6 +1,7 @@
 // controllers
 import {
     createCharacter,
+    deleteCharacter,
     getCharacterInfo,
     getClassEquipInfo,
     listCharacters,
@@ -25,12 +26,15 @@ import { PacketCommand } from "../../protos/ts/_PacketCommand";
 import { ss2cAliveRes } from "../../protos/ts/_PacketCommand";
 import {
     ss2cAccountCharacterCreateRes,
+    ss2cAccountCharacterDeleteRes,
     ss2cAccountCharacterListRes,
     ss2cAccountLoginRes,
     ss2cLobbyEnterRes,
 } from "../../protos/ts/Account";
 import {
+    saccountCurrencyInfo,
     ss2cCharacterSelectEnterRes,
+    ss2cLobbyAccountCurrencyListNot,
     ss2cLobbyCharacterInfoRes,
     ss2cLobbyEnterFromGameRes,
     ss2cLobbyGameDifficultySelectRes,
@@ -78,6 +82,12 @@ import {
     ss2cPartyInviteRes,
 } from "@/protos/ts/Party";
 import { ss2cClassEquipInfoRes } from "@/protos/ts/CharacterClass";
+import {
+    ss2cMerchantListRes,
+    ss2cMerchantStockBuyItemListRes,
+} from "@/protos/ts/Merchant";
+import { getMerchantBuyList, getMerchantList } from "../MerchantController";
+import { DefineAccount_CurrencyType } from "@/protos/ts/_Defins";
 
 export type PacketHandler = {
     label: string;
@@ -150,6 +160,17 @@ export const PacketHandlers: PacketHandler[] = [
             },
         ],
     },
+    {
+        label: "Delete Character",
+        requestCommand: PacketCommand.C2S_ACCOUNT_CHARACTER_DELETE_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_ACCOUNT_CHARACTER_DELETE_RES,
+                type: ss2cAccountCharacterDeleteRes,
+                handler: deleteCharacter,
+            },
+        ],
+    },
 
     // -----------------------
     // Lobby
@@ -160,9 +181,34 @@ export const PacketHandlers: PacketHandler[] = [
         requestCommand: PacketCommand.C2S_LOBBY_ENTER_REQ,
         res: [
             {
+                command: PacketCommand.S2C_CLASS_EQUIP_INFO_RES,
+                type: ss2cClassEquipInfoRes,
+                handler: getClassEquipInfo,
+            },
+            {
                 command: PacketCommand.S2C_LOBBY_ENTER_RES,
                 type: ss2cLobbyEnterRes,
                 handler: enterLobby,
+            },
+            {
+                command: PacketCommand.S2C_LOBBY_CHARACTER_INFO_RES,
+                handler: getCharacterInfo,
+                type: ss2cLobbyCharacterInfoRes,
+            },
+            {
+                command: PacketCommand.S2C_LOBBY_ACCOUNT_CURRENCY_LIST_NOT,
+                handler: async (data: Buffer, socket: net.Socket) => {
+                    return ss2cLobbyAccountCurrencyListNot.create({
+                        currencyInfos: [
+                            saccountCurrencyInfo.create({
+                                currencyType:
+                                    DefineAccount_CurrencyType.ADVENTURE,
+                                currencyValue: 100,
+                            }),
+                        ],
+                    });
+                },
+                type: ss2cLobbyAccountCurrencyListNot,
             },
         ],
     },
@@ -436,6 +482,41 @@ export const PacketHandlers: PacketHandler[] = [
     },
 
     // C2S_RE_LOGIN_REQ
+
+    // -----------------------
+    // Merchants
+    // -----------------------
+
+    {
+        label: "Merchant List",
+        requestCommand: PacketCommand.C2S_MERCHANT_LIST_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_MERCHANT_LIST_RES,
+                type: ss2cMerchantListRes,
+                handler: getMerchantList,
+            },
+        ],
+    },
+
+    {
+        label: "Merchant Buy List",
+        requestCommand: PacketCommand.C2S_MERCHANT_STOCK_BUY_ITEM_LIST_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_MERCHANT_STOCK_BUY_ITEM_LIST_RES,
+                type: ss2cMerchantStockBuyItemListRes,
+                handler: getMerchantBuyList,
+                multiple: true,
+            },
+        ],
+    },
+
+    //     pc.C2S_MERCHANT_LIST_REQ: merchant.get_merchant_list,
+    // pc.C2S_MERCHANT_STOCK_BUY_ITEM_LIST_REQ: merchant.get_buy_list,
+    // pc.C2S_MERCHANT_STOCK_SELL_BACK_ITEM_LIST_REQ: merchant.get_sellback_list,
+    // pc.C2S_TRADE_MEMBERSHIP_REQUIREMENT_REQ: trade.get_trade_reqs,
+    // pc.C2S_TRADE_MEMBERSHIP_REQ: trade.process_membership,
 ];
 
 export const PacketHandlersMap = new Map<number, PacketHandler>();

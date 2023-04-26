@@ -1,14 +1,20 @@
 import net from "net";
 import {
     sc2sAccountCharacterCreateReq,
+    sc2sAccountCharacterDeleteReq,
     sc2sAccountCharacterListReq,
     sloginCharacterInfo,
     ss2cAccountCharacterCreateRes,
+    ss2cAccountCharacterDeleteRes,
     ss2cAccountCharacterListRes,
 } from "../protos/ts/Account";
 import { bufferReader } from "../utils/bufferReader";
 import { db } from "../services/db";
-import { generateStartItems } from "../lib/items/test";
+import {
+    generateStackOfGoldCoinPurse,
+    generateStackOfGoldCoins,
+    generateStartItems,
+} from "../lib/items/test";
 import { PacketResult } from "../protos/ts/_PacketCommand";
 import {
     sc2sClassEquipInfoReq,
@@ -24,12 +30,11 @@ import { FighterClassSkills } from "@/models/game/enums/ClassSkills";
 import { lobbyState } from "@/state/LobbyManager";
 import { characterClassFromClient } from "@/models/game/enums/CharacterClass";
 import { Item } from "@/models/Item";
+import { random } from "lodash";
 
 export const createCharacter = async (data: Buffer, socket: net.Socket) => {
     const lobbyUser = lobbyState.getBySocket(socket);
-    const characterData = sc2sAccountCharacterCreateReq.decode(
-        bufferReader(data)
-    );
+    const req = sc2sAccountCharacterCreateReq.decode(bufferReader(data));
 
     let res = ss2cAccountCharacterCreateRes.create({});
 
@@ -40,16 +45,16 @@ export const createCharacter = async (data: Buffer, socket: net.Socket) => {
 
     const character_db = await db.character.create({
         data: {
-            nickname: characterData.nickName,
+            nickname: req.nickName,
             user_id: lobbyUser.userId,
-            class: characterData.characterClass,
-            gender: characterData.gender,
+            class: req.characterClass,
+            gender: req.gender,
             level: 1,
         },
     });
 
     const items = generateStartItems(
-        characterClassFromClient(characterData.characterClass)
+        characterClassFromClient(req.characterClass)
     );
 
     let db_items = [];
@@ -65,9 +70,72 @@ export const createCharacter = async (data: Buffer, socket: net.Socket) => {
         );
     }
 
+    let totalGold = 200;
+    let slotId = 0;
+    while (totalGold > 0) {
+        const randomGold = random(1, 10);
+        const gold =
+            randomGold > 10
+                ? generateStackOfGoldCoinPurse(randomGold)
+                : generateStackOfGoldCoins(randomGold);
+
+        await db.inventory.create({
+            data: {
+                ...gold.toDB(),
+                character_id: character_db.id,
+                slot_id: slotId++,
+            },
+        });
+
+        totalGold -= randomGold;
+    }
+
     res.result = PacketResult.SUCCESS;
 
     return res;
+};
+
+export const deleteCharacter = async (data: Buffer, socket: net.Socket) => {
+    const lobbyUser = lobbyState.getBySocket(socket);
+    const req = sc2sAccountCharacterDeleteReq.decode(bufferReader(data));
+
+    const db_character = await db.character.findFirst({
+        where: {
+            id: Number(req.characterId),
+        },
+    });
+
+    if (!db_character) {
+        logger.warn(`character_id: ${req.characterId} not found`);
+        return ss2cAccountCharacterDeleteRes.create({
+            result: PacketResult.FAIL_GENERAL,
+        });
+    }
+
+    if (db_character.user_id !== lobbyUser?.userId) {
+        logger.warn(`user_id: ${lobbyUser?.userId} is not owner of character`);
+        return ss2cAccountCharacterDeleteRes.create({
+            result: PacketResult.FAIL_GENERAL,
+        });
+    }
+
+    // delete inventory
+    await db.inventory.deleteMany({
+        where: {
+            character_id: db_character.id,
+        },
+    });
+
+    // delete character
+    await db.character.delete({
+        where: {
+            id: db_character.id,
+        },
+    });
+
+    return ss2cAccountCharacterDeleteRes.create({
+        result: PacketResult.SUCCESS,
+    });
 };
 
 export const listCharacters = async (data: Buffer, socket: net.Socket) => {

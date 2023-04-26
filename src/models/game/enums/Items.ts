@@ -715,7 +715,8 @@ export const Items = {
         [ItemQuality.UNCOMMON]: "DesignDataItem:Id_Item_GoldCandlePlatter_3001",
         [ItemQuality.RARE]: "DesignDataItem:Id_Item_GoldCandlePlatter_4001",
         [ItemQuality.EPIC]: "DesignDataItem:Id_Item_GoldCandlePlatter_5001",
-        [ItemQuality.LEGENDARY]: "DesignDataItem:Id_Item_GoldCandlePlatter_6001",
+        [ItemQuality.LEGENDARY]:
+            "DesignDataItem:Id_Item_GoldCandlePlatter_6001",
         [ItemQuality.ARTIFACT]: "DesignDataItem:Id_Item_GoldCandlePlatter_7001",
     },
     GOLD_CHALICE_A: {
@@ -842,12 +843,16 @@ export const Items = {
     HEAVY_LEATHER_LEGGINGS: {
         [ItemQuality.JUNK]: "DesignDataItem:Id_Item_HeavyLeatherLeggings_0001",
         [ItemQuality.POOR]: "DesignDataItem:Id_Item_HeavyLeatherLeggings_1001",
-        [ItemQuality.COMMON]: "DesignDataItem:Id_Item_HeavyLeatherLeggings_2001",
-        [ItemQuality.UNCOMMON]: "DesignDataItem:Id_Item_HeavyLeatherLeggings_3001",
+        [ItemQuality.COMMON]:
+            "DesignDataItem:Id_Item_HeavyLeatherLeggings_2001",
+        [ItemQuality.UNCOMMON]:
+            "DesignDataItem:Id_Item_HeavyLeatherLeggings_3001",
         [ItemQuality.RARE]: "DesignDataItem:Id_Item_HeavyLeatherLeggings_4001",
         [ItemQuality.EPIC]: "DesignDataItem:Id_Item_HeavyLeatherLeggings_5001",
-        [ItemQuality.LEGENDARY]: "DesignDataItem:Id_Item_HeavyLeatherLeggings_6001",
-        [ItemQuality.ARTIFACT]: "DesignDataItem:Id_Item_HeavyLeatherLeggings_7001",
+        [ItemQuality.LEGENDARY]:
+            "DesignDataItem:Id_Item_HeavyLeatherLeggings_6001",
+        [ItemQuality.ARTIFACT]:
+            "DesignDataItem:Id_Item_HeavyLeatherLeggings_7001",
     },
     HORSEMANS_AXE: {
         [ItemQuality.JUNK]: "DesignDataItem:Id_Item_HorsemansAxe_0001",
@@ -883,11 +888,14 @@ export const Items = {
         [ItemQuality.JUNK]: "DesignDataItem:Id_Item_InvisibilityPotion_0001",
         [ItemQuality.POOR]: "DesignDataItem:Id_Item_InvisibilityPotion_1001",
         [ItemQuality.COMMON]: "DesignDataItem:Id_Item_InvisibilityPotion_2001",
-        [ItemQuality.UNCOMMON]: "DesignDataItem:Id_Item_InvisibilityPotion_3001",
+        [ItemQuality.UNCOMMON]:
+            "DesignDataItem:Id_Item_InvisibilityPotion_3001",
         [ItemQuality.RARE]: "DesignDataItem:Id_Item_InvisibilityPotion_4001",
         [ItemQuality.EPIC]: "DesignDataItem:Id_Item_InvisibilityPotion_5001",
-        [ItemQuality.LEGENDARY]: "DesignDataItem:Id_Item_InvisibilityPotion_6001",
-        [ItemQuality.ARTIFACT]: "DesignDataItem:Id_Item_InvisibilityPotion_7001",
+        [ItemQuality.LEGENDARY]:
+            "DesignDataItem:Id_Item_InvisibilityPotion_6001",
+        [ItemQuality.ARTIFACT]:
+            "DesignDataItem:Id_Item_InvisibilityPotion_7001",
     },
     KETTLE_HAT: {
         [ItemQuality.JUNK]: "DesignDataItem:Id_Item_KettleHat_0001",
@@ -1104,7 +1112,8 @@ export const Items = {
         [ItemQuality.UNCOMMON]: "DesignDataItem:Id_Item_NorthernFullTunic_3001",
         [ItemQuality.RARE]: "DesignDataItem:Id_Item_NorthernFullTunic_4001",
         [ItemQuality.EPIC]: "DesignDataItem:Id_Item_NorthernFullTunic_5001",
-        [ItemQuality.LEGENDARY]: "DesignDataItem:Id_Item_NorthernFullTunic_6001",
+        [ItemQuality.LEGENDARY]:
+            "DesignDataItem:Id_Item_NorthernFullTunic_6001",
         [ItemQuality.ARTIFACT]: "DesignDataItem:Id_Item_NorthernFullTunic_7001",
     },
     OIL_LANTERN: {
@@ -1647,11 +1656,14 @@ export const Items = {
         [ItemQuality.JUNK]: "DesignDataItem:Id_Item_VisoredBarbutaHelm_0001",
         [ItemQuality.POOR]: "DesignDataItem:Id_Item_VisoredBarbutaHelm_1001",
         [ItemQuality.COMMON]: "DesignDataItem:Id_Item_VisoredBarbutaHelm_2001",
-        [ItemQuality.UNCOMMON]: "DesignDataItem:Id_Item_VisoredBarbutaHelm_3001",
+        [ItemQuality.UNCOMMON]:
+            "DesignDataItem:Id_Item_VisoredBarbutaHelm_3001",
         [ItemQuality.RARE]: "DesignDataItem:Id_Item_VisoredBarbutaHelm_4001",
         [ItemQuality.EPIC]: "DesignDataItem:Id_Item_VisoredBarbutaHelm_5001",
-        [ItemQuality.LEGENDARY]: "DesignDataItem:Id_Item_VisoredBarbutaHelm_6001",
-        [ItemQuality.ARTIFACT]: "DesignDataItem:Id_Item_VisoredBarbutaHelm_7001",
+        [ItemQuality.LEGENDARY]:
+            "DesignDataItem:Id_Item_VisoredBarbutaHelm_6001",
+        [ItemQuality.ARTIFACT]:
+            "DesignDataItem:Id_Item_VisoredBarbutaHelm_7001",
     },
     WANDERER_ATTIRE: {
         [ItemQuality.JUNK]: "DesignDataItem:Id_Item_WandererAttire_0001",
@@ -1740,4 +1752,61 @@ export const Items = {
         [ItemQuality.LEGENDARY]: "DesignDataItem:Id_Item_Zweihander_6001",
         [ItemQuality.ARTIFACT]: "DesignDataItem:Id_Item_Zweihander_7001",
     },
+};
+
+export const itemIdToMaxCount = (itemId: string): number => {
+    switch (itemId) {
+        case Items.GOLD_COINS.NONE:
+            return 10;
+
+        case Items.GOLD_COIN_PURSE.NONE:
+            return 50;
+
+        case Items.BANDAGE.JUNK:
+        case Items.BANDAGE.POOR:
+        case Items.BANDAGE.COMMON:
+        case Items.BANDAGE.UNCOMMON:
+        case Items.BANDAGE.RARE:
+        case Items.BANDAGE.EPIC:
+        case Items.BANDAGE.ARTIFACT:
+        case Items.BANDAGE.LEGENDARY:
+            return 3;
+
+        case Items.HEALING_POTION.JUNK:
+        case Items.HEALING_POTION.POOR:
+        case Items.HEALING_POTION.COMMON:
+        case Items.HEALING_POTION.UNCOMMON:
+        case Items.HEALING_POTION.RARE:
+        case Items.HEALING_POTION.EPIC:
+        case Items.HEALING_POTION.ARTIFACT:
+        case Items.HEALING_POTION.LEGENDARY:
+        case Items.CLARITY_POTION.JUNK:
+        case Items.CLARITY_POTION.POOR:
+        case Items.CLARITY_POTION.COMMON:
+        case Items.CLARITY_POTION.UNCOMMON:
+        case Items.CLARITY_POTION.RARE:
+        case Items.CLARITY_POTION.EPIC:
+        case Items.CLARITY_POTION.ARTIFACT:
+        case Items.CLARITY_POTION.LEGENDARY:
+        case Items.PROTECTION_POTION.JUNK:
+        case Items.PROTECTION_POTION.POOR:
+        case Items.PROTECTION_POTION.COMMON:
+        case Items.PROTECTION_POTION.UNCOMMON:
+        case Items.PROTECTION_POTION.RARE:
+        case Items.PROTECTION_POTION.EPIC:
+        case Items.PROTECTION_POTION.ARTIFACT:
+        case Items.PROTECTION_POTION.LEGENDARY:
+        case Items.INVISIBILITY_POTION.JUNK:
+        case Items.INVISIBILITY_POTION.POOR:
+        case Items.INVISIBILITY_POTION.COMMON:
+        case Items.INVISIBILITY_POTION.UNCOMMON:
+        case Items.INVISIBILITY_POTION.RARE:
+        case Items.INVISIBILITY_POTION.EPIC:
+        case Items.INVISIBILITY_POTION.ARTIFACT:
+        case Items.INVISIBILITY_POTION.LEGENDARY:
+            return 3;
+
+        default:
+            return 1;
+    }
 };
