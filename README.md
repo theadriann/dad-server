@@ -59,6 +59,15 @@ npm run dev
 ```
 
   </li>
+  <li>
+  <p>To connect to the server, modify the game's shortcut target by right-clicking on the game's shortcut and selecting 'Properties'. Then, update the target to connect to your server.</p>
+
+```bash
+"C:\Program Files\IRONMACE\Dark and Darker A5\DungeonCrawler.exe" -server=SERVER_IP:DISCOVERY_PORT
+```
+
+  <p>Replace the placeholders `SERVER_IP` and `DISCOVERY_PORT` with their corresponding values found in the `.env` file.</p>
+  </li>
 </ol>
 
 <h2 id="contributing">Contributing</h2>
