@@ -29,6 +29,7 @@ export const getMerchantBuyStockList = (merchantId: MERCHANTS_IDS_TYPE) => {
         case "WOODSMAN":
         case "VALENTINE":
         case "TAVERN_MASTER":
+        case "PUMPKIN_MAN":
             return getMerchantStockListFromJSON(merchantId);
 
         default:

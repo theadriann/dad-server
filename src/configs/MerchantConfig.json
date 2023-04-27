@@ -338,6 +338,29 @@
             }
         ]
     },
+    "PUMPKIN_MAN": {
+        "key": "PUMPKIN_MAN",
+        "items": [
+            {
+                "id": 1,
+                "name": "TROLL_BLOOD",
+                "quality": "EPIC",
+                "itemCount": 1
+            },
+            {
+                "id": 2,
+                "name": "SPLENDID_CLOAK",
+                "quality": "EPIC",
+                "itemCount": 0,
+                "properties": [["MOVESPEED", 10]],
+                "secondaryProperties": [
+                    ["STRENGTH", 2],
+                    ["PRIMITIVE", 3],
+                    ["AGILITY", 2]
+                ]
+            }
+        ]
+    },
     "SURGEON": {
         "key": "SURGEON",
         "items": [

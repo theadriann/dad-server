@@ -13,6 +13,7 @@ export enum MERCHANTS_IDS {
     WEAPONSMITH = `DesignDataMerchant:Id_Merchant_Weaponsmith`,
     GOBLIN_MERCHANT = `DesignDataMerchant:Id_Merchant_GoblinMerchant`,
     VALENTINE = `DesignDataMerchant:Id_Merchant_Valentine`,
+    PUMPKIN_MAN = `DesignDataMerchant:Id_Merchant_PumpkinMan`,
 }
 
 export type MERCHANTS_IDS_TYPE = keyof typeof MERCHANTS_IDS;
@@ -45,6 +46,8 @@ export const merchantIdFromClient = (merchantId: string): string => {
             return "GOBLIN_MERCHANT";
         case `DesignDataMerchant:Id_Merchant_Valentine`:
             return "VALENTINE";
+        case `DesignDataMerchant:Id_Merchant_PumpkinMan`:
+            return "PUMPKIN_MAN";
         default:
             return "";
     }
