@@ -290,7 +290,8 @@ export const generateStackOfGoldCoinPurse = (amount: number) => {
     return Item.fromSItem(
         SItem.create({
             inventoryId: DefineItem_InventoryId.STORAGE,
-            itemCount: Math.max(Math.min(amount, 50), 1),
+            itemCount: 1,
+            itemContentsCount: Math.max(Math.min(amount, 100), 1),
             itemId: Items.GOLD_COIN_PURSE.NONE,
             primaryPropertyArray: [],
             slotId: DefineEquipment_SlotId.NONE,

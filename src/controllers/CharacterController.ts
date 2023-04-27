@@ -72,10 +72,11 @@ export const createCharacter = async (data: Buffer, socket: net.Socket) => {
         );
     }
 
-    let totalGold = 200;
+    let totalGold = 421;
     let slotId = 0;
     while (totalGold > 0) {
         const randomGold = random(1, 10);
+        // const randomGold = random(1, 100);
         const gold =
             randomGold > 10
                 ? generateStackOfGoldCoinPurse(randomGold)

@@ -38,10 +38,22 @@ export class Item {
         this.id = obj.id;
         this.itemId = obj.item_id;
         this.itemCount = obj.item_count;
+        this.itemContentsCount = obj.item_contents_count;
+        this.itemAmmoCount = obj.item_ammo_count;
         this.inventoryId = obj.inventory_id;
         this.slotId = obj.slot_id;
 
-        this.primaryPropertyArray = JSON.parse(obj.properties);
+        try {
+            this.primaryPropertyArray = JSON.parse(obj.properties);
+        } catch (e) {
+            this.primaryPropertyArray = [];
+        }
+
+        try {
+            this.secondaryPropertyArray = JSON.parse(obj.secondary_properties);
+        } catch (e) {
+            this.secondaryPropertyArray = [];
+        }
 
         return this;
     }
