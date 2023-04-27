@@ -29,12 +29,16 @@ git clone https://github.com/theadriann/dad-server
 ```
 
   </li>
+  
   <li>
+  <p>You will need to have Node.JS installed. You can installed it from here <a href="https://nodejs.org/en" target="_new">https://nodejs.org/en</a></p>
+  </li>
+
   <li>
   <p>If there is no `.env` file in your project directory, copy `.env.example` to `.env` and edit the relevant information (like your server ip address).</p>
   </li>
-  <p>You will need to have Node.JS installed. You can installed it from here <a href="https://nodejs.org/en" target="_new">https://nodejs.org/en</a></p>
-  </li>
+  
+
   <li>
   <p>Install the project dependencies by running the following command in the project directory:</p>
 
