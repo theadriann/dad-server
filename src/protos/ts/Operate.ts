@@ -169,7 +169,7 @@ export interface OperateBanHardware {
   banType: number;
 }
 
-export interface OperateCharacterInfo {
+export interface OperateCharacterInfo2 {
   accountId: number;
   characterId: number;
   nickname: string;
@@ -2622,7 +2622,7 @@ export const OperateBanHardware = {
   },
 };
 
-function createBaseOperateCharacterInfo(): OperateCharacterInfo {
+function createBaseOperateCharacterInfo2(): OperateCharacterInfo2 {
   return {
     accountId: 0,
     characterId: 0,
@@ -2636,8 +2636,8 @@ function createBaseOperateCharacterInfo(): OperateCharacterInfo {
   };
 }
 
-export const OperateCharacterInfo = {
-  encode(message: OperateCharacterInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const OperateCharacterInfo2 = {
+  encode(message: OperateCharacterInfo2, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.accountId !== 0) {
       writer.uint32(8).uint64(message.accountId);
     }
@@ -2668,10 +2668,10 @@ export const OperateCharacterInfo = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): OperateCharacterInfo {
+  decode(input: _m0.Reader | Uint8Array, length?: number): OperateCharacterInfo2 {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseOperateCharacterInfo();
+    const message = createBaseOperateCharacterInfo2();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -2747,7 +2747,7 @@ export const OperateCharacterInfo = {
     return message;
   },
 
-  fromJSON(object: any): OperateCharacterInfo {
+  fromJSON(object: any): OperateCharacterInfo2 {
     return {
       accountId: isSet(object.accountId) ? Number(object.accountId) : 0,
       characterId: isSet(object.characterId) ? Number(object.characterId) : 0,
@@ -2763,7 +2763,7 @@ export const OperateCharacterInfo = {
     };
   },
 
-  toJSON(message: OperateCharacterInfo): unknown {
+  toJSON(message: OperateCharacterInfo2): unknown {
     const obj: any = {};
     message.accountId !== undefined && (obj.accountId = Math.round(message.accountId));
     message.characterId !== undefined && (obj.characterId = Math.round(message.characterId));
@@ -2785,12 +2785,12 @@ export const OperateCharacterInfo = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<OperateCharacterInfo>, I>>(base?: I): OperateCharacterInfo {
-    return OperateCharacterInfo.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<OperateCharacterInfo2>, I>>(base?: I): OperateCharacterInfo2 {
+    return OperateCharacterInfo2.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<OperateCharacterInfo>, I>>(object: I): OperateCharacterInfo {
-    const message = createBaseOperateCharacterInfo();
+  fromPartial<I extends Exact<DeepPartial<OperateCharacterInfo2>, I>>(object: I): OperateCharacterInfo2 {
+    const message = createBaseOperateCharacterInfo2();
     message.accountId = object.accountId ?? 0;
     message.characterId = object.characterId ?? 0;
     message.nickname = object.nickname ?? "";

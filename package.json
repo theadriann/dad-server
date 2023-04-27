@@ -4,7 +4,8 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "tsx src/index.ts",
+        "build": "tsc && tsc-alias",
+        "start": "node dist/src/index.js",
         "dev": "tsx watch src/index.ts",
         "migrate": "prisma migrate deploy"
     },
@@ -23,6 +24,7 @@
         "pino": "^8.11.0",
         "pino-pretty": "^10.0.0",
         "protobufjs": "^7.2.3",
+        "tsc-alias": "^1.8.6",
         "tsx": "^3.12.6",
         "typescript": "^5.0.4"
     },
