@@ -4,7 +4,7 @@ import { smerchantInfo } from "@/protos/ts/Merchant";
 export class Merchant {
     id: number = 0;
     merchantId: string = "";
-    remainingTime: number = 1000 * 60 * 2 + 1000 * 25;
+    remainingTime: number = 11700;
 
     constructor() {}
 

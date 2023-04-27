@@ -83,7 +83,7 @@ export const EffectTypes = {
         "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_SpellCapacityAdd",
     SPELL_CAPACITY_BONUS:
         "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_SpellCapacityBonus",
-    SPELL_CASTINGS_PEED:
+    SPELL_CASTING_SPEED:
         "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_SpellCastingSpeed",
     STRENGTH: "DesignDataItemPropertyType:Id_ItemPropertyType_Effect_Strength",
     UTILITY_EFFECTIVENESS_ADD:

@@ -85,7 +85,7 @@ export class Party {
                     nickName: user.characterNicknameObject,
                     partyIdx: index + 1,
                     equipItemList: user.characterItems.map((item) =>
-                        item.toJSON()
+                        item.toSItem()
                     ),
                 };
 

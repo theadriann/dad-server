@@ -33,14 +33,19 @@ model Character {
 }
 
 model Inventory {
-  id         Int    @id @default(autoincrement())
-  item_id    String
-  item_count Int
-  slot_id    Int
+  id      Int    @id @default(autoincrement())
+  item_id String
 
-  properties String
+  item_count          Int @default(0)
+  item_contents_count Int @default(0)
+  item_ammo_count     Int @default(0)
+
+  properties           String
+  secondary_properties String @default("")
 
   inventory_id Int
+  slot_id      Int
+
   character_id Int
 
   created_at DateTime @default(now())

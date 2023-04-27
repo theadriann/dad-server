@@ -41,188 +41,220 @@ import { Item } from "@/models/Item";
 
 export const generateFighterStartItems = () => {
     return [
-        Item.fromJSON({
-            inventoryId: DefineItem_InventoryId.EQUIPMENT,
-            slotId: DefineEquipment_SlotId.PRIMARY_A,
-            itemId: Items.ARMING_SWORD.RARE,
-            itemCount: 1,
-            primaryPropertyArray: [
-                SItemProperty.create({
-                    propertyTypeId: EffectTypes.MOVESPEED,
-                    propertyValue: -20,
-                }),
+        Item.fromSItem(
+            SItem.create({
+                inventoryId: DefineItem_InventoryId.EQUIPMENT,
+                slotId: DefineEquipment_SlotId.PRIMARY_A,
+                itemId: Items.ARMING_SWORD.RARE,
+                itemCount: 1,
+                primaryPropertyArray: [
+                    SItemProperty.create({
+                        propertyTypeId: EffectTypes.MOVESPEED,
+                        propertyValue: -20,
+                    }),
 
-                SItemProperty.create({
-                    propertyTypeId: EffectTypes.PHYSICAL_WEAPON_DAMAGE,
-                    propertyValue: 23,
-                }),
-            ],
-        }),
-        Item.fromJSON({
-            inventoryId: DefineItem_InventoryId.EQUIPMENT,
-            slotId: DefineEquipment_SlotId.SECONDARY_A,
-            itemId: Items.ROUND_SHIELD.JUNK,
-            itemCount: 1,
-            primaryPropertyArray: [
-                SItemProperty.create({
-                    propertyTypeId: EffectTypes.ARMOR_RATING,
-                    propertyValue: 13,
-                }),
+                    SItemProperty.create({
+                        propertyTypeId: EffectTypes.PHYSICAL_WEAPON_DAMAGE,
+                        propertyValue: 23,
+                    }),
+                ],
+            })
+        ),
+        Item.fromSItem(
+            SItem.create({
+                inventoryId: DefineItem_InventoryId.EQUIPMENT,
+                slotId: DefineEquipment_SlotId.SECONDARY_A,
+                itemId: Items.ROUND_SHIELD.JUNK,
+                itemCount: 1,
+                primaryPropertyArray: [
+                    SItemProperty.create({
+                        propertyTypeId: EffectTypes.ARMOR_RATING,
+                        propertyValue: 13,
+                    }),
 
-                SItemProperty.create({
-                    propertyTypeId: EffectTypes.MOVESPEED,
-                    propertyValue: -12,
-                }),
-            ],
-        }),
-        Item.fromJSON({
-            inventoryId: DefineItem_InventoryId.EQUIPMENT,
-            slotId: DefineEquipment_SlotId.CHEST,
-            itemId: Items.ADVENTURER_TUNIC.JUNK,
-            itemCount: 1,
-            primaryPropertyArray: [
-                SItemProperty.create({
-                    propertyTypeId: EffectTypes.ARMOR_RATING,
-                    propertyValue: 41,
-                }),
+                    SItemProperty.create({
+                        propertyTypeId: EffectTypes.MOVESPEED,
+                        propertyValue: -12,
+                    }),
+                ],
+            })
+        ),
+        Item.fromSItem(
+            SItem.create({
+                inventoryId: DefineItem_InventoryId.EQUIPMENT,
+                slotId: DefineEquipment_SlotId.CHEST,
+                itemId: Items.ADVENTURER_TUNIC.JUNK,
+                itemCount: 1,
+                primaryPropertyArray: [
+                    SItemProperty.create({
+                        propertyTypeId: EffectTypes.ARMOR_RATING,
+                        propertyValue: 41,
+                    }),
 
-                SItemProperty.create({
-                    propertyTypeId: EffectTypes.MOVESPEED,
-                    propertyValue: -5,
-                }),
-            ],
-        }),
-        Item.fromJSON({
-            inventoryId: DefineItem_InventoryId.EQUIPMENT,
-            slotId: DefineEquipment_SlotId.LEGS,
-            itemId: Items.CLOTH_PANTS.JUNK,
-            itemCount: 1,
-            primaryPropertyArray: [
-                SItemProperty.create({
-                    propertyTypeId: EffectTypes.ARMOR_RATING,
-                    propertyValue: 8,
-                }),
+                    SItemProperty.create({
+                        propertyTypeId: EffectTypes.MOVESPEED,
+                        propertyValue: -5,
+                    }),
+                ],
+            })
+        ),
+        Item.fromSItem(
+            SItem.create({
+                inventoryId: DefineItem_InventoryId.EQUIPMENT,
+                slotId: DefineEquipment_SlotId.LEGS,
+                itemId: Items.CLOTH_PANTS.JUNK,
+                itemCount: 1,
+                primaryPropertyArray: [
+                    SItemProperty.create({
+                        propertyTypeId: EffectTypes.ARMOR_RATING,
+                        propertyValue: 8,
+                    }),
 
-                SItemProperty.create({
-                    propertyTypeId: EffectTypes.MOVESPEED,
-                    propertyValue: -5,
-                }),
-            ],
-        }),
-        Item.fromJSON({
-            inventoryId: DefineItem_InventoryId.EQUIPMENT,
-            slotId: DefineEquipment_SlotId.UTILITY_A_2,
-            itemId: Items.BANDAGE.JUNK,
-            itemCount: 1,
-            primaryPropertyArray: [
-                SItemProperty.create({
-                    propertyTypeId: EffectTypes.MOVESPEED,
-                    propertyValue: -20,
-                }),
-            ],
-        }),
-        Item.fromJSON({
-            inventoryId: DefineItem_InventoryId.EQUIPMENT,
-            slotId: DefineEquipment_SlotId.UTILITY_A_1,
-            itemId: Items.LANTERN.JUNK,
-            itemCount: 1,
-            primaryPropertyArray: [
-                SItemProperty.create({
-                    propertyTypeId: EffectTypes.MOVESPEED,
-                    propertyValue: -10,
-                }),
+                    SItemProperty.create({
+                        propertyTypeId: EffectTypes.MOVESPEED,
+                        propertyValue: -5,
+                    }),
+                ],
+            })
+        ),
+        Item.fromSItem(
+            SItem.create({
+                inventoryId: DefineItem_InventoryId.EQUIPMENT,
+                slotId: DefineEquipment_SlotId.UTILITY_A_2,
+                itemId: Items.BANDAGE.JUNK,
+                itemCount: 1,
+                primaryPropertyArray: [
+                    SItemProperty.create({
+                        propertyTypeId: EffectTypes.MOVESPEED,
+                        propertyValue: -20,
+                    }),
+                ],
+            })
+        ),
+        Item.fromSItem(
+            SItem.create({
+                inventoryId: DefineItem_InventoryId.EQUIPMENT,
+                slotId: DefineEquipment_SlotId.UTILITY_A_1,
+                itemId: Items.LANTERN.JUNK,
+                itemCount: 1,
+                primaryPropertyArray: [
+                    SItemProperty.create({
+                        propertyTypeId: EffectTypes.MOVESPEED,
+                        propertyValue: -10,
+                    }),
 
-                SItemProperty.create({
-                    propertyTypeId: EffectTypes.PHYSICAL_WEAPON_DAMAGE,
-                    propertyValue: 13,
-                }),
-            ],
-        }),
-        Item.fromJSON({
-            inventoryId: DefineItem_InventoryId.EQUIPMENT,
-            slotId: DefineEquipment_SlotId.SECONDARY_B,
-            itemId: Items.TORCH.JUNK,
-            itemCount: 1,
-            primaryPropertyArray: [
-                SItemProperty.create({
-                    propertyTypeId: EffectTypes.PHYSICAL_WEAPON_DAMAGE,
-                    propertyValue: 15,
-                }),
+                    SItemProperty.create({
+                        propertyTypeId: EffectTypes.PHYSICAL_WEAPON_DAMAGE,
+                        propertyValue: 13,
+                    }),
+                ],
+            })
+        ),
+        Item.fromSItem(
+            SItem.create({
+                inventoryId: DefineItem_InventoryId.EQUIPMENT,
+                slotId: DefineEquipment_SlotId.SECONDARY_B,
+                itemId: Items.TORCH.JUNK,
+                itemCount: 1,
+                primaryPropertyArray: [
+                    SItemProperty.create({
+                        propertyTypeId: EffectTypes.PHYSICAL_WEAPON_DAMAGE,
+                        propertyValue: 15,
+                    }),
 
-                SItemProperty.create({
-                    propertyTypeId: EffectTypes.MOVESPEED,
-                    propertyValue: -12,
-                }),
-            ],
-        }),
+                    SItemProperty.create({
+                        propertyTypeId: EffectTypes.MOVESPEED,
+                        propertyValue: -12,
+                    }),
+                ],
+            })
+        ),
     ];
 };
 
 export const generateRangerStartItems = () => {
     return [
-        Item.fromJSON({
-            inventoryId: DefineItem_InventoryId.EQUIPMENT,
-            slotId: DefineEquipment_SlotId.PRIMARY_A,
-            itemId: Items.RECURVE_BOW.JUNK,
-            itemCount: 1,
-            primaryPropertyArray: [],
-        }),
-        Item.fromJSON({
-            inventoryId: DefineItem_InventoryId.EQUIPMENT,
-            slotId: DefineEquipment_SlotId.SECONDARY_B,
-            itemId: Items.SHORT_SWORD.JUNK,
-            itemCount: 1,
-            primaryPropertyArray: [],
-        }),
-        Item.fromJSON({
-            inventoryId: DefineItem_InventoryId.EQUIPMENT,
-            slotId: DefineEquipment_SlotId.HEAD,
-            itemId: Items.RANGER_HOOD.JUNK,
-            itemCount: 1,
-            primaryPropertyArray: [],
-        }),
-        Item.fromJSON({
-            inventoryId: DefineItem_InventoryId.EQUIPMENT,
-            slotId: DefineEquipment_SlotId.CHEST,
-            itemId: Items.DOUBLET.JUNK,
-            itemCount: 1,
-            primaryPropertyArray: [],
-        }),
-        Item.fromJSON({
-            inventoryId: DefineItem_InventoryId.EQUIPMENT,
-            slotId: DefineEquipment_SlotId.LEGS,
-            itemId: Items.CLOTH_PANTS.JUNK,
-            itemCount: 1,
-            primaryPropertyArray: [],
-        }),
-        Item.fromJSON({
-            inventoryId: DefineItem_InventoryId.EQUIPMENT,
-            slotId: DefineEquipment_SlotId.UTILITY_A_2,
-            itemId: Items.BANDAGE.JUNK,
-            itemCount: 1,
-            primaryPropertyArray: [],
-        }),
-        Item.fromJSON({
-            inventoryId: DefineItem_InventoryId.EQUIPMENT,
-            slotId: DefineEquipment_SlotId.UTILITY_A_1,
-            itemId: Items.LANTERN.JUNK,
-            itemCount: 1,
-            primaryPropertyArray: [],
-        }),
-        Item.fromJSON({
-            inventoryId: DefineItem_InventoryId.EQUIPMENT,
-            slotId: DefineEquipment_SlotId.UTILITY_A_3,
-            itemId: Items.HUNTING_TRAP.JUNK,
-            itemCount: 1,
-            primaryPropertyArray: [],
-        }),
-        Item.fromJSON({
-            inventoryId: DefineItem_InventoryId.BAG,
-            slotId: DefineEquipment_SlotId.NONE,
-            itemId: Items.TORCH.JUNK,
-            itemCount: 1,
-            primaryPropertyArray: [],
-        }),
+        Item.fromSItem(
+            SItem.create({
+                inventoryId: DefineItem_InventoryId.EQUIPMENT,
+                slotId: DefineEquipment_SlotId.PRIMARY_A,
+                itemId: Items.RECURVE_BOW.JUNK,
+                itemCount: 1,
+                primaryPropertyArray: [],
+            })
+        ),
+        Item.fromSItem(
+            SItem.create({
+                inventoryId: DefineItem_InventoryId.EQUIPMENT,
+                slotId: DefineEquipment_SlotId.SECONDARY_B,
+                itemId: Items.SHORT_SWORD.JUNK,
+                itemCount: 1,
+                primaryPropertyArray: [],
+            })
+        ),
+        Item.fromSItem(
+            SItem.create({
+                inventoryId: DefineItem_InventoryId.EQUIPMENT,
+                slotId: DefineEquipment_SlotId.HEAD,
+                itemId: Items.RANGER_HOOD.JUNK,
+                itemCount: 1,
+                primaryPropertyArray: [],
+            })
+        ),
+        Item.fromSItem(
+            SItem.create({
+                inventoryId: DefineItem_InventoryId.EQUIPMENT,
+                slotId: DefineEquipment_SlotId.CHEST,
+                itemId: Items.DOUBLET.JUNK,
+                itemCount: 1,
+                primaryPropertyArray: [],
+            })
+        ),
+        Item.fromSItem(
+            SItem.create({
+                inventoryId: DefineItem_InventoryId.EQUIPMENT,
+                slotId: DefineEquipment_SlotId.LEGS,
+                itemId: Items.CLOTH_PANTS.JUNK,
+                itemCount: 1,
+                primaryPropertyArray: [],
+            })
+        ),
+        Item.fromSItem(
+            SItem.create({
+                inventoryId: DefineItem_InventoryId.EQUIPMENT,
+                slotId: DefineEquipment_SlotId.UTILITY_A_2,
+                itemId: Items.BANDAGE.JUNK,
+                itemCount: 1,
+                primaryPropertyArray: [],
+            })
+        ),
+        Item.fromSItem(
+            SItem.create({
+                inventoryId: DefineItem_InventoryId.EQUIPMENT,
+                slotId: DefineEquipment_SlotId.UTILITY_A_1,
+                itemId: Items.LANTERN.JUNK,
+                itemCount: 1,
+                primaryPropertyArray: [],
+            })
+        ),
+        Item.fromSItem(
+            SItem.create({
+                inventoryId: DefineItem_InventoryId.EQUIPMENT,
+                slotId: DefineEquipment_SlotId.UTILITY_A_3,
+                itemId: Items.HUNTING_TRAP.JUNK,
+                itemCount: 1,
+                primaryPropertyArray: [],
+            })
+        ),
+        Item.fromSItem(
+            SItem.create({
+                inventoryId: DefineItem_InventoryId.BAG,
+                slotId: DefineEquipment_SlotId.NONE,
+                itemId: Items.TORCH.JUNK,
+                itemCount: 1,
+                primaryPropertyArray: [],
+            })
+        ),
     ];
 };
 
@@ -243,21 +275,25 @@ export const generateStartItems = (characterClass: CharacterClassKey) => {
 };
 
 export const generateStackOfGoldCoins = (amount: number) => {
-    return Item.fromJSON({
-        inventoryId: DefineItem_InventoryId.STORAGE,
-        itemCount: Math.max(Math.min(amount, 20), 1),
-        itemId: Items.GOLD_COINS.NONE,
-        primaryPropertyArray: [],
-        slotId: DefineEquipment_SlotId.NONE,
-    });
+    return Item.fromSItem(
+        SItem.create({
+            inventoryId: DefineItem_InventoryId.STORAGE,
+            itemCount: Math.max(Math.min(amount, 20), 1),
+            itemId: Items.GOLD_COINS.NONE,
+            primaryPropertyArray: [],
+            slotId: DefineEquipment_SlotId.NONE,
+        })
+    );
 };
 
 export const generateStackOfGoldCoinPurse = (amount: number) => {
-    return Item.fromJSON({
-        inventoryId: DefineItem_InventoryId.STORAGE,
-        itemCount: Math.max(Math.min(amount, 50), 1),
-        itemId: Items.GOLD_COIN_PURSE.NONE,
-        primaryPropertyArray: [],
-        slotId: DefineEquipment_SlotId.NONE,
-    });
+    return Item.fromSItem(
+        SItem.create({
+            inventoryId: DefineItem_InventoryId.STORAGE,
+            itemCount: Math.max(Math.min(amount, 50), 1),
+            itemId: Items.GOLD_COIN_PURSE.NONE,
+            primaryPropertyArray: [],
+            slotId: DefineEquipment_SlotId.NONE,
+        })
+    );
 };

@@ -1,0 +1,374 @@
+{
+    "ALCHEMIST": {
+        "key": "ALCHEMIST",
+        "items": [
+            {
+                "id": 1,
+                "name": "HEALING_POTION",
+                "quality": "POOR",
+                "itemCount": 1,
+                "properties": [["MOVESPEED", -20]]
+            },
+            {
+                "id": 2,
+                "name": "HEALING_POTION",
+                "quality": "COMMON",
+                "itemCount": 1,
+                "properties": [["MOVESPEED", -20]]
+            },
+            {
+                "id": 3,
+                "name": "HEALING_POTION",
+                "quality": "POOR",
+                "itemCount": 3,
+                "properties": [["MOVESPEED", -20]]
+            },
+            {
+                "id": 4,
+                "name": "HEALING_POTION",
+                "quality": "COMMON",
+                "itemCount": 3,
+                "properties": [["MOVESPEED", -20]]
+            },
+            {
+                "id": 5,
+                "name": "PROTECTION_POTION",
+                "quality": "POOR",
+                "itemCount": 1,
+                "properties": [["MOVESPEED", -20]]
+            },
+            {
+                "id": 6,
+                "name": "WIZARD_STAFF",
+                "quality": "POOR",
+                "itemCount": 0,
+                "properties": [
+                    ["MOVESPEED", -20],
+                    ["PHYSICAL_WEAPON_DAMAGE", 22]
+                ]
+            },
+            {
+                "id": 7,
+                "name": "CRYSTAL_SWORD",
+                "quality": "POOR",
+                "itemCount": 0,
+                "properties": [
+                    ["MAGICAL_WEAPON_DAMAGE", 8],
+                    ["MOVESPEED", -30],
+                    ["PHYSICAL_WEAPON_DAMAGE", 9]
+                ]
+            },
+            {
+                "id": 8,
+                "name": "SPELLBOOK",
+                "quality": "COMMON",
+                "itemCount": 0,
+                "properties": [
+                    ["MAGICAL_DAMAGE", 3],
+                    ["MOVESPEED", -10]
+                ]
+            },
+            {
+                "id": 9,
+                "name": "WIZARD_STAFF",
+                "quality": "UNCOMMON",
+                "itemCount": 0,
+                "properties": [
+                    ["MOVESPEED", -20],
+                    ["PHYSICAL_WEAPON_DAMAGE", 26]
+                ],
+                "secondaryProperties": [["MAGICAL_POWER", 2]]
+            }
+        ]
+    },
+    "WOODSMAN": {
+        "key": "WOODSMAN",
+        "items": [
+            {
+                "id": 1,
+                "name": "HATCHET",
+                "quality": "POOR",
+                "itemCount": 1,
+                "properties": [
+                    ["MOVESPEED", -25],
+                    ["PHYSICAL_WEAPON_DAMAGE", 18]
+                ]
+            },
+            {
+                "id": 2,
+                "name": "RECURVE_BOW",
+                "quality": "POOR",
+                "itemCount": 1,
+                "properties": [
+                    ["MOVESPEED", -40],
+                    ["PHYSICAL_WEAPON_DAMAGE", 28]
+                ]
+            },
+            {
+                "id": 3,
+                "name": "CAMPFIRE_KIT",
+                "quality": "POOR",
+                "itemCount": 3,
+                "properties": [["MOVESPEED", -20]]
+            },
+            {
+                "id": 4,
+                "name": "LONGBOW",
+                "quality": "UNCOMMON",
+                "itemCount": 3,
+                "properties": [
+                    ["MOVESPEED", -50],
+                    ["PHYSICAL_WEAPON_DAMAGE", 44]
+                ],
+                "secondaryProperties": [["ARMOR_PENETRATION", 30]]
+            },
+            {
+                "id": 5,
+                "name": "ARROW",
+                "quality": "JUNK",
+                "itemCount": 10
+            },
+            {
+                "id": 6,
+                "name": "HUNTING_TRAP",
+                "quality": "POOR",
+                "itemCount": 0,
+                "properties": [["MOVESPEED", -20]]
+            },
+            {
+                "id": 7,
+                "name": "BOLT",
+                "quality": "JUNK",
+                "itemCount": 10
+            },
+            {
+                "id": 8,
+                "name": "FRANCISCA_AXE",
+                "quality": "POOR",
+                "itemCount": 3,
+                "properties": [
+                    ["MOVESPEED", -10],
+                    ["PHYSICAL_WEAPON_DAMAGE", 20]
+                ]
+            },
+            {
+                "id": 9,
+                "name": "PICKAXE",
+                "quality": "COMMON",
+                "itemCount": 0,
+                "properties": [
+                    ["MOVESPEED", -45],
+                    ["PHYSICAL_WEAPON_DAMAGE", 20]
+                ]
+            },
+            {
+                "id": 10,
+                "name": "WINDLASS_CROSSBOW",
+                "quality": "POOR",
+                "itemCount": 0,
+                "properties": [
+                    ["MOVESPEED", -60],
+                    ["PHYSICAL_WEAPON_DAMAGE", 50]
+                ]
+            },
+            {
+                "id": 11,
+                "name": "HATCHET",
+                "quality": "UNCOMMON",
+                "itemCount": 0,
+                "properties": [
+                    ["MOVESPEED", -25],
+                    ["PHYSICAL_WEAPON_DAMAGE", 20]
+                ]
+            },
+            {
+                "id": 12,
+                "name": "TORCH",
+                "quality": "JUNK",
+                "itemCount": 0,
+                "properties": [
+                    ["MOVESPEED", -10],
+                    ["PHYSICAL_WEAPON_DAMAGE", 13]
+                ]
+            }
+        ]
+    },
+    "VALENTINE": {
+        "key": "VALENTINE",
+        "items": [
+            {
+                "id": 1,
+                "name": "DOUBLE_AXE",
+                "quality": "EPIC",
+                "properties": [
+                    ["MOVESPEED", -45],
+                    ["PHYSICAL_WEAPON_DAMAGE", 67]
+                ],
+                "secondaryProperties": [
+                    ["MOVESPEED_BONUS", 13],
+                    ["BUFF_DURATION_BONUS", 11],
+                    ["MAGICAL_INTERACTION_SPEED", 26]
+                ]
+            },
+            {
+                "id": 2,
+                "name": "NORTHERN_FULL_TUNIC",
+                "quality": "EPIC",
+                "properties": [
+                    ["ARMOR_RATING", 73],
+                    ["MAGIC_REGISTANCE", 20],
+                    ["MOVESPEED", -15]
+                ],
+                "secondaryProperties": [
+                    ["ITEM_EQUIP_SPEED", 32],
+                    ["SPELL_CAPACITY_ADD", 2],
+                    ["MAX_HEALTH_BONUS", 19]
+                ]
+            },
+            {
+                "id": 3,
+                "name": "FALCHION",
+                "quality": "EPIC",
+                "properties": [
+                    ["MOVESPEED", -25],
+                    ["PHYSICAL_WEAPON_DAMAGE", 49]
+                ],
+                "secondaryProperties": [
+                    ["WILL", 1],
+                    ["PRIMITIVE", 1],
+                    ["SPELL_CAPACITY_BONUS", 22]
+                ]
+            },
+            {
+                "id": 4,
+                "name": "RAPIER",
+                "quality": "EPIC",
+                "properties": [
+                    ["MOVESPEED", -13],
+                    ["PHYSICAL_WEAPON_DAMAGE", 30]
+                ],
+                "secondaryProperties": [
+                    ["ACTION_SPEED", 10],
+                    ["MAGICAL_INTERACTION_SPEED", 29],
+                    ["SPELL_CASTING_SPEED", 19]
+                ]
+            },
+            {
+                "id": 5,
+                "name": "WIZARD_STAFF",
+                "quality": "EPIC",
+                "properties": [
+                    ["MOVESPEED", -20],
+                    ["PHYSICAL_WEAPON_DAMAGE", 32]
+                ],
+                "secondaryProperties": [
+                    ["SPELL_CAPACITY_ADD", 2],
+                    ["SPELL_CAPACITY_BONUS", 51],
+                    ["SPELL_CASTING_SPEED", 16]
+                ]
+            },
+            {
+                "id": 6,
+                "name": "DOUBLET",
+                "quality": "EPIC",
+                "properties": [
+                    ["ARMOR_RATING", 27],
+                    ["MOVESPEED", -8]
+                ],
+                "secondaryProperties": [
+                    ["MAGICAL_DAMAGE_REDUCTION", 36],
+                    ["MAGIC_REGISTANCE", 10],
+                    ["PHYSICAL_POWER", 2]
+                ]
+            },
+            {
+                "id": 7,
+                "name": "ORACLE_ROBE",
+                "quality": "EPIC",
+                "properties": [
+                    ["ARMOR_RATING", 30],
+                    ["KNOWLEDGE", 1],
+                    ["MOVESPEED", -5]
+                ],
+                "secondaryProperties": [
+                    ["SPELL_CAPACITY_ADD", 2],
+                    ["MOVESPEED_BONUS", 13],
+                    ["PHYSICAL_DAMAGE_BONUS", 48]
+                ]
+            },
+            {
+                "id": 5,
+                "name": "QUARTERSTAFF",
+                "quality": "EPIC",
+                "properties": [
+                    ["MOVESPEED", -35],
+                    ["PHYSICAL_WEAPON_DAMAGE", 41]
+                ],
+                "secondaryProperties": [
+                    ["MOVESPEED_BONUS", 14],
+                    ["RESOURCEFULNESS", 1],
+                    ["MOVESPEED_ADD", 3]
+                ]
+            }
+        ]
+    },
+    "TAVERN_MASTER": {
+        "key": "TAVERN_MASTER",
+        "items": [
+            {
+                "id": 1,
+                "name": "ALE",
+                "quality": "POOR",
+                "itemCount": 1,
+                "properties": [["MOVESPEED", -20]]
+            },
+            {
+                "id": 2,
+                "name": "ALE",
+                "quality": "COMMON",
+                "itemCount": 1,
+                "properties": [["MOVESPEED", -20]]
+            },
+            {
+                "id": 3,
+                "name": "ALE",
+                "quality": "UNCOMMON",
+                "itemCount": 1,
+                "properties": [["MOVESPEED", -20]]
+            }
+        ]
+    },
+    "SURGEON": {
+        "key": "SURGEON",
+        "items": [
+            {
+                "id": 1,
+                "name": "BANDAGE",
+                "quality": "POOR",
+                "itemCount": 1,
+                "properties": [["MOVESPEED", -20]]
+            },
+            {
+                "id": 2,
+                "name": "BANDAGE",
+                "quality": "COMMON",
+                "itemCount": 1,
+                "properties": [["MOVESPEED", -20]]
+            },
+            {
+                "id": 3,
+                "name": "BANDAGE",
+                "quality": "POOR",
+                "itemCount": 3,
+                "properties": [["MOVESPEED", -20]]
+            },
+            {
+                "id": 4,
+                "name": "BANDAGE",
+                "quality": "COMMON",
+                "itemCount": 3,
+                "properties": [["MOVESPEED", -20]]
+            }
+        ]
+    }
+}

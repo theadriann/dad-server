@@ -166,7 +166,7 @@ export const listCharacters = async (data: Buffer, socket: net.Socket) => {
     for (let character_db of characters_db) {
         //
         const character_items = character_db.inventory.map((item) =>
-            new Item().fromDB(item).toJSON()
+            new Item().fromDB(item).toSItem()
         );
 
         characters.push(
@@ -220,7 +220,7 @@ export const getCharacterInfo = async (data: Buffer, socket: net.Socket) => {
     }
 
     const character_items = character_db.inventory.map((item) =>
-        new Item().fromDB(item).toJSON()
+        new Item().fromDB(item).toSItem()
     );
 
     res.result = PacketResult.SUCCESS;

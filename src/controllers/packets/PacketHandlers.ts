@@ -92,9 +92,11 @@ import {
 import {
     ss2cMerchantListRes,
     ss2cMerchantStockBuyItemListRes,
+    ss2cMerchantStockBuyRes,
     ss2cMerchantStockSellBackItemListRes,
 } from "@/protos/ts/Merchant";
 import {
+    buyMerchantItem,
     getMerchantBuyList,
     getMerchantList,
     getMerchantSellList,
@@ -558,6 +560,23 @@ export const PacketHandlers: PacketHandler[] = [
                 type: ss2cMerchantStockSellBackItemListRes,
                 handler: getMerchantSellList,
                 multiple: true,
+            },
+        ],
+    },
+
+    {
+        label: "Merchant Buy Item",
+        requestCommand: PacketCommand.C2S_MERCHANT_STOCK_BUY_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_MERCHANT_STOCK_BUY_RES,
+                type: ss2cMerchantStockBuyRes,
+                handler: buyMerchantItem,
+            },
+            {
+                command: PacketCommand.S2C_LOBBY_CHARACTER_INFO_RES,
+                handler: getCharacterInfo,
+                type: ss2cLobbyCharacterInfoRes,
             },
         ],
     },

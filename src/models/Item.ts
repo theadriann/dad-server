@@ -13,8 +13,11 @@ export class Item {
     itemCount: number = 0;
     inventoryId: DefineItem_InventoryId | null = null;
     slotId: DefineEquipment_SlotId | null = null;
+    itemContentsCount: number = 0;
+    itemAmmoCount: number = 0;
 
     primaryPropertyArray: SItemProperty[] = [];
+    secondaryPropertyArray: SItemProperty[] = [];
 
     constructor() {}
 
@@ -53,9 +56,12 @@ export class Item {
         const obj: any = {
             item_id: this.itemId,
             item_count: this.itemCount,
+            item_contents_count: this.itemContentsCount || 0,
+            item_ammo_count: this.itemAmmoCount || 0,
             inventory_id: this.inventoryId || 0,
             slot_id: this.slotId || 0,
             properties: JSON.stringify(this.primaryPropertyArray),
+            secondary_properties: JSON.stringify(this.secondaryPropertyArray),
         };
 
         if (this.id) {
@@ -65,44 +71,36 @@ export class Item {
         return obj;
     }
 
-    static fromJSON(obj: {
-        id?: number;
-        itemId: string;
-        itemCount: number;
-        inventoryId: DefineItem_InventoryId | null;
-        slotId: DefineEquipment_SlotId | null;
-        primaryPropertyArray: SItemProperty[];
-    }) {
+    static fromSItem(obj: SItem) {
         const item = new Item();
-        item.fromJSON(obj);
+        item.fromSItem(obj);
         return item;
     }
 
-    fromJSON(obj: {
-        id?: number;
-        itemId: string;
-        itemCount: number;
-        inventoryId: DefineItem_InventoryId | null;
-        slotId: DefineEquipment_SlotId | null;
-        primaryPropertyArray: SItemProperty[];
-    }) {
-        this.id = obj.id || 0;
+    fromSItem(obj: SItem) {
+        this.id = obj.itemUniqueId || 0;
         this.itemId = obj.itemId;
         this.itemCount = obj.itemCount;
         this.inventoryId = obj.inventoryId;
         this.slotId = obj.slotId;
+        this.itemAmmoCount = obj.itemAmmoCount;
+        this.itemContentsCount = obj.itemContentsCount;
 
         this.primaryPropertyArray = obj.primaryPropertyArray;
+        this.secondaryPropertyArray = obj.secondaryPropertyArray;
     }
 
-    toJSON() {
+    toSItem() {
         return SItem.create({
             itemUniqueId: this.id,
             itemId: this.itemId,
             itemCount: this.itemCount,
             inventoryId: this.inventoryId || 0,
             slotId: this.slotId || 0,
+            itemAmmoCount: this.itemAmmoCount || 0,
+            itemContentsCount: this.itemContentsCount || 0,
             primaryPropertyArray: this.primaryPropertyArray,
+            secondaryPropertyArray: this.secondaryPropertyArray,
         });
     }
 }
