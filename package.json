@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "build": "tsc && tsc-alias",
-        "start": "node dist/src/index.js",
+        "start": "node dist/index.js",
         "postinstall": "tsc && tsc-alias",
         "dev": "tsx watch src/index.ts",
         "migrate": "prisma migrate deploy"
