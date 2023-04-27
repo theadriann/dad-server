@@ -6,6 +6,7 @@
     "scripts": {
         "build": "tsc && tsc-alias",
         "start": "node dist/src/index.js",
+        "postinstall": "tsc && tsc-alias",
         "dev": "tsx watch src/index.ts",
         "migrate": "prisma migrate deploy"
     },
