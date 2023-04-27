@@ -43,17 +43,12 @@ import {
     ss2cOpenLobbyMapRes,
 } from "../../protos/ts/Lobby";
 import {
-    ss2cCustomizeActionInfoRes,
-    ss2cCustomizeCharacterInfoRes,
-    ss2cCustomizeEmoteInfoRes,
+    ss2cCustomizeActionInfoRes, ss2cCustomizeEmoteInfoRes,
     ss2cCustomizeItemInfoRes,
-    ss2cCustomizeLobbyEmoteInfoRes,
+    ss2cCustomizeLobbyEmoteInfoRes
 } from "../../protos/ts/Customize";
 import {
-    acceptPartyInvite,
-    exitParty,
     getBlockCharacterList,
-    inviteFriend,
     listAllFriendsContinue,
     listAllFriendsEnd,
     listAllFriendsStart,
@@ -64,11 +59,10 @@ import {
     ss2cFriendListAllRes,
 } from "../../protos/ts/Friend";
 import {
-    customizeCharacterInfo,
     getCustomizeActionInfo,
     getCustomizeItemInfo,
     getEmoteInfo,
-    getLobbyEmoteInfo,
+    getLobbyEmoteInfo
 } from "../CustomizeController";
 import {
     ss2cBlockCharacterListRes,
@@ -81,9 +75,11 @@ import { singleInventoryUpdate } from "../InventoryController";
 import { ss2cAutoMatchRegRes } from "@/protos/ts/InGame";
 import { startAutoMatchMaking } from "../MatchMakingController";
 import {
+    ss2cPartyChatRes,
     ss2cPartyExitRes,
     ss2cPartyInviteAnswerRes,
     ss2cPartyInviteRes,
+    ss2cPartyMemberKickRes,
 } from "@/protos/ts/Party";
 import {
     ss2cClassEquipInfoRes,
@@ -102,6 +98,13 @@ import {
     getMerchantSellList,
 } from "../MerchantController";
 import { DefineAccount_CurrencyType } from "@/protos/ts/_Defins";
+import {
+    acceptPartyInvite,
+    exitParty,
+    inviteFriend,
+    onPartyMemberKickReq,
+    partyChatReq,
+} from "../PartyController";
 
 export type PacketHandler = {
     label: string;
@@ -375,6 +378,28 @@ export const PacketHandlers: PacketHandler[] = [
                 command: PacketCommand.S2C_PARTY_EXIT_RES,
                 type: ss2cPartyExitRes,
                 handler: exitParty,
+            },
+        ],
+    },
+    {
+        label: "Party Chat Req",
+        requestCommand: PacketCommand.C2S_PARTY_CHAT_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_PARTY_CHAT_RES,
+                type: ss2cPartyChatRes,
+                handler: partyChatReq,
+            },
+        ],
+    },
+    {
+        label: "Party Member Kick",
+        requestCommand: PacketCommand.C2S_PARTY_MEMBER_KICK_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_PARTY_MEMBER_KICK_RES,
+                type: ss2cPartyMemberKickRes,
+                handler: onPartyMemberKickReq,
             },
         ],
     },

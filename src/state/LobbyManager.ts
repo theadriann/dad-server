@@ -26,6 +26,22 @@ export class LobbyState {
     }
 
     // -----------------------
+    //
+    // -----------------------
+
+    kickOtherConnectionsForUserId = (userId: number) => {
+        let user = null;
+
+        while ((user = this.getByUserId(userId))) {
+            logger.info(
+                `Kicking user ${userId} - ${user.sessionId} from lobby`
+            );
+            user.onDisconnect();
+            this.remove(user);
+        }
+    };
+
+    // -----------------------
     // Party
     // -----------------------
 
@@ -44,6 +60,15 @@ export class LobbyState {
         }
 
         this.createParty(user);
+    };
+
+    removeCharacterFromParties = (characterId: number) => {
+        const user = this.getByCharacterId(characterId);
+        const party = user?.getParty();
+
+        if (party) {
+            party.removeCharacter(characterId);
+        }
     };
 
     // -----------------------

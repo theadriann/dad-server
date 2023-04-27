@@ -39,12 +39,14 @@ const tcpServer = net.createServer((socket) => {
         lobbyUser.socketContext.setActive(false);
         logger.info(`${lobbyUser?.sessionId} disconnected`);
         socket.destroy();
+        lobbyUser.onDisconnect();
     });
 
     socket.on("error", (err) => {
         lobbyUser.socketContext.setActive(false);
         logger.info(`${lobbyUser?.sessionId} errored`, err);
         socket.destroy();
+        lobbyUser.onDisconnect();
     });
 
     socket.on("data", async (data) => {

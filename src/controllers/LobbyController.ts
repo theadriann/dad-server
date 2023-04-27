@@ -37,6 +37,7 @@ export const enterLobby = async (data: Buffer, socket: net.Socket) => {
     res.accountId = lobbyUser.userId.toString();
 
     lobbyUser.setCharacterId(Number(reqData.characterId));
+    lobbyUser.announcePartyStatus();
 
     logger.debug(res);
 

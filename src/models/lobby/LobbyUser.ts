@@ -9,6 +9,7 @@ import { Character } from "@prisma/client";
 import { LobbyState } from "@/state/LobbyManager";
 import { Item } from "../Item";
 import { DefineCommon_MetaLocation } from "@/protos/ts/_Defins";
+import { announcePartyMembersInfo } from "@/services/PartyNotifier";
 
 //
 export class LobbyUser {
@@ -53,6 +54,7 @@ export class LobbyUser {
     // -----------------------
 
     onDisconnect = () => {
+        this.socket.destroy();
         this.socketContext.setActive(false);
         this.characterLocation = DefineCommon_MetaLocation.OFFLINE;
     };
@@ -148,5 +150,12 @@ export class LobbyUser {
         }
 
         return null;
+    }
+
+    announcePartyStatus() {
+        const party = this.getParty();
+
+        if (party) return party.announceMembersInfo();
+        announcePartyMembersInfo([], this.socket);
     }
 }

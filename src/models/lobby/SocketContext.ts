@@ -51,7 +51,9 @@ export class SocketContext {
             return 0;
         }
 
-        return this.remainingData.readInt32LE(0);
+        // the other two bytes should be padding
+        // return this.remainingData.readUint32LE(0);
+        return this.remainingData.readUint16LE(0);
     }
 
     getCompleteData() {

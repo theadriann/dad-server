@@ -1,16 +1,13 @@
 import net from "net";
 import { bufferReader } from "../utils/bufferReader";
 import {
-    sc2sFriendFindReq,
-    sc2sFriendListAllReq,
-    sc2sFriendListReq,
+    sc2sFriendFindReq, sc2sFriendListReq,
     ss2cFriendFindRes,
     ss2cFriendListAllRes,
-    ss2cFriendListRes,
+    ss2cFriendListRes
 } from "../protos/ts/Friend";
 import {
-    getCharacterFriendInfoById,
-    getDbCharacterById,
+    getCharacterFriendInfoById
 } from "@/services/CharacterService";
 import { DefineMessage_LoopFlag } from "@/protos/ts/_Defins";
 import {
@@ -18,27 +15,12 @@ import {
     ss2cBlockCharacterListRes,
 } from "@/protos/ts/Common";
 import {
-    sblockCharacter,
-    scharacterFriendInfo,
-    scharacterPartyInfo,
+    sblockCharacter
 } from "@/protos/ts/_Character";
 import { createCharacterNickname } from "./CharacterController";
 import { logger } from "@/utils/loggers";
-import { PacketCommand, PacketResult } from "@/protos/ts/_PacketCommand";
-import {
-    partyInviteAnswer,
-    sc2sPartyExitReq,
-    sc2sPartyInviteAnswerReq,
-    sc2sPartyInviteReq,
-    ss2cPartyExitRes,
-    ss2cPartyInviteAnswerRes,
-    ss2cPartyInviteAnswerResultNot,
-    ss2cPartyInviteNot,
-    ss2cPartyInviteRes,
-} from "@/protos/ts/Party";
-import { sendPacket } from "@/utils/packets";
+import { PacketResult } from "@/protos/ts/_PacketCommand";
 import { lobbyState } from "@/state/LobbyManager";
-import { announcePartyMembersInfo } from "@/services/PartyNotifier";
 
 export const listFriends = async (data: Buffer, socket: net.Socket) => {
     const lobbyUser = lobbyState.getBySocket(socket);
@@ -184,163 +166,3 @@ export const searchFriend = async (data: Buffer, socket: net.Socket) => {
     return res;
 };
 
-export const inviteFriend = async (data: Buffer, socket: net.Socket) => {
-    const lobbyUser = lobbyState.getBySocket(socket);
-    const req = sc2sPartyInviteReq.decode(bufferReader(data));
-
-    logger.debug(req);
-
-    if (!lobbyUser || !lobbyUser.userId || !lobbyUser.characterId) {
-        logger.warn("inviteFriend: lobbyUser not found");
-        return ss2cPartyInviteRes.create({
-            result: PacketResult.FAIL_GENERAL,
-        });
-    }
-
-    const otherUser = lobbyState.getByCharacterId(Number(req.findCharacterId));
-
-    if (!otherUser || otherUser.socket.destroyed) {
-        logger.warn("inviteFriend: otherUser not found");
-        return ss2cPartyInviteRes.create({
-            result: PacketResult.FAIL_GENERAL,
-        });
-    }
-
-    //
-    lobbyState.ensureUserParty(lobbyUser);
-
-    // no need to await
-    sendInvitePartyNotification(
-        {
-            InviteeAccountId: lobbyUser.userId.toString(),
-            InviteeCharacterId: lobbyUser.characterId.toString(),
-            InviteeNickName: lobbyUser.characterNickname!,
-        },
-        otherUser.socket
-    );
-
-    return ss2cPartyInviteRes.create({
-        result: PacketResult.SUCCESS,
-    });
-};
-
-export const acceptPartyInvite = async (data: Buffer, socket: net.Socket) => {
-    const lobbyUser = lobbyState.getBySocket(socket);
-    const req = sc2sPartyInviteAnswerReq.decode(bufferReader(data));
-
-    logger.debug(req);
-
-    const inviteResult: partyInviteAnswer = req.inviteResult;
-    const toAccountId = req.returnAccountId;
-
-    if (!lobbyUser || !lobbyUser.userId || !lobbyUser.characterId) {
-        logger.warn("acceptPartyInvite: socketContext not found");
-        return ss2cPartyInviteAnswerRes.create({
-            result: PacketResult.FAIL_GENERAL,
-        });
-    }
-
-    const otherUser = lobbyState.getByUserId(Number(toAccountId));
-
-    if (!otherUser || !otherUser.getParty()) {
-        logger.warn("acceptPartyInvite: otherUser not found");
-        return ss2cPartyInviteAnswerRes.create({
-            result: PacketResult.FAIL_GENERAL,
-        });
-    }
-
-    //
-    const party = otherUser.getParty();
-
-    if (!party) {
-        logger.warn("acceptPartyInvite: party not found");
-        return ss2cPartyInviteAnswerRes.create({
-            result: PacketResult.FAIL_GENERAL,
-        });
-    }
-
-    // no need to await
-    sendAcceptInvitePartyNotification(
-        {
-            inviteResult,
-            nickName: (await getDbCharacterById(lobbyUser.characterId))!
-                .nickname,
-        },
-        otherUser.socket
-    );
-
-    party.addCharacter(lobbyUser.characterId);
-    party.announceMembersInfo();
-
-    return ss2cPartyInviteAnswerRes.create({
-        result: PacketResult.SUCCESS,
-    });
-};
-
-export const exitParty = async (data: Buffer, socket: net.Socket) => {
-    const lobbyUser = lobbyState.getBySocket(socket);
-    const req = sc2sPartyExitReq.decode(bufferReader(data));
-
-    const party = lobbyUser?.getParty();
-
-    if (!party) {
-        return ss2cPartyExitRes.create({
-            result: PacketResult.FAIL_GENERAL,
-        });
-    }
-
-    party.removeCharacter(lobbyUser!.characterId!);
-    party.announceMembersInfo();
-
-    return ss2cPartyExitRes.create({
-        result: PacketResult.SUCCESS,
-    });
-};
-
-// TODO: do this in a service
-export const sendInvitePartyNotification = async (
-    data: {
-        InviteeAccountId: string;
-        InviteeCharacterId: string;
-        InviteeNickName: string;
-    },
-    socket: net.Socket
-) => {
-    return sendPacket(
-        socket,
-        ss2cPartyInviteNot
-            .encode(
-                ss2cPartyInviteNot.create({
-                    InviteeAccountId: data.InviteeAccountId,
-                    InviteeCharacterId: data.InviteeCharacterId,
-                    InviteeNickName: await createCharacterNickname(
-                        data.InviteeNickName
-                    ),
-                })
-            )
-            .finish(),
-        PacketCommand.S2C_PARTY_INVITE_NOT
-    );
-};
-
-// TODO: do this in a service
-export const sendAcceptInvitePartyNotification = async (
-    data: {
-        nickName: string;
-        inviteResult: partyInviteAnswer;
-    },
-    socket: net.Socket
-) => {
-    return sendPacket(
-        socket,
-        ss2cPartyInviteAnswerResultNot
-            .encode(
-                ss2cPartyInviteAnswerResultNot.create({
-                    inviteResult: data.inviteResult,
-                    nickName: await createCharacterNickname(data.nickName),
-                })
-            )
-            .finish(),
-        PacketCommand.S2C_PARTY_INVITE_ANSWER_RESULT_NOT
-    );
-};

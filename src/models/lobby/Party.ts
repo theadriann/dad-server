@@ -2,7 +2,12 @@ import { scharacterPartyInfo } from "@/protos/ts/_Character";
 import { LobbyState } from "@/state/LobbyManager";
 import cuid from "cuid";
 import { LobbyUser } from "./LobbyUser";
-import { announcePartyMembersInfo } from "@/services/PartyNotifier";
+import {
+    announcePartyChatData,
+    announcePartyMemberKicked,
+    announcePartyMembersInfo,
+} from "@/services/PartyNotifier";
+import { schatdataPiece } from "@/protos/ts/_Chat";
 
 //
 export class Party {
@@ -20,9 +25,15 @@ export class Party {
     }
 
     addCharacter(characterId: number) {
+        //
+        this.lobby.removeCharacterFromParties(characterId);
+
+        //
         this.characterIds.push(characterId);
         const user = this.lobby.getByCharacterId(characterId);
         user?.setPartyId(this.id);
+
+        this.resolvePartyStatus();
     }
 
     removeCharacter(characterId: number) {
@@ -31,9 +42,19 @@ export class Party {
         );
 
         const user = this.lobby.getByCharacterId(characterId);
-        user?.setPartyId(null);
 
-        this.resolvePartyLeader();
+        if (user) {
+            user.setPartyId(null);
+            this.announceLeftPartyInfo(user);
+        }
+
+        this.resolvePartyStatus();
+        this.announceMembersInfo();
+    }
+
+    kickCharacter(characterId: number) {
+        this.removeCharacter(characterId);
+        this.announceMemberKicked(characterId);
     }
 
     setPartyLeader(characterId: number) {
@@ -42,6 +63,13 @@ export class Party {
 
     setIsFormed(value: boolean) {
         this.isFormed = value;
+    }
+
+    resolvePartyStatus() {
+        //
+        this.isFormed = this.size > 1;
+
+        this.resolvePartyLeader();
     }
 
     resolvePartyLeader() {
@@ -94,10 +122,18 @@ export class Party {
             .filter((infoData) => infoData !== null) as scharacterPartyInfo[];
     };
 
+    announceLeftPartyInfo = (user: LobbyUser) => {
+        announcePartyMembersInfo([], user.socket);
+    };
+
     announceMembersInfo = () => {
         const users = this.characterIds
             .map((characterId) => this.lobby.getByCharacterId(characterId))
             .filter((user) => user !== undefined) as LobbyUser[];
+
+        if (users.length === 1) {
+            return this.removeCharacter(users[0].characterId!);
+        }
 
         users.forEach((user) => {
             announcePartyMembersInfo(
@@ -107,7 +143,31 @@ export class Party {
         });
     };
 
+    announceChatFromUser = (
+        fromUser: LobbyUser,
+        messageDataPiece: schatdataPiece[]
+    ) => {
+        const users = this.characterIds
+            .map((characterId) => this.lobby.getByCharacterId(characterId))
+            .filter((user) => user !== undefined) as LobbyUser[];
+
+        users.forEach((user) => {
+            announcePartyChatData(fromUser, messageDataPiece, user.socket);
+        });
+    };
+
+    announceMemberKicked = (characterId: number) => {
+        const user = this.lobby.getByCharacterId(characterId);
+        if (!user) return null;
+
+        announcePartyMemberKicked(user.socket);
+    };
+
     // -----------------------
     //
     // -----------------------
+
+    get size() {
+        return this.characterIds.length;
+    }
 }

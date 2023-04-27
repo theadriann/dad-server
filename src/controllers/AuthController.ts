@@ -59,6 +59,7 @@ export const login = async (data: Buffer, socket: net.Socket) => {
         return res;
     }
 
+    lobbyState.kickOtherConnectionsForUserId(db_user.id);
     lobbyUser?.setUserId(db_user.id);
 
     const serverLocation: DefineCommon_ServerLocation =
