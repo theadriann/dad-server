@@ -4,9 +4,10 @@ import {
     deleteCharacter,
     getCharacterInfo,
     getClassEquipInfo,
+    getClassLevelInfo,
     listCharacters,
 } from "../CharacterController";
-import { login, relogin } from "../AuthController";
+import { login, relogin, sendServerPolicy } from "../AuthController";
 import {
     backToCharacterSelect,
     enterLobby,
@@ -50,6 +51,7 @@ import {
 } from "../../protos/ts/Customize";
 import {
     acceptPartyInvite,
+    exitParty,
     getBlockCharacterList,
     inviteFriend,
     listAllFriendsContinue,
@@ -72,16 +74,21 @@ import {
     ss2cBlockCharacterListRes,
     ss2cMetaLocationRes,
     ss2cReLoginRes,
+    ss2cServicePolicyNot,
 } from "../../protos/ts/Common";
 import { ss2cInventorySingleUpdateRes } from "@/protos/ts/Inventory";
 import { singleInventoryUpdate } from "../InventoryController";
 import { ss2cAutoMatchRegRes } from "@/protos/ts/InGame";
 import { startAutoMatchMaking } from "../MatchMakingController";
 import {
+    ss2cPartyExitRes,
     ss2cPartyInviteAnswerRes,
     ss2cPartyInviteRes,
 } from "@/protos/ts/Party";
-import { ss2cClassEquipInfoRes } from "@/protos/ts/CharacterClass";
+import {
+    ss2cClassEquipInfoRes,
+    ss2cClassLevelInfoRes,
+} from "@/protos/ts/CharacterClass";
 import {
     ss2cMerchantListRes,
     ss2cMerchantStockBuyItemListRes,
@@ -136,6 +143,11 @@ export const PacketHandlers: PacketHandler[] = [
                 handler: login,
                 command: PacketCommand.S2C_ACCOUNT_LOGIN_RES,
             },
+            {
+                type: ss2cServicePolicyNot,
+                handler: sendServerPolicy,
+                command: PacketCommand.S2C_SERVICE_POLICY_NOT,
+            },
         ],
     },
 
@@ -173,6 +185,17 @@ export const PacketHandlers: PacketHandler[] = [
                 command: PacketCommand.S2C_ACCOUNT_CHARACTER_DELETE_RES,
                 type: ss2cAccountCharacterDeleteRes,
                 handler: deleteCharacter,
+            },
+        ],
+    },
+    {
+        label: "Get Class Level Info",
+        requestCommand: PacketCommand.C2S_CLASS_LEVEL_INFO_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_CLASS_LEVEL_INFO_RES,
+                type: ss2cClassLevelInfoRes,
+                handler: getClassLevelInfo,
             },
         ],
     },
@@ -342,12 +365,21 @@ export const PacketHandlers: PacketHandler[] = [
             },
         ],
     },
+    {
+        label: "Exit Party",
+        requestCommand: PacketCommand.C2S_PARTY_EXIT_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_PARTY_EXIT_RES,
+                type: ss2cPartyExitRes,
+                handler: exitParty,
+            },
+        ],
+    },
 
     // -----------------------
     // Character Customization
     // -----------------------
-
-    // C2S_LOBBY_CHARACTER_INFO_REQ
 
     {
         label: "CustomizeCharacterInfo",
@@ -486,8 +518,6 @@ export const PacketHandlers: PacketHandler[] = [
         ],
     },
 
-    // C2S_RE_LOGIN_REQ
-
     // -----------------------
     // Merchants
     // -----------------------
@@ -532,7 +562,6 @@ export const PacketHandlers: PacketHandler[] = [
         ],
     },
 
-    // pc.C2S_MERCHANT_STOCK_SELL_BACK_ITEM_LIST_REQ: merchant.get_sellback_list,
     // pc.C2S_TRADE_MEMBERSHIP_REQUIREMENT_REQ: trade.get_trade_reqs,
     // pc.C2S_TRADE_MEMBERSHIP_REQ: trade.process_membership,
 ];

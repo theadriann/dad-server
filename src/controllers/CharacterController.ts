@@ -18,7 +18,9 @@ import {
 import { PacketResult } from "../protos/ts/_PacketCommand";
 import {
     sc2sClassEquipInfoReq,
+    sc2sClassLevelInfoReq,
     ss2cClassEquipInfoRes,
+    ss2cClassLevelInfoRes,
 } from "../protos/ts/CharacterClass";
 import { saccountNickname, scharacterInfo } from "../protos/ts/_Character";
 import {
@@ -234,6 +236,20 @@ export const getCharacterInfo = async (data: Buffer, socket: net.Socket) => {
     });
 
     return res;
+};
+
+export const getClassLevelInfo = async (data: Buffer, socket: net.Socket) => {
+    //
+    const lobbyUser = lobbyState.getBySocket(socket);
+    const req = sc2sClassLevelInfoReq.decode(bufferReader(data));
+
+    return ss2cClassLevelInfoRes.create({
+        exp: 0,
+        expBegin: 0,
+        expLimit: 0,
+        level: 1,
+        rewardPoint: 0,
+    });
 };
 
 export const getClassEquipInfo = async (data: Buffer, socket: net.Socket) => {

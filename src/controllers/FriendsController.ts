@@ -27,8 +27,10 @@ import { logger } from "@/utils/loggers";
 import { PacketCommand, PacketResult } from "@/protos/ts/_PacketCommand";
 import {
     partyInviteAnswer,
+    sc2sPartyExitReq,
     sc2sPartyInviteAnswerReq,
     sc2sPartyInviteReq,
+    ss2cPartyExitRes,
     ss2cPartyInviteAnswerRes,
     ss2cPartyInviteAnswerResultNot,
     ss2cPartyInviteNot,
@@ -271,6 +273,26 @@ export const acceptPartyInvite = async (data: Buffer, socket: net.Socket) => {
     party.announceMembersInfo();
 
     return ss2cPartyInviteAnswerRes.create({
+        result: PacketResult.SUCCESS,
+    });
+};
+
+export const exitParty = async (data: Buffer, socket: net.Socket) => {
+    const lobbyUser = lobbyState.getBySocket(socket);
+    const req = sc2sPartyExitReq.decode(bufferReader(data));
+
+    const party = lobbyUser?.getParty();
+
+    if (!party) {
+        return ss2cPartyExitRes.create({
+            result: PacketResult.FAIL_GENERAL,
+        });
+    }
+
+    party.removeCharacter(lobbyUser!.characterId!);
+    party.announceMembersInfo();
+
+    return ss2cPartyExitRes.create({
         result: PacketResult.SUCCESS,
     });
 };

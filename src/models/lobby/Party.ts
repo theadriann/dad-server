@@ -29,6 +29,11 @@ export class Party {
         this.characterIds = this.characterIds.filter(
             (id) => id !== characterId
         );
+
+        const user = this.lobby.getByCharacterId(characterId);
+        user?.setPartyId(null);
+
+        this.resolvePartyLeader();
     }
 
     setPartyLeader(characterId: number) {

@@ -7,9 +7,12 @@ import {
 } from "../protos/ts/Account";
 import { bufferReader } from "../utils/bufferReader";
 import { db } from "../services/db";
-import { DefineCommon_ServerLocation } from "../protos/ts/_Defins";
+import {
+    DefineCommon_ServerLocation,
+    Operate_Policy,
+} from "../protos/ts/_Defins";
 import { logger } from "@/utils/loggers";
-import { ss2cReLoginRes } from "@/protos/ts/Common";
+import { ss2cReLoginRes, ss2cServicePolicyNot } from "@/protos/ts/Common";
 import { LOBBY_PORT, SERVER_IP } from "@/utils/info";
 import { lobbyState } from "@/state/LobbyManager";
 
@@ -114,4 +117,61 @@ export const relogin = async (data: Buffer, socket: net.Socket) => {
     });
 
     return res;
+};
+
+export const sendServerPolicy = async (data: Buffer, socket: net.Socket) => {
+    return ss2cServicePolicyNot.create({
+        policyList: [
+            {
+                policyType: Operate_Policy.POLICY_CHAT_RESEND_MS,
+                policyValue: 500,
+            },
+            {
+                policyType:
+                    Operate_Policy.POLICY_TRADE_CHANNEL_CHAT_RESEND_TIME_MS,
+                policyValue: 10000,
+            },
+            {
+                policyType: Operate_Policy.POLICY_CHAT_LENGTH_MAX,
+                policyValue: 200,
+            },
+            {
+                policyType: Operate_Policy.POLICY_GATHERING_HALL_CHAT_RESEND_MS,
+                policyValue: 10,
+            },
+            {
+                policyType: Operate_Policy.POLICY_TRADE_CHANNEL_CHAT_MAX_LINE,
+                policyValue: 1000,
+            },
+            {
+                policyType: Operate_Policy.POLICY_MATCH_CANCEL_TIME_MS,
+                policyValue: 10000,
+            },
+            {
+                policyType: Operate_Policy.POLICY_GATHERING_HALL_JOIN_MIN_LEVEL,
+                policyValue: 5,
+            },
+            {
+                policyType: Operate_Policy.POLICY_HIGH_ROLLER_ENTRANCE_FEE,
+                policyValue: 100,
+            },
+            {
+                policyType: Operate_Policy.POLICY_GATHERING_HALL_CHAT_MAX_LINE,
+                policyValue: 1000,
+            },
+            {
+                policyType: Operate_Policy.POLICY_CHAT_MAX_LINE,
+                policyValue: 500,
+            },
+            {
+                policyType:
+                    Operate_Policy.POLICY_HIGH_ROLLER_ENTRANCE_MIN_LEVEL,
+                policyValue: 15,
+            },
+            {
+                policyType: Operate_Policy.POLICY_BLOCK_CHARACTER_MAX_LIMIT,
+                policyValue: 50,
+            },
+        ],
+    });
 };
