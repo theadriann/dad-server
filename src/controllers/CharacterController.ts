@@ -10,11 +10,7 @@ import {
 } from "../protos/ts/Account";
 import { bufferReader } from "../utils/bufferReader";
 import { db } from "../services/db";
-import {
-    generateStackOfGoldCoinPurse,
-    generateStackOfGoldCoins,
-    generateStartItems,
-} from "../lib/items/test";
+import { generateStarterGear } from "../generators/items/classes/strarterGear";
 import { PacketResult } from "../protos/ts/_PacketCommand";
 import {
     sc2sClassEquipInfoReq,
@@ -33,6 +29,10 @@ import { lobbyState } from "@/state/LobbyManager";
 import { characterClassFromClient } from "@/models/game/enums/CharacterClass";
 import { Item } from "@/models/Item";
 import { random } from "lodash";
+import {
+    generateStackOfGoldCoinPurse,
+    generateStackOfGoldCoins,
+} from "@/generators/items/common/gold";
 
 export const createCharacter = async (data: Buffer, socket: net.Socket) => {
     const lobbyUser = lobbyState.getBySocket(socket);
@@ -55,7 +55,7 @@ export const createCharacter = async (data: Buffer, socket: net.Socket) => {
         },
     });
 
-    const items = generateStartItems(
+    const items = generateStarterGear(
         characterClassFromClient(req.characterClass)
     );
 

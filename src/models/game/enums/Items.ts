@@ -13,6 +13,19 @@ export enum ItemQuality {
     ARTIFACT = "ARTIFACT",
 }
 
+//
+export enum ItemQualityId {
+    NONE = "",
+    JUNK = "0001",
+    POOR = "1001",
+    COMMON = "2001",
+    UNCOMMON = "3001",
+    RARE = "4001",
+    EPIC = "5001",
+    LEGENDARY = "6001",
+    ARTIFACT = "7001",
+}
+
 export function itemQualityFromClient(itemId: string): ItemQuality {
     //
     const qualityId = itemId.split("_").pop();
@@ -1753,7 +1766,10 @@ export const Items = {
     },
 };
 
-export const itemConfigToItemId = (itemKey: ItemKey, quality: ItemQuality): string => {
+export const itemConfigToItemId = (
+    itemKey: ItemKey,
+    quality: ItemQuality
+): string => {
     return (Items as any)[itemKey][quality];
 };
 
@@ -1978,7 +1994,7 @@ export const itemIdToMaxCount = (itemId: string): number => {
             return 10;
 
         case Items.GOLD_COIN_PURSE.NONE:
-            return 50;
+            return 1;
 
         case Items.BANDAGE.JUNK:
         case Items.BANDAGE.POOR:
@@ -2025,6 +2041,16 @@ export const itemIdToMaxCount = (itemId: string): number => {
             return 3;
 
         default:
-            return 1;
+            return 0;
+    }
+};
+
+export const itemIdToMaxItemContents = (itemId: string): number => {
+    switch (itemId) {
+        case Items.GOLD_COIN_PURSE.NONE:
+            return 100;
+
+        default:
+            return 0;
     }
 };

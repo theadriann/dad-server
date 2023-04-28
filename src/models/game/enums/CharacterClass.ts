@@ -7,6 +7,7 @@ export const CharacterClassKeys = {
     RANGER: "RANGER",
     ROGUE: "ROGUE",
     WIZARD: "WIZARD",
+    WARLOCK: "WARLOCK",
 };
 
 export const CharacterClass = {
@@ -17,6 +18,7 @@ export const CharacterClass = {
     RANGER: "DesignDataPlayerCharacter:Id_PlayerCharacter_Ranger",
     ROGUE: "DesignDataPlayerCharacter:Id_PlayerCharacter_Rogue",
     WIZARD: "DesignDataPlayerCharacter:Id_PlayerCharacter_Wizard",
+    WARLOCK: "DesignDataPlayerCharacter:Id_PlayerCharacter_Warlock",
 };
 
 export type CharacterClassKey = keyof typeof CharacterClass;

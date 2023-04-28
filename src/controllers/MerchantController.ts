@@ -11,7 +11,7 @@ import {
     ss2cMerchantStockBuyRes,
     ss2cMerchantStockSellBackItemListRes,
 } from "@/protos/ts/Merchant";
-import { allMerchants, getMerchantBuyStockList } from "@/lib/merchants";
+import { allMerchants, getMerchantBuyStockList } from "@/generators/merchants";
 import { bufferReader } from "@/utils/bufferReader";
 import {
     DefineEquipment_SlotId,
