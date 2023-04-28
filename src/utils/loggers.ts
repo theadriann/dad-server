@@ -1,4 +1,5 @@
 import pino from "pino";
+import { LOG_LEVEL } from "./info";
 
 export const logger = pino({
     transport: {
@@ -7,5 +8,5 @@ export const logger = pino({
             colorize: true,
         },
     },
-    level: "debug",
+    level: LOG_LEVEL,
 });
