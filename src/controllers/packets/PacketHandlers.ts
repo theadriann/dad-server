@@ -225,35 +225,35 @@ export const PacketHandlers: PacketHandler[] = [
         requestCommand: PacketCommand.C2S_LOBBY_ENTER_REQ,
         res: [
             {
-                command: PacketCommand.S2C_CLASS_EQUIP_INFO_RES,
-                type: ss2cClassEquipInfoRes,
-                handler: getClassEquipInfo,
-            },
-            {
                 command: PacketCommand.S2C_LOBBY_ENTER_RES,
                 type: ss2cLobbyEnterRes,
                 handler: enterLobby,
+            },
+            {
+                command: PacketCommand.S2C_CLASS_EQUIP_INFO_RES,
+                type: ss2cClassEquipInfoRes,
+                handler: getClassEquipInfo,
             },
             {
                 command: PacketCommand.S2C_LOBBY_CHARACTER_INFO_RES,
                 handler: getCharacterInfo,
                 type: ss2cLobbyCharacterInfoRes,
             },
-            {
-                command: PacketCommand.S2C_LOBBY_ACCOUNT_CURRENCY_LIST_NOT,
-                handler: async (data: Buffer, socket: net.Socket) => {
-                    return ss2cLobbyAccountCurrencyListNot.create({
-                        currencyInfos: [
-                            saccountCurrencyInfo.create({
-                                currencyType:
-                                    DefineAccount_CurrencyType.ADVENTURE,
-                                currencyValue: 100,
-                            }),
-                        ],
-                    });
-                },
-                type: ss2cLobbyAccountCurrencyListNot,
-            },
+            // {
+            //     command: PacketCommand.S2C_LOBBY_ACCOUNT_CURRENCY_LIST_NOT,
+            //     handler: async (data: Buffer, socket: net.Socket) => {
+            //         return ss2cLobbyAccountCurrencyListNot.create({
+            //             currencyInfos: [
+            //                 saccountCurrencyInfo.create({
+            //                     currencyType:
+            //                         DefineAccount_CurrencyType.ADVENTURE,
+            //                     currencyValue: 100,
+            //                 }),
+            //             ],
+            //         });
+            //     },
+            //     type: ss2cLobbyAccountCurrencyListNot,
+            // },
         ],
     },
     {

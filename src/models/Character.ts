@@ -1,6 +1,6 @@
 import { scharacterInfo } from "@/protos/ts/_Character";
 import { Item } from "./Item";
-import { Character as CharacterDB } from "@prisma/client";
+import { Character as CharacterDB, Inventory } from "@prisma/client";
 import { db } from "@/services/db";
 import { CharacterClass } from "./game/enums/CharacterClass";
 import { lobbyState } from "@/state/LobbyManager";
@@ -90,7 +90,11 @@ export class Character {
     // DB Serialization
     // -----------------------
 
-    fromDB(obj: CharacterDB) {
+    fromDB(
+        obj: CharacterDB & {
+            inventory?: Inventory[];
+        }
+    ) {
         //
         if (!obj) {
             return this;
@@ -115,6 +119,10 @@ export class Character {
 
         this.spell1 = obj.spell1 || this.spell1;
         this.spell2 = obj.spell2 || this.spell2;
+
+        if (obj.inventory) {
+            this.items.push(...obj.inventory.map((item) => Item.fromDB(item)));
+        }
 
         return this;
     }

@@ -220,45 +220,29 @@ export const listCharacters = async (data: Buffer, socket: net.Socket) => {
 export const getCharacterInfo = async (data: Buffer, socket: net.Socket) => {
     //
     const lobbyUser = lobbyState.getBySocket(socket);
-    const req = sc2sLobbyCharacterInfoReq.decode(bufferReader(data));
-
-    let res = ss2cLobbyCharacterInfoRes.create({});
-    res.result = PacketResult.FAIL_GENERAL;
+    const char = Character.fromDB(await lobbyUser?.getCharacterDb());
 
     if (!lobbyUser?.hasCharacterLoaded) {
-        return res;
+        return ss2cLobbyCharacterInfoRes.create({
+            result: PacketResult.FAIL_GENERAL,
+        });
     }
 
-    const character_db = await db.character.findFirst({
-        where: {
-            id: lobbyUser.characterId!,
-        },
-        include: {
-            inventory: true,
+    const character_items = char.items.map((item) => item.toSItem());
+
+    return ss2cLobbyCharacterInfoRes.create({
+        result: PacketResult.SUCCESS,
+        characterDataBase: {
+            accountId: lobbyUser.userId!.toString(),
+            characterId: lobbyUser.characterId!.toString(),
+            characterClass: char.characterClass,
+            gender: char.gender,
+            level: char.level,
+            nickName: lobbyUser.characterNicknameObject,
+            CharacterItemList: character_items,
+            CharacterStorageItemList: [],
         },
     });
-
-    if (!character_db) {
-        return res;
-    }
-
-    const character_items = character_db.inventory.map((item) =>
-        new Item().fromDB(item).toSItem()
-    );
-
-    res.result = PacketResult.SUCCESS;
-    res.characterDataBase = scharacterInfo.create({
-        accountId: lobbyUser.userId!.toString(),
-        characterId: lobbyUser.characterId!.toString(),
-        characterClass: character_db.class,
-        gender: character_db.gender,
-        level: character_db.level,
-        nickName: await createCharacterNickname(character_db.nickname),
-        CharacterItemList: character_items,
-        CharacterStorageItemList: [],
-    });
-
-    return res;
 };
 
 export const getClassLevelInfo = async (data: Buffer, socket: net.Socket) => {
