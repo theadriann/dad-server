@@ -181,7 +181,6 @@ export class LobbyUser {
     };
 
     getParty() {
-        console.log(`party@user: ${this.partyId}`);
         if (this.partyId) {
             return this.lobby.parties.get(this.partyId) || null;
         }

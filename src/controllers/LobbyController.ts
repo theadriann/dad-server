@@ -39,6 +39,7 @@ export const enterLobby = async (data: Buffer, socket: net.Socket) => {
     res.accountId = lobbyUser.userId.toString();
 
     lobbyUser.setCharacterId(Number(reqData.characterId));
+    await lobbyUser.loadCharacterData();
     lobbyUser.setLocation(DefineCommon_MetaLocation.PLAY);
     lobbyUser.setFriendLocation(FriendLocation.Friend_Location_LOBBY);
     lobbyUser.announcePartyStatus();
@@ -179,13 +180,19 @@ export const backToCharacterSelect = async (
 ) => {
     //
     const lobbyUser = lobbyState.getBySocket(socket);
-    const reqData = sc2sCharacterSelectEnterReq.decode(bufferReader(data));
+    const party = lobbyUser?.getParty();
 
     let res = ss2cCharacterSelectEnterRes.create({});
 
     if (!lobbyUser || !lobbyUser.characterId) {
         res.result = PacketResult.FAIL_GENERAL;
         return;
+    }
+
+    lobbyUser.setFriendLocation(FriendLocation.Friend_Location_OFFLINE);
+    lobbyUser.setLocation(DefineCommon_MetaLocation.CHARACTER_SELECT);
+    if (party) {
+        party.announceMemberLocationChange(lobbyUser.userId!);
     }
 
     res.result = PacketResult.SUCCESS;
