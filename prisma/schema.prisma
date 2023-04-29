@@ -19,17 +19,27 @@ model User {
 }
 
 model Character {
-  id         Int         @id @default(autoincrement())
-  user_id    Int
-  nickname   String
-  class      String
-  level      Int
-  gender     Int
-  last_login DateTime    @default(now())
-  created_at DateTime    @default(now())
-  updated_at DateTime    @updatedAt
-  user       User        @relation(fields: [user_id], references: [id])
-  inventory  Inventory[]
+  id       Int    @id @default(autoincrement())
+  user_id  Int
+  nickname String
+  class    String
+  level    Int
+  gender   Int
+
+  perk1 String @default("")
+  perk2 String @default("")
+  perk3 String @default("")
+  perk4 String @default("")
+
+  spell1 String @default("")
+  spell2 String @default("")
+
+  last_login DateTime @default(now())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user      User        @relation(fields: [user_id], references: [id])
+  inventory Inventory[]
 }
 
 model Inventory {

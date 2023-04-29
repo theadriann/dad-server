@@ -46,8 +46,8 @@ export class LobbyState {
     createParty = (user: LobbyUser) => {
         const party = new Party(this);
 
-        party.addCharacter(user.characterId!);
-        party.setPartyLeader(user.characterId!);
+        party.addUser(user.userId!);
+        party.setPartyLeader(user.userId!);
 
         this.parties.set(party.id, party);
     };
@@ -60,12 +60,12 @@ export class LobbyState {
         this.createParty(user);
     };
 
-    removeCharacterFromParties = (characterId: number) => {
-        const user = this.getByCharacterId(characterId);
+    removeUserFromParties = (userId: number) => {
+        const user = this.getByUserId(userId);
         const party = user?.getParty();
 
         if (party) {
-            party.removeCharacter(characterId);
+            party.removeUser(userId);
         }
     };
 

@@ -4,11 +4,15 @@ import cuid from "cuid";
 import net from "net";
 import { SocketContext } from "./SocketContext";
 import { getDbCharacterById } from "@/services/CharacterService";
-import { saccountNickname } from "@/protos/ts/_Character";
+import { FriendLocation, saccountNickname } from "@/protos/ts/_Character";
 import { Character } from "@prisma/client";
 import { LobbyState } from "@/state/LobbyManager";
 import { Item } from "../Item";
-import { DefineCommon_MetaLocation } from "@/protos/ts/_Defins";
+import {
+    DefineCommon_MetaLocation,
+    DefineGame_DifficultyType,
+    DefineMatch_MatchRegion,
+} from "@/protos/ts/_Defins";
 import { announcePartyMembersInfo } from "@/services/PartyNotifier";
 
 //
@@ -35,9 +39,17 @@ export class LobbyUser {
     characterDb: Character | null = null;
     characterLocation: DefineCommon_MetaLocation =
         DefineCommon_MetaLocation.PLAY;
+    characterFriendLocation: FriendLocation =
+        FriendLocation.Friend_Location_LOBBY;
     characterItems: Item[] = [];
 
     partyId: string | null = null;
+
+    regionId: DefineMatch_MatchRegion = DefineMatch_MatchRegion.EU_CENTRAL;
+    gameDifficultyId: DefineGame_DifficultyType =
+        DefineGame_DifficultyType.NORMAL;
+
+    isReady: number = 0;
 
     constructor(socket: net.Socket, lobby: LobbyState) {
         this.socket = socket;
@@ -57,6 +69,7 @@ export class LobbyUser {
         this.socket.destroy();
         this.socketContext.setActive(false);
         this.characterLocation = DefineCommon_MetaLocation.OFFLINE;
+        this.characterFriendLocation = FriendLocation.Friend_Location_OFFLINE;
     };
 
     setSocket(socket: net.Socket) {
@@ -72,6 +85,14 @@ export class LobbyUser {
         this.characterId = value;
 
         this.loadCharacterData();
+    }
+
+    async getCharacterDb(mustRefresh = false) {
+        if (!this.characterDb || mustRefresh) {
+            await this.loadCharacterData();
+        }
+
+        return this.characterDb;
     }
 
     loadCharacterData = async () => {
@@ -135,6 +156,22 @@ export class LobbyUser {
         this.characterLocation = value;
     };
 
+    setFriendLocation = (value: FriendLocation) => {
+        this.characterFriendLocation = value;
+    };
+
+    setRegionId = (value: DefineMatch_MatchRegion) => {
+        this.regionId = value;
+    };
+
+    setGameDifficultyId = (value: DefineGame_DifficultyType) => {
+        this.gameDifficultyId = value;
+    };
+
+    setIsReady = (value: number) => {
+        this.isReady = value;
+    };
+
     // -----------------------
     // Party
     // -----------------------
@@ -157,5 +194,12 @@ export class LobbyUser {
 
         if (party) return party.announceMembersInfo();
         announcePartyMembersInfo([], this.socket);
+    }
+
+    getCurrentPartySize() {
+        const party = this.getParty();
+
+        if (party) return party.size;
+        return 0;
     }
 }

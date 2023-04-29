@@ -3,6 +3,7 @@ import { createCharacterNickname } from "@/controllers/CharacterController";
 import { FriendLocation, scharacterFriendInfo } from "@/protos/ts/_Character";
 import { DefineCommon_MetaLocation } from "@/protos/ts/_Defins";
 import { db } from "@/services/db";
+import { lobbyState } from "@/state/LobbyManager";
 
 //
 export const getDbCharacterById = async (chracterId: number) => {
@@ -19,23 +20,27 @@ export const getDbCharacterById = async (chracterId: number) => {
 //
 export const getCharacterFriendInfoById = async (characterId: number) => {
     //
-    const dbCharacter = await getDbCharacterById(characterId);
+    const user = lobbyState.getByCharacterId(characterId);
 
-    if (!dbCharacter) {
+    if (!user?.characterDb || user.characterDb.id !== characterId) {
+        await user?.loadCharacterData();
+    }
+
+    if (!user?.characterDb) {
         return scharacterFriendInfo.create({});
     }
 
     return scharacterFriendInfo.create({
-        accountId: dbCharacter.user_id.toString(),
-        characterId: dbCharacter.id.toString(),
-        characterClass: dbCharacter.class,
+        accountId: user.userId!.toString(),
+        characterId: user.characterId!.toString(),
+        characterClass: user.characterDb.class,
         // characterClass: "DesignDataPlayerCharacter:Id_PlayerCharacter_Fighter",
-        gender: dbCharacter.gender,
-        level: dbCharacter.level,
+        gender: user.characterDb.gender,
+        level: user.characterDb.level,
         // locationStatus: DefineCommon_MetaLocation.PLAY,
         locationStatus: FriendLocation.Friend_Location_LOBBY,
-        nickName: await createCharacterNickname(dbCharacter.nickname),
-        PartyMemeberCount: 0,
+        nickName: user.characterNicknameObject,
+        PartyMemeberCount: user.getCurrentPartySize(),
         PartyMaxMemeberCount: 3,
     });
 };

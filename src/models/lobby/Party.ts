@@ -4,17 +4,24 @@ import cuid from "cuid";
 import { LobbyUser } from "./LobbyUser";
 import {
     announcePartyChatData,
+    announcePartyDifficultyChange,
     announcePartyMemberKicked,
+    announcePartyMemberLocationChange,
     announcePartyMembersInfo,
+    announcePartyReadyChange,
+    announcePartyRegionChange,
 } from "@/services/PartyNotifier";
 import { schatdataPiece } from "@/protos/ts/_Chat";
+import { DefineGame_DifficultyType } from "@/protos/ts/_Defins";
+
+export const PARTY_MAX_SIZE = 3;
 
 //
 export class Party {
     id: string;
     lobby: LobbyState;
 
-    characterIds: number[] = [];
+    userIds: number[] = [];
     partyLeaderId: number | null = null;
 
     isFormed = false;
@@ -24,24 +31,36 @@ export class Party {
         this.lobby = lobby;
     }
 
-    addCharacter(characterId: number) {
+    canJoin(userId: number) {
+        if (this.isMax) {
+            return false;
+        }
+
+        if (this.userIds.includes(userId)) {
+            return false;
+        }
+
+        // TODO: add more checks
+
+        return true;
+    }
+
+    addUser(userId: number) {
         //
-        this.lobby.removeCharacterFromParties(characterId);
+        this.lobby.removeUserFromParties(userId);
 
         //
-        this.characterIds.push(characterId);
-        const user = this.lobby.getByCharacterId(characterId);
+        this.userIds.push(userId);
+        const user = this.lobby.getByUserId(userId);
         user?.setPartyId(this.id);
 
         this.resolvePartyStatus();
     }
 
-    removeCharacter(characterId: number) {
-        this.characterIds = this.characterIds.filter(
-            (id) => id !== characterId
-        );
+    removeUser(userId: number) {
+        this.userIds = this.userIds.filter((id) => id !== userId);
 
-        const user = this.lobby.getByCharacterId(characterId);
+        const user = this.lobby.getByUserId(userId);
 
         if (user) {
             user.setPartyId(null);
@@ -52,17 +71,21 @@ export class Party {
         this.announceMembersInfo();
     }
 
-    kickCharacter(characterId: number) {
-        this.removeCharacter(characterId);
-        this.announceMemberKicked(characterId);
+    kickUser(userId: number) {
+        this.removeUser(userId);
+        this.announceMemberKicked(userId);
     }
 
-    setPartyLeader(characterId: number) {
-        this.partyLeaderId = characterId;
+    setPartyLeader(userId: number) {
+        this.partyLeaderId = userId;
     }
 
     setIsFormed(value: boolean) {
         this.isFormed = value;
+    }
+
+    isPartyLeader(user: LobbyUser) {
+        return user.userId === this.partyLeaderId;
     }
 
     resolvePartyStatus() {
@@ -73,28 +96,28 @@ export class Party {
     }
 
     resolvePartyLeader() {
-        if (this.characterIds.length === 0) {
+        if (this.userIds.length === 0) {
             this.partyLeaderId = null;
             return;
         }
 
         if (this.partyLeaderId === null) {
-            this.partyLeaderId = this.characterIds[0];
+            this.partyLeaderId = this.userIds[0];
             return;
         }
 
-        if (this.characterIds.includes(this.partyLeaderId)) {
+        if (this.userIds.includes(this.partyLeaderId)) {
             return;
         }
 
-        this.partyLeaderId = this.characterIds[0];
+        this.partyLeaderId = this.userIds[0];
     }
 
     getCharacterPartyInfoArr = () => {
-        return this.characterIds
-            .map((characterId, index) => {
+        return this.userIds
+            .map((userId, index) => {
                 //
-                const user = this.lobby.getByCharacterId(characterId);
+                const user = this.lobby.getByUserId(userId);
 
                 if (!user) {
                     return null;
@@ -106,9 +129,8 @@ export class Party {
                     characterId: user.characterId!.toString(),
                     gender: user.characterDb!.gender,
                     isInGame: 0,
-                    isPartyLeader:
-                        this.partyLeaderId === user.characterId ? 1 : 0,
-                    isReady: 0,
+                    isPartyLeader: this.partyLeaderId === user.userId ? 1 : 0,
+                    isReady: user.isReady,
                     level: user.characterDb!.level,
                     nickName: user.characterNicknameObject,
                     partyIdx: index + 1,
@@ -122,19 +144,33 @@ export class Party {
             .filter((infoData) => infoData !== null) as scharacterPartyInfo[];
     };
 
+    setRegionId = (regionId: number) => {
+        this.forEachUser((user) => {
+            user.setRegionId(regionId);
+            announcePartyRegionChange(regionId, user.socket);
+        });
+    };
+
+    setGameDifficultyId = (difficulty: DefineGame_DifficultyType) => {
+        this.forEachUser((user) => {
+            user.setGameDifficultyId(difficulty);
+            announcePartyDifficultyChange(difficulty, user.socket);
+        });
+    };
+
     announceLeftPartyInfo = (user: LobbyUser) => {
         announcePartyMembersInfo([], user.socket);
     };
 
     announceMembersInfo = () => {
-        const users = this.characterIds
-            .map((characterId) => this.lobby.getByCharacterId(characterId))
-            .filter((user) => user !== undefined) as LobbyUser[];
+        const users = this.getUsers();
 
+        // destroy party if no users left in it
         if (users.length === 1) {
-            return this.removeCharacter(users[0].characterId!);
+            return this.removeUser(users[0].userId!);
         }
 
+        //
         users.forEach((user) => {
             announcePartyMembersInfo(
                 this.getCharacterPartyInfoArr(),
@@ -147,20 +183,62 @@ export class Party {
         fromUser: LobbyUser,
         messageDataPiece: schatdataPiece[]
     ) => {
-        const users = this.characterIds
-            .map((characterId) => this.lobby.getByCharacterId(characterId))
-            .filter((user) => user !== undefined) as LobbyUser[];
-
-        users.forEach((user) => {
+        this.forEachUser((user) => {
             announcePartyChatData(fromUser, messageDataPiece, user.socket);
         });
     };
 
-    announceMemberKicked = (characterId: number) => {
-        const user = this.lobby.getByCharacterId(characterId);
+    announceMemberKicked = (userId: number) => {
+        const user = this.lobby.getByUserId(userId);
         if (!user) return null;
 
         announcePartyMemberKicked(user.socket);
+    };
+
+    announceMemberLocationChange = (userId: number) => {
+        const changedUser = this.lobby.getByUserId(userId);
+        if (!changedUser) return null;
+
+        this.forEachUser((user) => {
+            announcePartyMemberLocationChange(changedUser, user.socket);
+        });
+    };
+
+    announceReadyChange = (userId: number) => {
+        const changedUser = this.lobby.getByUserId(userId);
+        if (!changedUser) return null;
+
+        this.forEachUser((user) => {
+            announcePartyReadyChange(changedUser, user.socket);
+        });
+    };
+
+    // -----------------------
+    // aggrs
+    // -----------------------
+
+    getUsers = () => {
+        return this.mapUser((user) => user).filter(
+            (user: LobbyUser | null) => user
+        ) as LobbyUser[];
+    };
+
+    forEachUser = (callback: (user: LobbyUser) => void) => {
+        this.userIds.forEach((userId) => {
+            const user = this.lobby.getByUserId(userId);
+            if (!user) return null;
+
+            callback(user);
+        });
+    };
+
+    mapUser = <T>(callback: (user: LobbyUser) => T) => {
+        return this.userIds.map((userId) => {
+            const user = this.lobby.getByUserId(userId);
+            if (!user) return null;
+
+            return callback(user);
+        });
     };
 
     // -----------------------
@@ -168,6 +246,14 @@ export class Party {
     // -----------------------
 
     get size() {
-        return this.characterIds.length;
+        return this.userIds.length;
+    }
+
+    get isMax() {
+        return this.size >= PARTY_MAX_SIZE;
+    }
+
+    get isReady() {
+        return this.mapUser((user) => user.isReady).every((isReady) => isReady);
     }
 }

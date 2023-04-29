@@ -20,6 +20,8 @@ import {
 } from "../protos/ts/_Defins";
 import { logger } from "@/utils/loggers";
 import { lobbyState } from "@/state/LobbyManager";
+import { FriendLocation } from "@/protos/ts/_Character";
+import { sc2sPartyReadyReq, ss2cPartyReadyRes } from "@/protos/ts/Party";
 
 export const enterLobby = async (data: Buffer, socket: net.Socket) => {
     //
@@ -37,6 +39,8 @@ export const enterLobby = async (data: Buffer, socket: net.Socket) => {
     res.accountId = lobbyUser.userId.toString();
 
     lobbyUser.setCharacterId(Number(reqData.characterId));
+    lobbyUser.setLocation(DefineCommon_MetaLocation.PLAY);
+    lobbyUser.setFriendLocation(FriendLocation.Friend_Location_LOBBY);
     lobbyUser.announcePartyStatus();
 
     logger.debug(res);
@@ -50,26 +54,41 @@ export const selectGameDifficulty = async (
 ) => {
     //
     const lobbyUser = lobbyState.getBySocket(socket);
+    const party = lobbyUser?.getParty();
     const reqData = sc2sLobbyGameDifficultySelectReq.decode(bufferReader(data));
-
-    let res = ss2cLobbyGameDifficultySelectRes.create({});
-
-    if (!lobbyUser || !lobbyUser.userId) {
-        res.result = PacketResult.FAIL_GENERAL;
-        return res;
-    }
-
     const difficulty: DefineGame_DifficultyType =
         reqData.gameDifficultyTypeIndex;
 
-    if (difficulty === DefineGame_DifficultyType.HIGH_ROLLER) {
-        // check money
+    if (!lobbyUser || !lobbyUser.userId) {
+        return ss2cLobbyGameDifficultySelectRes.create({
+            result: PacketResult.FAIL_GENERAL,
+        });
     }
 
-    res.gameDifficultyTypeIndex = difficulty;
-    res.result = PacketResult.SUCCESS;
+    if (!party) {
+        //
+        lobbyUser.setGameDifficultyId(difficulty);
 
-    return res;
+        //
+        return ss2cLobbyGameDifficultySelectRes.create({
+            result: PacketResult.SUCCESS,
+            gameDifficultyTypeIndex: difficulty,
+        });
+    }
+
+    if (!party.isPartyLeader(lobbyUser)) {
+        return ss2cLobbyGameDifficultySelectRes.create({
+            result: PacketResult.FAIL_GENERAL,
+            gameDifficultyTypeIndex: difficulty,
+        });
+    }
+
+    party.setGameDifficultyId(difficulty);
+
+    return ss2cLobbyGameDifficultySelectRes.create({
+        result: PacketResult.SUCCESS,
+        gameDifficultyTypeIndex: difficulty,
+    });
 };
 
 export const lobbyEnterFromGame = async (data: Buffer, socket: net.Socket) => {
@@ -93,20 +112,38 @@ export const selectRegion = async (data: Buffer, socket: net.Socket) => {
     //
     const lobbyUser = lobbyState.getBySocket(socket);
     const reqData = sc2sLobbyRegionSelectReq.decode(bufferReader(data));
-
-    let res = ss2cLobbyRegionSelectRes.create({});
+    const region: DefineMatch_MatchRegion = reqData.region;
 
     if (!lobbyUser || !lobbyUser.userId) {
-        res.result = PacketResult.FAIL_GENERAL;
-        return res;
+        return ss2cLobbyRegionSelectRes.create({
+            result: PacketResult.FAIL_GENERAL,
+        });
     }
 
-    res.result = PacketResult.SUCCESS;
+    const party = lobbyUser.getParty();
+    if (!party) {
+        //
+        lobbyUser.setRegionId(region);
 
-    const region: DefineMatch_MatchRegion = reqData.region;
-    res.region = region;
+        return ss2cLobbyRegionSelectRes.create({
+            result: PacketResult.SUCCESS,
+            region: region,
+        });
+    }
 
-    return res;
+    if (!party.isPartyLeader(lobbyUser)) {
+        return ss2cLobbyRegionSelectRes.create({
+            result: PacketResult.FAIL_GENERAL,
+            region: region,
+        });
+    }
+
+    party.setRegionId(region);
+
+    return ss2cLobbyRegionSelectRes.create({
+        result: PacketResult.SUCCESS,
+        region: region,
+    });
 };
 
 export const getPlayerLobbyLocation = async (
@@ -128,6 +165,10 @@ export const getPlayerLobbyLocation = async (
     lobbyUser.setLocation(location);
 
     // notify party members of location change
+    const party = lobbyUser.getParty();
+    if (party) {
+        party.announceMemberLocationChange(lobbyUser.userId!);
+    }
 
     return res;
 };
@@ -150,4 +191,30 @@ export const backToCharacterSelect = async (
     res.result = PacketResult.SUCCESS;
 
     return res;
+};
+
+export const onPartyReadyReq = async (data: Buffer, socket: net.Socket) => {
+    //
+    const lobbyUser = lobbyState.getBySocket(socket);
+    const req = sc2sPartyReadyReq.decode(bufferReader(data));
+
+    if (!lobbyUser || !lobbyUser.characterId) {
+        return ss2cPartyReadyRes.create({
+            result: PacketResult.FAIL_GENERAL,
+        });
+    }
+
+    const party = lobbyUser.getParty();
+
+    if (!party) {
+        return ss2cPartyReadyRes.create({
+            result: PacketResult.FAIL_GENERAL,
+        });
+    }
+
+    //
+    lobbyUser.setIsReady(req.isReady);
+
+    //
+    party.announceReadyChange(lobbyUser.userId!);
 };

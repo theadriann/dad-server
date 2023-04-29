@@ -1,10 +1,14 @@
 // controllers
 import {
+    classItemMoveReq,
     createCharacter,
     deleteCharacter,
     getCharacterInfo,
     getClassEquipInfo,
     getClassLevelInfo,
+    getClassPerkList,
+    getClassSkillList,
+    getClassSpellList,
     listCharacters,
 } from "../CharacterController";
 import { login, relogin, sendServerPolicy } from "../AuthController";
@@ -13,6 +17,7 @@ import {
     enterLobby,
     getPlayerLobbyLocation,
     lobbyEnterFromGame,
+    onPartyReadyReq,
     selectGameDifficulty,
     selectRegion,
 } from "../LobbyController";
@@ -43,9 +48,10 @@ import {
     ss2cOpenLobbyMapRes,
 } from "../../protos/ts/Lobby";
 import {
-    ss2cCustomizeActionInfoRes, ss2cCustomizeEmoteInfoRes,
+    ss2cCustomizeActionInfoRes,
+    ss2cCustomizeEmoteInfoRes,
     ss2cCustomizeItemInfoRes,
-    ss2cCustomizeLobbyEmoteInfoRes
+    ss2cCustomizeLobbyEmoteInfoRes,
 } from "../../protos/ts/Customize";
 import {
     getBlockCharacterList,
@@ -62,7 +68,7 @@ import {
     getCustomizeActionInfo,
     getCustomizeItemInfo,
     getEmoteInfo,
-    getLobbyEmoteInfo
+    getLobbyEmoteInfo,
 } from "../CustomizeController";
 import {
     ss2cBlockCharacterListRes,
@@ -80,10 +86,15 @@ import {
     ss2cPartyInviteAnswerRes,
     ss2cPartyInviteRes,
     ss2cPartyMemberKickRes,
+    ss2cPartyReadyRes,
 } from "@/protos/ts/Party";
 import {
     ss2cClassEquipInfoRes,
+    ss2cClassItemMoveRes,
     ss2cClassLevelInfoRes,
+    ss2cClassPerkListRes,
+    ss2cClassSkillListRes,
+    ss2cClassSpellListRes,
 } from "@/protos/ts/CharacterClass";
 import {
     ss2cMerchantListRes,
@@ -300,6 +311,28 @@ export const PacketHandlers: PacketHandler[] = [
             },
         ],
     },
+    {
+        label: "On Party Ready",
+        requestCommand: PacketCommand.C2S_PARTY_READY_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_PARTY_READY_RES,
+                type: ss2cPartyReadyRes,
+                handler: onPartyReadyReq,
+            },
+        ],
+    },
+    {
+        label: "MetaLocationReq",
+        requestCommand: PacketCommand.C2S_META_LOCATION_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_META_LOCATION_RES,
+                type: ss2cMetaLocationRes,
+                handler: getPlayerLobbyLocation,
+            },
+        ],
+    },
 
     // -----------------------
     // Friends
@@ -470,7 +503,7 @@ export const PacketHandlers: PacketHandler[] = [
     },
 
     // -----------------------
-    //
+    // Perks, Skills & Spells
     // -----------------------
 
     {
@@ -484,15 +517,47 @@ export const PacketHandlers: PacketHandler[] = [
             },
         ],
     },
-
     {
-        label: "MetaLocationReq",
-        requestCommand: PacketCommand.C2S_META_LOCATION_REQ,
+        label: "Get Character Perks List",
+        requestCommand: PacketCommand.C2S_CLASS_PERK_LIST_REQ,
         res: [
             {
-                command: PacketCommand.S2C_META_LOCATION_RES,
-                type: ss2cMetaLocationRes,
-                handler: getPlayerLobbyLocation,
+                command: PacketCommand.S2C_CLASS_PERK_LIST_RES,
+                type: ss2cClassPerkListRes,
+                handler: getClassPerkList,
+            },
+        ],
+    },
+    {
+        label: "Get Character Skills List",
+        requestCommand: PacketCommand.C2S_CLASS_SKILL_LIST_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_CLASS_SKILL_LIST_RES,
+                type: ss2cClassSkillListRes,
+                handler: getClassSkillList,
+            },
+        ],
+    },
+    {
+        label: "Get Character Spells List",
+        requestCommand: PacketCommand.C2S_CLASS_SPELL_LIST_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_CLASS_SPELL_LIST_RES,
+                type: ss2cClassSpellListRes,
+                handler: getClassSpellList,
+            },
+        ],
+    },
+    {
+        label: "Get Character Perk/Skill Move",
+        requestCommand: PacketCommand.C2S_CLASS_ITEM_MOVE_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_CLASS_ITEM_MOVE_RES,
+                type: ss2cClassItemMoveRes,
+                handler: classItemMoveReq,
             },
         ],
     },

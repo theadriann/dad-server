@@ -7,6 +7,7 @@ import {
 import { SItem } from "@/protos/ts/_Item";
 import { Items } from "@/models/game/enums/Items";
 import {
+    CharacterClass,
     CharacterClassKey,
     CharacterClassKeys,
 } from "@/models/game/enums/CharacterClass";
@@ -571,27 +572,27 @@ export const generateBardStartItems = () => {
     ];
 };
 
-export const generateStarterGear = (characterClass: CharacterClassKey) => {
+export const generateStarterGear = (characterClass: CharacterClass) => {
     switch (characterClass) {
-        case CharacterClassKeys.FIGHTER:
+        case CharacterClass.FIGHTER:
             return generateFighterStartItems();
 
-        case CharacterClassKeys.BARBARIAN:
+        case CharacterClass.BARBARIAN:
             return generateBarbarianStartItems();
 
-        case CharacterClassKeys.ROGUE:
+        case CharacterClass.ROGUE:
             return generateRogueStartItems();
 
-        case CharacterClassKeys.RANGER:
+        case CharacterClass.RANGER:
             return generateRangerStartItems();
 
-        case CharacterClassKeys.WIZARD:
+        case CharacterClass.WIZARD:
             return generateWizardStartItems();
 
-        case CharacterClassKeys.CLERIC:
+        case CharacterClass.CLERIC:
             return generateClericStartItems();
 
-        case CharacterClassKeys.BARD:
+        case CharacterClass.BARD:
             return generateBardStartItems();
 
         default:

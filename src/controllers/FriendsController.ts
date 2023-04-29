@@ -1,48 +1,40 @@
 import net from "net";
 import { bufferReader } from "../utils/bufferReader";
 import {
-    sc2sFriendFindReq, sc2sFriendListReq,
+    sc2sFriendFindReq,
+    sc2sFriendListReq,
     ss2cFriendFindRes,
     ss2cFriendListAllRes,
-    ss2cFriendListRes
+    ss2cFriendListRes,
 } from "../protos/ts/Friend";
-import {
-    getCharacterFriendInfoById
-} from "@/services/CharacterService";
+import { getCharacterFriendInfoById } from "@/services/CharacterService";
 import { DefineMessage_LoopFlag } from "@/protos/ts/_Defins";
 import {
     sc2sBlockCharacterListReq,
     ss2cBlockCharacterListRes,
 } from "@/protos/ts/Common";
-import {
-    sblockCharacter
-} from "@/protos/ts/_Character";
+import { sblockCharacter } from "@/protos/ts/_Character";
 import { createCharacterNickname } from "./CharacterController";
 import { logger } from "@/utils/loggers";
 import { PacketResult } from "@/protos/ts/_PacketCommand";
 import { lobbyState } from "@/state/LobbyManager";
 
+// TODO: where is this used?!?
 export const listFriends = async (data: Buffer, socket: net.Socket) => {
     const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sFriendListReq.decode(bufferReader(data));
 
     let res = ss2cFriendListRes.create({});
 
-    res.friendInfoList = [];
-    res.dungeonLocateCount = 0;
-    res.lobbyLocateCount = 0;
-    res.pageIndex = 0;
-    res.totalFriendCount = 0;
+    // const char = await getCharacterFriendInfoById(9);
+    // if (char) {
+    //     res.friendInfoList.push(char);
+    //     res.lobbyLocateCount++;
+    //     res.totalFriendCount++;
+    // }
 
-    const char = await getCharacterFriendInfoById(9);
-    if (char) {
-        res.friendInfoList.push(char);
-        res.lobbyLocateCount++;
-        res.totalFriendCount++;
-    }
-
-    logger.debug("listFriends");
-    logger.debug(JSON.stringify(res, null, 2));
+    // logger.debug("listFriends");
+    // logger.debug(JSON.stringify(res, null, 2));
 
     return res;
 };
@@ -141,17 +133,21 @@ export const searchFriend = async (data: Buffer, socket: net.Socket) => {
         });
     }
 
-    const foundUser = lobbyState
-        .getAllActive()
-        .find((user) =>
-            user.characterNickname?.startsWith(
-                req.nickName?.originalNickName || ""
-            )
+    const foundUser = lobbyState.getAllActive().find((user) => {
+        const userCharName = user.characterNickname || "";
+        const searchedCharName = req.nickName?.originalNickName || "";
+
+        return (
+            userCharName.startsWith(searchedCharName) ||
+            userCharName
+                .toLowerCase()
+                .startsWith(searchedCharName.toLowerCase())
         );
+    });
 
     if (!foundUser) {
         return ss2cFriendFindRes.create({
-            result: PacketResult.FAIL_GENERAL,
+            result: PacketResult.SUCCESS,
         });
     }
 
@@ -165,4 +161,3 @@ export const searchFriend = async (data: Buffer, socket: net.Socket) => {
 
     return res;
 };
-

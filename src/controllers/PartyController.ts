@@ -65,7 +65,7 @@ export const inviteFriend = async (data: Buffer, socket: net.Socket) => {
 };
 
 export const acceptPartyInvite = async (data: Buffer, socket: net.Socket) => {
-    const lobbyUser = lobbyState.getBySocket(socket);
+    const accepter = lobbyState.getBySocket(socket);
     const req = sc2sPartyInviteAnswerReq.decode(bufferReader(data));
 
     const inviteResult: partyInviteAnswer = req.inviteResult;
@@ -73,42 +73,39 @@ export const acceptPartyInvite = async (data: Buffer, socket: net.Socket) => {
 
     logger.debug(req);
 
-    if (!lobbyUser || !lobbyUser.userId || !lobbyUser.characterId) {
-        logger.warn("acceptPartyInvite: socketContext not found");
+    if (!accepter?.hasCharacterLoaded) {
+        logger.warn("acceptPartyInvite: accepter is not valid");
         return ss2cPartyInviteAnswerRes.create({
             result: PacketResult.FAIL_GENERAL,
         });
     }
 
-    const otherUser = lobbyState.getByUserId(Number(toAccountId));
+    const inviter = lobbyState.getByUserId(Number(toAccountId));
+    const targetParty = inviter?.getParty();
 
-    if (!otherUser || !otherUser.getParty()) {
-        logger.warn("acceptPartyInvite: otherUser not found");
+    if (!inviter || !targetParty) {
+        logger.warn("acceptPartyInvite: inviter or inviter party not found");
         return ss2cPartyInviteAnswerRes.create({
             result: PacketResult.FAIL_GENERAL,
         });
     }
 
-    //
-    const targetParty = otherUser.getParty();
-
-    if (!targetParty) {
-        logger.warn("acceptPartyInvite: party not found");
-        return ss2cPartyInviteAnswerRes.create({
-            result: PacketResult.FAIL_GENERAL,
-        });
-    }
-
-    const myParty = lobbyUser.getParty();
-    if (myParty && myParty.isFormed) {
-        logger.warn("acceptPartyInvite: already joined a different party");
+    const myParty = accepter.getParty();
+    // if (myParty && myParty.isFormed) {
+    //     logger.warn("acceptPartyInvite: already joined a different party");
+    //     return ss2cPartyInviteAnswerRes.create({
+    //         result: PacketResult.FAIL_GENERAL,
+    //     });
+    // }
+    if (myParty === targetParty) {
+        logger.warn("acceptPartyInvite: already joined the same party");
         return ss2cPartyInviteAnswerRes.create({
             result: PacketResult.FAIL_GENERAL,
         });
     }
 
     // no need to await
-    announceAcceptedPartyInvite(inviteResult, lobbyUser, otherUser);
+    announceAcceptedPartyInvite(inviteResult, accepter, inviter);
 
     // 2 = not accepted
     if (inviteResult == 2) {
@@ -117,7 +114,7 @@ export const acceptPartyInvite = async (data: Buffer, socket: net.Socket) => {
         });
     }
 
-    targetParty.addCharacter(lobbyUser.characterId);
+    targetParty.addUser(accepter.userId!);
     targetParty.announceMembersInfo();
 
     return ss2cPartyInviteAnswerRes.create({
@@ -137,7 +134,7 @@ export const exitParty = async (data: Buffer, socket: net.Socket) => {
         });
     }
 
-    party.removeCharacter(lobbyUser!.characterId!);
+    party.removeUser(lobbyUser!.userId!);
     party.announceMembersInfo();
 
     return ss2cPartyExitRes.create({
@@ -193,7 +190,7 @@ export const onPartyMemberKickReq = async (
         });
     }
 
-    party.kickCharacter(foundUser.characterId!);
+    party.kickUser(foundUser.userId!);
 
     return ss2cPartyMemberKickRes.create({
         result: PacketResult.SUCCESS,

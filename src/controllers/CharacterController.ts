@@ -14,9 +14,17 @@ import { generateStarterGear } from "../generators/items/classes/strarterGear";
 import { PacketResult } from "../protos/ts/_PacketCommand";
 import {
     sc2sClassEquipInfoReq,
+    sc2sClassItemMoveReq,
     sc2sClassLevelInfoReq,
+    sc2sClassPerkListReq,
+    sc2sClassSkillListReq,
+    sc2sClassSpellListReq,
     ss2cClassEquipInfoRes,
+    ss2cClassItemMoveRes,
     ss2cClassLevelInfoRes,
+    ss2cClassPerkListRes,
+    ss2cClassSkillListRes,
+    ss2cClassSpellListRes,
 } from "../protos/ts/CharacterClass";
 import { saccountNickname, scharacterInfo } from "../protos/ts/_Character";
 import {
@@ -26,13 +34,22 @@ import {
 import { logger } from "@/utils/loggers";
 import { FighterClassSkills } from "@/models/game/enums/ClassSkills";
 import { lobbyState } from "@/state/LobbyManager";
-import { characterClassFromClient } from "@/models/game/enums/CharacterClass";
+import {
+    CharacterClass,
+    characterClassFromClient,
+} from "@/models/game/enums/CharacterClass";
 import { Item } from "@/models/Item";
 import { random } from "lodash";
 import {
     generateStackOfGoldCoinPurse,
     generateStackOfGoldCoins,
 } from "@/generators/items/common/gold";
+import { getClassPerks } from "@/generators/perks";
+import { getClassSkills } from "@/generators/skills";
+import { SPerk, SSkill } from "@/protos/ts/_Item";
+import { Character } from "@/models/Character";
+import { generateNewCharacter } from "@/generators/characters";
+import { DefineClass_Move } from "@/protos/ts/_Defins";
 
 export const createCharacter = async (data: Buffer, socket: net.Socket) => {
     const lobbyUser = lobbyState.getBySocket(socket);
@@ -45,19 +62,22 @@ export const createCharacter = async (data: Buffer, socket: net.Socket) => {
         return res;
     }
 
+    const characterClass = req.characterClass as CharacterClass;
+    const character = generateNewCharacter(characterClass, {
+        nickname: req.nickName,
+        gender: req.gender,
+        userId: lobbyUser.userId,
+    });
+
+    // TODO: use items from character
+
     const character_db = await db.character.create({
         data: {
-            nickname: req.nickName,
-            user_id: lobbyUser.userId,
-            class: req.characterClass,
-            gender: req.gender,
-            level: 1,
+            ...(character.toDB() as any),
         },
     });
 
-    const items = generateStarterGear(
-        characterClassFromClient(req.characterClass)
-    );
+    const items = generateStarterGear(req.characterClass as CharacterClass);
 
     let db_items = [];
 
@@ -243,12 +263,13 @@ export const getClassLevelInfo = async (data: Buffer, socket: net.Socket) => {
     //
     const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sClassLevelInfoReq.decode(bufferReader(data));
+    const char = Character.fromDB(await lobbyUser?.getCharacterDb());
 
     return ss2cClassLevelInfoRes.create({
         exp: 0,
         expBegin: 0,
         expLimit: 0,
-        level: 1,
+        level: char.level,
         rewardPoint: 0,
     });
 };
@@ -257,59 +278,133 @@ export const getClassEquipInfo = async (data: Buffer, socket: net.Socket) => {
     //
     const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sClassEquipInfoReq.decode(bufferReader(data));
+    const char = Character.fromDB(await lobbyUser?.getCharacterDb());
 
     let res = ss2cClassEquipInfoRes.create({});
 
-    res.equips = [
-        {
-            index: 1,
-            isAvailableSlot: 1,
-            requiredLevel: 1,
-            type: 1,
-            equipId: "", // Perk #1
-        },
-        {
-            index: 2,
-            isAvailableSlot: 0, // is level 5
-            requiredLevel: 5,
-            type: 1,
-            equipId: "", // Perk #2
-        },
-        {
-            index: 3,
-            isAvailableSlot: 0, // is level 10
-            requiredLevel: 10,
-            type: 1,
-            equipId: "", // Perk #3
-        },
-        {
-            index: 4,
-            isAvailableSlot: 0,
-            requiredLevel: 15,
-            type: 1,
-            equipId: "", // Perk #4
-        },
-        {
-            index: 5,
-            isAvailableSlot: 1,
-            requiredLevel: 1,
-            type: 2,
-            equipId: FighterClassSkills.SPRINT, // Skill #1
-        },
-        {
-            index: 6,
-            isAvailableSlot: 1,
-            requiredLevel: 1,
-            type: 2,
-            equipId: FighterClassSkills.SECOND_WIND, // Skill #2
-        },
-    ];
+    if (!char.id) {
+        return res;
+    }
+
+    res.equips = char.toClassEquipList();
 
     if (!lobbyUser || !lobbyUser.userId) {
         return res;
     }
 
     return res;
+};
+
+export const getClassPerkList = async (data: Buffer, socket: net.Socket) => {
+    //
+    const lobbyUser = lobbyState.getBySocket(socket);
+    const req = sc2sClassPerkListReq.decode(bufferReader(data));
+    const character = Character.fromDB(await lobbyUser?.getCharacterDb());
+    const characterClassEquipList = character.toClassEquipList();
+
+    // return ss2cClassPerkListRes.create({
+    //     perks: getClassPerks((lobbyUser?.characterDb?.class || "") as any).map(
+    //         (perkId: string, index: number) => {
+    //             return {
+    //                 index: index,
+    //                 perkId: perkId,
+    //             } as SPerk;
+    //         }
+    //     ),
+    // });
+
+    return ss2cClassPerkListRes.create({
+        perks: getClassPerks((lobbyUser?.characterDb?.class || "") as any)
+            .map((perkId: string, index: number) => {
+                return {
+                    index: index,
+                    perkId: perkId,
+                } as SPerk;
+            })
+            .filter((perkId: SPerk) => {
+                return !characterClassEquipList.find((equip) => {
+                    return equip.equipId === perkId.perkId;
+                });
+            }),
+    });
+};
+
+export const getClassSkillList = async (data: Buffer, socket: net.Socket) => {
+    //
+    const lobbyUser = lobbyState.getBySocket(socket);
+    const req = sc2sClassSkillListReq.decode(bufferReader(data));
+    const character = Character.fromDB(await lobbyUser?.getCharacterDb());
+    const characterClassEquipList = character.toClassEquipList();
+
+    return ss2cClassSkillListRes.create({
+        skills: getClassSkills((lobbyUser?.characterDb?.class || "") as any)
+            .map((skillId: string, index: number) => {
+                return {
+                    index: index,
+                    skillId: skillId,
+                } as SSkill;
+            })
+            .filter((skill: SSkill) => {
+                return !characterClassEquipList.find((equip) => {
+                    return equip.equipId === skill.skillId;
+                });
+            }),
+    });
+};
+
+export const getClassSpellList = async (data: Buffer, socket: net.Socket) => {
+    //
+    const lobbyUser = lobbyState.getBySocket(socket);
+    const req = sc2sClassSpellListReq.decode(bufferReader(data));
+
+    // req.maxSpellMemory = 0;
+
+    return ss2cClassSpellListRes.create({
+        spells: [],
+    });
+};
+
+export const classItemMoveReq = async (data: Buffer, socket: net.Socket) => {
+    //
+    const lobbyUser = lobbyState.getBySocket(socket);
+    const req = sc2sClassItemMoveReq.decode(bufferReader(data));
+    const character = Character.fromDB(await lobbyUser?.getCharacterDb());
+
+    if (
+        req.oldMove?.index &&
+        req.newMove?.index &&
+        req.oldMove?.move === req.newMove.move &&
+        req.oldMove?.move === 1
+    ) {
+        character.setClassEquipListItem(req.newMove.index, req.oldMove.moveId);
+        character.setClassEquipListItem(req.oldMove.index, req.newMove.moveId);
+    } else {
+        if (req.oldMove?.index) {
+            character.setClassEquipListItem(
+                req.oldMove.index,
+                req.oldMove.move === DefineClass_Move.UN_EQUIP
+                    ? ""
+                    : req.oldMove.moveId
+            );
+        }
+
+        if (req.newMove?.index) {
+            character.setClassEquipListItem(
+                req.newMove.index,
+                req.newMove.move === DefineClass_Move.UN_EQUIP
+                    ? ""
+                    : req.newMove.moveId
+            );
+        }
+    }
+
+    await character.updateClassEquipList();
+
+    return ss2cClassItemMoveRes.create({
+        result: PacketResult.SUCCESS,
+        oldMove: req.oldMove,
+        newMove: req.newMove,
+    });
 };
 
 export const createCharacterNickname = async (nickname: string) => {
