@@ -38,10 +38,6 @@ export const singleInventoryUpdate = async (
             const sourceReqItem = oldItem[index];
             const destReqItem = newItem[index];
 
-            if (!destReqItem) {
-                continue;
-            }
-
             let sourceDBItem = await db.inventory.findFirst({
                 where: {
                     character_id: lobbyUser.characterId!,
@@ -59,74 +55,65 @@ export const singleInventoryUpdate = async (
                 },
             });
 
-            if (!sourceDBItem) {
-                continue;
-            }
+            if (sourceReqItem && sourceDBItem) {
+                sourceDBItem.item_count -= sourceReqItem.itemCount;
+                sourceDBItem.item_contents_count -=
+                    sourceReqItem.itemContentsCount;
+                sourceDBItem.item_ammo_count -= sourceReqItem.itemAmmoCount;
 
-            if (!destDBItem) {
-                sourceDBItem = await db.inventory.update({
-                    where: {
-                        id: sourceReqItem.itemUniqueId,
-                    },
-                    data: {
-                        slot_id: destReqItem.slotId,
-                        inventory_id: destReqItem.inventoryId,
-                    },
-                });
-
-                res.oldItem.push(sourceReqItem);
-                // res.newItem.push(Item.fromDB(sourceDBItem).toJSON());
-                // same stuff
-                res.newItem.push(destReqItem);
-                continue;
-            }
-
-            let srcItem = Item.fromDB(sourceDBItem);
-            let destItem = Item.fromDB(destDBItem);
-
-            const addedItemCount = srcItem.itemCount + destItem.itemCount;
-
-            if (addedItemCount > destItem.getMaxCount()) {
-                const remaining = addedItemCount - destItem.getMaxCount();
-
-                srcItem = Item.fromDB(
+                if (sourceDBItem.item_count <= 0) {
+                    await db.inventory.delete({
+                        where: {
+                            id: sourceDBItem.id,
+                        },
+                    });
+                } else {
                     await db.inventory.update({
                         where: {
-                            id: srcItem.id,
+                            id: sourceDBItem.id,
                         },
                         data: {
-                            item_count: remaining,
+                            item_count: sourceDBItem.item_count,
+                            item_contents_count:
+                                sourceDBItem.item_contents_count,
+                            item_ammo_count: sourceDBItem.item_ammo_count,
                         },
-                    })
-                );
-            } else {
-                await db.inventory.delete({
+                    });
+                }
+            }
+
+            if (destReqItem && destDBItem) {
+                destDBItem.item_count += destReqItem.itemCount;
+                destDBItem.item_contents_count += destReqItem.itemContentsCount;
+                destDBItem.item_ammo_count += destReqItem.itemAmmoCount;
+
+                await db.inventory.update({
                     where: {
-                        id: srcItem.id,
+                        id: destDBItem.id,
+                    },
+                    data: {
+                        item_count: destDBItem.item_count,
+                        item_contents_count: destDBItem.item_contents_count,
+                        item_ammo_count: destDBItem.item_ammo_count,
+                    },
+                });
+            } else if (sourceDBItem && destReqItem) {
+                await db.inventory.create({
+                    data: {
+                        ...sourceDBItem,
+                        character_id: lobbyUser.characterId!,
+                        slot_id: destReqItem.slotId,
+                        inventory_id: destReqItem.inventoryId,
+                        item_count: destReqItem.itemCount,
+                        item_contents_count: destReqItem.itemContentsCount,
+                        item_ammo_count: destReqItem.itemAmmoCount,
+                        id: undefined,
                     },
                 });
             }
-
-            destDBItem = await db.inventory.update({
-                where: {
-                    id: destDBItem.id,
-                },
-                data: {
-                    item_count: Math.min(
-                        addedItemCount,
-                        destItem.getMaxCount()
-                    ),
-                },
-            });
 
             res.oldItem.push(sourceReqItem);
             res.newItem.push(destReqItem);
-            // res.newItem.push(Item.fromDB(destDBItem).toJSON());
-
-            // return ss2cInventorySingleUpdateRes.create({
-            //     result: PacketResult.SUCCESS,
-            //     oldItem: source,
-            // });
         }
     } else {
         res.newItem = newItem;

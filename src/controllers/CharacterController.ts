@@ -220,7 +220,7 @@ export const listCharacters = async (data: Buffer, socket: net.Socket) => {
 export const getCharacterInfo = async (data: Buffer, socket: net.Socket) => {
     //
     const lobbyUser = lobbyState.getBySocket(socket);
-    const char = Character.fromDB(await lobbyUser?.getCharacterDb());
+    const char = Character.fromDB(await lobbyUser?.getCharacterDb(true));
 
     if (!lobbyUser?.hasCharacterLoaded) {
         return ss2cLobbyCharacterInfoRes.create({
