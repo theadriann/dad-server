@@ -1,4 +1,5 @@
 //
+import { GatheringHall } from "@/models/lobby/GatheringHall";
 import { LobbyUser } from "@/models/lobby/LobbyUser";
 import { Party } from "@/models/lobby/Party";
 import { logger } from "@/utils/loggers";
@@ -8,6 +9,11 @@ export class LobbyState {
     //
     users = new Map<string, LobbyUser>();
     parties = new Map<string, Party>();
+    halls = new Map<string, GatheringHall>();
+
+    constructor() {
+        this.createGatheringHall();
+    }
 
     create = (socket: net.Socket) => {
         const user = new LobbyUser(socket, this);
@@ -37,6 +43,17 @@ export class LobbyState {
             user.onDisconnect();
             this.remove(user);
         }
+    };
+
+    // -----------------------
+    // Gathering Hall
+    // -----------------------
+
+    createGatheringHall = () => {
+        const hall = new GatheringHall(this);
+        hall.id = "default";
+
+        this.halls.set(hall.id, hall);
     };
 
     // -----------------------

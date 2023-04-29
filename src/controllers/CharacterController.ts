@@ -187,11 +187,10 @@ export const listCharacters = async (data: Buffer, socket: net.Socket) => {
     for (let character_db of characters_db) {
         //
         const character_items = character_db.inventory
-            .map((item) => new Item().fromDB(item).toSItem())
             .filter(
-                (item) => item.inventoryId === DefineItem_InventoryId.EQUIPMENT
-            );
-
+                (item) => item.inventory_id === DefineItem_InventoryId.EQUIPMENT
+            )
+            .map((item) => new Item().fromDB(item).toSItem());
         characters.push(
             sloginCharacterInfo.create({
                 characterClass: character_db.class,

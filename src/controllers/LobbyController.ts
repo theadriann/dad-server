@@ -237,4 +237,8 @@ export const onPartyReadyReq = async (data: Buffer, socket: net.Socket) => {
 
     //
     party.announceReadyChange(lobbyUser.userId!);
+
+    return ss2cPartyReadyRes.create({
+        result: PacketResult.SUCCESS,
+    });
 };

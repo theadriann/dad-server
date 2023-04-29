@@ -46,13 +46,13 @@ export const inviteFriend = async (data: Buffer, socket: net.Socket) => {
         });
     }
 
-    const otherUserParty = otherUser.getParty();
-    if (otherUserParty && otherUserParty.isFormed) {
-        logger.warn("inviteFriend: otherUser is already in a party");
-        return ss2cPartyInviteRes.create({
-            result: PacketResult.FAIL_GENERAL,
-        });
-    }
+    // const otherUserParty = otherUser.getParty();
+    // if (otherUserParty && otherUserParty.isFormed) {
+    //     logger.warn("inviteFriend: otherUser is already in a party");
+    //     return ss2cPartyInviteRes.create({
+    //         result: PacketResult.FAIL_GENERAL,
+    //     });
+    // }
 
     //
     lobbyState.ensureUserParty(lobbyUser);

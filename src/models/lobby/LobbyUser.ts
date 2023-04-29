@@ -4,13 +4,18 @@ import cuid from "cuid";
 import net from "net";
 import { SocketContext } from "./SocketContext";
 import { getDbCharacterById } from "@/services/CharacterService";
-import { FriendLocation, saccountNickname } from "@/protos/ts/_Character";
+import {
+    FriendLocation,
+    saccountNickname,
+    scharacterGatheringHallInfo,
+} from "@/protos/ts/_Character";
 import { Character } from "@prisma/client";
 import { LobbyState } from "@/state/LobbyManager";
 import { Item } from "../Item";
 import {
     DefineCommon_MetaLocation,
     DefineGame_DifficultyType,
+    DefineItem_InventoryId,
     DefineMatch_MatchRegion,
 } from "@/protos/ts/_Defins";
 import { announcePartyMembersInfo } from "@/services/PartyNotifier";
@@ -44,6 +49,7 @@ export class LobbyUser {
     characterItems: Item[] = [];
 
     partyId: string | null = null;
+    gatheringHallId: string | null = null;
 
     regionId: DefineMatch_MatchRegion = DefineMatch_MatchRegion.EU_CENTRAL;
     gameDifficultyId: DefineGame_DifficultyType =
@@ -170,6 +176,41 @@ export class LobbyUser {
 
     setIsReady = (value: number) => {
         this.isReady = value;
+    };
+
+    toEquipmentInfo = () => {
+        return this.characterItems
+            .filter(
+                (item) => item.inventoryId === DefineItem_InventoryId.EQUIPMENT
+            )
+            .map((item) => item.toSItem());
+    };
+
+    // -----------------------
+    // Gathering Hall
+    // -----------------------
+
+    setGatheringHallId = (value: string | null) => {
+        this.gatheringHallId = value;
+    };
+
+    getGatheringHall() {
+        if (this.gatheringHallId) {
+            return this.lobby.halls.get(this.gatheringHallId) || null;
+        }
+
+        return null;
+    }
+
+    toGatheringHallInfo = () => {
+        return scharacterGatheringHallInfo.create({
+            accountId: this.userId?.toString(),
+            characterClass: this.characterDb?.class,
+            characterId: this.characterId?.toString(),
+            gender: this.characterDb?.gender,
+            level: this.characterDb?.level,
+            nickName: this.characterNicknameObject,
+        });
     };
 
     // -----------------------

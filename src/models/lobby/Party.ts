@@ -12,7 +12,10 @@ import {
     announcePartyRegionChange,
 } from "@/services/PartyNotifier";
 import { schatdataPiece } from "@/protos/ts/_Chat";
-import { DefineGame_DifficultyType } from "@/protos/ts/_Defins";
+import {
+    DefineGame_DifficultyType,
+    DefineItem_InventoryId,
+} from "@/protos/ts/_Defins";
 
 export const PARTY_MAX_SIZE = 3;
 
@@ -134,9 +137,13 @@ export class Party {
                     level: user.characterDb!.level,
                     nickName: user.characterNicknameObject,
                     partyIdx: index + 1,
-                    equipItemList: user.characterItems.map((item) =>
-                        item.toSItem()
-                    ),
+                    equipItemList: user.characterItems
+                        .filter(
+                            (item) =>
+                                item.inventoryId ===
+                                DefineItem_InventoryId.EQUIPMENT
+                        )
+                        .map((item) => item.toSItem()),
                 };
 
                 return infoData;
@@ -207,6 +214,8 @@ export class Party {
     announceReadyChange = (userId: number) => {
         const changedUser = this.lobby.getByUserId(userId);
         if (!changedUser) return null;
+
+        this.announceMembersInfo();
 
         this.forEachUser((user) => {
             announcePartyReadyChange(changedUser, user.socket);

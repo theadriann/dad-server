@@ -117,6 +117,24 @@ import {
     onPartyMemberKickReq,
     partyChatReq,
 } from "../PartyController";
+import {
+    getGatheringHallChannelList,
+    onGatheringHallChannelSelect,
+    onGatheringHallChat,
+    onGatheringHallLeave,
+    onGatheringHallTargetEquippedItem,
+    onGatheringHallUserListReqContinue,
+    onGatheringHallUserListReqEnd,
+    onGatheringHallUserListReqStart,
+} from "../GatheringHallController";
+import {
+    ss2cGatheringHallChannelChatRes,
+    ss2cGatheringHallChannelExitRes,
+    ss2cGatheringHallChannelListRes,
+    ss2cGatheringHallChannelSelectRes,
+    ss2cGatheringHallChannelUserListRes,
+    ss2cGatheringHallTargetEquippedItemRes,
+} from "@/protos/ts/GatheringHall";
 
 export type PacketHandler = {
     label: string;
@@ -682,8 +700,103 @@ export const PacketHandlers: PacketHandler[] = [
         ],
     },
 
-    // pc.C2S_TRADE_MEMBERSHIP_REQUIREMENT_REQ: trade.get_trade_reqs,
-    // pc.C2S_TRADE_MEMBERSHIP_REQ: trade.process_membership,
+    // -----------------------
+    // Gathering Hall
+    // -----------------------
+
+    {
+        label: "Gathering Hall Request List",
+        requestCommand: PacketCommand.C2S_GATHERING_HALL_CHANNEL_LIST_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_GATHERING_HALL_CHANNEL_LIST_RES,
+                handler: getGatheringHallChannelList,
+                type: ss2cGatheringHallChannelListRes,
+            },
+        ],
+    },
+    {
+        label: "Gathering Hall Select Channel",
+        requestCommand: PacketCommand.C2S_GATHERING_HALL_CHANNEL_SELECT_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_GATHERING_HALL_CHANNEL_SELECT_RES,
+                handler: onGatheringHallChannelSelect,
+                type: ss2cGatheringHallChannelSelectRes,
+            },
+            {
+                command: PacketCommand.S2C_GATHERING_HALL_CHANNEL_USER_LIST_RES,
+                handler: onGatheringHallUserListReqStart,
+                type: ss2cGatheringHallChannelUserListRes,
+            },
+            {
+                command: PacketCommand.S2C_GATHERING_HALL_CHANNEL_USER_LIST_RES,
+                handler: onGatheringHallUserListReqContinue,
+                type: ss2cGatheringHallChannelUserListRes,
+            },
+            {
+                command: PacketCommand.S2C_GATHERING_HALL_CHANNEL_USER_LIST_RES,
+                handler: onGatheringHallUserListReqEnd,
+                type: ss2cGatheringHallChannelUserListRes,
+            },
+        ],
+    },
+    {
+        label: "Gathering Hall Get User List",
+        requestCommand: PacketCommand.C2S_GATHERING_HALL_CHANNEL_USER_LIST_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_GATHERING_HALL_CHANNEL_USER_LIST_RES,
+                handler: onGatheringHallUserListReqStart,
+                type: ss2cGatheringHallChannelUserListRes,
+            },
+            {
+                command: PacketCommand.S2C_GATHERING_HALL_CHANNEL_USER_LIST_RES,
+                handler: onGatheringHallUserListReqContinue,
+                type: ss2cGatheringHallChannelUserListRes,
+            },
+            {
+                command: PacketCommand.S2C_GATHERING_HALL_CHANNEL_USER_LIST_RES,
+                handler: onGatheringHallUserListReqEnd,
+                type: ss2cGatheringHallChannelUserListRes,
+            },
+        ],
+    },
+    {
+        label: "Gathering Hall Send Chat",
+        requestCommand: PacketCommand.C2S_GATHERING_HALL_CHANNEL_CHAT_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_GATHERING_HALL_CHANNEL_CHAT_RES,
+                handler: onGatheringHallChat,
+                type: ss2cGatheringHallChannelChatRes,
+            },
+        ],
+    },
+    {
+        label: "Gathering Hall Leave",
+        requestCommand: PacketCommand.C2S_GATHERING_HALL_CHANNEL_EXIT_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_GATHERING_HALL_CHANNEL_EXIT_RES,
+                handler: onGatheringHallLeave,
+                type: ss2cGatheringHallChannelExitRes,
+            },
+        ],
+    },
+    {
+        label: "Gathering Hall Inspect Request",
+        requestCommand:
+            PacketCommand.C2S_GATHERING_HALL_TARGET_EQUIPPED_ITEM_REQ,
+        res: [
+            {
+                command:
+                    PacketCommand.S2C_GATHERING_HALL_TARGET_EQUIPPED_ITEM_RES,
+                handler: onGatheringHallTargetEquippedItem,
+                type: ss2cGatheringHallTargetEquippedItemRes,
+            },
+        ],
+    },
 ];
 
 export const PacketHandlersMap = new Map<number, PacketHandler>();
