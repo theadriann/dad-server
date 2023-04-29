@@ -23,30 +23,43 @@ import { lobbyState } from "@/state/LobbyManager";
 import { FriendLocation } from "@/protos/ts/_Character";
 import { sc2sPartyReadyReq, ss2cPartyReadyRes } from "@/protos/ts/Party";
 
+export const enterLobbyAction = async (data: Buffer, socket: net.Socket) => {
+    //
+    const lobbyUser = lobbyState.getBySocket(socket);
+    const reqData = sc2sLobbyEnterReq.decode(bufferReader(data));
+
+    if (!lobbyUser || !lobbyUser.userId) {
+        return;
+    }
+
+    lobbyUser.setCharacterId(Number(reqData.characterId));
+
+    await lobbyUser.loadCharacterData();
+
+    // lobbyUser.setLocation(DefineCommon_MetaLocation.PLAY);
+    // lobbyUser.setFriendLocation(FriendLocation.Friend_Location_LOBBY);
+    // lobbyUser.announcePartyStatus();
+};
+
 export const enterLobby = async (data: Buffer, socket: net.Socket) => {
     //
     const lobbyUser = lobbyState.getBySocket(socket);
     const reqData = sc2sLobbyEnterReq.decode(bufferReader(data));
 
-    let res = ss2cLobbyEnterRes.create({});
-
-    if (!lobbyUser || !lobbyUser.userId) {
-        res.result = PacketResult.FAIL_LOBBY_ENTER_COUPON_CODE_INVALID;
-        return res;
+    if (!lobbyUser?.hasCharacterLoaded) {
+        return ss2cLobbyEnterRes.create({
+            result: PacketResult.FAIL_GENERAL,
+        });
     }
 
-    res.result = PacketResult.SUCCESS;
-    res.accountId = lobbyUser.userId.toString();
-
-    lobbyUser.setCharacterId(Number(reqData.characterId));
-    await lobbyUser.loadCharacterData();
     lobbyUser.setLocation(DefineCommon_MetaLocation.PLAY);
     lobbyUser.setFriendLocation(FriendLocation.Friend_Location_LOBBY);
     lobbyUser.announcePartyStatus();
 
-    logger.debug(res);
-
-    return res;
+    return ss2cLobbyEnterRes.create({
+        accountId: lobbyUser.userId?.toString(),
+        result: PacketResult.SUCCESS,
+    });
 };
 
 export const selectGameDifficulty = async (

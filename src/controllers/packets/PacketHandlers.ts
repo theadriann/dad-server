@@ -15,6 +15,7 @@ import { login, relogin, sendServerPolicy } from "../AuthController";
 import {
     backToCharacterSelect,
     enterLobby,
+    enterLobbyAction,
     getPlayerLobbyLocation,
     lobbyEnterFromGame,
     onPartyReadyReq,
@@ -226,8 +227,8 @@ export const PacketHandlers: PacketHandler[] = [
         res: [
             {
                 command: PacketCommand.S2C_LOBBY_ENTER_RES,
-                type: ss2cLobbyEnterRes,
-                handler: enterLobby,
+                type: null,
+                handler: enterLobbyAction,
             },
             {
                 command: PacketCommand.S2C_CLASS_EQUIP_INFO_RES,
@@ -239,21 +240,26 @@ export const PacketHandlers: PacketHandler[] = [
                 handler: getCharacterInfo,
                 type: ss2cLobbyCharacterInfoRes,
             },
-            // {
-            //     command: PacketCommand.S2C_LOBBY_ACCOUNT_CURRENCY_LIST_NOT,
-            //     handler: async (data: Buffer, socket: net.Socket) => {
-            //         return ss2cLobbyAccountCurrencyListNot.create({
-            //             currencyInfos: [
-            //                 saccountCurrencyInfo.create({
-            //                     currencyType:
-            //                         DefineAccount_CurrencyType.ADVENTURE,
-            //                     currencyValue: 100,
-            //                 }),
-            //             ],
-            //         });
-            //     },
-            //     type: ss2cLobbyAccountCurrencyListNot,
-            // },
+            {
+                command: PacketCommand.S2C_LOBBY_ENTER_RES,
+                type: ss2cLobbyEnterRes,
+                handler: enterLobby,
+            },
+            {
+                command: PacketCommand.S2C_LOBBY_ACCOUNT_CURRENCY_LIST_NOT,
+                handler: async (data: Buffer, socket: net.Socket) => {
+                    return ss2cLobbyAccountCurrencyListNot.create({
+                        currencyInfos: [
+                            saccountCurrencyInfo.create({
+                                currencyType:
+                                    DefineAccount_CurrencyType.ADVENTURE,
+                                currencyValue: 100,
+                            }),
+                        ],
+                    });
+                },
+                type: ss2cLobbyAccountCurrencyListNot,
+            },
         ],
     },
     {
@@ -445,6 +451,11 @@ export const PacketHandlers: PacketHandler[] = [
         label: "CustomizeCharacterInfo",
         requestCommand: PacketCommand.C2S_CUSTOMIZE_CHARACTER_INFO_REQ,
         res: [
+            {
+                command: PacketCommand.S2C_CLASS_EQUIP_INFO_RES,
+                type: ss2cClassEquipInfoRes,
+                handler: getClassEquipInfo,
+            },
             {
                 command: PacketCommand.S2C_LOBBY_CHARACTER_INFO_RES,
                 handler: getCharacterInfo,
