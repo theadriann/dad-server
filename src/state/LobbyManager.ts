@@ -120,7 +120,7 @@ export class LobbyState {
 
     getAllActive() {
         return Array.from(this.users.values()).filter(
-            (user) => !user.socketContext.active
+            (user) => !user.socket.destroyed
         );
     }
 }
