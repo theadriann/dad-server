@@ -49,7 +49,7 @@ import { getClassSkills } from "@/generators/skills";
 import { SPerk, SSkill } from "@/protos/ts/_Item";
 import { Character } from "@/models/Character";
 import { generateNewCharacter } from "@/generators/characters";
-import { DefineClass_Move } from "@/protos/ts/_Defins";
+import { DefineClass_Move, DefineItem_InventoryId } from "@/protos/ts/_Defins";
 
 export const createCharacter = async (data: Buffer, socket: net.Socket) => {
     const lobbyUser = lobbyState.getBySocket(socket);
@@ -186,9 +186,11 @@ export const listCharacters = async (data: Buffer, socket: net.Socket) => {
 
     for (let character_db of characters_db) {
         //
-        const character_items = character_db.inventory.map((item) =>
-            new Item().fromDB(item).toSItem()
-        );
+        const character_items = character_db.inventory
+            .map((item) => new Item().fromDB(item).toSItem())
+            .filter(
+                (item) => item.inventoryId === DefineItem_InventoryId.EQUIPMENT
+            );
 
         characters.push(
             sloginCharacterInfo.create({
