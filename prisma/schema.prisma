@@ -19,12 +19,13 @@ model User {
 }
 
 model Character {
-  id       Int    @id @default(autoincrement())
-  user_id  Int
-  nickname String
-  class    String
-  level    Int
-  gender   Int
+  id              Int    @id @default(autoincrement())
+  user_id         Int
+  hidden_nickname String @default("")
+  nickname        String @default("")
+  class           String @default("")
+  level           Int
+  gender          Int
 
   perk1 String @default("")
   perk2 String @default("")

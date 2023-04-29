@@ -62,6 +62,19 @@ export const createCharacter = async (data: Buffer, socket: net.Socket) => {
         return res;
     }
 
+    // check if any character with that name exists
+    const existing_character_db = await db.character.findFirst({
+        where: {
+            hidden_nickname: req.nickName.toLowerCase(),
+        },
+    });
+
+    if (existing_character_db) {
+        return ss2cAccountCharacterCreateRes.create({
+            result: PacketResult.FAIL_CHARACTER_BAD_NICKNAME,
+        });
+    }
+
     const characterClass = req.characterClass as CharacterClass;
     const character = generateNewCharacter(characterClass, {
         nickname: req.nickName,
@@ -70,10 +83,10 @@ export const createCharacter = async (data: Buffer, socket: net.Socket) => {
     });
 
     // TODO: use items from character
-
     const character_db = await db.character.create({
         data: {
             ...(character.toDB() as any),
+            hidden_nickname: req.nickName.toLowerCase(),
         },
     });
 
