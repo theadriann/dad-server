@@ -11,6 +11,7 @@ export const generateNewCharacter = (
     //
     return Character.fromJSON({
         ...characterProps,
+        level: 15,
         characterClass: characterClass,
         ...generateStarterClassEquip(characterClass),
         items: generateStarterGear(characterClass),
