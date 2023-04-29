@@ -15,11 +15,11 @@ export const sendPacket = (
 ) => {
     logger.debug(`==================== Sending Packet ====================`);
 
-    const header = makePacketHeader(packet, packetType);
-
     if (packet instanceof Uint8Array) {
         packet = Buffer.from(packet);
     }
+
+    const header = makePacketHeader(packet, packetType);
 
     logger.debug(
         `Message-Type ${packetCommandToJSON(

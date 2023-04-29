@@ -15,8 +15,8 @@ export const makePacketHeader = (
     let header: Buffer[] = [];
 
     // create buffer and write 32LE to it
-    const lengthBuf = Buffer.alloc(4);
-    lengthBuf.writeUInt32LE(totalLength, 0);
+    const lengthBuf = Buffer.alloc(2);
+    lengthBuf.writeUInt16LE(totalLength, 0);
     header.push(lengthBuf);
 
     // if (totalLengthHex.length <= 2) {
@@ -30,7 +30,7 @@ export const makePacketHeader = (
     //     );
     // }
 
-    // header.push(Buffer.from([0x00, 0x00]));
+    header.push(Buffer.from([0x00, 0x00]));
 
     const typeBuf = Buffer.alloc(2);
     typeBuf.writeUInt16LE(type, 0);
