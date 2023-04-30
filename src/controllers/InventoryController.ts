@@ -46,10 +46,21 @@ export const singleInventoryUpdate = async (
             });
 
             if (sourceReqItem && sourceDBItem) {
-                sourceDBItem.item_count -= sourceReqItem.itemCount;
-                sourceDBItem.item_contents_count -=
-                    sourceReqItem.itemContentsCount;
-                sourceDBItem.item_ammo_count -= sourceReqItem.itemAmmoCount;
+                sourceDBItem.item_count = Math.max(
+                    0,
+                    sourceDBItem.item_count - sourceReqItem.itemCount
+                );
+
+                sourceDBItem.item_contents_count = Math.max(
+                    0,
+                    sourceDBItem.item_contents_count -
+                        sourceReqItem.itemContentsCount
+                );
+
+                sourceDBItem.item_ammo_count = Math.max(
+                    0,
+                    sourceDBItem.item_ammo_count - sourceReqItem.itemAmmoCount
+                );
 
                 if (sourceDBItem.item_count <= 0) {
                     await db.inventory.delete({
