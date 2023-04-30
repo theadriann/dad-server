@@ -204,8 +204,6 @@ export const onInventoryMoveReq = async (data: Buffer, socket: net.Socket) => {
         return ss2cInventoryMoveRes.create({});
     }
 
-    // TODO: check if item is user's
-
     await db.inventory.update({
         where: {
             id: Number(req.srcInfo.uniqueId),
@@ -289,8 +287,6 @@ export const onInventorySwapReq = async (data: Buffer, socket: net.Socket) => {
         return ss2cInventorySwapRes.create({});
     }
 
-    // TODO: check if item is user's
-
     await db.inventory.update({
         where: {
             id: Number(req.srcInfo.uniqueId),
@@ -330,14 +326,6 @@ export const onInventorySplitSwapReq = async (
     if (!req.srcInfo) {
         return ss2cInventorySplitSwapRes.create({});
     }
-
-    req.srcInfo.uniqueId;
-    req.dstInfo?.uniqueId;
-    req.count;
-    req.newInventoryId;
-    req.newSlotId;
-
-    // TODO: check for a valid use-case in game
 
     const srcDbItem = await db.inventory.findFirst({
         where: {
@@ -411,8 +399,6 @@ export const onInventoryMergeReq = async (data: Buffer, socket: net.Socket) => {
     if (!req.srcInfo) {
         return ss2cInventoryMergeRes.create({});
     }
-
-    // TODO: check if item is user's
 
     const srcDbItem = await db.inventory.findUnique({
         where: {
