@@ -78,11 +78,21 @@ import {
     ss2cServicePolicyNot,
 } from "../../protos/ts/Common";
 import {
+    ss2cInventoryMergeRes,
     ss2cInventoryMoveRes,
     ss2cInventorySingleUpdateRes,
+    ss2cInventorySplitMergeRes,
+    ss2cInventorySplitMoveRes,
+    ss2cInventorySplitSwapRes,
+    ss2cInventorySwapRes,
 } from "@/protos/ts/Inventory";
 import {
+    onInventoryMergeReq,
     onInventoryMoveReq,
+    onInventorySplitMergeReq,
+    onInventorySplitMoveReq,
+    onInventorySplitSwapReq,
+    onInventorySwapReq,
     singleInventoryUpdate,
 } from "../InventoryController";
 import { ss2cAutoMatchRegRes } from "@/protos/ts/InGame";
@@ -629,7 +639,7 @@ export const PacketHandlers: PacketHandler[] = [
         ],
     },
     {
-        label: "Inventory Single Update",
+        label: "Inventory Move Req",
         requestCommand: PacketCommand.C2S_INVENTORY_MOVE_REQ,
         res: [
             {
@@ -639,6 +649,66 @@ export const PacketHandlers: PacketHandler[] = [
             },
         ],
     },
+    {
+        label: "Inventory SplitMove Req",
+        requestCommand: PacketCommand.C2S_INVENTORY_SPLIT_MOVE_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_INVENTORY_SPLIT_MOVE_RES,
+                type: ss2cInventorySplitMoveRes,
+                handler: onInventorySplitMoveReq,
+            },
+        ],
+    },
+    {
+        label: "Inventory Swap Req",
+        requestCommand: PacketCommand.C2S_INVENTORY_SWAP_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_INVENTORY_SWAP_RES,
+                type: ss2cInventorySwapRes,
+                handler: onInventorySwapReq,
+            },
+        ],
+    },
+    {
+        label: "Inventory SplitSwap Req",
+        requestCommand: PacketCommand.C2S_INVENTORY_SPLIT_SWAP_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_INVENTORY_SPLIT_SWAP_RES,
+                type: ss2cInventorySplitSwapRes,
+                handler: onInventorySplitSwapReq,
+            },
+        ],
+    },
+    {
+        label: "Inventory Merge Req",
+        requestCommand: PacketCommand.C2S_INVENTORY_MERGE_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_INVENTORY_MERGE_RES,
+                type: ss2cInventoryMergeRes,
+                handler: onInventoryMergeReq,
+            },
+        ],
+    },
+    {
+        label: "Inventory SplitMerge Req",
+        requestCommand: PacketCommand.C2S_INVENTORY_SPLIT_MERGE_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_INVENTORY_SPLIT_MERGE_RES,
+                type: ss2cInventorySplitMergeRes,
+                handler: onInventorySplitMergeReq,
+            },
+        ],
+    },
+
+    // C2S_INVENTORY_INFO_REQ = 501,
+    // C2S_INVENTORY_ALL_UPDATE_REQ = 503,
+    // (C2S_INVENTORY_SPLIT_SWAP_REQ = 517),
+    // (C2S_INVENTORY_TWO_HANDED_WEAPON_SWAP_REQ = 519),
 
     // -----------------------
     // Matchmaking
