@@ -36,22 +36,12 @@ export const singleInventoryUpdate = async (
     if (updateFlag === DefineMessage_UpdateFlag.NONE_UPDATE_FLAG) {
         for (let index in oldItem) {
             const sourceReqItem = oldItem[index];
-            const destReqItem = newItem[index];
 
             let sourceDBItem = await db.inventory.findFirst({
                 where: {
                     character_id: lobbyUser.characterId!,
                     slot_id: sourceReqItem.slotId,
                     inventory_id: sourceReqItem.inventoryId,
-                },
-            });
-
-            let destDBItem = await db.inventory.findFirst({
-                where: {
-                    character_id: lobbyUser.characterId!,
-                    slot_id: destReqItem.slotId,
-                    inventory_id: destReqItem.inventoryId,
-                    // id: destReqItem.itemUniqueId
                 },
             });
 
@@ -82,6 +72,22 @@ export const singleInventoryUpdate = async (
                 }
             }
 
+            res.oldItem.push(sourceReqItem);
+        }
+
+        for (let index in newItem) {
+            //
+            const destReqItem = newItem[index];
+
+            let destDBItem = await db.inventory.findFirst({
+                where: {
+                    character_id: lobbyUser.characterId!,
+                    slot_id: destReqItem.slotId,
+                    inventory_id: destReqItem.inventoryId,
+                    // id: destReqItem.itemUniqueId
+                },
+            });
+
             if (destReqItem && destDBItem) {
                 destDBItem.item_count += destReqItem.itemCount;
                 destDBItem.item_contents_count += destReqItem.itemContentsCount;
@@ -97,10 +103,13 @@ export const singleInventoryUpdate = async (
                         item_ammo_count: destDBItem.item_ammo_count,
                     },
                 });
-            } else if (sourceDBItem && destReqItem) {
+            } else if (destReqItem) {
                 await db.inventory.create({
                     data: {
-                        ...sourceDBItem,
+                        item_id: destReqItem.itemId,
+                        properties: JSON.stringify(
+                            destReqItem.primaryPropertyArray || []
+                        ),
                         character_id: lobbyUser.characterId!,
                         slot_id: destReqItem.slotId,
                         inventory_id: destReqItem.inventoryId,
@@ -112,7 +121,6 @@ export const singleInventoryUpdate = async (
                 });
             }
 
-            res.oldItem.push(sourceReqItem);
             res.newItem.push(destReqItem);
         }
     } else {
@@ -121,9 +129,6 @@ export const singleInventoryUpdate = async (
     }
 
     res.result = PacketResult.SUCCESS;
-
-    logger.info("singleInventoryUpdateRes");
-    logger.info(res);
 
     return res;
 };
