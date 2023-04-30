@@ -45,8 +45,8 @@ export const listAllFriendsStart = async (data: Buffer, socket: net.Socket) => {
         loopFlag: DefineMessage_LoopFlag.BEGIN,
     });
 
-    logger.debug("listAllFriends");
-    logger.debug(JSON.stringify(res, null, 2));
+    // logger.debug("listAllFriends");
+    // logger.debug(JSON.stringify(res, null, 2));
 
     return res;
 };
@@ -66,8 +66,8 @@ export const listAllFriendsContinue = async (
         ),
     });
 
-    logger.debug("listAllFriendsContinue");
-    logger.debug(JSON.stringify(res, null, 2));
+    // logger.debug("listAllFriendsContinue");
+    // logger.debug(JSON.stringify(res, null, 2));
 
     return res;
 };
@@ -89,8 +89,8 @@ export const listAllFriendsEnd = async (data: Buffer, socket: net.Socket) => {
     res.lobbyLocateCount = active_characters.length;
     res.totalUserCount = active_characters.length;
 
-    logger.debug("listAllFriendsEnd");
-    logger.debug(JSON.stringify(res, null, 2));
+    // logger.debug("listAllFriendsEnd");
+    // logger.debug(JSON.stringify(res, null, 2));
 
     return res;
 };
@@ -125,7 +125,7 @@ export const searchFriend = async (data: Buffer, socket: net.Socket) => {
     const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sFriendFindReq.decode(bufferReader(data));
 
-    logger.debug(req);
+    // logger.debug(req);
 
     if (!req.nickName?.originalNickName) {
         return ss2cFriendFindRes.create({
@@ -156,8 +156,8 @@ export const searchFriend = async (data: Buffer, socket: net.Socket) => {
         friendInfo: await getCharacterFriendInfoById(foundUser.characterId!),
     });
 
-    logger.debug("searchFriend");
-    logger.debug(JSON.stringify(res, null, 2));
+    // logger.debug("searchFriend");
+    // logger.debug(JSON.stringify(res, null, 2));
 
     return res;
 };

@@ -114,4 +114,8 @@ export const startLoginServer = () => {
     tcpServer.listen(port, () => {
         logger.info(`Starting Dark and Darker Login Server on port ${port}`);
     });
+
+    setInterval(() => {
+        logger.info(`Active Users: ${lobbyState.getAllActive().length}`);
+    }, 10 * 1000);
 };

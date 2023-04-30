@@ -139,8 +139,8 @@ export const onGatheringHallUserListReqContinue = async (
                 ?.getCharacterGatheringHallInfoArr() || [],
     });
 
-    logger.debug("onGatheringHallUserListReqContinue");
-    logger.debug(JSON.stringify(res, null, 2));
+    // logger.debug("onGatheringHallUserListReqContinue");
+    // logger.debug(JSON.stringify(res, null, 2));
 
     return res;
 };
@@ -154,8 +154,8 @@ export const onGatheringHallUserListReqEnd = async (
         loopFlag: DefineMessage_LoopFlag.END,
     });
 
-    logger.debug("onGatheringHallUserListReqEnd");
-    logger.debug(JSON.stringify(res, null, 2));
+    // logger.debug("onGatheringHallUserListReqEnd");
+    // logger.debug(JSON.stringify(res, null, 2));
 
     return res;
 };
@@ -191,8 +191,8 @@ export const onGatheringHallChat = async (data: Buffer, socket: net.Socket) => {
         result: PacketResult.SUCCESS,
     });
 
-    logger.debug("onGatheringHallChat");
-    logger.debug(JSON.stringify(res, null, 2));
+    // logger.debug("onGatheringHallChat");
+    // logger.debug(JSON.stringify(res, null, 2));
 
     return res;
 };

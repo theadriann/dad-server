@@ -27,7 +27,7 @@ export const startAutoMatchMaking = async (
     const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sAutoMatchRegReq.decode(bufferReader(data));
 
-    logger.debug(req);
+    // logger.debug(req);
 
     let res = ss2cAutoMatchRegRes.create({});
 
@@ -115,7 +115,7 @@ export const startAutoMatchMaking = async (
     // TODO: actually join all the players in the party
     game.join(lobbyUser.userId);
 
-    logger.debug(game);
+    // logger.debug(game);
 
     res.result = ss2cAutoMatchRegRes_RESULT.SUCCESS;
 

@@ -71,7 +71,7 @@ export const acceptPartyInvite = async (data: Buffer, socket: net.Socket) => {
     const inviteResult: partyInviteAnswer = req.inviteResult;
     const toAccountId = req.returnAccountId;
 
-    logger.debug(req);
+    // logger.debug(req);
 
     if (!accepter?.hasCharacterLoaded) {
         logger.warn("acceptPartyInvite: accepter is not valid");

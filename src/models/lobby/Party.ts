@@ -58,6 +58,8 @@ export class Party {
         user?.setPartyId(this.id);
 
         this.resolvePartyStatus();
+        this.announceMembersInfo();
+        this.announceMembersLocation();
     }
 
     removeUser(userId: number) {
@@ -173,9 +175,9 @@ export class Party {
         const users = this.getUsers();
 
         // destroy party if no users left in it
-        if (users.length === 1) {
-            return this.removeUser(users[0].userId!);
-        }
+        // if (users.length === 1) {
+        //     return this.removeUser(users[0].userId!);
+        // }
 
         //
         users.forEach((user) => {
@@ -200,6 +202,14 @@ export class Party {
         if (!user) return null;
 
         announcePartyMemberKicked(user.socket);
+    };
+
+    announceMembersLocation = () => {
+        this.forEachUser((changedUser) => {
+            this.forEachUser((user) => {
+                announcePartyMemberLocationChange(changedUser, user.socket);
+            });
+        });
     };
 
     announceMemberLocationChange = (userId: number) => {
