@@ -178,3 +178,36 @@ export const announcePartyReadyChange = async (
         PacketCommand.S2C_PARTY_READY_CHANGE_NOT
     );
 };
+
+export const announceChatData = async (
+    message: schatdataPiece[],
+    userConfig: {
+        accountId: string;
+        characterId: string;
+        nickname: string;
+        partyId: string;
+    },
+    socket: net.Socket
+) => {
+    return sendPacket(
+        socket,
+        ss2cPartyChatNot
+            .encode(
+                ss2cPartyChatNot.create({
+                    chatData: {
+                        accountId: userConfig.accountId,
+                        characterId: userConfig.characterId,
+                        chatDataPieceArray: message,
+                        nickname: {
+                            originalNickName: userConfig.nickname,
+                            streamingModeNickName: userConfig.nickname,
+                            karmaRating: 0,
+                        },
+                        partyId: userConfig.partyId,
+                    },
+                })
+            )
+            .finish(),
+        PacketCommand.S2C_PARTY_CHAT_NOT
+    );
+};

@@ -142,6 +142,7 @@ import {
     ss2cGatheringHallChannelUserListRes,
     ss2cGatheringHallTargetEquippedItemRes,
 } from "@/protos/ts/GatheringHall";
+import { sendMotd } from "../ExtraController";
 
 export type PacketHandler = {
     label: string;
@@ -288,6 +289,11 @@ export const PacketHandlers: PacketHandler[] = [
                     });
                 },
                 type: ss2cLobbyAccountCurrencyListNot,
+            },
+            {
+                command: PacketCommand.S2C_PARTY_CHAT_NOT,
+                handler: sendMotd,
+                type: null,
             },
         ],
     },
