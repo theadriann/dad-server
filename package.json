@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "build": "tsc && tsc-alias",
-        "start": "nodemon dist/index.js",
+        "start": "nodemon --watch dist dist/index.js",
         "dev": "tsx watch src/index.ts",
         "migrate": "prisma generate && prisma migrate deploy"
     },
