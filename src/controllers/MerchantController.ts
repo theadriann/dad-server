@@ -13,13 +13,8 @@ import {
 } from "@/protos/ts/Merchant";
 import { allMerchants, getMerchantBuyStockList } from "@/generators/merchants";
 import { bufferReader } from "@/utils/bufferReader";
-import {
-    DefineEquipment_SlotId,
-    DefineItem_InventoryId,
-    DefineMessage_LoopFlag,
-} from "@/protos/ts/_Defins";
+import { DefineMessage_LoopFlag } from "@/protos/ts/_Defins";
 import { PacketResult } from "@/protos/ts/_PacketCommand";
-import { Items } from "@/models/game/enums/Items";
 import { Item } from "@/models/Item";
 import { merchantIdFromClient } from "@/models/game/enums/Merchant";
 import { db } from "@/services/db";
@@ -95,7 +90,11 @@ export const getMerchantSellList = async (data: Buffer, socket: net.Socket) => {
     ];
 };
 
-export const buyMerchantItem = async (data: Buffer, socket: net.Socket) => {
+export const buyMerchantItemStart = async (
+    data: Buffer,
+    socket: net.Socket,
+    prevResponses?: any[]
+) => {
     const lobbyUser = lobbyState.getBySocket(socket);
     const req = sc2sMerchantStockBuyReq.decode(bufferReader(data));
 
@@ -107,50 +106,37 @@ export const buyMerchantItem = async (data: Buffer, socket: net.Socket) => {
 
     for (let item of req.dealItemList) {
         //
-        const targetDBItem = await db.inventory.findFirst({
+        const dbItem = await db.inventory.findFirst({
             where: {
                 id: item.itemUniqueId,
             },
         });
 
-        if (!targetDBItem) {
+        if (!dbItem) {
             return ss2cMerchantStockBuyRes.create({
                 result: PacketResult.FAIL_GENERAL,
             });
         }
 
-        const targetItem = Item.fromDB(targetDBItem);
+        dbItem.item_count -= item.itemCount;
+        dbItem.item_contents_count -= item.itemContentsCount;
 
-        const keys = [
-            { db_key: "item_contents_count", item_key: "itemContentsCount" },
-            { db_key: "item_count", item_key: "itemCount" },
-        ];
-
-        for (let key of keys) {
-            if (!(item as any)[key.item_key]) {
-                continue;
-            }
-
-            if (
-                (targetItem as any)[key.item_key] > (item as any)[key.item_key]
-            ) {
-                await db.inventory.update({
-                    where: {
-                        id: item.itemUniqueId,
-                    },
-                    data: {
-                        [key.db_key]:
-                            (targetItem as any)[key.item_key] -
-                            (item as any)[key.item_key],
-                    },
-                });
-            } else {
-                await db.inventory.delete({
-                    where: {
-                        id: item.itemUniqueId,
-                    },
-                });
-            }
+        if (dbItem.item_count <= 0) {
+            await db.inventory.delete({
+                where: {
+                    id: dbItem.id,
+                },
+            });
+        } else {
+            await db.inventory.update({
+                where: {
+                    id: dbItem.id,
+                },
+                data: {
+                    item_count: dbItem.item_count,
+                    item_contents_count: dbItem.item_contents_count,
+                },
+            });
         }
     }
 
@@ -177,6 +163,22 @@ export const buyMerchantItem = async (data: Buffer, socket: net.Socket) => {
     return ss2cMerchantStockBuyRes.create({
         result: PacketResult.SUCCESS,
     });
+};
+
+export const buyMerchantItemEnd = async (
+    data: Buffer,
+    socket: net.Socket,
+    prevResponses?: any[]
+) => {
+    //
+    const firstReponse = prevResponses?.[0];
+
+    return (
+        firstReponse ||
+        ss2cMerchantStockBuyRes.create({
+            result: PacketResult.FAIL_GENERAL,
+        })
+    );
 };
 
 const addItemToDb = async (

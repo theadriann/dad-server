@@ -28,10 +28,14 @@ export const processPacket = async (data: Buffer, socket: net.Socket) => {
     }
 
     if (handler) {
+        //
+        const responses: any = [];
+
         logger.debug(`Packet-Type: ${packetCommandToJSON(command)}`);
         logger.debug(`Handler: ${handler.label}`);
         for (let res of handler.res) {
-            const responseData = await res.handler(data, socket);
+            const responseData = await res.handler(data, socket, responses);
+            responses.push(responseData);
 
             if (!res.type) {
                 continue;

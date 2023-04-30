@@ -105,18 +105,18 @@ export const getBlockCharacterList = async (
     let res = ss2cBlockCharacterListRes.create({
         blockCharacters: [
             sblockCharacter.create({
-                accountId: "100",
+                accountId: "13371337",
                 characterClass:
                     "DesignDataPlayerCharacter:Id_PlayerCharacter_Fighter",
-                characterId: "1337",
+                characterId: "13371337",
                 gender: 1,
-                nickName: await createCharacterNickname("lololo"),
+                nickName: await createCharacterNickname("IgnoreMe"),
             }),
         ],
     });
 
-    logger.debug("getBlockCharacterList");
-    logger.debug(JSON.stringify(res, null, 2));
+    // logger.debug("getBlockCharacterList");
+    // logger.debug(JSON.stringify(res, null, 2));
 
     return res;
 };

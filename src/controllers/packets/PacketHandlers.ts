@@ -77,8 +77,14 @@ import {
     ss2cReLoginRes,
     ss2cServicePolicyNot,
 } from "../../protos/ts/Common";
-import { ss2cInventorySingleUpdateRes } from "@/protos/ts/Inventory";
-import { singleInventoryUpdate } from "../InventoryController";
+import {
+    ss2cInventoryMoveRes,
+    ss2cInventorySingleUpdateRes,
+} from "@/protos/ts/Inventory";
+import {
+    onInventoryMoveReq,
+    singleInventoryUpdate,
+} from "../InventoryController";
 import { ss2cAutoMatchRegRes } from "@/protos/ts/InGame";
 import { startAutoMatchMaking } from "../MatchMakingController";
 import {
@@ -104,7 +110,8 @@ import {
     ss2cMerchantStockSellBackItemListRes,
 } from "@/protos/ts/Merchant";
 import {
-    buyMerchantItem,
+    buyMerchantItemEnd,
+    buyMerchantItemStart,
     getMerchantBuyList,
     getMerchantList,
     getMerchantSellList,
@@ -141,7 +148,11 @@ export type PacketHandler = {
     requestCommand: PacketCommand;
     res: {
         type: any;
-        handler: (data: Buffer, socket: net.Socket) => Promise<any>;
+        handler: (
+            data: Buffer,
+            socket: net.Socket,
+            prevResponses?: any[]
+        ) => Promise<any>;
         command: PacketCommand;
         multiple?: boolean;
     }[];
@@ -604,6 +615,22 @@ export const PacketHandlers: PacketHandler[] = [
                 type: ss2cInventorySingleUpdateRes,
                 handler: singleInventoryUpdate,
             },
+            {
+                command: PacketCommand.S2C_LOBBY_CHARACTER_INFO_RES,
+                handler: getCharacterInfo,
+                type: ss2cLobbyCharacterInfoRes,
+            },
+        ],
+    },
+    {
+        label: "Inventory Single Update",
+        requestCommand: PacketCommand.C2S_INVENTORY_MOVE_REQ,
+        res: [
+            {
+                command: PacketCommand.S2C_INVENTORY_MOVE_RES,
+                type: ss2cInventoryMoveRes,
+                handler: onInventoryMoveReq,
+            },
         ],
     },
 
@@ -689,13 +716,18 @@ export const PacketHandlers: PacketHandler[] = [
         res: [
             {
                 command: PacketCommand.S2C_MERCHANT_STOCK_BUY_RES,
-                type: ss2cMerchantStockBuyRes,
-                handler: buyMerchantItem,
+                type: null,
+                handler: buyMerchantItemStart,
             },
             {
                 command: PacketCommand.S2C_LOBBY_CHARACTER_INFO_RES,
                 handler: getCharacterInfo,
                 type: ss2cLobbyCharacterInfoRes,
+            },
+            {
+                command: PacketCommand.S2C_MERCHANT_STOCK_BUY_RES,
+                type: ss2cMerchantStockBuyRes,
+                handler: buyMerchantItemEnd,
             },
         ],
     },

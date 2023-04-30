@@ -108,14 +108,12 @@
                 "id": 3,
                 "name": "CAMPFIRE_KIT",
                 "quality": "POOR",
-                "itemCount": 3,
                 "properties": [["MOVESPEED", -20]]
             },
             {
                 "id": 4,
                 "name": "LONGBOW",
                 "quality": "UNCOMMON",
-                "itemCount": 3,
                 "properties": [
                     ["MOVESPEED", -50],
                     ["PHYSICAL_WEAPON_DAMAGE", 44]

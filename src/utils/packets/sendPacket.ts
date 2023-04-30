@@ -6,6 +6,9 @@ import {
     packetCommandToJSON,
 } from "@/protos/ts/_PacketCommand";
 import { buffer2HexSpacedString } from "../hex";
+import { reportPackets } from "./FileDumper";
+import { lobbyState } from "@/state/LobbyManager";
+import { LOG_PACKETS } from "../info";
 
 //
 export const sendPacket = (
@@ -26,11 +29,16 @@ export const sendPacket = (
             packetCommandFromJSON(packetType)
         )} (${packetType})`
     );
-    logger.debug("Header:");
-    logger.debug(buffer2HexSpacedString(header as Buffer));
-    logger.debug("Cotents:");
-    logger.debug(buffer2HexSpacedString(packet as Buffer));
+    // logger.debug("Header:");
+    // logger.debug(buffer2HexSpacedString(header as Buffer));
+    // logger.debug("Contents:");
+    // logger.debug(buffer2HexSpacedString(packet as Buffer));
     const packetToSend = Buffer.from([...header, ...packet]);
+
+    if (LOG_PACKETS) {
+        const id = lobbyState.getBySocket(socket)?.sessionId || "";
+        reportPackets(packetToSend.toString("hex"), id);
+    }
 
     socket.write(packetToSend);
     logger.debug(`=========================================================`);

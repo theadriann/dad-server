@@ -8,6 +8,8 @@ import { buffer2HexSpacedString } from "./utils/hex";
 // types
 import { logger } from "./utils/loggers";
 import { lobbyState } from "./state/LobbyManager";
+import { reportPackets } from "./utils/packets/FileDumper";
+import { LOG_PACKETS } from "./utils/info";
 
 const tcpServer = net.createServer((socket) => {
     //
@@ -61,8 +63,12 @@ const tcpServer = net.createServer((socket) => {
         logger.debug(`=============== ${lobbyUser.sessionId} ===============`);
 
         //
-        logger.debug("[HEX]");
-        logger.debug(buffer2HexSpacedString(data));
+        // logger.debug("[HEX]");
+        // logger.debug(buffer2HexSpacedString(data));
+        if (LOG_PACKETS) {
+            const id = lobbyUser.sessionId || "";
+            reportPackets(data.toString("hex"), id);
+        }
 
         //
         lobbyUser.socketContext.appendData(data);
@@ -79,10 +85,10 @@ const tcpServer = net.createServer((socket) => {
             const { data, rest } = lobbyUser.socketContext.getCompleteData();
 
             // set the rest of the data back into the context
-            logger.debug("[HEX-DATA]");
-            logger.debug(buffer2HexSpacedString(data));
-            logger.debug("[HEX-REMAINING]");
-            logger.debug(buffer2HexSpacedString(rest));
+            // logger.debug("[HEX-DATA]");
+            // logger.debug(buffer2HexSpacedString(data));
+            // logger.debug("[HEX-REMAINING]");
+            // logger.debug(buffer2HexSpacedString(rest));
 
             lobbyUser.socketContext.setData(rest);
 

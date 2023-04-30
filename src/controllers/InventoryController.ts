@@ -3,7 +3,9 @@ import { bufferReader } from "../utils/bufferReader";
 
 import { PacketResult } from "../protos/ts/_PacketCommand";
 import {
+    sc2sInventoryMoveReq,
     sc2sInventorySingleUpdateReq,
+    ss2cInventoryMoveRes,
     ss2cInventorySingleUpdateRes,
 } from "@/protos/ts/Inventory";
 import { DefineMessage_UpdateFlag } from "@/protos/ts/_Defins";
@@ -20,8 +22,6 @@ export const singleInventoryUpdate = async (
     const req = sc2sInventorySingleUpdateReq.decode(bufferReader(data));
 
     let res = ss2cInventorySingleUpdateRes.create({});
-
-    console.log(req);
 
     if (!lobbyUser || !lobbyUser.userId) {
         res.result = PacketResult.FAIL_GENERAL;
@@ -131,4 +131,31 @@ export const singleInventoryUpdate = async (
     res.result = PacketResult.SUCCESS;
 
     return res;
+};
+
+export const onInventoryMoveReq = async (data: Buffer, socket: net.Socket) => {
+    const lobbyUser = lobbyState.getBySocket(socket);
+    const req = sc2sInventoryMoveReq.decode(bufferReader(data));
+
+    if (!lobbyUser || !lobbyUser.userId) {
+        return ss2cInventoryMoveRes.create({});
+    }
+
+    if (!req.srcInfo) {
+        return ss2cInventoryMoveRes.create({});
+    }
+
+    // TODO: check if item is user's
+
+    await db.inventory.update({
+        where: {
+            id: Number(req.srcInfo.uniqueId),
+        },
+        data: {
+            inventory_id: req.dstInventoryId,
+            slot_id: req.dstSlotId,
+        },
+    });
+
+    return ss2cInventoryMoveRes.create({});
 };
