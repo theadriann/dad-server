@@ -44,7 +44,7 @@ model Character {
 }
 
 model Inventory {
-  id      BigInt @id @default(autoincrement())
+  id      Int    @id @default(autoincrement())
   item_id String
 
   item_count          Int @default(0)
