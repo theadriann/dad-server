@@ -9,7 +9,7 @@ const messagesToSend = [
     "Welcome to Dark and Darker PS",
     "",
     "This is a Public Test Server, so expect bugs and crashes. You cannot enter in dungeons, only the lobby is available.",
-    "Please report any bugs to theadriann#2212 on Discord",
+    "Please report any bugs to @theadriann on Discord",
     "Have fun!",
 ];
 
