@@ -21,6 +21,7 @@ import {
 } from "@/protos/ts/_Defins";
 import { announcePartyMembersInfo } from "@/services/PartyNotifier";
 import { stradingUserInfo } from "@/protos/ts/Trade";
+import { LobbyUserGameState } from "./LobbyUserGameState";
 
 //
 export class LobbyUser {
@@ -57,12 +58,16 @@ export class LobbyUser {
   gameDifficultyId: DefineGame_DifficultyType =
     DefineGame_DifficultyType.NORMAL;
 
+  gameState: LobbyUserGameState;
+
   isReady: number = 0;
 
   constructor(socket: net.Socket, lobby: LobbyState) {
     this.socket = socket;
     this.sessionId = cuid();
     this.address = socket.remoteAddress || "";
+
+    this.gameState = new LobbyUserGameState(this);
 
     this.lobby = lobby;
 

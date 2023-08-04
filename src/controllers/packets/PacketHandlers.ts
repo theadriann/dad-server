@@ -159,7 +159,13 @@ import {
   onTradeChannelExit,
   onTradeChannelList,
   onTradeChannelSelect,
+  onTradeChat,
+  onTradeClose,
+  onTradeConfirmCancel,
+  onTradeConfirmReady,
+  onTradeItemUpdate,
   onTradeMembershipRequirement,
+  onTradeReady,
   onTradeRequest,
   onTradingChannelUserListReqContinue,
   onTradingChannelUserListReqEnd,
@@ -174,6 +180,12 @@ import {
   ss2cTradeChannelUserListRes,
   ss2cTradeMembershipRequirementRes,
   ss2cTradeRequestRes,
+  ss2cTradingChatRes,
+  ss2cTradingCloseRes,
+  ss2cTradingConfirmCancelRes,
+  ss2cTradingConfirmReadyRes,
+  ss2cTradingItemUpdateRes,
+  ss2cTradingReadyRes,
 } from "@/protos/ts/Trade";
 
 export type PacketHandler = {
@@ -1048,10 +1060,77 @@ export const PacketHandlers: PacketHandler[] = [
     ],
   },
 
-  // C2S_TRADING_CHAT_REQ
-  // C2S_TRADING_ITEM_UPDATE_REQ
-  // C2S_TRADING_READY_REQ
-  // C2S_TRADING_CLOSE_REQ
+  {
+    label: "Trade Chat Request",
+    requestCommand: PacketCommand.C2S_TRADING_CHAT_REQ,
+    res: [
+      {
+        command: PacketCommand.S2C_TRADING_CHAT_RES,
+        handler: onTradeChat,
+        type: ss2cTradingChatRes,
+      },
+    ],
+  },
+
+  {
+    label: "Trading Item Update Request",
+    requestCommand: PacketCommand.C2S_TRADING_ITEM_UPDATE_REQ,
+    res: [
+      {
+        command: PacketCommand.S2C_TRADING_ITEM_UPDATE_RES,
+        handler: onTradeItemUpdate,
+        type: ss2cTradingItemUpdateRes,
+      },
+    ],
+  },
+
+  {
+    label: "Trading Ready Request",
+    requestCommand: PacketCommand.C2S_TRADING_READY_REQ,
+    res: [
+      {
+        command: PacketCommand.S2C_TRADING_READY_RES,
+        handler: onTradeReady,
+        type: ss2cTradingReadyRes,
+      },
+    ],
+  },
+
+  {
+    label: "Trading Confirm Cancel Request",
+    requestCommand: PacketCommand.C2S_TRADING_CONFIRM_CANCEL_REQ,
+    res: [
+      {
+        command: PacketCommand.S2C_TRADING_CONFIRM_CANCEL_RES,
+        handler: onTradeConfirmCancel,
+        type: ss2cTradingConfirmCancelRes,
+      },
+    ],
+  },
+
+  {
+    label: "Trading Confirm Ready Request",
+    requestCommand: PacketCommand.C2S_TRADING_CONFIRM_READY_REQ,
+    res: [
+      {
+        command: PacketCommand.S2C_TRADING_CONFIRM_READY_RES,
+        handler: onTradeConfirmReady,
+        type: ss2cTradingConfirmReadyRes,
+      },
+    ],
+  },
+
+  {
+    label: "Trading Close Request",
+    requestCommand: PacketCommand.C2S_TRADING_CLOSE_REQ,
+    res: [
+      {
+        command: PacketCommand.S2C_TRADING_CLOSE_RES,
+        handler: onTradeClose,
+        type: ss2cTradingCloseRes,
+      },
+    ],
+  },
 ];
 
 export const PacketHandlersMap = new Map<number, PacketHandler>();

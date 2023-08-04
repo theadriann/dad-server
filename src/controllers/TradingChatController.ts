@@ -1,9 +1,11 @@
 import net from "net";
 import { bufferReader } from "../utils/bufferReader";
-import { PacketResult } from "../protos/ts/_PacketCommand";
+import { PacketCommand, PacketResult } from "../protos/ts/_PacketCommand";
 import {
   DefineChat_RoomType,
   DefineMessage_LoopFlag,
+  DefineMessage_UpdateFlag,
+  DefineTrade_RequirementType,
 } from "../protos/ts/_Defins";
 import { logger } from "@/utils/loggers";
 import { lobbyState } from "@/state/LobbyManager";
@@ -17,6 +19,12 @@ import {
   sc2sTradeChannelUserListReq,
   sc2sTradeMembershipRequirementReq,
   sc2sTradeRequestReq,
+  sc2sTradingChatReq,
+  sc2sTradingCloseReq,
+  sc2sTradingConfirmCancelReq,
+  sc2sTradingConfirmReadyReq,
+  sc2sTradingItemUpdateReq,
+  sc2sTradingReadyReq,
   ss2cTradeAnswerRes,
   ss2cTradeChannelChatRes,
   ss2cTradeChannelExitRes,
@@ -25,10 +33,31 @@ import {
   ss2cTradeChannelUserListRes,
   ss2cTradeMembershipRequirementRes,
   ss2cTradeRequestRes,
+  ss2cTradingChatRes,
+  ss2cTradingCloseRes,
+  ss2cTradingConfirmCancelRes,
+  ss2cTradingConfirmReadyRes,
+  ss2cTradingItemUpdateRes,
+  ss2cTradingReadyNot,
+  ss2cTradingReadyRes,
   stradeChatC2s,
   stradeChatS2c,
 } from "@/protos/ts/Trade";
-import { announceReceivingTradeRequest } from "@/services/TradingChannelNotifier";
+import {
+  announceReceivingTradeRequest,
+  announceRefusingTradeRequest,
+  announceTradeClosed,
+  announceTradeConfirm,
+  announceTradeResult,
+  announceTradingChannelNewChatV2,
+  announceTradingChatNewChatV2,
+  announceTradingItemUpdate,
+  announceTradingUserConfirm,
+  announceTradingUserReady,
+} from "@/services/TradingChannelNotifier";
+import { db } from "@/services/db";
+import { Item } from "@/models/Item";
+import { SItem } from "@/protos/ts/_Item";
 
 export const onTradeMembershipRequirement = async (
   data: Buffer,
@@ -41,7 +70,7 @@ export const onTradeMembershipRequirement = async (
   return ss2cTradeMembershipRequirementRes.create({
     requirements: [
       {
-        memberShipType: 1,
+        memberShipType: DefineTrade_RequirementType.MINIMUM_LEVEL,
         memberShipValue: 1,
       },
     ],
@@ -105,11 +134,24 @@ export const onTradeChannelSelect = async (
 export const onTradeChannelExit = async (data: Buffer, socket: net.Socket) => {
   const lobbyUser = lobbyState.getBySocket(socket);
   const req = sc2sTradeChannelExitReq.decode(bufferReader(data));
-  const tradingChannel = lobbyState.tradingChannels.get("default")!;
 
-  if (lobbyUser?.userId) {
-    tradingChannel.removeUserId(lobbyUser.userId);
+  if (!lobbyUser?.userId) {
+    return ss2cTradeChannelExitRes.create({
+      result: PacketResult.FAIL_GENERAL,
+    });
   }
+
+  const tradingChannel = lobbyState.getTradingChannelByUserId(
+    lobbyUser?.userId
+  );
+
+  if (!tradingChannel) {
+    return ss2cTradeChannelExitRes.create({
+      result: PacketResult.FAIL_GENERAL,
+    });
+  }
+
+  tradingChannel.removeUserId(lobbyUser.userId);
 
   return ss2cTradeChannelExitRes.create({
     result: PacketResult.SUCCESS,
@@ -235,7 +277,6 @@ export const onTradeRequest = async (data: Buffer, socket: net.Socket) => {
     return null;
   }
 
-  console.log(req);
   const receiver = lobbyState.getByCharacterId(Number(req.characterId));
 
   if (!receiver || receiver.socket.destroyed) {
@@ -291,11 +332,272 @@ export const onTradeAnswer = async (data: Buffer, socket: net.Socket) => {
   if (req.selectFlag === 1) {
     // ss2cTradingBeginNot
     tradingChannel.announceTradeBegin(invitee, answeree);
+    invitee.gameState.trading.setTradingWith(answeree);
+    answeree.gameState.trading.setTradingWith(invitee);
   } else if (req.selectFlag === 2) {
-    //  ss2cTradeAnswerRefusalNot
+    announceRefusingTradeRequest(answeree, invitee);
   }
 
   return ss2cTradeAnswerRes.create({
+    result: PacketResult.SUCCESS,
+  });
+};
+
+export const onTradeChat = async (data: Buffer, socket: net.Socket) => {
+  //
+  const req = sc2sTradingChatReq.decode(bufferReader(data));
+  const lobbyUser = lobbyState.getBySocket(socket);
+
+  if (!lobbyUser?.userId) {
+    return null;
+  }
+
+  const otherTrader = lobbyUser.gameState.trading.tradingWith;
+
+  if (!otherTrader) {
+    return null;
+    // return ss2cTradingChatRes.create({
+    //   result: PacketResult.FAIL_GENERAL,
+    //   chat: undefined,
+    // });
+  }
+
+  const chat = stradeChatS2c.create({
+    chatData: SCHATDATA.create({
+      accountId: lobbyUser.userId?.toString(),
+      characterId: lobbyUser.characterId?.toString(),
+      chatDataPieceArray: req.chat?.chatData?.chatDataPieceArray,
+      nickname: lobbyUser.characterNicknameObject,
+      partyId: undefined,
+    }),
+    chatType: req.chat?.chatType,
+    index: 1,
+    time: Date.now(),
+  });
+
+  announceTradingChatNewChatV2(chat, otherTrader.socket);
+
+  return null;
+  // return ss2cTradingChatRes.create({
+  //   result: PacketResult.SUCCESS,
+  //   chat: undefined,
+  // });
+};
+
+export const onTradeItemUpdate = async (data: Buffer, socket: net.Socket) => {
+  //
+  const req = sc2sTradingItemUpdateReq.decode(bufferReader(data));
+  const lobbyUser = lobbyState.getBySocket(socket);
+
+  // slotId - [0 - 24] - 5x5
+
+  // TODO: should check if it's user's item
+  const dbItem = await db.inventory.findFirst({
+    where: {
+      id: req.uniqueId,
+    },
+  });
+
+  if (!dbItem || !lobbyUser?.userId) {
+    return null;
+  }
+
+  const item = new Item().fromDB(dbItem);
+  const sItem = {
+    ...item.toSItem(),
+    slotId: req.slotId,
+  } as SItem;
+
+  switch (req.updateFlag) {
+    case DefineMessage_UpdateFlag.INSERT: {
+      lobbyUser.gameState.trading.addItem(req.slotId, sItem);
+      break;
+    }
+
+    case DefineMessage_UpdateFlag.DELETE: {
+      lobbyUser.gameState.trading.removeItem(req.slotId);
+      lobbyUser.gameState.trading.removeItemByItemId(req.uniqueId);
+      break;
+    }
+
+    case DefineMessage_UpdateFlag.UPDATE: {
+      lobbyUser.gameState.trading.removeItemByItemId(req.uniqueId);
+      lobbyUser.gameState.trading.addItem(req.slotId, sItem);
+      break;
+    }
+  }
+
+  console.log(lobbyUser.gameState.trading.tradingInventory);
+
+  const res = ss2cTradingItemUpdateRes.create({
+    result: PacketResult.SUCCESS,
+    updateFlag: req.updateFlag,
+    updateItem: sItem, // should use different inventoryId, slotId
+    updateUserInfo: lobbyUser.toTradingUserInfo(),
+  });
+
+  if (lobbyUser) {
+    const otherTrader = lobbyUser.gameState.trading.tradingWith;
+    if (otherTrader) {
+      announceTradingItemUpdate(res, otherTrader.socket);
+    }
+  }
+
+  return res;
+};
+
+export const onTradeReady = async (data: Buffer, socket: net.Socket) => {
+  //
+  const req = sc2sTradingReadyReq.decode(bufferReader(data));
+  const lobbyUser = lobbyState.getBySocket(socket);
+
+  if (!lobbyUser) {
+    return ss2cTradingReadyRes.create({
+      result: PacketResult.FAIL_GENERAL,
+    });
+  }
+
+  const otherTrader = lobbyUser.gameState.trading.tradingWith;
+  if (!otherTrader) {
+    return ss2cTradingReadyRes.create({
+      result: PacketResult.FAIL_GENERAL,
+    });
+  }
+
+  lobbyUser.gameState.trading.setReady(req.isReady);
+
+  announceTradingUserReady(
+    lobbyUser.toTradingUserInfo(),
+    req.isReady,
+    otherTrader.socket
+  );
+
+  announceTradingUserReady(
+    lobbyUser.toTradingUserInfo(),
+    req.isReady,
+    lobbyUser.socket
+  );
+
+  if (
+    lobbyUser.gameState.trading.isReady &&
+    otherTrader.gameState.trading.isReady
+  ) {
+    announceTradeConfirm(lobbyUser, otherTrader);
+  }
+
+  return ss2cTradingReadyRes.create({
+    result: PacketResult.SUCCESS,
+  });
+};
+
+export const onTradeConfirmCancel = async (
+  data: Buffer,
+  socket: net.Socket
+) => {
+  //
+  const req = sc2sTradingConfirmCancelReq.decode(bufferReader(data));
+  const lobbyUser = lobbyState.getBySocket(socket);
+
+  if (!lobbyUser) {
+    return ss2cTradingConfirmReadyRes.create({
+      result: PacketResult.FAIL_GENERAL,
+    });
+  }
+
+  const otherTrader = lobbyUser.gameState.trading.tradingWith;
+  if (!otherTrader) {
+    return ss2cTradingConfirmReadyRes.create({
+      result: PacketResult.FAIL_GENERAL,
+    });
+  }
+
+  announceTradingUserConfirm(
+    lobbyUser.toTradingUserInfo(),
+    0,
+    otherTrader.socket
+  );
+
+  announceTradingUserConfirm(
+    lobbyUser.toTradingUserInfo(),
+    0,
+    lobbyUser.socket
+  );
+
+  return ss2cTradingConfirmCancelRes.create({
+    result: PacketResult.SUCCESS,
+  });
+};
+
+export const onTradeConfirmReady = async (data: Buffer, socket: net.Socket) => {
+  //
+  const req = sc2sTradingConfirmReadyReq.decode(bufferReader(data));
+  const lobbyUser = lobbyState.getBySocket(socket);
+
+  if (!lobbyUser) {
+    return ss2cTradingConfirmReadyRes.create({
+      result: PacketResult.FAIL_GENERAL,
+    });
+  }
+
+  const otherTrader = lobbyUser.gameState.trading.tradingWith;
+  if (!otherTrader) {
+    return ss2cTradingConfirmReadyRes.create({
+      result: PacketResult.FAIL_GENERAL,
+    });
+  }
+
+  lobbyUser.gameState.trading.setIsConfirmed(req.isReady);
+
+  announceTradingUserConfirm(
+    lobbyUser.toTradingUserInfo(),
+    req.isReady,
+    otherTrader.socket
+  );
+
+  announceTradingUserConfirm(
+    lobbyUser.toTradingUserInfo(),
+    req.isReady,
+    lobbyUser.socket
+  );
+
+  if (
+    lobbyUser.gameState.trading.isConfirmed &&
+    otherTrader.gameState.trading.isConfirmed
+  ) {
+    announceTradeResult(PacketResult.SUCCESS, lobbyUser.socket);
+    announceTradeResult(PacketResult.SUCCESS, otherTrader.socket);
+  }
+
+  // ss2cTradingReadyNot;
+
+  return ss2cTradingConfirmReadyRes.create({
+    result: PacketResult.SUCCESS,
+  });
+};
+
+export const onTradeClose = async (data: Buffer, socket: net.Socket) => {
+  //
+  const req = sc2sTradingCloseReq.decode(bufferReader(data));
+  const lobbyUser = lobbyState.getBySocket(socket);
+
+  if (!lobbyUser) {
+    return ss2cTradingCloseRes.create({
+      result: PacketResult.SUCCESS,
+    });
+  }
+
+  const otherTrader = lobbyUser.gameState.trading.tradingWith;
+  if (!otherTrader) {
+    return ss2cTradingCloseRes.create({
+      result: PacketResult.SUCCESS,
+    });
+  }
+
+  lobbyUser.gameState.trading.reset();
+  otherTrader.gameState.trading.reset();
+  announceTradeClosed(otherTrader.socket);
+
+  return ss2cTradingCloseRes.create({
     result: PacketResult.SUCCESS,
   });
 };
