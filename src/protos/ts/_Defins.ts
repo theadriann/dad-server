@@ -92,7 +92,8 @@ export function defineAccount_LengthTextToJSON(object: DefineAccount_LengthText)
 
 export enum DefineAccount_CurrencyType {
   CURRENCY_NONE = 0,
-  ADVENTURE = 1,
+  BLUE_STONE_SHARD = 1,
+  RED_STONE_SHARD = 2,
   UNRECOGNIZED = -1,
 }
 
@@ -102,8 +103,11 @@ export function defineAccount_CurrencyTypeFromJSON(object: any): DefineAccount_C
     case "CURRENCY_NONE":
       return DefineAccount_CurrencyType.CURRENCY_NONE;
     case 1:
-    case "ADVENTURE":
-      return DefineAccount_CurrencyType.ADVENTURE;
+    case "BLUE_STONE_SHARD":
+      return DefineAccount_CurrencyType.BLUE_STONE_SHARD;
+    case 2:
+    case "RED_STONE_SHARD":
+      return DefineAccount_CurrencyType.RED_STONE_SHARD;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -115,8 +119,10 @@ export function defineAccount_CurrencyTypeToJSON(object: DefineAccount_CurrencyT
   switch (object) {
     case DefineAccount_CurrencyType.CURRENCY_NONE:
       return "CURRENCY_NONE";
-    case DefineAccount_CurrencyType.ADVENTURE:
-      return "ADVENTURE";
+    case DefineAccount_CurrencyType.BLUE_STONE_SHARD:
+      return "BLUE_STONE_SHARD";
+    case DefineAccount_CurrencyType.RED_STONE_SHARD:
+      return "RED_STONE_SHARD";
     case DefineAccount_CurrencyType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -128,6 +134,7 @@ export enum DefineAccount_LoginType {
   STEAM = 1,
   EPIC = 2,
   IRONMACE = 3,
+  CHAF = 4,
   UNRECOGNIZED = -1,
 }
 
@@ -145,6 +152,9 @@ export function defineAccount_LoginTypeFromJSON(object: any): DefineAccount_Logi
     case 3:
     case "IRONMACE":
       return DefineAccount_LoginType.IRONMACE;
+    case 4:
+    case "CHAF":
+      return DefineAccount_LoginType.CHAF;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -162,6 +172,8 @@ export function defineAccount_LoginTypeToJSON(object: DefineAccount_LoginType): 
       return "EPIC";
     case DefineAccount_LoginType.IRONMACE:
       return "IRONMACE";
+    case DefineAccount_LoginType.CHAF:
+      return "CHAF";
     case DefineAccount_LoginType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -783,6 +795,7 @@ export enum DefineGame_DifficultyType {
   HIGH_ROLLER = 2,
   GOBLIN = 3,
   RUINS = 4,
+  GOBLIN_HIGH_ROLLER = 5,
   UNRECOGNIZED = -1,
 }
 
@@ -803,6 +816,9 @@ export function defineGame_DifficultyTypeFromJSON(object: any): DefineGame_Diffi
     case 4:
     case "RUINS":
       return DefineGame_DifficultyType.RUINS;
+    case 5:
+    case "GOBLIN_HIGH_ROLLER":
+      return DefineGame_DifficultyType.GOBLIN_HIGH_ROLLER;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -822,6 +838,8 @@ export function defineGame_DifficultyTypeToJSON(object: DefineGame_DifficultyTyp
       return "GOBLIN";
     case DefineGame_DifficultyType.RUINS:
       return "RUINS";
+    case DefineGame_DifficultyType.GOBLIN_HIGH_ROLLER:
+      return "GOBLIN_HIGH_ROLLER";
     case DefineGame_DifficultyType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -830,6 +848,7 @@ export function defineGame_DifficultyTypeToJSON(object: DefineGame_DifficultyTyp
 
 export enum DefineGame_Floor {
   NONE_FLOOR = 0,
+  FLOOR_1F = 1,
   FLOOR_2F = 2,
   FLOOR_3F = 3,
   UNRECOGNIZED = -1,
@@ -840,6 +859,9 @@ export function defineGame_FloorFromJSON(object: any): DefineGame_Floor {
     case 0:
     case "NONE_FLOOR":
       return DefineGame_Floor.NONE_FLOOR;
+    case 1:
+    case "FLOOR_1F":
+      return DefineGame_Floor.FLOOR_1F;
     case 2:
     case "FLOOR_2F":
       return DefineGame_Floor.FLOOR_2F;
@@ -857,6 +879,8 @@ export function defineGame_FloorToJSON(object: DefineGame_Floor): string {
   switch (object) {
     case DefineGame_Floor.NONE_FLOOR:
       return "NONE_FLOOR";
+    case DefineGame_Floor.FLOOR_1F:
+      return "FLOOR_1F";
     case DefineGame_Floor.FLOOR_2F:
       return "FLOOR_2F";
     case DefineGame_Floor.FLOOR_3F:
@@ -1028,6 +1052,7 @@ export enum DefineClass_Type {
   PERK = 1,
   SKILL = 2,
   SPELL = 3,
+  MUSIC = 4,
   UNRECOGNIZED = -1,
 }
 
@@ -1045,6 +1070,9 @@ export function defineClass_TypeFromJSON(object: any): DefineClass_Type {
     case 3:
     case "SPELL":
       return DefineClass_Type.SPELL;
+    case 4:
+    case "MUSIC":
+      return DefineClass_Type.MUSIC;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -1062,6 +1090,8 @@ export function defineClass_TypeToJSON(object: DefineClass_Type): string {
       return "SKILL";
     case DefineClass_Type.SPELL:
       return "SPELL";
+    case DefineClass_Type.MUSIC:
+      return "MUSIC";
     case DefineClass_Type.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -1310,6 +1340,8 @@ export enum Operate_Policy {
   POLICY_GATHERING_HALL_CHAT_MAX_LINE = 10,
   POLICY_GATHERING_HALL_JOIN_MIN_LEVEL = 11,
   POLICY_HIGH_ROLLER_ENTRANCE_MIN_LEVEL = 12,
+  POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_FEE = 13,
+  POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_MIN_LEVEL = 14,
   UNRECOGNIZED = -1,
 }
 
@@ -1354,6 +1386,12 @@ export function operate_PolicyFromJSON(object: any): Operate_Policy {
     case 12:
     case "POLICY_HIGH_ROLLER_ENTRANCE_MIN_LEVEL":
       return Operate_Policy.POLICY_HIGH_ROLLER_ENTRANCE_MIN_LEVEL;
+    case 13:
+    case "POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_FEE":
+      return Operate_Policy.POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_FEE;
+    case 14:
+    case "POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_MIN_LEVEL":
+      return Operate_Policy.POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_MIN_LEVEL;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -1389,6 +1427,10 @@ export function operate_PolicyToJSON(object: Operate_Policy): string {
       return "POLICY_GATHERING_HALL_JOIN_MIN_LEVEL";
     case Operate_Policy.POLICY_HIGH_ROLLER_ENTRANCE_MIN_LEVEL:
       return "POLICY_HIGH_ROLLER_ENTRANCE_MIN_LEVEL";
+    case Operate_Policy.POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_FEE:
+      return "POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_FEE";
+    case Operate_Policy.POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_MIN_LEVEL:
+      return "POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_MIN_LEVEL";
     case Operate_Policy.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -1743,6 +1785,216 @@ export function defineCoupon_TypeToJSON(object: DefineCoupon_Type): string {
   }
 }
 
+export interface DefineShop {
+}
+
+export enum DefineShop_Type {
+  SHOP_TYPE_NONE = 0,
+  CHARACTER_SKIN = 1,
+  ITEM_SKIN = 2,
+  EMOTE = 3,
+  ACTION = 4,
+  LOBBY_EMOTE = 5,
+  CLASS_PACKAGE = 6,
+  UNRECOGNIZED = -1,
+}
+
+export function defineShop_TypeFromJSON(object: any): DefineShop_Type {
+  switch (object) {
+    case 0:
+    case "SHOP_TYPE_NONE":
+      return DefineShop_Type.SHOP_TYPE_NONE;
+    case 1:
+    case "CHARACTER_SKIN":
+      return DefineShop_Type.CHARACTER_SKIN;
+    case 2:
+    case "ITEM_SKIN":
+      return DefineShop_Type.ITEM_SKIN;
+    case 3:
+    case "EMOTE":
+      return DefineShop_Type.EMOTE;
+    case 4:
+    case "ACTION":
+      return DefineShop_Type.ACTION;
+    case 5:
+    case "LOBBY_EMOTE":
+      return DefineShop_Type.LOBBY_EMOTE;
+    case 6:
+    case "CLASS_PACKAGE":
+      return DefineShop_Type.CLASS_PACKAGE;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return DefineShop_Type.UNRECOGNIZED;
+  }
+}
+
+export function defineShop_TypeToJSON(object: DefineShop_Type): string {
+  switch (object) {
+    case DefineShop_Type.SHOP_TYPE_NONE:
+      return "SHOP_TYPE_NONE";
+    case DefineShop_Type.CHARACTER_SKIN:
+      return "CHARACTER_SKIN";
+    case DefineShop_Type.ITEM_SKIN:
+      return "ITEM_SKIN";
+    case DefineShop_Type.EMOTE:
+      return "EMOTE";
+    case DefineShop_Type.ACTION:
+      return "ACTION";
+    case DefineShop_Type.LOBBY_EMOTE:
+      return "LOBBY_EMOTE";
+    case DefineShop_Type.CLASS_PACKAGE:
+      return "CLASS_PACKAGE";
+    case DefineShop_Type.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum DefineShop_PaymentMethod {
+  PAYMENT_NONE = 0,
+  BLUE_STONE_SHARD = 1,
+  RED_STONE_SHARD = 2,
+  UNRECOGNIZED = -1,
+}
+
+export function defineShop_PaymentMethodFromJSON(object: any): DefineShop_PaymentMethod {
+  switch (object) {
+    case 0:
+    case "PAYMENT_NONE":
+      return DefineShop_PaymentMethod.PAYMENT_NONE;
+    case 1:
+    case "BLUE_STONE_SHARD":
+      return DefineShop_PaymentMethod.BLUE_STONE_SHARD;
+    case 2:
+    case "RED_STONE_SHARD":
+      return DefineShop_PaymentMethod.RED_STONE_SHARD;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return DefineShop_PaymentMethod.UNRECOGNIZED;
+  }
+}
+
+export function defineShop_PaymentMethodToJSON(object: DefineShop_PaymentMethod): string {
+  switch (object) {
+    case DefineShop_PaymentMethod.PAYMENT_NONE:
+      return "PAYMENT_NONE";
+    case DefineShop_PaymentMethod.BLUE_STONE_SHARD:
+      return "BLUE_STONE_SHARD";
+    case DefineShop_PaymentMethod.RED_STONE_SHARD:
+      return "RED_STONE_SHARD";
+    case DefineShop_PaymentMethod.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum DefineShop_SalesChannelType {
+  CHANNEL_NONE = 0,
+  CHANNEL_SHOP = 1,
+  CHANNEL_FOUNDERS_PACK = 2,
+  UNRECOGNIZED = -1,
+}
+
+export function defineShop_SalesChannelTypeFromJSON(object: any): DefineShop_SalesChannelType {
+  switch (object) {
+    case 0:
+    case "CHANNEL_NONE":
+      return DefineShop_SalesChannelType.CHANNEL_NONE;
+    case 1:
+    case "CHANNEL_SHOP":
+      return DefineShop_SalesChannelType.CHANNEL_SHOP;
+    case 2:
+    case "CHANNEL_FOUNDERS_PACK":
+      return DefineShop_SalesChannelType.CHANNEL_FOUNDERS_PACK;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return DefineShop_SalesChannelType.UNRECOGNIZED;
+  }
+}
+
+export function defineShop_SalesChannelTypeToJSON(object: DefineShop_SalesChannelType): string {
+  switch (object) {
+    case DefineShop_SalesChannelType.CHANNEL_NONE:
+      return "CHANNEL_NONE";
+    case DefineShop_SalesChannelType.CHANNEL_SHOP:
+      return "CHANNEL_SHOP";
+    case DefineShop_SalesChannelType.CHANNEL_FOUNDERS_PACK:
+      return "CHANNEL_FOUNDERS_PACK";
+    case DefineShop_SalesChannelType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export interface DefineReward {
+}
+
+export enum DefineReward_RewardType {
+  NONE_TYPE = 0,
+  CharacterSkin = 1,
+  ItemSkin = 2,
+  Emote = 3,
+  Action = 4,
+  LobbyEmote = 5,
+  ClassPackage = 6,
+  UNRECOGNIZED = -1,
+}
+
+export function defineReward_RewardTypeFromJSON(object: any): DefineReward_RewardType {
+  switch (object) {
+    case 0:
+    case "NONE_TYPE":
+      return DefineReward_RewardType.NONE_TYPE;
+    case 1:
+    case "CharacterSkin":
+      return DefineReward_RewardType.CharacterSkin;
+    case 2:
+    case "ItemSkin":
+      return DefineReward_RewardType.ItemSkin;
+    case 3:
+    case "Emote":
+      return DefineReward_RewardType.Emote;
+    case 4:
+    case "Action":
+      return DefineReward_RewardType.Action;
+    case 5:
+    case "LobbyEmote":
+      return DefineReward_RewardType.LobbyEmote;
+    case 6:
+    case "ClassPackage":
+      return DefineReward_RewardType.ClassPackage;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return DefineReward_RewardType.UNRECOGNIZED;
+  }
+}
+
+export function defineReward_RewardTypeToJSON(object: DefineReward_RewardType): string {
+  switch (object) {
+    case DefineReward_RewardType.NONE_TYPE:
+      return "NONE_TYPE";
+    case DefineReward_RewardType.CharacterSkin:
+      return "CharacterSkin";
+    case DefineReward_RewardType.ItemSkin:
+      return "ItemSkin";
+    case DefineReward_RewardType.Emote:
+      return "Emote";
+    case DefineReward_RewardType.Action:
+      return "Action";
+    case DefineReward_RewardType.LobbyEmote:
+      return "LobbyEmote";
+    case DefineReward_RewardType.ClassPackage:
+      return "ClassPackage";
+    case DefineReward_RewardType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
 function createBaseDefineAccount(): DefineAccount {
   return {};
 }
@@ -1760,7 +2012,7 @@ export const DefineAccount = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1778,9 +2030,8 @@ export const DefineAccount = {
   },
 
   create<I extends Exact<DeepPartial<DefineAccount>, I>>(base?: I): DefineAccount {
-    return DefineAccount.fromPartial(base ?? {});
+    return DefineAccount.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DefineAccount>, I>>(_: I): DefineAccount {
     const message = createBaseDefineAccount();
     return message;
@@ -1804,7 +2055,7 @@ export const DefineCharacter = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1822,9 +2073,8 @@ export const DefineCharacter = {
   },
 
   create<I extends Exact<DeepPartial<DefineCharacter>, I>>(base?: I): DefineCharacter {
-    return DefineCharacter.fromPartial(base ?? {});
+    return DefineCharacter.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DefineCharacter>, I>>(_: I): DefineCharacter {
     const message = createBaseDefineCharacter();
     return message;
@@ -1848,7 +2098,7 @@ export const DefineParty = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1866,9 +2116,8 @@ export const DefineParty = {
   },
 
   create<I extends Exact<DeepPartial<DefineParty>, I>>(base?: I): DefineParty {
-    return DefineParty.fromPartial(base ?? {});
+    return DefineParty.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DefineParty>, I>>(_: I): DefineParty {
     const message = createBaseDefineParty();
     return message;
@@ -1892,7 +2141,7 @@ export const DefineItem = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1910,9 +2159,8 @@ export const DefineItem = {
   },
 
   create<I extends Exact<DeepPartial<DefineItem>, I>>(base?: I): DefineItem {
-    return DefineItem.fromPartial(base ?? {});
+    return DefineItem.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DefineItem>, I>>(_: I): DefineItem {
     const message = createBaseDefineItem();
     return message;
@@ -1936,7 +2184,7 @@ export const DefineEquipment = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1954,9 +2202,8 @@ export const DefineEquipment = {
   },
 
   create<I extends Exact<DeepPartial<DefineEquipment>, I>>(base?: I): DefineEquipment {
-    return DefineEquipment.fromPartial(base ?? {});
+    return DefineEquipment.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DefineEquipment>, I>>(_: I): DefineEquipment {
     const message = createBaseDefineEquipment();
     return message;
@@ -1980,7 +2227,7 @@ export const DefineMessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1998,9 +2245,8 @@ export const DefineMessage = {
   },
 
   create<I extends Exact<DeepPartial<DefineMessage>, I>>(base?: I): DefineMessage {
-    return DefineMessage.fromPartial(base ?? {});
+    return DefineMessage.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DefineMessage>, I>>(_: I): DefineMessage {
     const message = createBaseDefineMessage();
     return message;
@@ -2024,7 +2270,7 @@ export const DefineMatch = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2042,9 +2288,8 @@ export const DefineMatch = {
   },
 
   create<I extends Exact<DeepPartial<DefineMatch>, I>>(base?: I): DefineMatch {
-    return DefineMatch.fromPartial(base ?? {});
+    return DefineMatch.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DefineMatch>, I>>(_: I): DefineMatch {
     const message = createBaseDefineMatch();
     return message;
@@ -2068,7 +2313,7 @@ export const DefineGame = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2086,9 +2331,8 @@ export const DefineGame = {
   },
 
   create<I extends Exact<DeepPartial<DefineGame>, I>>(base?: I): DefineGame {
-    return DefineGame.fromPartial(base ?? {});
+    return DefineGame.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DefineGame>, I>>(_: I): DefineGame {
     const message = createBaseDefineGame();
     return message;
@@ -2112,7 +2356,7 @@ export const DefineCommon = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2130,9 +2374,8 @@ export const DefineCommon = {
   },
 
   create<I extends Exact<DeepPartial<DefineCommon>, I>>(base?: I): DefineCommon {
-    return DefineCommon.fromPartial(base ?? {});
+    return DefineCommon.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DefineCommon>, I>>(_: I): DefineCommon {
     const message = createBaseDefineCommon();
     return message;
@@ -2156,7 +2399,7 @@ export const DefineClass = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2174,9 +2417,8 @@ export const DefineClass = {
   },
 
   create<I extends Exact<DeepPartial<DefineClass>, I>>(base?: I): DefineClass {
-    return DefineClass.fromPartial(base ?? {});
+    return DefineClass.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DefineClass>, I>>(_: I): DefineClass {
     const message = createBaseDefineClass();
     return message;
@@ -2200,7 +2442,7 @@ export const DefineChat = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2218,9 +2460,8 @@ export const DefineChat = {
   },
 
   create<I extends Exact<DeepPartial<DefineChat>, I>>(base?: I): DefineChat {
-    return DefineChat.fromPartial(base ?? {});
+    return DefineChat.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DefineChat>, I>>(_: I): DefineChat {
     const message = createBaseDefineChat();
     return message;
@@ -2244,7 +2485,7 @@ export const DefineTrade = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2262,9 +2503,8 @@ export const DefineTrade = {
   },
 
   create<I extends Exact<DeepPartial<DefineTrade>, I>>(base?: I): DefineTrade {
-    return DefineTrade.fromPartial(base ?? {});
+    return DefineTrade.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DefineTrade>, I>>(_: I): DefineTrade {
     const message = createBaseDefineTrade();
     return message;
@@ -2288,7 +2528,7 @@ export const Operate = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2306,9 +2546,8 @@ export const Operate = {
   },
 
   create<I extends Exact<DeepPartial<Operate>, I>>(base?: I): Operate {
-    return Operate.fromPartial(base ?? {});
+    return Operate.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Operate>, I>>(_: I): Operate {
     const message = createBaseOperate();
     return message;
@@ -2332,7 +2571,7 @@ export const DefineHack = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2350,9 +2589,8 @@ export const DefineHack = {
   },
 
   create<I extends Exact<DeepPartial<DefineHack>, I>>(base?: I): DefineHack {
-    return DefineHack.fromPartial(base ?? {});
+    return DefineHack.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DefineHack>, I>>(_: I): DefineHack {
     const message = createBaseDefineHack();
     return message;
@@ -2376,7 +2614,7 @@ export const DefineReport = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2394,9 +2632,8 @@ export const DefineReport = {
   },
 
   create<I extends Exact<DeepPartial<DefineReport>, I>>(base?: I): DefineReport {
-    return DefineReport.fromPartial(base ?? {});
+    return DefineReport.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DefineReport>, I>>(_: I): DefineReport {
     const message = createBaseDefineReport();
     return message;
@@ -2420,7 +2657,7 @@ export const DefineLog = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2438,9 +2675,8 @@ export const DefineLog = {
   },
 
   create<I extends Exact<DeepPartial<DefineLog>, I>>(base?: I): DefineLog {
-    return DefineLog.fromPartial(base ?? {});
+    return DefineLog.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DefineLog>, I>>(_: I): DefineLog {
     const message = createBaseDefineLog();
     return message;
@@ -2464,7 +2700,7 @@ export const DefineKarma = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2482,9 +2718,8 @@ export const DefineKarma = {
   },
 
   create<I extends Exact<DeepPartial<DefineKarma>, I>>(base?: I): DefineKarma {
-    return DefineKarma.fromPartial(base ?? {});
+    return DefineKarma.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DefineKarma>, I>>(_: I): DefineKarma {
     const message = createBaseDefineKarma();
     return message;
@@ -2508,7 +2743,7 @@ export const DefineCoupon = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2526,11 +2761,96 @@ export const DefineCoupon = {
   },
 
   create<I extends Exact<DeepPartial<DefineCoupon>, I>>(base?: I): DefineCoupon {
-    return DefineCoupon.fromPartial(base ?? {});
+    return DefineCoupon.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DefineCoupon>, I>>(_: I): DefineCoupon {
     const message = createBaseDefineCoupon();
+    return message;
+  },
+};
+
+function createBaseDefineShop(): DefineShop {
+  return {};
+}
+
+export const DefineShop = {
+  encode(_: DefineShop, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DefineShop {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDefineShop();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): DefineShop {
+    return {};
+  },
+
+  toJSON(_: DefineShop): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DefineShop>, I>>(base?: I): DefineShop {
+    return DefineShop.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<DefineShop>, I>>(_: I): DefineShop {
+    const message = createBaseDefineShop();
+    return message;
+  },
+};
+
+function createBaseDefineReward(): DefineReward {
+  return {};
+}
+
+export const DefineReward = {
+  encode(_: DefineReward, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DefineReward {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDefineReward();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): DefineReward {
+    return {};
+  },
+
+  toJSON(_: DefineReward): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DefineReward>, I>>(base?: I): DefineReward {
+    return DefineReward.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<DefineReward>, I>>(_: I): DefineReward {
+    const message = createBaseDefineReward();
     return message;
   },
 };

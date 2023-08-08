@@ -63,6 +63,11 @@ export interface SSpell {
   spellId: string;
 }
 
+export interface SMusic {
+  musicId: string;
+  slotIndex: number;
+}
+
 export interface scustomizeCharacter {
   customizeCharacterId: string;
   isEquip: number;
@@ -131,42 +136,42 @@ export const SItemMeta = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.SoulHeartAccountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.SoulHeartPartyId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.SoulHeartNickNameOrigin = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.SoulHeartNickNameStreaming = reader.string();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.AvailableValue = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -188,19 +193,27 @@ export const SItemMeta = {
 
   toJSON(message: SItemMeta): unknown {
     const obj: any = {};
-    message.SoulHeartAccountId !== undefined && (obj.SoulHeartAccountId = message.SoulHeartAccountId);
-    message.SoulHeartPartyId !== undefined && (obj.SoulHeartPartyId = message.SoulHeartPartyId);
-    message.SoulHeartNickNameOrigin !== undefined && (obj.SoulHeartNickNameOrigin = message.SoulHeartNickNameOrigin);
-    message.SoulHeartNickNameStreaming !== undefined &&
-      (obj.SoulHeartNickNameStreaming = message.SoulHeartNickNameStreaming);
-    message.AvailableValue !== undefined && (obj.AvailableValue = Math.round(message.AvailableValue));
+    if (message.SoulHeartAccountId !== "") {
+      obj.SoulHeartAccountId = message.SoulHeartAccountId;
+    }
+    if (message.SoulHeartPartyId !== "") {
+      obj.SoulHeartPartyId = message.SoulHeartPartyId;
+    }
+    if (message.SoulHeartNickNameOrigin !== "") {
+      obj.SoulHeartNickNameOrigin = message.SoulHeartNickNameOrigin;
+    }
+    if (message.SoulHeartNickNameStreaming !== "") {
+      obj.SoulHeartNickNameStreaming = message.SoulHeartNickNameStreaming;
+    }
+    if (message.AvailableValue !== 0) {
+      obj.AvailableValue = Math.round(message.AvailableValue);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SItemMeta>, I>>(base?: I): SItemMeta {
-    return SItemMeta.fromPartial(base ?? {});
+    return SItemMeta.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SItemMeta>, I>>(object: I): SItemMeta {
     const message = createBaseSItemMeta();
     message.SoulHeartAccountId = object.SoulHeartAccountId ?? "";
@@ -274,84 +287,84 @@ export const SDownItem = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.itemUniqueId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.itemId = reader.string();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.itemCount = reader.uint32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.inventoryId = reader.uint32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.slotId = reader.uint32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.bEquipped = reader.uint32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.itemAmmoCount = reader.uint32();
           continue;
         case 8:
-          if (tag != 64) {
+          if (tag !== 64) {
             break;
           }
 
           message.itemContentsCount = reader.uint32();
           continue;
         case 9:
-          if (tag != 74) {
+          if (tag !== 74) {
             break;
           }
 
           message.metaItem = SItemMeta.decode(reader, reader.uint32());
           continue;
         case 10:
-          if (tag != 82) {
+          if (tag !== 82) {
             break;
           }
 
           message.primaryPropertyArray.push(SItemProperty.decode(reader, reader.uint32()));
           continue;
         case 11:
-          if (tag != 90) {
+          if (tag !== 90) {
             break;
           }
 
           message.secondaryPropertyArray.push(SItemProperty.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -381,33 +394,45 @@ export const SDownItem = {
 
   toJSON(message: SDownItem): unknown {
     const obj: any = {};
-    message.itemUniqueId !== undefined && (obj.itemUniqueId = Math.round(message.itemUniqueId));
-    message.itemId !== undefined && (obj.itemId = message.itemId);
-    message.itemCount !== undefined && (obj.itemCount = Math.round(message.itemCount));
-    message.inventoryId !== undefined && (obj.inventoryId = Math.round(message.inventoryId));
-    message.slotId !== undefined && (obj.slotId = Math.round(message.slotId));
-    message.bEquipped !== undefined && (obj.bEquipped = Math.round(message.bEquipped));
-    message.itemAmmoCount !== undefined && (obj.itemAmmoCount = Math.round(message.itemAmmoCount));
-    message.itemContentsCount !== undefined && (obj.itemContentsCount = Math.round(message.itemContentsCount));
-    message.metaItem !== undefined &&
-      (obj.metaItem = message.metaItem ? SItemMeta.toJSON(message.metaItem) : undefined);
-    if (message.primaryPropertyArray) {
-      obj.primaryPropertyArray = message.primaryPropertyArray.map((e) => e ? SItemProperty.toJSON(e) : undefined);
-    } else {
-      obj.primaryPropertyArray = [];
+    if (message.itemUniqueId !== 0) {
+      obj.itemUniqueId = Math.round(message.itemUniqueId);
     }
-    if (message.secondaryPropertyArray) {
-      obj.secondaryPropertyArray = message.secondaryPropertyArray.map((e) => e ? SItemProperty.toJSON(e) : undefined);
-    } else {
-      obj.secondaryPropertyArray = [];
+    if (message.itemId !== "") {
+      obj.itemId = message.itemId;
+    }
+    if (message.itemCount !== 0) {
+      obj.itemCount = Math.round(message.itemCount);
+    }
+    if (message.inventoryId !== 0) {
+      obj.inventoryId = Math.round(message.inventoryId);
+    }
+    if (message.slotId !== 0) {
+      obj.slotId = Math.round(message.slotId);
+    }
+    if (message.bEquipped !== 0) {
+      obj.bEquipped = Math.round(message.bEquipped);
+    }
+    if (message.itemAmmoCount !== 0) {
+      obj.itemAmmoCount = Math.round(message.itemAmmoCount);
+    }
+    if (message.itemContentsCount !== 0) {
+      obj.itemContentsCount = Math.round(message.itemContentsCount);
+    }
+    if (message.metaItem !== undefined) {
+      obj.metaItem = SItemMeta.toJSON(message.metaItem);
+    }
+    if (message.primaryPropertyArray?.length) {
+      obj.primaryPropertyArray = message.primaryPropertyArray.map((e) => SItemProperty.toJSON(e));
+    }
+    if (message.secondaryPropertyArray?.length) {
+      obj.secondaryPropertyArray = message.secondaryPropertyArray.map((e) => SItemProperty.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SDownItem>, I>>(base?: I): SDownItem {
-    return SDownItem.fromPartial(base ?? {});
+    return SDownItem.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SDownItem>, I>>(object: I): SDownItem {
     const message = createBaseSDownItem();
     message.itemUniqueId = object.itemUniqueId ?? 0;
@@ -481,70 +506,70 @@ export const SItem = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.itemUniqueId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.itemId = reader.string();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.itemCount = reader.uint32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.inventoryId = reader.uint32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.slotId = reader.uint32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.itemAmmoCount = reader.uint32();
           continue;
         case 8:
-          if (tag != 64) {
+          if (tag !== 64) {
             break;
           }
 
           message.itemContentsCount = reader.uint32();
           continue;
         case 9:
-          if (tag != 74) {
+          if (tag !== 74) {
             break;
           }
 
           message.primaryPropertyArray.push(SItemProperty.decode(reader, reader.uint32()));
           continue;
         case 10:
-          if (tag != 82) {
+          if (tag !== 82) {
             break;
           }
 
           message.secondaryPropertyArray.push(SItemProperty.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -572,30 +597,39 @@ export const SItem = {
 
   toJSON(message: SItem): unknown {
     const obj: any = {};
-    message.itemUniqueId !== undefined && (obj.itemUniqueId = Math.round(message.itemUniqueId));
-    message.itemId !== undefined && (obj.itemId = message.itemId);
-    message.itemCount !== undefined && (obj.itemCount = Math.round(message.itemCount));
-    message.inventoryId !== undefined && (obj.inventoryId = Math.round(message.inventoryId));
-    message.slotId !== undefined && (obj.slotId = Math.round(message.slotId));
-    message.itemAmmoCount !== undefined && (obj.itemAmmoCount = Math.round(message.itemAmmoCount));
-    message.itemContentsCount !== undefined && (obj.itemContentsCount = Math.round(message.itemContentsCount));
-    if (message.primaryPropertyArray) {
-      obj.primaryPropertyArray = message.primaryPropertyArray.map((e) => e ? SItemProperty.toJSON(e) : undefined);
-    } else {
-      obj.primaryPropertyArray = [];
+    if (message.itemUniqueId !== 0) {
+      obj.itemUniqueId = Math.round(message.itemUniqueId);
     }
-    if (message.secondaryPropertyArray) {
-      obj.secondaryPropertyArray = message.secondaryPropertyArray.map((e) => e ? SItemProperty.toJSON(e) : undefined);
-    } else {
-      obj.secondaryPropertyArray = [];
+    if (message.itemId !== "") {
+      obj.itemId = message.itemId;
+    }
+    if (message.itemCount !== 0) {
+      obj.itemCount = Math.round(message.itemCount);
+    }
+    if (message.inventoryId !== 0) {
+      obj.inventoryId = Math.round(message.inventoryId);
+    }
+    if (message.slotId !== 0) {
+      obj.slotId = Math.round(message.slotId);
+    }
+    if (message.itemAmmoCount !== 0) {
+      obj.itemAmmoCount = Math.round(message.itemAmmoCount);
+    }
+    if (message.itemContentsCount !== 0) {
+      obj.itemContentsCount = Math.round(message.itemContentsCount);
+    }
+    if (message.primaryPropertyArray?.length) {
+      obj.primaryPropertyArray = message.primaryPropertyArray.map((e) => SItemProperty.toJSON(e));
+    }
+    if (message.secondaryPropertyArray?.length) {
+      obj.secondaryPropertyArray = message.secondaryPropertyArray.map((e) => SItemProperty.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SItem>, I>>(base?: I): SItem {
-    return SItem.fromPartial(base ?? {});
+    return SItem.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SItem>, I>>(object: I): SItem {
     const message = createBaseSItem();
     message.itemUniqueId = object.itemUniqueId ?? 0;
@@ -634,21 +668,21 @@ export const SItemProperty = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.propertyTypeId = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.propertyValue = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -665,15 +699,18 @@ export const SItemProperty = {
 
   toJSON(message: SItemProperty): unknown {
     const obj: any = {};
-    message.propertyTypeId !== undefined && (obj.propertyTypeId = message.propertyTypeId);
-    message.propertyValue !== undefined && (obj.propertyValue = Math.round(message.propertyValue));
+    if (message.propertyTypeId !== "") {
+      obj.propertyTypeId = message.propertyTypeId;
+    }
+    if (message.propertyValue !== 0) {
+      obj.propertyValue = Math.round(message.propertyValue);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SItemProperty>, I>>(base?: I): SItemProperty {
-    return SItemProperty.fromPartial(base ?? {});
+    return SItemProperty.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SItemProperty>, I>>(object: I): SItemProperty {
     const message = createBaseSItemProperty();
     message.propertyTypeId = object.propertyTypeId ?? "";
@@ -702,14 +739,14 @@ export const SItems = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.item.push(SItem.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -723,18 +760,15 @@ export const SItems = {
 
   toJSON(message: SItems): unknown {
     const obj: any = {};
-    if (message.item) {
-      obj.item = message.item.map((e) => e ? SItem.toJSON(e) : undefined);
-    } else {
-      obj.item = [];
+    if (message.item?.length) {
+      obj.item = message.item.map((e) => SItem.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SItems>, I>>(base?: I): SItems {
-    return SItems.fromPartial(base ?? {});
+    return SItems.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SItems>, I>>(object: I): SItems {
     const message = createBaseSItems();
     message.item = object.item?.map((e) => SItem.fromPartial(e)) || [];
@@ -765,21 +799,21 @@ export const SPerk = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.index = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.perkId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -796,15 +830,18 @@ export const SPerk = {
 
   toJSON(message: SPerk): unknown {
     const obj: any = {};
-    message.index !== undefined && (obj.index = Math.round(message.index));
-    message.perkId !== undefined && (obj.perkId = message.perkId);
+    if (message.index !== 0) {
+      obj.index = Math.round(message.index);
+    }
+    if (message.perkId !== "") {
+      obj.perkId = message.perkId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SPerk>, I>>(base?: I): SPerk {
-    return SPerk.fromPartial(base ?? {});
+    return SPerk.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SPerk>, I>>(object: I): SPerk {
     const message = createBaseSPerk();
     message.index = object.index ?? 0;
@@ -836,21 +873,21 @@ export const SSkill = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.index = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.skillId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -867,15 +904,18 @@ export const SSkill = {
 
   toJSON(message: SSkill): unknown {
     const obj: any = {};
-    message.index !== undefined && (obj.index = Math.round(message.index));
-    message.skillId !== undefined && (obj.skillId = message.skillId);
+    if (message.index !== 0) {
+      obj.index = Math.round(message.index);
+    }
+    if (message.skillId !== "") {
+      obj.skillId = message.skillId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SSkill>, I>>(base?: I): SSkill {
-    return SSkill.fromPartial(base ?? {});
+    return SSkill.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SSkill>, I>>(object: I): SSkill {
     const message = createBaseSSkill();
     message.index = object.index ?? 0;
@@ -910,28 +950,28 @@ export const SSpell = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.slotIndex = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.sequenceIndex = reader.uint32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.spellId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -949,21 +989,100 @@ export const SSpell = {
 
   toJSON(message: SSpell): unknown {
     const obj: any = {};
-    message.slotIndex !== undefined && (obj.slotIndex = Math.round(message.slotIndex));
-    message.sequenceIndex !== undefined && (obj.sequenceIndex = Math.round(message.sequenceIndex));
-    message.spellId !== undefined && (obj.spellId = message.spellId);
+    if (message.slotIndex !== 0) {
+      obj.slotIndex = Math.round(message.slotIndex);
+    }
+    if (message.sequenceIndex !== 0) {
+      obj.sequenceIndex = Math.round(message.sequenceIndex);
+    }
+    if (message.spellId !== "") {
+      obj.spellId = message.spellId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SSpell>, I>>(base?: I): SSpell {
-    return SSpell.fromPartial(base ?? {});
+    return SSpell.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SSpell>, I>>(object: I): SSpell {
     const message = createBaseSSpell();
     message.slotIndex = object.slotIndex ?? 0;
     message.sequenceIndex = object.sequenceIndex ?? 0;
     message.spellId = object.spellId ?? "";
+    return message;
+  },
+};
+
+function createBaseSMusic(): SMusic {
+  return { musicId: "", slotIndex: 0 };
+}
+
+export const SMusic = {
+  encode(message: SMusic, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.musicId !== "") {
+      writer.uint32(10).string(message.musicId);
+    }
+    if (message.slotIndex !== 0) {
+      writer.uint32(16).uint32(message.slotIndex);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SMusic {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSMusic();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.musicId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.slotIndex = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SMusic {
+    return {
+      musicId: isSet(object.musicId) ? String(object.musicId) : "",
+      slotIndex: isSet(object.slotIndex) ? Number(object.slotIndex) : 0,
+    };
+  },
+
+  toJSON(message: SMusic): unknown {
+    const obj: any = {};
+    if (message.musicId !== "") {
+      obj.musicId = message.musicId;
+    }
+    if (message.slotIndex !== 0) {
+      obj.slotIndex = Math.round(message.slotIndex);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SMusic>, I>>(base?: I): SMusic {
+    return SMusic.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SMusic>, I>>(object: I): SMusic {
+    const message = createBaseSMusic();
+    message.musicId = object.musicId ?? "";
+    message.slotIndex = object.slotIndex ?? 0;
     return message;
   },
 };
@@ -994,28 +1113,28 @@ export const scustomizeCharacter = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.customizeCharacterId = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.isEquip = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.isNew = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1033,16 +1152,21 @@ export const scustomizeCharacter = {
 
   toJSON(message: scustomizeCharacter): unknown {
     const obj: any = {};
-    message.customizeCharacterId !== undefined && (obj.customizeCharacterId = message.customizeCharacterId);
-    message.isEquip !== undefined && (obj.isEquip = Math.round(message.isEquip));
-    message.isNew !== undefined && (obj.isNew = Math.round(message.isNew));
+    if (message.customizeCharacterId !== "") {
+      obj.customizeCharacterId = message.customizeCharacterId;
+    }
+    if (message.isEquip !== 0) {
+      obj.isEquip = Math.round(message.isEquip);
+    }
+    if (message.isNew !== 0) {
+      obj.isNew = Math.round(message.isNew);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<scustomizeCharacter>, I>>(base?: I): scustomizeCharacter {
-    return scustomizeCharacter.fromPartial(base ?? {});
+    return scustomizeCharacter.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<scustomizeCharacter>, I>>(object: I): scustomizeCharacter {
     const message = createBasescustomizeCharacter();
     message.customizeCharacterId = object.customizeCharacterId ?? "";
@@ -1078,28 +1202,28 @@ export const scustomizeItem = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.customizeItemId = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.isEquip = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.isNew = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1117,16 +1241,21 @@ export const scustomizeItem = {
 
   toJSON(message: scustomizeItem): unknown {
     const obj: any = {};
-    message.customizeItemId !== undefined && (obj.customizeItemId = message.customizeItemId);
-    message.isEquip !== undefined && (obj.isEquip = Math.round(message.isEquip));
-    message.isNew !== undefined && (obj.isNew = Math.round(message.isNew));
+    if (message.customizeItemId !== "") {
+      obj.customizeItemId = message.customizeItemId;
+    }
+    if (message.isEquip !== 0) {
+      obj.isEquip = Math.round(message.isEquip);
+    }
+    if (message.isNew !== 0) {
+      obj.isNew = Math.round(message.isNew);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<scustomizeItem>, I>>(base?: I): scustomizeItem {
-    return scustomizeItem.fromPartial(base ?? {});
+    return scustomizeItem.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<scustomizeItem>, I>>(object: I): scustomizeItem {
     const message = createBasescustomizeItem();
     message.customizeItemId = object.customizeItemId ?? "";
@@ -1162,28 +1291,28 @@ export const SEMOTE = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.emoteId = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.equipSlotIndex = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.isNew = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1201,16 +1330,21 @@ export const SEMOTE = {
 
   toJSON(message: SEMOTE): unknown {
     const obj: any = {};
-    message.emoteId !== undefined && (obj.emoteId = message.emoteId);
-    message.equipSlotIndex !== undefined && (obj.equipSlotIndex = Math.round(message.equipSlotIndex));
-    message.isNew !== undefined && (obj.isNew = Math.round(message.isNew));
+    if (message.emoteId !== "") {
+      obj.emoteId = message.emoteId;
+    }
+    if (message.equipSlotIndex !== 0) {
+      obj.equipSlotIndex = Math.round(message.equipSlotIndex);
+    }
+    if (message.isNew !== 0) {
+      obj.isNew = Math.round(message.isNew);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SEMOTE>, I>>(base?: I): SEMOTE {
-    return SEMOTE.fromPartial(base ?? {});
+    return SEMOTE.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SEMOTE>, I>>(object: I): SEMOTE {
     const message = createBaseSEMOTE();
     message.emoteId = object.emoteId ?? "";
@@ -1246,28 +1380,28 @@ export const scustomizeAction = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.customizeActionId = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.isEquip = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.isNew = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1285,16 +1419,21 @@ export const scustomizeAction = {
 
   toJSON(message: scustomizeAction): unknown {
     const obj: any = {};
-    message.customizeActionId !== undefined && (obj.customizeActionId = message.customizeActionId);
-    message.isEquip !== undefined && (obj.isEquip = Math.round(message.isEquip));
-    message.isNew !== undefined && (obj.isNew = Math.round(message.isNew));
+    if (message.customizeActionId !== "") {
+      obj.customizeActionId = message.customizeActionId;
+    }
+    if (message.isEquip !== 0) {
+      obj.isEquip = Math.round(message.isEquip);
+    }
+    if (message.isNew !== 0) {
+      obj.isNew = Math.round(message.isNew);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<scustomizeAction>, I>>(base?: I): scustomizeAction {
-    return scustomizeAction.fromPartial(base ?? {});
+    return scustomizeAction.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<scustomizeAction>, I>>(object: I): scustomizeAction {
     const message = createBasescustomizeAction();
     message.customizeActionId = object.customizeActionId ?? "";
@@ -1330,28 +1469,28 @@ export const scustomizeLobbyEmote = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.lobbyEmoteId = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.equipSlotIndex = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.isNew = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1369,16 +1508,21 @@ export const scustomizeLobbyEmote = {
 
   toJSON(message: scustomizeLobbyEmote): unknown {
     const obj: any = {};
-    message.lobbyEmoteId !== undefined && (obj.lobbyEmoteId = message.lobbyEmoteId);
-    message.equipSlotIndex !== undefined && (obj.equipSlotIndex = Math.round(message.equipSlotIndex));
-    message.isNew !== undefined && (obj.isNew = Math.round(message.isNew));
+    if (message.lobbyEmoteId !== "") {
+      obj.lobbyEmoteId = message.lobbyEmoteId;
+    }
+    if (message.equipSlotIndex !== 0) {
+      obj.equipSlotIndex = Math.round(message.equipSlotIndex);
+    }
+    if (message.isNew !== 0) {
+      obj.isNew = Math.round(message.isNew);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<scustomizeLobbyEmote>, I>>(base?: I): scustomizeLobbyEmote {
-    return scustomizeLobbyEmote.fromPartial(base ?? {});
+    return scustomizeLobbyEmote.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<scustomizeLobbyEmote>, I>>(object: I): scustomizeLobbyEmote {
     const message = createBasescustomizeLobbyEmote();
     message.lobbyEmoteId = object.lobbyEmoteId ?? "";
@@ -1388,10 +1532,10 @@ export const scustomizeLobbyEmote = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

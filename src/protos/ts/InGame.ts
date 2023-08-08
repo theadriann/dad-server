@@ -9,8 +9,8 @@ export interface ss2cEnterGameServerNot {
   ip: string;
   sessionId: string;
   accountId: string;
-  isReconnect: number;
   nickName: saccountNickname | undefined;
+  serviceUrl: string;
 }
 
 export interface sc2sAutoMatchRegReq {
@@ -162,14 +162,8 @@ export interface ss2cReconnectIngameRes {
   serviceUrl: string;
 }
 
-export interface ss2cFloorMatchmakedNot {
-  port: number;
-  ip: string;
-  sessionId: string;
-}
-
 function createBasess2cEnterGameServerNot(): ss2cEnterGameServerNot {
-  return { port: 0, ip: "", sessionId: "", accountId: "", isReconnect: 0, nickName: undefined };
+  return { port: 0, ip: "", sessionId: "", accountId: "", nickName: undefined, serviceUrl: "" };
 }
 
 export const ss2cEnterGameServerNot = {
@@ -186,11 +180,11 @@ export const ss2cEnterGameServerNot = {
     if (message.accountId !== "") {
       writer.uint32(34).string(message.accountId);
     }
-    if (message.isReconnect !== 0) {
-      writer.uint32(40).uint32(message.isReconnect);
-    }
     if (message.nickName !== undefined) {
-      saccountNickname.encode(message.nickName, writer.uint32(50).fork()).ldelim();
+      saccountNickname.encode(message.nickName, writer.uint32(42).fork()).ldelim();
+    }
+    if (message.serviceUrl !== "") {
+      writer.uint32(50).string(message.serviceUrl);
     }
     return writer;
   },
@@ -203,49 +197,49 @@ export const ss2cEnterGameServerNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.port = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.ip = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.sessionId = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 5:
-          if (tag != 40) {
-            break;
-          }
-
-          message.isReconnect = reader.uint32();
-          continue;
-        case 6:
-          if (tag != 50) {
+          if (tag !== 42) {
             break;
           }
 
           message.nickName = saccountNickname.decode(reader, reader.uint32());
           continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.serviceUrl = reader.string();
+          continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -259,37 +253,47 @@ export const ss2cEnterGameServerNot = {
       ip: isSet(object.ip) ? String(object.ip) : "",
       sessionId: isSet(object.sessionId) ? String(object.sessionId) : "",
       accountId: isSet(object.accountId) ? String(object.accountId) : "",
-      isReconnect: isSet(object.isReconnect) ? Number(object.isReconnect) : 0,
       nickName: isSet(object.nickName) ? saccountNickname.fromJSON(object.nickName) : undefined,
+      serviceUrl: isSet(object.serviceUrl) ? String(object.serviceUrl) : "",
     };
   },
 
   toJSON(message: ss2cEnterGameServerNot): unknown {
     const obj: any = {};
-    message.port !== undefined && (obj.port = Math.round(message.port));
-    message.ip !== undefined && (obj.ip = message.ip);
-    message.sessionId !== undefined && (obj.sessionId = message.sessionId);
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.isReconnect !== undefined && (obj.isReconnect = Math.round(message.isReconnect));
-    message.nickName !== undefined &&
-      (obj.nickName = message.nickName ? saccountNickname.toJSON(message.nickName) : undefined);
+    if (message.port !== 0) {
+      obj.port = Math.round(message.port);
+    }
+    if (message.ip !== "") {
+      obj.ip = message.ip;
+    }
+    if (message.sessionId !== "") {
+      obj.sessionId = message.sessionId;
+    }
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.nickName !== undefined) {
+      obj.nickName = saccountNickname.toJSON(message.nickName);
+    }
+    if (message.serviceUrl !== "") {
+      obj.serviceUrl = message.serviceUrl;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cEnterGameServerNot>, I>>(base?: I): ss2cEnterGameServerNot {
-    return ss2cEnterGameServerNot.fromPartial(base ?? {});
+    return ss2cEnterGameServerNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cEnterGameServerNot>, I>>(object: I): ss2cEnterGameServerNot {
     const message = createBasess2cEnterGameServerNot();
     message.port = object.port ?? 0;
     message.ip = object.ip ?? "";
     message.sessionId = object.sessionId ?? "";
     message.accountId = object.accountId ?? "";
-    message.isReconnect = object.isReconnect ?? 0;
     message.nickName = (object.nickName !== undefined && object.nickName !== null)
       ? saccountNickname.fromPartial(object.nickName)
       : undefined;
+    message.serviceUrl = object.serviceUrl ?? "";
     return message;
   },
 };
@@ -320,28 +324,28 @@ export const sc2sAutoMatchRegReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.mode = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.region = reader.uint32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.difficultyType = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -359,16 +363,21 @@ export const sc2sAutoMatchRegReq = {
 
   toJSON(message: sc2sAutoMatchRegReq): unknown {
     const obj: any = {};
-    message.mode !== undefined && (obj.mode = Math.round(message.mode));
-    message.region !== undefined && (obj.region = Math.round(message.region));
-    message.difficultyType !== undefined && (obj.difficultyType = Math.round(message.difficultyType));
+    if (message.mode !== 0) {
+      obj.mode = Math.round(message.mode);
+    }
+    if (message.region !== 0) {
+      obj.region = Math.round(message.region);
+    }
+    if (message.difficultyType !== 0) {
+      obj.difficultyType = Math.round(message.difficultyType);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sAutoMatchRegReq>, I>>(base?: I): sc2sAutoMatchRegReq {
-    return sc2sAutoMatchRegReq.fromPartial(base ?? {});
+    return sc2sAutoMatchRegReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sAutoMatchRegReq>, I>>(object: I): sc2sAutoMatchRegReq {
     const message = createBasesc2sAutoMatchRegReq();
     message.mode = object.mode ?? 0;
@@ -398,14 +407,14 @@ export const ss2cAutoMatchRegRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -419,14 +428,15 @@ export const ss2cAutoMatchRegRes = {
 
   toJSON(message: ss2cAutoMatchRegRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cAutoMatchRegRes>, I>>(base?: I): ss2cAutoMatchRegRes {
-    return ss2cAutoMatchRegRes.fromPartial(base ?? {});
+    return ss2cAutoMatchRegRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cAutoMatchRegRes>, I>>(object: I): ss2cAutoMatchRegRes {
     const message = createBasess2cAutoMatchRegRes();
     message.result = object.result ?? 0;
@@ -454,14 +464,14 @@ export const sc2sGameEnterCompleteNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.isSuccess = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -475,14 +485,15 @@ export const sc2sGameEnterCompleteNot = {
 
   toJSON(message: sc2sGameEnterCompleteNot): unknown {
     const obj: any = {};
-    message.isSuccess !== undefined && (obj.isSuccess = Math.round(message.isSuccess));
+    if (message.isSuccess !== 0) {
+      obj.isSuccess = Math.round(message.isSuccess);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sGameEnterCompleteNot>, I>>(base?: I): sc2sGameEnterCompleteNot {
-    return sc2sGameEnterCompleteNot.fromPartial(base ?? {});
+    return sc2sGameEnterCompleteNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sGameEnterCompleteNot>, I>>(object: I): sc2sGameEnterCompleteNot {
     const message = createBasesc2sGameEnterCompleteNot();
     message.isSuccess = object.isSuccess ?? 0;
@@ -513,21 +524,21 @@ export const ss2cAutoMatchRegTeamNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.mode = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -544,15 +555,18 @@ export const ss2cAutoMatchRegTeamNot = {
 
   toJSON(message: ss2cAutoMatchRegTeamNot): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.mode !== undefined && (obj.mode = Math.round(message.mode));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.mode !== 0) {
+      obj.mode = Math.round(message.mode);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cAutoMatchRegTeamNot>, I>>(base?: I): ss2cAutoMatchRegTeamNot {
-    return ss2cAutoMatchRegTeamNot.fromPartial(base ?? {});
+    return ss2cAutoMatchRegTeamNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cAutoMatchRegTeamNot>, I>>(object: I): ss2cAutoMatchRegTeamNot {
     const message = createBasess2cAutoMatchRegTeamNot();
     message.result = object.result ?? 0;
@@ -584,21 +598,21 @@ export const sc2sReconnectIngameReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.isRefusal = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.nickName = saccountNickname.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -615,16 +629,18 @@ export const sc2sReconnectIngameReq = {
 
   toJSON(message: sc2sReconnectIngameReq): unknown {
     const obj: any = {};
-    message.isRefusal !== undefined && (obj.isRefusal = Math.round(message.isRefusal));
-    message.nickName !== undefined &&
-      (obj.nickName = message.nickName ? saccountNickname.toJSON(message.nickName) : undefined);
+    if (message.isRefusal !== 0) {
+      obj.isRefusal = Math.round(message.isRefusal);
+    }
+    if (message.nickName !== undefined) {
+      obj.nickName = saccountNickname.toJSON(message.nickName);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sReconnectIngameReq>, I>>(base?: I): sc2sReconnectIngameReq {
-    return sc2sReconnectIngameReq.fromPartial(base ?? {});
+    return sc2sReconnectIngameReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sReconnectIngameReq>, I>>(object: I): sc2sReconnectIngameReq {
     const message = createBasesc2sReconnectIngameReq();
     message.isRefusal = object.isRefusal ?? 0;
@@ -658,21 +674,21 @@ export const ss2cReconnectIngameRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.serviceUrl = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -689,103 +705,22 @@ export const ss2cReconnectIngameRes = {
 
   toJSON(message: ss2cReconnectIngameRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.serviceUrl !== undefined && (obj.serviceUrl = message.serviceUrl);
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.serviceUrl !== "") {
+      obj.serviceUrl = message.serviceUrl;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cReconnectIngameRes>, I>>(base?: I): ss2cReconnectIngameRes {
-    return ss2cReconnectIngameRes.fromPartial(base ?? {});
+    return ss2cReconnectIngameRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cReconnectIngameRes>, I>>(object: I): ss2cReconnectIngameRes {
     const message = createBasess2cReconnectIngameRes();
     message.result = object.result ?? 0;
     message.serviceUrl = object.serviceUrl ?? "";
-    return message;
-  },
-};
-
-function createBasess2cFloorMatchmakedNot(): ss2cFloorMatchmakedNot {
-  return { port: 0, ip: "", sessionId: "" };
-}
-
-export const ss2cFloorMatchmakedNot = {
-  encode(message: ss2cFloorMatchmakedNot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.port !== 0) {
-      writer.uint32(8).uint32(message.port);
-    }
-    if (message.ip !== "") {
-      writer.uint32(18).string(message.ip);
-    }
-    if (message.sessionId !== "") {
-      writer.uint32(26).string(message.sessionId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cFloorMatchmakedNot {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasess2cFloorMatchmakedNot();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 8) {
-            break;
-          }
-
-          message.port = reader.uint32();
-          continue;
-        case 2:
-          if (tag != 18) {
-            break;
-          }
-
-          message.ip = reader.string();
-          continue;
-        case 3:
-          if (tag != 26) {
-            break;
-          }
-
-          message.sessionId = reader.string();
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ss2cFloorMatchmakedNot {
-    return {
-      port: isSet(object.port) ? Number(object.port) : 0,
-      ip: isSet(object.ip) ? String(object.ip) : "",
-      sessionId: isSet(object.sessionId) ? String(object.sessionId) : "",
-    };
-  },
-
-  toJSON(message: ss2cFloorMatchmakedNot): unknown {
-    const obj: any = {};
-    message.port !== undefined && (obj.port = Math.round(message.port));
-    message.ip !== undefined && (obj.ip = message.ip);
-    message.sessionId !== undefined && (obj.sessionId = message.sessionId);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ss2cFloorMatchmakedNot>, I>>(base?: I): ss2cFloorMatchmakedNot {
-    return ss2cFloorMatchmakedNot.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<ss2cFloorMatchmakedNot>, I>>(object: I): ss2cFloorMatchmakedNot {
-    const message = createBasess2cFloorMatchmakedNot();
-    message.port = object.port ?? 0;
-    message.ip = object.ip ?? "";
-    message.sessionId = object.sessionId ?? "";
     return message;
   },
 };

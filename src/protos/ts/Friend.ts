@@ -60,21 +60,21 @@ export const sc2sFriendListReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.pageIndex = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.pageCapacity = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -91,15 +91,18 @@ export const sc2sFriendListReq = {
 
   toJSON(message: sc2sFriendListReq): unknown {
     const obj: any = {};
-    message.pageIndex !== undefined && (obj.pageIndex = Math.round(message.pageIndex));
-    message.pageCapacity !== undefined && (obj.pageCapacity = Math.round(message.pageCapacity));
+    if (message.pageIndex !== 0) {
+      obj.pageIndex = Math.round(message.pageIndex);
+    }
+    if (message.pageCapacity !== 0) {
+      obj.pageCapacity = Math.round(message.pageCapacity);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sFriendListReq>, I>>(base?: I): sc2sFriendListReq {
-    return sc2sFriendListReq.fromPartial(base ?? {});
+    return sc2sFriendListReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sFriendListReq>, I>>(object: I): sc2sFriendListReq {
     const message = createBasesc2sFriendListReq();
     message.pageIndex = object.pageIndex ?? 0;
@@ -140,42 +143,42 @@ export const ss2cFriendListRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.friendInfoList.push(scharacterFriendInfo.decode(reader, reader.uint32()));
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.pageIndex = reader.uint32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.totalFriendCount = reader.uint32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.lobbyLocateCount = reader.uint32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.dungeonLocateCount = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -197,22 +200,27 @@ export const ss2cFriendListRes = {
 
   toJSON(message: ss2cFriendListRes): unknown {
     const obj: any = {};
-    if (message.friendInfoList) {
-      obj.friendInfoList = message.friendInfoList.map((e) => e ? scharacterFriendInfo.toJSON(e) : undefined);
-    } else {
-      obj.friendInfoList = [];
+    if (message.friendInfoList?.length) {
+      obj.friendInfoList = message.friendInfoList.map((e) => scharacterFriendInfo.toJSON(e));
     }
-    message.pageIndex !== undefined && (obj.pageIndex = Math.round(message.pageIndex));
-    message.totalFriendCount !== undefined && (obj.totalFriendCount = Math.round(message.totalFriendCount));
-    message.lobbyLocateCount !== undefined && (obj.lobbyLocateCount = Math.round(message.lobbyLocateCount));
-    message.dungeonLocateCount !== undefined && (obj.dungeonLocateCount = Math.round(message.dungeonLocateCount));
+    if (message.pageIndex !== 0) {
+      obj.pageIndex = Math.round(message.pageIndex);
+    }
+    if (message.totalFriendCount !== 0) {
+      obj.totalFriendCount = Math.round(message.totalFriendCount);
+    }
+    if (message.lobbyLocateCount !== 0) {
+      obj.lobbyLocateCount = Math.round(message.lobbyLocateCount);
+    }
+    if (message.dungeonLocateCount !== 0) {
+      obj.dungeonLocateCount = Math.round(message.dungeonLocateCount);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cFriendListRes>, I>>(base?: I): ss2cFriendListRes {
-    return ss2cFriendListRes.fromPartial(base ?? {});
+    return ss2cFriendListRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cFriendListRes>, I>>(object: I): ss2cFriendListRes {
     const message = createBasess2cFriendListRes();
     message.friendInfoList = object.friendInfoList?.map((e) => scharacterFriendInfo.fromPartial(e)) || [];
@@ -241,7 +249,7 @@ export const sc2sFriendListAllReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -259,9 +267,8 @@ export const sc2sFriendListAllReq = {
   },
 
   create<I extends Exact<DeepPartial<sc2sFriendListAllReq>, I>>(base?: I): sc2sFriendListAllReq {
-    return sc2sFriendListAllReq.fromPartial(base ?? {});
+    return sc2sFriendListAllReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sFriendListAllReq>, I>>(_: I): sc2sFriendListAllReq {
     const message = createBasesc2sFriendListAllReq();
     return message;
@@ -300,42 +307,42 @@ export const ss2cFriendListAllRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.friendInfoList.push(scharacterFriendInfo.decode(reader, reader.uint32()));
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.loopFlag = reader.uint32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.totalUserCount = reader.uint32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.lobbyLocateCount = reader.uint32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.dungeonLocateCount = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -357,22 +364,27 @@ export const ss2cFriendListAllRes = {
 
   toJSON(message: ss2cFriendListAllRes): unknown {
     const obj: any = {};
-    if (message.friendInfoList) {
-      obj.friendInfoList = message.friendInfoList.map((e) => e ? scharacterFriendInfo.toJSON(e) : undefined);
-    } else {
-      obj.friendInfoList = [];
+    if (message.friendInfoList?.length) {
+      obj.friendInfoList = message.friendInfoList.map((e) => scharacterFriendInfo.toJSON(e));
     }
-    message.loopFlag !== undefined && (obj.loopFlag = Math.round(message.loopFlag));
-    message.totalUserCount !== undefined && (obj.totalUserCount = Math.round(message.totalUserCount));
-    message.lobbyLocateCount !== undefined && (obj.lobbyLocateCount = Math.round(message.lobbyLocateCount));
-    message.dungeonLocateCount !== undefined && (obj.dungeonLocateCount = Math.round(message.dungeonLocateCount));
+    if (message.loopFlag !== 0) {
+      obj.loopFlag = Math.round(message.loopFlag);
+    }
+    if (message.totalUserCount !== 0) {
+      obj.totalUserCount = Math.round(message.totalUserCount);
+    }
+    if (message.lobbyLocateCount !== 0) {
+      obj.lobbyLocateCount = Math.round(message.lobbyLocateCount);
+    }
+    if (message.dungeonLocateCount !== 0) {
+      obj.dungeonLocateCount = Math.round(message.dungeonLocateCount);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cFriendListAllRes>, I>>(base?: I): ss2cFriendListAllRes {
-    return ss2cFriendListAllRes.fromPartial(base ?? {});
+    return ss2cFriendListAllRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cFriendListAllRes>, I>>(object: I): ss2cFriendListAllRes {
     const message = createBasess2cFriendListAllRes();
     message.friendInfoList = object.friendInfoList?.map((e) => scharacterFriendInfo.fromPartial(e)) || [];
@@ -404,14 +416,14 @@ export const sc2sFriendFindReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.nickName = saccountNickname.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -425,15 +437,15 @@ export const sc2sFriendFindReq = {
 
   toJSON(message: sc2sFriendFindReq): unknown {
     const obj: any = {};
-    message.nickName !== undefined &&
-      (obj.nickName = message.nickName ? saccountNickname.toJSON(message.nickName) : undefined);
+    if (message.nickName !== undefined) {
+      obj.nickName = saccountNickname.toJSON(message.nickName);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sFriendFindReq>, I>>(base?: I): sc2sFriendFindReq {
-    return sc2sFriendFindReq.fromPartial(base ?? {});
+    return sc2sFriendFindReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sFriendFindReq>, I>>(object: I): sc2sFriendFindReq {
     const message = createBasesc2sFriendFindReq();
     message.nickName = (object.nickName !== undefined && object.nickName !== null)
@@ -466,21 +478,21 @@ export const ss2cFriendFindRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.friendInfo = scharacterFriendInfo.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -497,16 +509,18 @@ export const ss2cFriendFindRes = {
 
   toJSON(message: ss2cFriendFindRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.friendInfo !== undefined &&
-      (obj.friendInfo = message.friendInfo ? scharacterFriendInfo.toJSON(message.friendInfo) : undefined);
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.friendInfo !== undefined) {
+      obj.friendInfo = scharacterFriendInfo.toJSON(message.friendInfo);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cFriendFindRes>, I>>(base?: I): ss2cFriendFindRes {
-    return ss2cFriendFindRes.fromPartial(base ?? {});
+    return ss2cFriendFindRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cFriendFindRes>, I>>(object: I): ss2cFriendFindRes {
     const message = createBasess2cFriendFindRes();
     message.result = object.result ?? 0;

@@ -15,7 +15,8 @@ message Define_Account {
 
   enum CurrencyType {
     CURRENCY_NONE = 0;
-    ADVENTURE = 1;
+    BLUE_STONE_SHARD = 1;
+    RED_STONE_SHARD = 2;
   }
 
   enum LoginType {
@@ -23,6 +24,7 @@ message Define_Account {
     STEAM = 1;
     EPIC = 2;
     IRONMACE = 3;
+    CHAF = 4;
   }
 
 }
@@ -145,10 +147,12 @@ message Define_Game {
     HIGH_ROLLER = 2;
     GOBLIN = 3;
     RUINS = 4;
+    GOBLIN_HIGH_ROLLER = 5;
   }
 
   enum Floor {
     NONE_FLOOR = 0;
+    FLOOR_1F = 1;
     FLOOR_2F = 2;
     FLOOR_3F = 3;
   }
@@ -188,6 +192,7 @@ message Define_Class {
     PERK = 1;
     SKILL = 2;
     SPELL = 3;
+    MUSIC = 4;
   }
 
   enum Move {
@@ -247,6 +252,8 @@ message Operate {
     POLICY_GATHERING_HALL_CHAT_MAX_LINE = 10;
     POLICY_GATHERING_HALL_JOIN_MIN_LEVEL = 11;
     POLICY_HIGH_ROLLER_ENTRANCE_MIN_LEVEL = 12;
+    POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_FEE = 13;
+    POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_MIN_LEVEL = 14;
   }
 
 }
@@ -314,6 +321,44 @@ message Define_Coupon {
   enum Type {
     NONE_TYPE = 0;
     MADRINAS = 1;
+  }
+
+}
+
+message Define_Shop {
+  enum Type {
+    SHOP_TYPE_NONE = 0;
+    CHARACTER_SKIN = 1;
+    ITEM_SKIN = 2;
+    EMOTE = 3;
+    ACTION = 4;
+    LOBBY_EMOTE = 5;
+    CLASS_PACKAGE = 6;
+  }
+
+  enum PaymentMethod {
+    PAYMENT_NONE = 0;
+    BLUE_STONE_SHARD = 1;
+    RED_STONE_SHARD = 2;
+  }
+
+  enum SalesChannelType {
+    CHANNEL_NONE = 0;
+    CHANNEL_SHOP = 1;
+    CHANNEL_FOUNDERS_PACK = 2;
+  }
+
+}
+
+message Define_Reward {
+  enum RewardType {
+    NONE_TYPE = 0;
+    CharacterSkin = 1;
+    ItemSkin = 2;
+    Emote = 3;
+    Action = 4;
+    LobbyEmote = 5;
+    ClassPackage = 6;
   }
 
 }

@@ -43,6 +43,8 @@ export interface ss2cAccountLoginRes {
   accountId: string;
   serverLocation: number;
   secretToken: string;
+  banTimeBeginMs: number;
+  banTimeEndMs: number;
 }
 
 export enum ss2cAccountLoginRes_RESULT {
@@ -61,6 +63,7 @@ export enum ss2cAccountLoginRes_RESULT {
   FAIL_LOGIN_BAN_USER_INAPPROPRIATE_NAME = 14,
   FAIL_LOGIN_BAN_USER_ETC = 15,
   FAIL_LOGIN_BAN_HARDWARE = 16,
+  FAIL_UNDER_MAINTENANCE = 17,
   FAIL_BUILD_VERSION_ID = 41,
   SUCCESS_AGREE_CHECK_RES = 51,
   UNRECOGNIZED = -1,
@@ -113,6 +116,9 @@ export function ss2cAccountLoginRes_RESULTFromJSON(object: any): ss2cAccountLogi
     case 16:
     case "FAIL_LOGIN_BAN_HARDWARE":
       return ss2cAccountLoginRes_RESULT.FAIL_LOGIN_BAN_HARDWARE;
+    case 17:
+    case "FAIL_UNDER_MAINTENANCE":
+      return ss2cAccountLoginRes_RESULT.FAIL_UNDER_MAINTENANCE;
     case 41:
     case "FAIL_BUILD_VERSION_ID":
       return ss2cAccountLoginRes_RESULT.FAIL_BUILD_VERSION_ID;
@@ -158,6 +164,8 @@ export function ss2cAccountLoginRes_RESULTToJSON(object: ss2cAccountLoginRes_RES
       return "FAIL_LOGIN_BAN_USER_ETC";
     case ss2cAccountLoginRes_RESULT.FAIL_LOGIN_BAN_HARDWARE:
       return "FAIL_LOGIN_BAN_HARDWARE";
+    case ss2cAccountLoginRes_RESULT.FAIL_UNDER_MAINTENANCE:
+      return "FAIL_UNDER_MAINTENANCE";
     case ss2cAccountLoginRes_RESULT.FAIL_BUILD_VERSION_ID:
       return "FAIL_BUILD_VERSION_ID";
     case ss2cAccountLoginRes_RESULT.SUCCESS_AGREE_CHECK_RES:
@@ -214,6 +222,16 @@ export interface ss2cAccountAgreeAnswerRes {
   result: number;
 }
 
+export interface saccountCharacterClassInfo {
+  characterClassId: string;
+  shopId: string;
+  isOwned: number;
+}
+
+export interface ss2cAccountCharacterClassListNot {
+  characterClassList: saccountCharacterClassInfo[];
+}
+
 function createBasesloginAccountInfo(): sloginAccountInfo {
   return { AccountID: "" };
 }
@@ -234,14 +252,14 @@ export const sloginAccountInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.AccountID = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -255,14 +273,15 @@ export const sloginAccountInfo = {
 
   toJSON(message: sloginAccountInfo): unknown {
     const obj: any = {};
-    message.AccountID !== undefined && (obj.AccountID = message.AccountID);
+    if (message.AccountID !== "") {
+      obj.AccountID = message.AccountID;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sloginAccountInfo>, I>>(base?: I): sloginAccountInfo {
-    return sloginAccountInfo.fromPartial(base ?? {});
+    return sloginAccountInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sloginAccountInfo>, I>>(object: I): sloginAccountInfo {
     const message = createBasesloginAccountInfo();
     message.AccountID = object.AccountID ?? "";
@@ -328,77 +347,77 @@ export const sloginCharacterInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.nickName = saccountNickname.decode(reader, reader.uint32());
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.characterClass = reader.string();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.createAt = longToNumber(reader.uint64() as Long);
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.gender = reader.uint32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.level = reader.uint32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.lastloginDate = longToNumber(reader.uint64() as Long);
           continue;
         case 8:
-          if (tag != 66) {
+          if (tag !== 66) {
             break;
           }
 
           message.equipItemList.push(SItem.decode(reader, reader.uint32()));
           continue;
         case 9:
-          if (tag != 74) {
+          if (tag !== 74) {
             break;
           }
 
           message.equipCharacterSkinList.push(reader.string());
           continue;
         case 10:
-          if (tag != 82) {
+          if (tag !== 82) {
             break;
           }
 
           message.equipItemSkinList.push(reader.string());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -429,36 +448,42 @@ export const sloginCharacterInfo = {
 
   toJSON(message: sloginCharacterInfo): unknown {
     const obj: any = {};
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.nickName !== undefined &&
-      (obj.nickName = message.nickName ? saccountNickname.toJSON(message.nickName) : undefined);
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
-    message.createAt !== undefined && (obj.createAt = Math.round(message.createAt));
-    message.gender !== undefined && (obj.gender = Math.round(message.gender));
-    message.level !== undefined && (obj.level = Math.round(message.level));
-    message.lastloginDate !== undefined && (obj.lastloginDate = Math.round(message.lastloginDate));
-    if (message.equipItemList) {
-      obj.equipItemList = message.equipItemList.map((e) => e ? SItem.toJSON(e) : undefined);
-    } else {
-      obj.equipItemList = [];
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
     }
-    if (message.equipCharacterSkinList) {
-      obj.equipCharacterSkinList = message.equipCharacterSkinList.map((e) => e);
-    } else {
-      obj.equipCharacterSkinList = [];
+    if (message.nickName !== undefined) {
+      obj.nickName = saccountNickname.toJSON(message.nickName);
     }
-    if (message.equipItemSkinList) {
-      obj.equipItemSkinList = message.equipItemSkinList.map((e) => e);
-    } else {
-      obj.equipItemSkinList = [];
+    if (message.characterClass !== "") {
+      obj.characterClass = message.characterClass;
+    }
+    if (message.createAt !== 0) {
+      obj.createAt = Math.round(message.createAt);
+    }
+    if (message.gender !== 0) {
+      obj.gender = Math.round(message.gender);
+    }
+    if (message.level !== 0) {
+      obj.level = Math.round(message.level);
+    }
+    if (message.lastloginDate !== 0) {
+      obj.lastloginDate = Math.round(message.lastloginDate);
+    }
+    if (message.equipItemList?.length) {
+      obj.equipItemList = message.equipItemList.map((e) => SItem.toJSON(e));
+    }
+    if (message.equipCharacterSkinList?.length) {
+      obj.equipCharacterSkinList = message.equipCharacterSkinList;
+    }
+    if (message.equipItemSkinList?.length) {
+      obj.equipItemSkinList = message.equipItemSkinList;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sloginCharacterInfo>, I>>(base?: I): sloginCharacterInfo {
-    return sloginCharacterInfo.fromPartial(base ?? {});
+    return sloginCharacterInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sloginCharacterInfo>, I>>(object: I): sloginCharacterInfo {
     const message = createBasesloginCharacterInfo();
     message.characterId = object.characterId ?? "";
@@ -527,63 +552,63 @@ export const sc2sAccountLoginReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.loginId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.password = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.ipAddress = reader.string();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.steamBuildId = reader.uint32();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.hwIds.push(reader.string());
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.macAddress = reader.string();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.platformId = reader.uint32();
           continue;
         case 8:
-          if (tag != 66) {
+          if (tag !== 66) {
             break;
           }
 
           message.buildVersion = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -606,25 +631,36 @@ export const sc2sAccountLoginReq = {
 
   toJSON(message: sc2sAccountLoginReq): unknown {
     const obj: any = {};
-    message.loginId !== undefined && (obj.loginId = message.loginId);
-    message.password !== undefined && (obj.password = message.password);
-    message.ipAddress !== undefined && (obj.ipAddress = message.ipAddress);
-    message.steamBuildId !== undefined && (obj.steamBuildId = Math.round(message.steamBuildId));
-    if (message.hwIds) {
-      obj.hwIds = message.hwIds.map((e) => e);
-    } else {
-      obj.hwIds = [];
+    if (message.loginId !== "") {
+      obj.loginId = message.loginId;
     }
-    message.macAddress !== undefined && (obj.macAddress = message.macAddress);
-    message.platformId !== undefined && (obj.platformId = Math.round(message.platformId));
-    message.buildVersion !== undefined && (obj.buildVersion = message.buildVersion);
+    if (message.password !== "") {
+      obj.password = message.password;
+    }
+    if (message.ipAddress !== "") {
+      obj.ipAddress = message.ipAddress;
+    }
+    if (message.steamBuildId !== 0) {
+      obj.steamBuildId = Math.round(message.steamBuildId);
+    }
+    if (message.hwIds?.length) {
+      obj.hwIds = message.hwIds;
+    }
+    if (message.macAddress !== "") {
+      obj.macAddress = message.macAddress;
+    }
+    if (message.platformId !== 0) {
+      obj.platformId = Math.round(message.platformId);
+    }
+    if (message.buildVersion !== "") {
+      obj.buildVersion = message.buildVersion;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sAccountLoginReq>, I>>(base?: I): sc2sAccountLoginReq {
-    return sc2sAccountLoginReq.fromPartial(base ?? {});
+    return sc2sAccountLoginReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sAccountLoginReq>, I>>(object: I): sc2sAccountLoginReq {
     const message = createBasesc2sAccountLoginReq();
     message.loginId = object.loginId ?? "";
@@ -649,6 +685,8 @@ function createBasess2cAccountLoginRes(): ss2cAccountLoginRes {
     accountId: "",
     serverLocation: 0,
     secretToken: "",
+    banTimeBeginMs: 0,
+    banTimeEndMs: 0,
   };
 }
 
@@ -678,6 +716,12 @@ export const ss2cAccountLoginRes = {
     if (message.secretToken !== "") {
       writer.uint32(66).string(message.secretToken);
     }
+    if (message.banTimeBeginMs !== 0) {
+      writer.uint32(72).uint64(message.banTimeBeginMs);
+    }
+    if (message.banTimeEndMs !== 0) {
+      writer.uint32(80).uint64(message.banTimeEndMs);
+    }
     return writer;
   },
 
@@ -689,63 +733,77 @@ export const ss2cAccountLoginRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.Result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.AccountInfo = sloginAccountInfo.decode(reader, reader.uint32());
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.isReconnect = reader.uint32();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.address = reader.string();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.sessionId = reader.string();
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.serverLocation = reader.uint32();
           continue;
         case 8:
-          if (tag != 66) {
+          if (tag !== 66) {
             break;
           }
 
           message.secretToken = reader.string();
           continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.banTimeBeginMs = longToNumber(reader.uint64() as Long);
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.banTimeEndMs = longToNumber(reader.uint64() as Long);
+          continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -763,27 +821,49 @@ export const ss2cAccountLoginRes = {
       accountId: isSet(object.accountId) ? String(object.accountId) : "",
       serverLocation: isSet(object.serverLocation) ? Number(object.serverLocation) : 0,
       secretToken: isSet(object.secretToken) ? String(object.secretToken) : "",
+      banTimeBeginMs: isSet(object.banTimeBeginMs) ? Number(object.banTimeBeginMs) : 0,
+      banTimeEndMs: isSet(object.banTimeEndMs) ? Number(object.banTimeEndMs) : 0,
     };
   },
 
   toJSON(message: ss2cAccountLoginRes): unknown {
     const obj: any = {};
-    message.Result !== undefined && (obj.Result = Math.round(message.Result));
-    message.AccountInfo !== undefined &&
-      (obj.AccountInfo = message.AccountInfo ? sloginAccountInfo.toJSON(message.AccountInfo) : undefined);
-    message.isReconnect !== undefined && (obj.isReconnect = Math.round(message.isReconnect));
-    message.address !== undefined && (obj.address = message.address);
-    message.sessionId !== undefined && (obj.sessionId = message.sessionId);
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.serverLocation !== undefined && (obj.serverLocation = Math.round(message.serverLocation));
-    message.secretToken !== undefined && (obj.secretToken = message.secretToken);
+    if (message.Result !== 0) {
+      obj.Result = Math.round(message.Result);
+    }
+    if (message.AccountInfo !== undefined) {
+      obj.AccountInfo = sloginAccountInfo.toJSON(message.AccountInfo);
+    }
+    if (message.isReconnect !== 0) {
+      obj.isReconnect = Math.round(message.isReconnect);
+    }
+    if (message.address !== "") {
+      obj.address = message.address;
+    }
+    if (message.sessionId !== "") {
+      obj.sessionId = message.sessionId;
+    }
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.serverLocation !== 0) {
+      obj.serverLocation = Math.round(message.serverLocation);
+    }
+    if (message.secretToken !== "") {
+      obj.secretToken = message.secretToken;
+    }
+    if (message.banTimeBeginMs !== 0) {
+      obj.banTimeBeginMs = Math.round(message.banTimeBeginMs);
+    }
+    if (message.banTimeEndMs !== 0) {
+      obj.banTimeEndMs = Math.round(message.banTimeEndMs);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cAccountLoginRes>, I>>(base?: I): ss2cAccountLoginRes {
-    return ss2cAccountLoginRes.fromPartial(base ?? {});
+    return ss2cAccountLoginRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cAccountLoginRes>, I>>(object: I): ss2cAccountLoginRes {
     const message = createBasess2cAccountLoginRes();
     message.Result = object.Result ?? 0;
@@ -796,6 +876,8 @@ export const ss2cAccountLoginRes = {
     message.accountId = object.accountId ?? "";
     message.serverLocation = object.serverLocation ?? 0;
     message.secretToken = object.secretToken ?? "";
+    message.banTimeBeginMs = object.banTimeBeginMs ?? 0;
+    message.banTimeEndMs = object.banTimeEndMs ?? 0;
     return message;
   },
 };
@@ -826,28 +908,28 @@ export const sc2sAccountCharacterCreateReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.nickName = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characterClass = reader.string();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.gender = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -865,16 +947,21 @@ export const sc2sAccountCharacterCreateReq = {
 
   toJSON(message: sc2sAccountCharacterCreateReq): unknown {
     const obj: any = {};
-    message.nickName !== undefined && (obj.nickName = message.nickName);
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
-    message.gender !== undefined && (obj.gender = Math.round(message.gender));
+    if (message.nickName !== "") {
+      obj.nickName = message.nickName;
+    }
+    if (message.characterClass !== "") {
+      obj.characterClass = message.characterClass;
+    }
+    if (message.gender !== 0) {
+      obj.gender = Math.round(message.gender);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sAccountCharacterCreateReq>, I>>(base?: I): sc2sAccountCharacterCreateReq {
-    return sc2sAccountCharacterCreateReq.fromPartial(base ?? {});
+    return sc2sAccountCharacterCreateReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sAccountCharacterCreateReq>, I>>(
     object: I,
   ): sc2sAccountCharacterCreateReq {
@@ -906,14 +993,14 @@ export const ss2cAccountCharacterCreateRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -927,14 +1014,15 @@ export const ss2cAccountCharacterCreateRes = {
 
   toJSON(message: ss2cAccountCharacterCreateRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cAccountCharacterCreateRes>, I>>(base?: I): ss2cAccountCharacterCreateRes {
-    return ss2cAccountCharacterCreateRes.fromPartial(base ?? {});
+    return ss2cAccountCharacterCreateRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cAccountCharacterCreateRes>, I>>(
     object: I,
   ): ss2cAccountCharacterCreateRes {
@@ -967,21 +1055,21 @@ export const sc2sAccountCharacterListReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.pageIndex = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.pageCapacity = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -998,15 +1086,18 @@ export const sc2sAccountCharacterListReq = {
 
   toJSON(message: sc2sAccountCharacterListReq): unknown {
     const obj: any = {};
-    message.pageIndex !== undefined && (obj.pageIndex = Math.round(message.pageIndex));
-    message.pageCapacity !== undefined && (obj.pageCapacity = Math.round(message.pageCapacity));
+    if (message.pageIndex !== 0) {
+      obj.pageIndex = Math.round(message.pageIndex);
+    }
+    if (message.pageCapacity !== 0) {
+      obj.pageCapacity = Math.round(message.pageCapacity);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sAccountCharacterListReq>, I>>(base?: I): sc2sAccountCharacterListReq {
-    return sc2sAccountCharacterListReq.fromPartial(base ?? {});
+    return sc2sAccountCharacterListReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sAccountCharacterListReq>, I>>(object: I): sc2sAccountCharacterListReq {
     const message = createBasesc2sAccountCharacterListReq();
     message.pageIndex = object.pageIndex ?? 0;
@@ -1041,28 +1132,28 @@ export const ss2cAccountCharacterListRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.totalCharacterCount = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.pageIndex = reader.uint32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.characterList.push(sloginCharacterInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1082,20 +1173,21 @@ export const ss2cAccountCharacterListRes = {
 
   toJSON(message: ss2cAccountCharacterListRes): unknown {
     const obj: any = {};
-    message.totalCharacterCount !== undefined && (obj.totalCharacterCount = Math.round(message.totalCharacterCount));
-    message.pageIndex !== undefined && (obj.pageIndex = Math.round(message.pageIndex));
-    if (message.characterList) {
-      obj.characterList = message.characterList.map((e) => e ? sloginCharacterInfo.toJSON(e) : undefined);
-    } else {
-      obj.characterList = [];
+    if (message.totalCharacterCount !== 0) {
+      obj.totalCharacterCount = Math.round(message.totalCharacterCount);
+    }
+    if (message.pageIndex !== 0) {
+      obj.pageIndex = Math.round(message.pageIndex);
+    }
+    if (message.characterList?.length) {
+      obj.characterList = message.characterList.map((e) => sloginCharacterInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cAccountCharacterListRes>, I>>(base?: I): ss2cAccountCharacterListRes {
-    return ss2cAccountCharacterListRes.fromPartial(base ?? {});
+    return ss2cAccountCharacterListRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cAccountCharacterListRes>, I>>(object: I): ss2cAccountCharacterListRes {
     const message = createBasess2cAccountCharacterListRes();
     message.totalCharacterCount = object.totalCharacterCount ?? 0;
@@ -1125,14 +1217,14 @@ export const sc2sAccountCharacterDeleteReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1146,14 +1238,15 @@ export const sc2sAccountCharacterDeleteReq = {
 
   toJSON(message: sc2sAccountCharacterDeleteReq): unknown {
     const obj: any = {};
-    message.characterId !== undefined && (obj.characterId = message.characterId);
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sAccountCharacterDeleteReq>, I>>(base?: I): sc2sAccountCharacterDeleteReq {
-    return sc2sAccountCharacterDeleteReq.fromPartial(base ?? {});
+    return sc2sAccountCharacterDeleteReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sAccountCharacterDeleteReq>, I>>(
     object: I,
   ): sc2sAccountCharacterDeleteReq {
@@ -1183,14 +1276,14 @@ export const ss2cAccountCharacterDeleteRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1204,14 +1297,15 @@ export const ss2cAccountCharacterDeleteRes = {
 
   toJSON(message: ss2cAccountCharacterDeleteRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cAccountCharacterDeleteRes>, I>>(base?: I): ss2cAccountCharacterDeleteRes {
-    return ss2cAccountCharacterDeleteRes.fromPartial(base ?? {});
+    return ss2cAccountCharacterDeleteRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cAccountCharacterDeleteRes>, I>>(
     object: I,
   ): ss2cAccountCharacterDeleteRes {
@@ -1241,14 +1335,14 @@ export const sc2sLobbyEnterReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1262,14 +1356,15 @@ export const sc2sLobbyEnterReq = {
 
   toJSON(message: sc2sLobbyEnterReq): unknown {
     const obj: any = {};
-    message.characterId !== undefined && (obj.characterId = message.characterId);
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sLobbyEnterReq>, I>>(base?: I): sc2sLobbyEnterReq {
-    return sc2sLobbyEnterReq.fromPartial(base ?? {});
+    return sc2sLobbyEnterReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sLobbyEnterReq>, I>>(object: I): sc2sLobbyEnterReq {
     const message = createBasesc2sLobbyEnterReq();
     message.characterId = object.characterId ?? "";
@@ -1300,21 +1395,21 @@ export const ss2cLobbyEnterRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1331,15 +1426,18 @@ export const ss2cLobbyEnterRes = {
 
   toJSON(message: ss2cLobbyEnterRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.accountId !== undefined && (obj.accountId = message.accountId);
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cLobbyEnterRes>, I>>(base?: I): ss2cLobbyEnterRes {
-    return ss2cLobbyEnterRes.fromPartial(base ?? {});
+    return ss2cLobbyEnterRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cLobbyEnterRes>, I>>(object: I): ss2cLobbyEnterRes {
     const message = createBasess2cLobbyEnterRes();
     message.result = object.result ?? 0;
@@ -1368,14 +1466,14 @@ export const sc2sAccountAgreeAnswerReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.isAgree = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1389,14 +1487,15 @@ export const sc2sAccountAgreeAnswerReq = {
 
   toJSON(message: sc2sAccountAgreeAnswerReq): unknown {
     const obj: any = {};
-    message.isAgree !== undefined && (obj.isAgree = Math.round(message.isAgree));
+    if (message.isAgree !== 0) {
+      obj.isAgree = Math.round(message.isAgree);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sAccountAgreeAnswerReq>, I>>(base?: I): sc2sAccountAgreeAnswerReq {
-    return sc2sAccountAgreeAnswerReq.fromPartial(base ?? {});
+    return sc2sAccountAgreeAnswerReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sAccountAgreeAnswerReq>, I>>(object: I): sc2sAccountAgreeAnswerReq {
     const message = createBasesc2sAccountAgreeAnswerReq();
     message.isAgree = object.isAgree ?? 0;
@@ -1424,14 +1523,14 @@ export const ss2cAccountAgreeAnswerRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1445,14 +1544,15 @@ export const ss2cAccountAgreeAnswerRes = {
 
   toJSON(message: ss2cAccountAgreeAnswerRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cAccountAgreeAnswerRes>, I>>(base?: I): ss2cAccountAgreeAnswerRes {
-    return ss2cAccountAgreeAnswerRes.fromPartial(base ?? {});
+    return ss2cAccountAgreeAnswerRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cAccountAgreeAnswerRes>, I>>(object: I): ss2cAccountAgreeAnswerRes {
     const message = createBasess2cAccountAgreeAnswerRes();
     message.result = object.result ?? 0;
@@ -1460,10 +1560,164 @@ export const ss2cAccountAgreeAnswerRes = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+function createBasesaccountCharacterClassInfo(): saccountCharacterClassInfo {
+  return { characterClassId: "", shopId: "", isOwned: 0 };
+}
+
+export const saccountCharacterClassInfo = {
+  encode(message: saccountCharacterClassInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.characterClassId !== "") {
+      writer.uint32(10).string(message.characterClassId);
+    }
+    if (message.shopId !== "") {
+      writer.uint32(18).string(message.shopId);
+    }
+    if (message.isOwned !== 0) {
+      writer.uint32(24).uint32(message.isOwned);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): saccountCharacterClassInfo {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesaccountCharacterClassInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.characterClassId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.shopId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.isOwned = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): saccountCharacterClassInfo {
+    return {
+      characterClassId: isSet(object.characterClassId) ? String(object.characterClassId) : "",
+      shopId: isSet(object.shopId) ? String(object.shopId) : "",
+      isOwned: isSet(object.isOwned) ? Number(object.isOwned) : 0,
+    };
+  },
+
+  toJSON(message: saccountCharacterClassInfo): unknown {
+    const obj: any = {};
+    if (message.characterClassId !== "") {
+      obj.characterClassId = message.characterClassId;
+    }
+    if (message.shopId !== "") {
+      obj.shopId = message.shopId;
+    }
+    if (message.isOwned !== 0) {
+      obj.isOwned = Math.round(message.isOwned);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<saccountCharacterClassInfo>, I>>(base?: I): saccountCharacterClassInfo {
+    return saccountCharacterClassInfo.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<saccountCharacterClassInfo>, I>>(object: I): saccountCharacterClassInfo {
+    const message = createBasesaccountCharacterClassInfo();
+    message.characterClassId = object.characterClassId ?? "";
+    message.shopId = object.shopId ?? "";
+    message.isOwned = object.isOwned ?? 0;
+    return message;
+  },
+};
+
+function createBasess2cAccountCharacterClassListNot(): ss2cAccountCharacterClassListNot {
+  return { characterClassList: [] };
+}
+
+export const ss2cAccountCharacterClassListNot = {
+  encode(message: ss2cAccountCharacterClassListNot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.characterClassList) {
+      saccountCharacterClassInfo.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cAccountCharacterClassListNot {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cAccountCharacterClassListNot();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.characterClassList.push(saccountCharacterClassInfo.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cAccountCharacterClassListNot {
+    return {
+      characterClassList: Array.isArray(object?.characterClassList)
+        ? object.characterClassList.map((e: any) => saccountCharacterClassInfo.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ss2cAccountCharacterClassListNot): unknown {
+    const obj: any = {};
+    if (message.characterClassList?.length) {
+      obj.characterClassList = message.characterClassList.map((e) => saccountCharacterClassInfo.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cAccountCharacterClassListNot>, I>>(
+    base?: I,
+  ): ss2cAccountCharacterClassListNot {
+    return ss2cAccountCharacterClassListNot.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cAccountCharacterClassListNot>, I>>(
+    object: I,
+  ): ss2cAccountCharacterClassListNot {
+    const message = createBasess2cAccountCharacterClassListNot();
+    message.characterClassList = object.characterClassList?.map((e) => saccountCharacterClassInfo.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

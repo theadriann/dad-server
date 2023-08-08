@@ -54,6 +54,8 @@ export interface OperateBanReportUser {
   securityCode: string;
   reportId: string;
   nickName: string;
+  banTimeMin: number;
+  banReason: string;
 }
 
 export interface OperateHackReportList {
@@ -161,15 +163,17 @@ export interface OperateBanUser {
   nickName: string;
   reason: string;
   banType: number;
+  banTimeMin: number;
 }
 
 export interface OperateBanHardware {
   hardwareId: string;
   reason: string;
   banType: number;
+  banTimeMin: number;
 }
 
-export interface OperateCharacterInfo2 {
+export interface OperateCharacterInfo {
   accountId: number;
   characterId: number;
   nickname: string;
@@ -227,6 +231,11 @@ export interface OperateOperateDuplicateHardwareInfo {
   accountId: number;
   hardwareId: string;
   isAccountBan: string;
+}
+
+export interface OperateOperateHardwareInfo {
+  hardwareAccountInfos: OperateOperateHardwareAccountInfo[];
+  duplicateHardwareInfos: OperateOperateDuplicateHardwareInfo[];
 }
 
 export interface OperateOperateFileInfo {
@@ -292,14 +301,14 @@ export const OperateBadWordList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.badWord.push(reader.string());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -313,18 +322,15 @@ export const OperateBadWordList = {
 
   toJSON(message: OperateBadWordList): unknown {
     const obj: any = {};
-    if (message.badWord) {
-      obj.badWord = message.badWord.map((e) => e);
-    } else {
-      obj.badWord = [];
+    if (message.badWord?.length) {
+      obj.badWord = message.badWord;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateBadWordList>, I>>(base?: I): OperateBadWordList {
-    return OperateBadWordList.fromPartial(base ?? {});
+    return OperateBadWordList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateBadWordList>, I>>(object: I): OperateBadWordList {
     const message = createBaseOperateBadWordList();
     message.badWord = object.badWord?.map((e) => e) || [];
@@ -355,21 +361,21 @@ export const OperateAddBadWord = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.securityCode = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.badWord = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -386,15 +392,18 @@ export const OperateAddBadWord = {
 
   toJSON(message: OperateAddBadWord): unknown {
     const obj: any = {};
-    message.securityCode !== undefined && (obj.securityCode = message.securityCode);
-    message.badWord !== undefined && (obj.badWord = message.badWord);
+    if (message.securityCode !== "") {
+      obj.securityCode = message.securityCode;
+    }
+    if (message.badWord !== "") {
+      obj.badWord = message.badWord;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateAddBadWord>, I>>(base?: I): OperateAddBadWord {
-    return OperateAddBadWord.fromPartial(base ?? {});
+    return OperateAddBadWord.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateAddBadWord>, I>>(object: I): OperateAddBadWord {
     const message = createBaseOperateAddBadWord();
     message.securityCode = object.securityCode ?? "";
@@ -426,21 +435,21 @@ export const OperateAnnounceMessageInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.nationType = reader.int32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.announceMessage = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -457,15 +466,18 @@ export const OperateAnnounceMessageInfo = {
 
   toJSON(message: OperateAnnounceMessageInfo): unknown {
     const obj: any = {};
-    message.nationType !== undefined && (obj.nationType = Math.round(message.nationType));
-    message.announceMessage !== undefined && (obj.announceMessage = message.announceMessage);
+    if (message.nationType !== 0) {
+      obj.nationType = Math.round(message.nationType);
+    }
+    if (message.announceMessage !== "") {
+      obj.announceMessage = message.announceMessage;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateAnnounceMessageInfo>, I>>(base?: I): OperateAnnounceMessageInfo {
-    return OperateAnnounceMessageInfo.fromPartial(base ?? {});
+    return OperateAnnounceMessageInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateAnnounceMessageInfo>, I>>(object: I): OperateAnnounceMessageInfo {
     const message = createBaseOperateAnnounceMessageInfo();
     message.nationType = object.nationType ?? 0;
@@ -497,21 +509,21 @@ export const OperateAddAnnounceMsg = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.securityCode = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.announceList.push(OperateAnnounceMessageInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -530,19 +542,18 @@ export const OperateAddAnnounceMsg = {
 
   toJSON(message: OperateAddAnnounceMsg): unknown {
     const obj: any = {};
-    message.securityCode !== undefined && (obj.securityCode = message.securityCode);
-    if (message.announceList) {
-      obj.announceList = message.announceList.map((e) => e ? OperateAnnounceMessageInfo.toJSON(e) : undefined);
-    } else {
-      obj.announceList = [];
+    if (message.securityCode !== "") {
+      obj.securityCode = message.securityCode;
+    }
+    if (message.announceList?.length) {
+      obj.announceList = message.announceList.map((e) => OperateAnnounceMessageInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateAddAnnounceMsg>, I>>(base?: I): OperateAddAnnounceMsg {
-    return OperateAddAnnounceMsg.fromPartial(base ?? {});
+    return OperateAddAnnounceMsg.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateAddAnnounceMsg>, I>>(object: I): OperateAddAnnounceMsg {
     const message = createBaseOperateAddAnnounceMsg();
     message.securityCode = object.securityCode ?? "";
@@ -574,21 +585,21 @@ export const OperateDllInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.securityCode = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.dllPath = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -605,15 +616,18 @@ export const OperateDllInfo = {
 
   toJSON(message: OperateDllInfo): unknown {
     const obj: any = {};
-    message.securityCode !== undefined && (obj.securityCode = message.securityCode);
-    message.dllPath !== undefined && (obj.dllPath = message.dllPath);
+    if (message.securityCode !== "") {
+      obj.securityCode = message.securityCode;
+    }
+    if (message.dllPath !== "") {
+      obj.dllPath = message.dllPath;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateDllInfo>, I>>(base?: I): OperateDllInfo {
-    return OperateDllInfo.fromPartial(base ?? {});
+    return OperateDllInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateDllInfo>, I>>(object: I): OperateDllInfo {
     const message = createBaseOperateDllInfo();
     message.securityCode = object.securityCode ?? "";
@@ -642,14 +656,14 @@ export const OperateDllList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.dlls.push(reader.string());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -663,18 +677,15 @@ export const OperateDllList = {
 
   toJSON(message: OperateDllList): unknown {
     const obj: any = {};
-    if (message.dlls) {
-      obj.dlls = message.dlls.map((e) => e);
-    } else {
-      obj.dlls = [];
+    if (message.dlls?.length) {
+      obj.dlls = message.dlls;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateDllList>, I>>(base?: I): OperateDllList {
-    return OperateDllList.fromPartial(base ?? {});
+    return OperateDllList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateDllList>, I>>(object: I): OperateDllList {
     const message = createBaseOperateDllList();
     message.dlls = object.dlls?.map((e) => e) || [];
@@ -705,21 +716,21 @@ export const OperateUserInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.accountId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.nicknameList.push(reader.string());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -736,19 +747,18 @@ export const OperateUserInfo = {
 
   toJSON(message: OperateUserInfo): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = Math.round(message.accountId));
-    if (message.nicknameList) {
-      obj.nicknameList = message.nicknameList.map((e) => e);
-    } else {
-      obj.nicknameList = [];
+    if (message.accountId !== 0) {
+      obj.accountId = Math.round(message.accountId);
+    }
+    if (message.nicknameList?.length) {
+      obj.nicknameList = message.nicknameList;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateUserInfo>, I>>(base?: I): OperateUserInfo {
-    return OperateUserInfo.fromPartial(base ?? {});
+    return OperateUserInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateUserInfo>, I>>(object: I): OperateUserInfo {
     const message = createBaseOperateUserInfo();
     message.accountId = object.accountId ?? 0;
@@ -789,42 +799,42 @@ export const HackLogInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.nickname = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.reason = reader.string();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.registerTime = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -844,18 +854,27 @@ export const HackLogInfo = {
 
   toJSON(message: HackLogInfo): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.nickname !== undefined && (obj.nickname = message.nickname);
-    message.reason !== undefined && (obj.reason = message.reason);
-    message.registerTime !== undefined && (obj.registerTime = message.registerTime);
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.nickname !== "") {
+      obj.nickname = message.nickname;
+    }
+    if (message.reason !== "") {
+      obj.reason = message.reason;
+    }
+    if (message.registerTime !== "") {
+      obj.registerTime = message.registerTime;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<HackLogInfo>, I>>(base?: I): HackLogInfo {
-    return HackLogInfo.fromPartial(base ?? {});
+    return HackLogInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<HackLogInfo>, I>>(object: I): HackLogInfo {
     const message = createBaseHackLogInfo();
     message.accountId = object.accountId ?? "";
@@ -887,14 +906,14 @@ export const OperateHacklog = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.infos.push(HackLogInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -908,18 +927,15 @@ export const OperateHacklog = {
 
   toJSON(message: OperateHacklog): unknown {
     const obj: any = {};
-    if (message.infos) {
-      obj.infos = message.infos.map((e) => e ? HackLogInfo.toJSON(e) : undefined);
-    } else {
-      obj.infos = [];
+    if (message.infos?.length) {
+      obj.infos = message.infos.map((e) => HackLogInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateHacklog>, I>>(base?: I): OperateHacklog {
-    return OperateHacklog.fromPartial(base ?? {});
+    return OperateHacklog.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateHacklog>, I>>(object: I): OperateHacklog {
     const message = createBaseOperateHacklog();
     message.infos = object.infos?.map((e) => HackLogInfo.fromPartial(e)) || [];
@@ -928,7 +944,7 @@ export const OperateHacklog = {
 };
 
 function createBaseOperateBanReportUser(): OperateBanReportUser {
-  return { securityCode: "", reportId: "", nickName: "" };
+  return { securityCode: "", reportId: "", nickName: "", banTimeMin: 0, banReason: "" };
 }
 
 export const OperateBanReportUser = {
@@ -942,6 +958,12 @@ export const OperateBanReportUser = {
     if (message.nickName !== "") {
       writer.uint32(26).string(message.nickName);
     }
+    if (message.banTimeMin !== 0) {
+      writer.uint32(32).uint32(message.banTimeMin);
+    }
+    if (message.banReason !== "") {
+      writer.uint32(42).string(message.banReason);
+    }
     return writer;
   },
 
@@ -953,28 +975,42 @@ export const OperateBanReportUser = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.securityCode = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.reportId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.nickName = reader.string();
           continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.banTimeMin = reader.uint32();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.banReason = reader.string();
+          continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -987,26 +1023,41 @@ export const OperateBanReportUser = {
       securityCode: isSet(object.securityCode) ? String(object.securityCode) : "",
       reportId: isSet(object.reportId) ? String(object.reportId) : "",
       nickName: isSet(object.nickName) ? String(object.nickName) : "",
+      banTimeMin: isSet(object.banTimeMin) ? Number(object.banTimeMin) : 0,
+      banReason: isSet(object.banReason) ? String(object.banReason) : "",
     };
   },
 
   toJSON(message: OperateBanReportUser): unknown {
     const obj: any = {};
-    message.securityCode !== undefined && (obj.securityCode = message.securityCode);
-    message.reportId !== undefined && (obj.reportId = message.reportId);
-    message.nickName !== undefined && (obj.nickName = message.nickName);
+    if (message.securityCode !== "") {
+      obj.securityCode = message.securityCode;
+    }
+    if (message.reportId !== "") {
+      obj.reportId = message.reportId;
+    }
+    if (message.nickName !== "") {
+      obj.nickName = message.nickName;
+    }
+    if (message.banTimeMin !== 0) {
+      obj.banTimeMin = Math.round(message.banTimeMin);
+    }
+    if (message.banReason !== "") {
+      obj.banReason = message.banReason;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateBanReportUser>, I>>(base?: I): OperateBanReportUser {
-    return OperateBanReportUser.fromPartial(base ?? {});
+    return OperateBanReportUser.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateBanReportUser>, I>>(object: I): OperateBanReportUser {
     const message = createBaseOperateBanReportUser();
     message.securityCode = object.securityCode ?? "";
     message.reportId = object.reportId ?? "";
     message.nickName = object.nickName ?? "";
+    message.banTimeMin = object.banTimeMin ?? 0;
+    message.banReason = object.banReason ?? "";
     return message;
   },
 };
@@ -1031,14 +1082,14 @@ export const OperateHackReportList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.securityCode = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1052,14 +1103,15 @@ export const OperateHackReportList = {
 
   toJSON(message: OperateHackReportList): unknown {
     const obj: any = {};
-    message.securityCode !== undefined && (obj.securityCode = message.securityCode);
+    if (message.securityCode !== "") {
+      obj.securityCode = message.securityCode;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateHackReportList>, I>>(base?: I): OperateHackReportList {
-    return OperateHackReportList.fromPartial(base ?? {});
+    return OperateHackReportList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateHackReportList>, I>>(object: I): OperateHackReportList {
     const message = createBaseOperateHackReportList();
     message.securityCode = object.securityCode ?? "";
@@ -1087,14 +1139,14 @@ export const OperateIronShieldList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.securityCode = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1108,14 +1160,15 @@ export const OperateIronShieldList = {
 
   toJSON(message: OperateIronShieldList): unknown {
     const obj: any = {};
-    message.securityCode !== undefined && (obj.securityCode = message.securityCode);
+    if (message.securityCode !== "") {
+      obj.securityCode = message.securityCode;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateIronShieldList>, I>>(base?: I): OperateIronShieldList {
-    return OperateIronShieldList.fromPartial(base ?? {});
+    return OperateIronShieldList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateIronShieldList>, I>>(object: I): OperateIronShieldList {
     const message = createBaseOperateIronShieldList();
     message.securityCode = object.securityCode ?? "";
@@ -1146,21 +1199,21 @@ export const OperateAddHardwareBan = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.securityCode = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.hardwareId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1177,15 +1230,18 @@ export const OperateAddHardwareBan = {
 
   toJSON(message: OperateAddHardwareBan): unknown {
     const obj: any = {};
-    message.securityCode !== undefined && (obj.securityCode = message.securityCode);
-    message.hardwareId !== undefined && (obj.hardwareId = message.hardwareId);
+    if (message.securityCode !== "") {
+      obj.securityCode = message.securityCode;
+    }
+    if (message.hardwareId !== "") {
+      obj.hardwareId = message.hardwareId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateAddHardwareBan>, I>>(base?: I): OperateAddHardwareBan {
-    return OperateAddHardwareBan.fromPartial(base ?? {});
+    return OperateAddHardwareBan.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateAddHardwareBan>, I>>(object: I): OperateAddHardwareBan {
     const message = createBaseOperateAddHardwareBan();
     message.securityCode = object.securityCode ?? "";
@@ -1217,21 +1273,21 @@ export const OperateBanHistory = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.securityCode = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.nickname = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1248,15 +1304,18 @@ export const OperateBanHistory = {
 
   toJSON(message: OperateBanHistory): unknown {
     const obj: any = {};
-    message.securityCode !== undefined && (obj.securityCode = message.securityCode);
-    message.nickname !== undefined && (obj.nickname = message.nickname);
+    if (message.securityCode !== "") {
+      obj.securityCode = message.securityCode;
+    }
+    if (message.nickname !== "") {
+      obj.nickname = message.nickname;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateBanHistory>, I>>(base?: I): OperateBanHistory {
-    return OperateBanHistory.fromPartial(base ?? {});
+    return OperateBanHistory.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateBanHistory>, I>>(object: I): OperateBanHistory {
     const message = createBaseOperateBanHistory();
     message.securityCode = object.securityCode ?? "";
@@ -1294,35 +1353,35 @@ export const banInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.banType = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.comment = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.registerTime = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1341,17 +1400,24 @@ export const banInfo = {
 
   toJSON(message: banInfo): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.banType !== undefined && (obj.banType = message.banType);
-    message.comment !== undefined && (obj.comment = message.comment);
-    message.registerTime !== undefined && (obj.registerTime = message.registerTime);
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.banType !== "") {
+      obj.banType = message.banType;
+    }
+    if (message.comment !== "") {
+      obj.comment = message.comment;
+    }
+    if (message.registerTime !== "") {
+      obj.registerTime = message.registerTime;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<banInfo>, I>>(base?: I): banInfo {
-    return banInfo.fromPartial(base ?? {});
+    return banInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<banInfo>, I>>(object: I): banInfo {
     const message = createBasebanInfo();
     message.accountId = object.accountId ?? "";
@@ -1382,14 +1448,14 @@ export const OperateBanInfoList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.infos.push(banInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1403,18 +1469,15 @@ export const OperateBanInfoList = {
 
   toJSON(message: OperateBanInfoList): unknown {
     const obj: any = {};
-    if (message.infos) {
-      obj.infos = message.infos.map((e) => e ? banInfo.toJSON(e) : undefined);
-    } else {
-      obj.infos = [];
+    if (message.infos?.length) {
+      obj.infos = message.infos.map((e) => banInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateBanInfoList>, I>>(base?: I): OperateBanInfoList {
-    return OperateBanInfoList.fromPartial(base ?? {});
+    return OperateBanInfoList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateBanInfoList>, I>>(object: I): OperateBanInfoList {
     const message = createBaseOperateBanInfoList();
     message.infos = object.infos?.map((e) => banInfo.fromPartial(e)) || [];
@@ -1442,14 +1505,14 @@ export const OperateBanHardwareList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.securityCode = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1463,14 +1526,15 @@ export const OperateBanHardwareList = {
 
   toJSON(message: OperateBanHardwareList): unknown {
     const obj: any = {};
-    message.securityCode !== undefined && (obj.securityCode = message.securityCode);
+    if (message.securityCode !== "") {
+      obj.securityCode = message.securityCode;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateBanHardwareList>, I>>(base?: I): OperateBanHardwareList {
-    return OperateBanHardwareList.fromPartial(base ?? {});
+    return OperateBanHardwareList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateBanHardwareList>, I>>(object: I): OperateBanHardwareList {
     const message = createBaseOperateBanHardwareList();
     message.securityCode = object.securityCode ?? "";
@@ -1504,28 +1568,28 @@ export const OperateNicknameChange = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.securityCode = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.currentNickname = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.changeNickname = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1543,16 +1607,21 @@ export const OperateNicknameChange = {
 
   toJSON(message: OperateNicknameChange): unknown {
     const obj: any = {};
-    message.securityCode !== undefined && (obj.securityCode = message.securityCode);
-    message.currentNickname !== undefined && (obj.currentNickname = message.currentNickname);
-    message.changeNickname !== undefined && (obj.changeNickname = message.changeNickname);
+    if (message.securityCode !== "") {
+      obj.securityCode = message.securityCode;
+    }
+    if (message.currentNickname !== "") {
+      obj.currentNickname = message.currentNickname;
+    }
+    if (message.changeNickname !== "") {
+      obj.changeNickname = message.changeNickname;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateNicknameChange>, I>>(base?: I): OperateNicknameChange {
-    return OperateNicknameChange.fromPartial(base ?? {});
+    return OperateNicknameChange.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateNicknameChange>, I>>(object: I): OperateNicknameChange {
     const message = createBaseOperateNicknameChange();
     message.securityCode = object.securityCode ?? "";
@@ -1608,56 +1677,56 @@ export const OperateCharacterInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.accountId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.characterId = longToNumber(reader.uint64() as Long);
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.nickname = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.characterClass = reader.string();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.gebder = reader.string();
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.registerDate = reader.string();
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.lastLoginDate = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1679,20 +1748,33 @@ export const OperateCharacterInfo = {
 
   toJSON(message: OperateCharacterInfo): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = Math.round(message.accountId));
-    message.characterId !== undefined && (obj.characterId = Math.round(message.characterId));
-    message.nickname !== undefined && (obj.nickname = message.nickname);
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
-    message.gebder !== undefined && (obj.gebder = message.gebder);
-    message.registerDate !== undefined && (obj.registerDate = message.registerDate);
-    message.lastLoginDate !== undefined && (obj.lastLoginDate = message.lastLoginDate);
+    if (message.accountId !== 0) {
+      obj.accountId = Math.round(message.accountId);
+    }
+    if (message.characterId !== 0) {
+      obj.characterId = Math.round(message.characterId);
+    }
+    if (message.nickname !== "") {
+      obj.nickname = message.nickname;
+    }
+    if (message.characterClass !== "") {
+      obj.characterClass = message.characterClass;
+    }
+    if (message.gebder !== "") {
+      obj.gebder = message.gebder;
+    }
+    if (message.registerDate !== "") {
+      obj.registerDate = message.registerDate;
+    }
+    if (message.lastLoginDate !== "") {
+      obj.lastLoginDate = message.lastLoginDate;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateCharacterInfo>, I>>(base?: I): OperateCharacterInfo {
-    return OperateCharacterInfo.fromPartial(base ?? {});
+    return OperateCharacterInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateCharacterInfo>, I>>(object: I): OperateCharacterInfo {
     const message = createBaseOperateCharacterInfo();
     message.accountId = object.accountId ?? 0;
@@ -1726,14 +1808,14 @@ export const OperateCharacterInfoList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.infos.push(OperateCharacterInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1749,18 +1831,15 @@ export const OperateCharacterInfoList = {
 
   toJSON(message: OperateCharacterInfoList): unknown {
     const obj: any = {};
-    if (message.infos) {
-      obj.infos = message.infos.map((e) => e ? OperateCharacterInfo.toJSON(e) : undefined);
-    } else {
-      obj.infos = [];
+    if (message.infos?.length) {
+      obj.infos = message.infos.map((e) => OperateCharacterInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateCharacterInfoList>, I>>(base?: I): OperateCharacterInfoList {
-    return OperateCharacterInfoList.fromPartial(base ?? {});
+    return OperateCharacterInfoList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateCharacterInfoList>, I>>(object: I): OperateCharacterInfoList {
     const message = createBaseOperateCharacterInfoList();
     message.infos = object.infos?.map((e) => OperateCharacterInfo.fromPartial(e)) || [];
@@ -1800,42 +1879,42 @@ export const OperateReportInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.reportId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.targetCharacterId = longToNumber(reader.uint64() as Long);
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.targetNickname = reader.string();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.gameId = longToNumber(reader.uint64() as Long);
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.registerDate = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1855,18 +1934,27 @@ export const OperateReportInfo = {
 
   toJSON(message: OperateReportInfo): unknown {
     const obj: any = {};
-    message.reportId !== undefined && (obj.reportId = Math.round(message.reportId));
-    message.targetCharacterId !== undefined && (obj.targetCharacterId = Math.round(message.targetCharacterId));
-    message.targetNickname !== undefined && (obj.targetNickname = message.targetNickname);
-    message.gameId !== undefined && (obj.gameId = Math.round(message.gameId));
-    message.registerDate !== undefined && (obj.registerDate = message.registerDate);
+    if (message.reportId !== 0) {
+      obj.reportId = Math.round(message.reportId);
+    }
+    if (message.targetCharacterId !== 0) {
+      obj.targetCharacterId = Math.round(message.targetCharacterId);
+    }
+    if (message.targetNickname !== "") {
+      obj.targetNickname = message.targetNickname;
+    }
+    if (message.gameId !== 0) {
+      obj.gameId = Math.round(message.gameId);
+    }
+    if (message.registerDate !== "") {
+      obj.registerDate = message.registerDate;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateReportInfo>, I>>(base?: I): OperateReportInfo {
-    return OperateReportInfo.fromPartial(base ?? {});
+    return OperateReportInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateReportInfo>, I>>(object: I): OperateReportInfo {
     const message = createBaseOperateReportInfo();
     message.reportId = object.reportId ?? 0;
@@ -1898,14 +1986,14 @@ export const OperateReportInfoList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.infos.push(OperateReportInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1919,18 +2007,15 @@ export const OperateReportInfoList = {
 
   toJSON(message: OperateReportInfoList): unknown {
     const obj: any = {};
-    if (message.infos) {
-      obj.infos = message.infos.map((e) => e ? OperateReportInfo.toJSON(e) : undefined);
-    } else {
-      obj.infos = [];
+    if (message.infos?.length) {
+      obj.infos = message.infos.map((e) => OperateReportInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateReportInfoList>, I>>(base?: I): OperateReportInfoList {
-    return OperateReportInfoList.fromPartial(base ?? {});
+    return OperateReportInfoList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateReportInfoList>, I>>(object: I): OperateReportInfoList {
     const message = createBaseOperateReportInfoList();
     message.infos = object.infos?.map((e) => OperateReportInfo.fromPartial(e)) || [];
@@ -1970,42 +2055,42 @@ export const OperateIronShieldInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.characterId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.nickname = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.hardwareIds.push(reader.string());
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.callbackType = reader.string();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.registerDate = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2025,22 +2110,27 @@ export const OperateIronShieldInfo = {
 
   toJSON(message: OperateIronShieldInfo): unknown {
     const obj: any = {};
-    message.characterId !== undefined && (obj.characterId = Math.round(message.characterId));
-    message.nickname !== undefined && (obj.nickname = message.nickname);
-    if (message.hardwareIds) {
-      obj.hardwareIds = message.hardwareIds.map((e) => e);
-    } else {
-      obj.hardwareIds = [];
+    if (message.characterId !== 0) {
+      obj.characterId = Math.round(message.characterId);
     }
-    message.callbackType !== undefined && (obj.callbackType = message.callbackType);
-    message.registerDate !== undefined && (obj.registerDate = message.registerDate);
+    if (message.nickname !== "") {
+      obj.nickname = message.nickname;
+    }
+    if (message.hardwareIds?.length) {
+      obj.hardwareIds = message.hardwareIds;
+    }
+    if (message.callbackType !== "") {
+      obj.callbackType = message.callbackType;
+    }
+    if (message.registerDate !== "") {
+      obj.registerDate = message.registerDate;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateIronShieldInfo>, I>>(base?: I): OperateIronShieldInfo {
-    return OperateIronShieldInfo.fromPartial(base ?? {});
+    return OperateIronShieldInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateIronShieldInfo>, I>>(object: I): OperateIronShieldInfo {
     const message = createBaseOperateIronShieldInfo();
     message.characterId = object.characterId ?? 0;
@@ -2072,14 +2162,14 @@ export const OperateIronShieldInfoList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.infos.push(OperateIronShieldInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2095,18 +2185,15 @@ export const OperateIronShieldInfoList = {
 
   toJSON(message: OperateIronShieldInfoList): unknown {
     const obj: any = {};
-    if (message.infos) {
-      obj.infos = message.infos.map((e) => e ? OperateIronShieldInfo.toJSON(e) : undefined);
-    } else {
-      obj.infos = [];
+    if (message.infos?.length) {
+      obj.infos = message.infos.map((e) => OperateIronShieldInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateIronShieldInfoList>, I>>(base?: I): OperateIronShieldInfoList {
-    return OperateIronShieldInfoList.fromPartial(base ?? {});
+    return OperateIronShieldInfoList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateIronShieldInfoList>, I>>(object: I): OperateIronShieldInfoList {
     const message = createBaseOperateIronShieldInfoList();
     message.infos = object.infos?.map((e) => OperateIronShieldInfo.fromPartial(e)) || [];
@@ -2143,35 +2230,35 @@ export const OperateBanUserInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.accountId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.banType = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.comment = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.registerDate = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2190,17 +2277,24 @@ export const OperateBanUserInfo = {
 
   toJSON(message: OperateBanUserInfo): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = Math.round(message.accountId));
-    message.banType !== undefined && (obj.banType = message.banType);
-    message.comment !== undefined && (obj.comment = message.comment);
-    message.registerDate !== undefined && (obj.registerDate = message.registerDate);
+    if (message.accountId !== 0) {
+      obj.accountId = Math.round(message.accountId);
+    }
+    if (message.banType !== "") {
+      obj.banType = message.banType;
+    }
+    if (message.comment !== "") {
+      obj.comment = message.comment;
+    }
+    if (message.registerDate !== "") {
+      obj.registerDate = message.registerDate;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateBanUserInfo>, I>>(base?: I): OperateBanUserInfo {
-    return OperateBanUserInfo.fromPartial(base ?? {});
+    return OperateBanUserInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateBanUserInfo>, I>>(object: I): OperateBanUserInfo {
     const message = createBaseOperateBanUserInfo();
     message.accountId = object.accountId ?? 0;
@@ -2231,14 +2325,14 @@ export const OperateBanUserInfoList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.infos.push(OperateBanUserInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2252,18 +2346,15 @@ export const OperateBanUserInfoList = {
 
   toJSON(message: OperateBanUserInfoList): unknown {
     const obj: any = {};
-    if (message.infos) {
-      obj.infos = message.infos.map((e) => e ? OperateBanUserInfo.toJSON(e) : undefined);
-    } else {
-      obj.infos = [];
+    if (message.infos?.length) {
+      obj.infos = message.infos.map((e) => OperateBanUserInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateBanUserInfoList>, I>>(base?: I): OperateBanUserInfoList {
-    return OperateBanUserInfoList.fromPartial(base ?? {});
+    return OperateBanUserInfoList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateBanUserInfoList>, I>>(object: I): OperateBanUserInfoList {
     const message = createBaseOperateBanUserInfoList();
     message.infos = object.infos?.map((e) => OperateBanUserInfo.fromPartial(e)) || [];
@@ -2303,42 +2394,42 @@ export const OperateLoginLog = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.idx = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.accountId = longToNumber(reader.uint64() as Long);
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.loginTime = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.logoutTime = reader.string();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.ipAddress = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2358,18 +2449,27 @@ export const OperateLoginLog = {
 
   toJSON(message: OperateLoginLog): unknown {
     const obj: any = {};
-    message.idx !== undefined && (obj.idx = Math.round(message.idx));
-    message.accountId !== undefined && (obj.accountId = Math.round(message.accountId));
-    message.loginTime !== undefined && (obj.loginTime = message.loginTime);
-    message.logoutTime !== undefined && (obj.logoutTime = message.logoutTime);
-    message.ipAddress !== undefined && (obj.ipAddress = message.ipAddress);
+    if (message.idx !== 0) {
+      obj.idx = Math.round(message.idx);
+    }
+    if (message.accountId !== 0) {
+      obj.accountId = Math.round(message.accountId);
+    }
+    if (message.loginTime !== "") {
+      obj.loginTime = message.loginTime;
+    }
+    if (message.logoutTime !== "") {
+      obj.logoutTime = message.logoutTime;
+    }
+    if (message.ipAddress !== "") {
+      obj.ipAddress = message.ipAddress;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateLoginLog>, I>>(base?: I): OperateLoginLog {
-    return OperateLoginLog.fromPartial(base ?? {});
+    return OperateLoginLog.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateLoginLog>, I>>(object: I): OperateLoginLog {
     const message = createBaseOperateLoginLog();
     message.idx = object.idx ?? 0;
@@ -2401,14 +2501,14 @@ export const OperateLoginLogList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.logs.push(OperateLoginLog.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2422,18 +2522,15 @@ export const OperateLoginLogList = {
 
   toJSON(message: OperateLoginLogList): unknown {
     const obj: any = {};
-    if (message.logs) {
-      obj.logs = message.logs.map((e) => e ? OperateLoginLog.toJSON(e) : undefined);
-    } else {
-      obj.logs = [];
+    if (message.logs?.length) {
+      obj.logs = message.logs.map((e) => OperateLoginLog.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateLoginLogList>, I>>(base?: I): OperateLoginLogList {
-    return OperateLoginLogList.fromPartial(base ?? {});
+    return OperateLoginLogList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateLoginLogList>, I>>(object: I): OperateLoginLogList {
     const message = createBaseOperateLoginLogList();
     message.logs = object.logs?.map((e) => OperateLoginLog.fromPartial(e)) || [];
@@ -2442,7 +2539,7 @@ export const OperateLoginLogList = {
 };
 
 function createBaseOperateBanUser(): OperateBanUser {
-  return { securityCode: "", nickName: "", reason: "", banType: 0 };
+  return { securityCode: "", nickName: "", reason: "", banType: 0, banTimeMin: 0 };
 }
 
 export const OperateBanUser = {
@@ -2459,6 +2556,9 @@ export const OperateBanUser = {
     if (message.banType !== 0) {
       writer.uint32(32).uint32(message.banType);
     }
+    if (message.banTimeMin !== 0) {
+      writer.uint32(40).uint32(message.banTimeMin);
+    }
     return writer;
   },
 
@@ -2470,35 +2570,42 @@ export const OperateBanUser = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.securityCode = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.nickName = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.reason = reader.string();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.banType = reader.uint32();
           continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.banTimeMin = reader.uint32();
+          continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2512,34 +2619,46 @@ export const OperateBanUser = {
       nickName: isSet(object.nickName) ? String(object.nickName) : "",
       reason: isSet(object.reason) ? String(object.reason) : "",
       banType: isSet(object.banType) ? Number(object.banType) : 0,
+      banTimeMin: isSet(object.banTimeMin) ? Number(object.banTimeMin) : 0,
     };
   },
 
   toJSON(message: OperateBanUser): unknown {
     const obj: any = {};
-    message.securityCode !== undefined && (obj.securityCode = message.securityCode);
-    message.nickName !== undefined && (obj.nickName = message.nickName);
-    message.reason !== undefined && (obj.reason = message.reason);
-    message.banType !== undefined && (obj.banType = Math.round(message.banType));
+    if (message.securityCode !== "") {
+      obj.securityCode = message.securityCode;
+    }
+    if (message.nickName !== "") {
+      obj.nickName = message.nickName;
+    }
+    if (message.reason !== "") {
+      obj.reason = message.reason;
+    }
+    if (message.banType !== 0) {
+      obj.banType = Math.round(message.banType);
+    }
+    if (message.banTimeMin !== 0) {
+      obj.banTimeMin = Math.round(message.banTimeMin);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateBanUser>, I>>(base?: I): OperateBanUser {
-    return OperateBanUser.fromPartial(base ?? {});
+    return OperateBanUser.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateBanUser>, I>>(object: I): OperateBanUser {
     const message = createBaseOperateBanUser();
     message.securityCode = object.securityCode ?? "";
     message.nickName = object.nickName ?? "";
     message.reason = object.reason ?? "";
     message.banType = object.banType ?? 0;
+    message.banTimeMin = object.banTimeMin ?? 0;
     return message;
   },
 };
 
 function createBaseOperateBanHardware(): OperateBanHardware {
-  return { hardwareId: "", reason: "", banType: 0 };
+  return { hardwareId: "", reason: "", banType: 0, banTimeMin: 0 };
 }
 
 export const OperateBanHardware = {
@@ -2553,6 +2672,9 @@ export const OperateBanHardware = {
     if (message.banType !== 0) {
       writer.uint32(24).uint32(message.banType);
     }
+    if (message.banTimeMin !== 0) {
+      writer.uint32(32).uint32(message.banTimeMin);
+    }
     return writer;
   },
 
@@ -2564,28 +2686,35 @@ export const OperateBanHardware = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.hardwareId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.reason = reader.string();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.banType = reader.uint32();
           continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.banTimeMin = reader.uint32();
+          continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2598,31 +2727,41 @@ export const OperateBanHardware = {
       hardwareId: isSet(object.hardwareId) ? String(object.hardwareId) : "",
       reason: isSet(object.reason) ? String(object.reason) : "",
       banType: isSet(object.banType) ? Number(object.banType) : 0,
+      banTimeMin: isSet(object.banTimeMin) ? Number(object.banTimeMin) : 0,
     };
   },
 
   toJSON(message: OperateBanHardware): unknown {
     const obj: any = {};
-    message.hardwareId !== undefined && (obj.hardwareId = message.hardwareId);
-    message.reason !== undefined && (obj.reason = message.reason);
-    message.banType !== undefined && (obj.banType = Math.round(message.banType));
+    if (message.hardwareId !== "") {
+      obj.hardwareId = message.hardwareId;
+    }
+    if (message.reason !== "") {
+      obj.reason = message.reason;
+    }
+    if (message.banType !== 0) {
+      obj.banType = Math.round(message.banType);
+    }
+    if (message.banTimeMin !== 0) {
+      obj.banTimeMin = Math.round(message.banTimeMin);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateBanHardware>, I>>(base?: I): OperateBanHardware {
-    return OperateBanHardware.fromPartial(base ?? {});
+    return OperateBanHardware.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateBanHardware>, I>>(object: I): OperateBanHardware {
     const message = createBaseOperateBanHardware();
     message.hardwareId = object.hardwareId ?? "";
     message.reason = object.reason ?? "";
     message.banType = object.banType ?? 0;
+    message.banTimeMin = object.banTimeMin ?? 0;
     return message;
   },
 };
 
-function createBaseOperateCharacterInfo2(): OperateCharacterInfo2 {
+function createBaseOperateCharacterInfo(): OperateCharacterInfo {
   return {
     accountId: 0,
     characterId: 0,
@@ -2636,8 +2775,8 @@ function createBaseOperateCharacterInfo2(): OperateCharacterInfo2 {
   };
 }
 
-export const OperateCharacterInfo2 = {
-  encode(message: OperateCharacterInfo2, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const OperateCharacterInfo = {
+  encode(message: OperateCharacterInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.accountId !== 0) {
       writer.uint32(8).uint64(message.accountId);
     }
@@ -2668,78 +2807,78 @@ export const OperateCharacterInfo2 = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): OperateCharacterInfo2 {
+  decode(input: _m0.Reader | Uint8Array, length?: number): OperateCharacterInfo {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseOperateCharacterInfo2();
+    const message = createBaseOperateCharacterInfo();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.accountId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.characterId = longToNumber(reader.uint64() as Long);
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.nickname = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.characterClass = reader.string();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.gender = reader.string();
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.registerdate = reader.string();
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.lastlogindate = reader.string();
           continue;
         case 8:
-          if (tag != 66) {
+          if (tag !== 66) {
             break;
           }
 
           message.inventoryItems.push(SItems.decode(reader, reader.uint32()));
           continue;
         case 9:
-          if (tag != 74) {
+          if (tag !== 74) {
             break;
           }
 
           message.storageItems.push(SItems.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2747,7 +2886,7 @@ export const OperateCharacterInfo2 = {
     return message;
   },
 
-  fromJSON(object: any): OperateCharacterInfo2 {
+  fromJSON(object: any): OperateCharacterInfo {
     return {
       accountId: isSet(object.accountId) ? Number(object.accountId) : 0,
       characterId: isSet(object.characterId) ? Number(object.characterId) : 0,
@@ -2763,34 +2902,43 @@ export const OperateCharacterInfo2 = {
     };
   },
 
-  toJSON(message: OperateCharacterInfo2): unknown {
+  toJSON(message: OperateCharacterInfo): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = Math.round(message.accountId));
-    message.characterId !== undefined && (obj.characterId = Math.round(message.characterId));
-    message.nickname !== undefined && (obj.nickname = message.nickname);
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
-    message.gender !== undefined && (obj.gender = message.gender);
-    message.registerdate !== undefined && (obj.registerdate = message.registerdate);
-    message.lastlogindate !== undefined && (obj.lastlogindate = message.lastlogindate);
-    if (message.inventoryItems) {
-      obj.inventoryItems = message.inventoryItems.map((e) => e ? SItems.toJSON(e) : undefined);
-    } else {
-      obj.inventoryItems = [];
+    if (message.accountId !== 0) {
+      obj.accountId = Math.round(message.accountId);
     }
-    if (message.storageItems) {
-      obj.storageItems = message.storageItems.map((e) => e ? SItems.toJSON(e) : undefined);
-    } else {
-      obj.storageItems = [];
+    if (message.characterId !== 0) {
+      obj.characterId = Math.round(message.characterId);
+    }
+    if (message.nickname !== "") {
+      obj.nickname = message.nickname;
+    }
+    if (message.characterClass !== "") {
+      obj.characterClass = message.characterClass;
+    }
+    if (message.gender !== "") {
+      obj.gender = message.gender;
+    }
+    if (message.registerdate !== "") {
+      obj.registerdate = message.registerdate;
+    }
+    if (message.lastlogindate !== "") {
+      obj.lastlogindate = message.lastlogindate;
+    }
+    if (message.inventoryItems?.length) {
+      obj.inventoryItems = message.inventoryItems.map((e) => SItems.toJSON(e));
+    }
+    if (message.storageItems?.length) {
+      obj.storageItems = message.storageItems.map((e) => SItems.toJSON(e));
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<OperateCharacterInfo2>, I>>(base?: I): OperateCharacterInfo2 {
-    return OperateCharacterInfo2.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<OperateCharacterInfo>, I>>(base?: I): OperateCharacterInfo {
+    return OperateCharacterInfo.fromPartial(base ?? ({} as any));
   },
-
-  fromPartial<I extends Exact<DeepPartial<OperateCharacterInfo2>, I>>(object: I): OperateCharacterInfo2 {
-    const message = createBaseOperateCharacterInfo2();
+  fromPartial<I extends Exact<DeepPartial<OperateCharacterInfo>, I>>(object: I): OperateCharacterInfo {
+    const message = createBaseOperateCharacterInfo();
     message.accountId = object.accountId ?? 0;
     message.characterId = object.characterId ?? 0;
     message.nickname = object.nickname ?? "";
@@ -2850,56 +2998,56 @@ export const OperateOperateReportBodyInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.reportId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.reportAccountId = longToNumber(reader.uint64() as Long);
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.targetCharacterId = longToNumber(reader.uint64() as Long);
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.targetNickname = reader.string();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.gameId = longToNumber(reader.uint64() as Long);
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.file = OperateOperateFileInfo.decode(reader, reader.uint32());
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.registerDate = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2921,20 +3069,33 @@ export const OperateOperateReportBodyInfo = {
 
   toJSON(message: OperateOperateReportBodyInfo): unknown {
     const obj: any = {};
-    message.reportId !== undefined && (obj.reportId = Math.round(message.reportId));
-    message.reportAccountId !== undefined && (obj.reportAccountId = Math.round(message.reportAccountId));
-    message.targetCharacterId !== undefined && (obj.targetCharacterId = Math.round(message.targetCharacterId));
-    message.targetNickname !== undefined && (obj.targetNickname = message.targetNickname);
-    message.gameId !== undefined && (obj.gameId = Math.round(message.gameId));
-    message.file !== undefined && (obj.file = message.file ? OperateOperateFileInfo.toJSON(message.file) : undefined);
-    message.registerDate !== undefined && (obj.registerDate = message.registerDate);
+    if (message.reportId !== 0) {
+      obj.reportId = Math.round(message.reportId);
+    }
+    if (message.reportAccountId !== 0) {
+      obj.reportAccountId = Math.round(message.reportAccountId);
+    }
+    if (message.targetCharacterId !== 0) {
+      obj.targetCharacterId = Math.round(message.targetCharacterId);
+    }
+    if (message.targetNickname !== "") {
+      obj.targetNickname = message.targetNickname;
+    }
+    if (message.gameId !== 0) {
+      obj.gameId = Math.round(message.gameId);
+    }
+    if (message.file !== undefined) {
+      obj.file = OperateOperateFileInfo.toJSON(message.file);
+    }
+    if (message.registerDate !== "") {
+      obj.registerDate = message.registerDate;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateOperateReportBodyInfo>, I>>(base?: I): OperateOperateReportBodyInfo {
-    return OperateOperateReportBodyInfo.fromPartial(base ?? {});
+    return OperateOperateReportBodyInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateOperateReportBodyInfo>, I>>(object: I): OperateOperateReportBodyInfo {
     const message = createBaseOperateOperateReportBodyInfo();
     message.reportId = object.reportId ?? 0;
@@ -2988,56 +3149,56 @@ export const OperateOperateIronShieldInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.idx = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.characterId = longToNumber(reader.uint64() as Long);
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.nickname = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.callbackType = reader.string();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.file = OperateOperateFileInfo.decode(reader, reader.uint32());
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.RegisterTime = reader.string();
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.hardwareIds.push(reader.string());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -3059,24 +3220,33 @@ export const OperateOperateIronShieldInfo = {
 
   toJSON(message: OperateOperateIronShieldInfo): unknown {
     const obj: any = {};
-    message.idx !== undefined && (obj.idx = Math.round(message.idx));
-    message.characterId !== undefined && (obj.characterId = Math.round(message.characterId));
-    message.nickname !== undefined && (obj.nickname = message.nickname);
-    message.callbackType !== undefined && (obj.callbackType = message.callbackType);
-    message.file !== undefined && (obj.file = message.file ? OperateOperateFileInfo.toJSON(message.file) : undefined);
-    message.RegisterTime !== undefined && (obj.RegisterTime = message.RegisterTime);
-    if (message.hardwareIds) {
-      obj.hardwareIds = message.hardwareIds.map((e) => e);
-    } else {
-      obj.hardwareIds = [];
+    if (message.idx !== 0) {
+      obj.idx = Math.round(message.idx);
+    }
+    if (message.characterId !== 0) {
+      obj.characterId = Math.round(message.characterId);
+    }
+    if (message.nickname !== "") {
+      obj.nickname = message.nickname;
+    }
+    if (message.callbackType !== "") {
+      obj.callbackType = message.callbackType;
+    }
+    if (message.file !== undefined) {
+      obj.file = OperateOperateFileInfo.toJSON(message.file);
+    }
+    if (message.RegisterTime !== "") {
+      obj.RegisterTime = message.RegisterTime;
+    }
+    if (message.hardwareIds?.length) {
+      obj.hardwareIds = message.hardwareIds;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateOperateIronShieldInfo>, I>>(base?: I): OperateOperateIronShieldInfo {
-    return OperateOperateIronShieldInfo.fromPartial(base ?? {});
+    return OperateOperateIronShieldInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateOperateIronShieldInfo>, I>>(object: I): OperateOperateIronShieldInfo {
     const message = createBaseOperateOperateIronShieldInfo();
     message.idx = object.idx ?? 0;
@@ -3124,42 +3294,42 @@ export const OperateOperateBanUserInfos = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.accountId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.banType = reader.int32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.comment = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.registerTime = reader.string();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.isHardwareBan = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -3179,18 +3349,27 @@ export const OperateOperateBanUserInfos = {
 
   toJSON(message: OperateOperateBanUserInfos): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = Math.round(message.accountId));
-    message.banType !== undefined && (obj.banType = Math.round(message.banType));
-    message.comment !== undefined && (obj.comment = message.comment);
-    message.registerTime !== undefined && (obj.registerTime = message.registerTime);
-    message.isHardwareBan !== undefined && (obj.isHardwareBan = message.isHardwareBan);
+    if (message.accountId !== 0) {
+      obj.accountId = Math.round(message.accountId);
+    }
+    if (message.banType !== 0) {
+      obj.banType = Math.round(message.banType);
+    }
+    if (message.comment !== "") {
+      obj.comment = message.comment;
+    }
+    if (message.registerTime !== "") {
+      obj.registerTime = message.registerTime;
+    }
+    if (message.isHardwareBan !== "") {
+      obj.isHardwareBan = message.isHardwareBan;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateOperateBanUserInfos>, I>>(base?: I): OperateOperateBanUserInfos {
-    return OperateOperateBanUserInfos.fromPartial(base ?? {});
+    return OperateOperateBanUserInfos.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateOperateBanUserInfos>, I>>(object: I): OperateOperateBanUserInfos {
     const message = createBaseOperateOperateBanUserInfos();
     message.accountId = object.accountId ?? 0;
@@ -3231,35 +3410,35 @@ export const OperateOperateLoginLogInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.accountId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.loginTime = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.logoutTime = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.ipAddress = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -3278,17 +3457,24 @@ export const OperateOperateLoginLogInfo = {
 
   toJSON(message: OperateOperateLoginLogInfo): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = Math.round(message.accountId));
-    message.loginTime !== undefined && (obj.loginTime = message.loginTime);
-    message.logoutTime !== undefined && (obj.logoutTime = message.logoutTime);
-    message.ipAddress !== undefined && (obj.ipAddress = message.ipAddress);
+    if (message.accountId !== 0) {
+      obj.accountId = Math.round(message.accountId);
+    }
+    if (message.loginTime !== "") {
+      obj.loginTime = message.loginTime;
+    }
+    if (message.logoutTime !== "") {
+      obj.logoutTime = message.logoutTime;
+    }
+    if (message.ipAddress !== "") {
+      obj.ipAddress = message.ipAddress;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateOperateLoginLogInfo>, I>>(base?: I): OperateOperateLoginLogInfo {
-    return OperateOperateLoginLogInfo.fromPartial(base ?? {});
+    return OperateOperateLoginLogInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateOperateLoginLogInfo>, I>>(object: I): OperateOperateLoginLogInfo {
     const message = createBaseOperateOperateLoginLogInfo();
     message.accountId = object.accountId ?? 0;
@@ -3328,35 +3514,35 @@ export const OperateOperateHardwareAccountInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.accountId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.hardwareId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.lastUpdateDate = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.isHardwareBan = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -3375,19 +3561,26 @@ export const OperateOperateHardwareAccountInfo = {
 
   toJSON(message: OperateOperateHardwareAccountInfo): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = Math.round(message.accountId));
-    message.hardwareId !== undefined && (obj.hardwareId = message.hardwareId);
-    message.lastUpdateDate !== undefined && (obj.lastUpdateDate = message.lastUpdateDate);
-    message.isHardwareBan !== undefined && (obj.isHardwareBan = message.isHardwareBan);
+    if (message.accountId !== 0) {
+      obj.accountId = Math.round(message.accountId);
+    }
+    if (message.hardwareId !== "") {
+      obj.hardwareId = message.hardwareId;
+    }
+    if (message.lastUpdateDate !== "") {
+      obj.lastUpdateDate = message.lastUpdateDate;
+    }
+    if (message.isHardwareBan !== "") {
+      obj.isHardwareBan = message.isHardwareBan;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateOperateHardwareAccountInfo>, I>>(
     base?: I,
   ): OperateOperateHardwareAccountInfo {
-    return OperateOperateHardwareAccountInfo.fromPartial(base ?? {});
+    return OperateOperateHardwareAccountInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateOperateHardwareAccountInfo>, I>>(
     object: I,
   ): OperateOperateHardwareAccountInfo {
@@ -3426,28 +3619,28 @@ export const OperateOperateDuplicateHardwareInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.accountId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.hardwareId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.isAccountBan = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -3465,18 +3658,23 @@ export const OperateOperateDuplicateHardwareInfo = {
 
   toJSON(message: OperateOperateDuplicateHardwareInfo): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = Math.round(message.accountId));
-    message.hardwareId !== undefined && (obj.hardwareId = message.hardwareId);
-    message.isAccountBan !== undefined && (obj.isAccountBan = message.isAccountBan);
+    if (message.accountId !== 0) {
+      obj.accountId = Math.round(message.accountId);
+    }
+    if (message.hardwareId !== "") {
+      obj.hardwareId = message.hardwareId;
+    }
+    if (message.isAccountBan !== "") {
+      obj.isAccountBan = message.isAccountBan;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateOperateDuplicateHardwareInfo>, I>>(
     base?: I,
   ): OperateOperateDuplicateHardwareInfo {
-    return OperateOperateDuplicateHardwareInfo.fromPartial(base ?? {});
+    return OperateOperateDuplicateHardwareInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateOperateDuplicateHardwareInfo>, I>>(
     object: I,
   ): OperateOperateDuplicateHardwareInfo {
@@ -3484,6 +3682,88 @@ export const OperateOperateDuplicateHardwareInfo = {
     message.accountId = object.accountId ?? 0;
     message.hardwareId = object.hardwareId ?? "";
     message.isAccountBan = object.isAccountBan ?? "";
+    return message;
+  },
+};
+
+function createBaseOperateOperateHardwareInfo(): OperateOperateHardwareInfo {
+  return { hardwareAccountInfos: [], duplicateHardwareInfos: [] };
+}
+
+export const OperateOperateHardwareInfo = {
+  encode(message: OperateOperateHardwareInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.hardwareAccountInfos) {
+      OperateOperateHardwareAccountInfo.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    for (const v of message.duplicateHardwareInfos) {
+      OperateOperateDuplicateHardwareInfo.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OperateOperateHardwareInfo {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOperateOperateHardwareInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.hardwareAccountInfos.push(OperateOperateHardwareAccountInfo.decode(reader, reader.uint32()));
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.duplicateHardwareInfos.push(OperateOperateDuplicateHardwareInfo.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): OperateOperateHardwareInfo {
+    return {
+      hardwareAccountInfos: Array.isArray(object?.hardwareAccountInfos)
+        ? object.hardwareAccountInfos.map((e: any) => OperateOperateHardwareAccountInfo.fromJSON(e))
+        : [],
+      duplicateHardwareInfos: Array.isArray(object?.duplicateHardwareInfos)
+        ? object.duplicateHardwareInfos.map((e: any) => OperateOperateDuplicateHardwareInfo.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: OperateOperateHardwareInfo): unknown {
+    const obj: any = {};
+    if (message.hardwareAccountInfos?.length) {
+      obj.hardwareAccountInfos = message.hardwareAccountInfos.map((e) => OperateOperateHardwareAccountInfo.toJSON(e));
+    }
+    if (message.duplicateHardwareInfos?.length) {
+      obj.duplicateHardwareInfos = message.duplicateHardwareInfos.map((e) =>
+        OperateOperateDuplicateHardwareInfo.toJSON(e)
+      );
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<OperateOperateHardwareInfo>, I>>(base?: I): OperateOperateHardwareInfo {
+    return OperateOperateHardwareInfo.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<OperateOperateHardwareInfo>, I>>(object: I): OperateOperateHardwareInfo {
+    const message = createBaseOperateOperateHardwareInfo();
+    message.hardwareAccountInfos =
+      object.hardwareAccountInfos?.map((e) => OperateOperateHardwareAccountInfo.fromPartial(e)) || [];
+    message.duplicateHardwareInfos =
+      object.duplicateHardwareInfos?.map((e) => OperateOperateDuplicateHardwareInfo.fromPartial(e)) || [];
     return message;
   },
 };
@@ -3511,21 +3791,21 @@ export const OperateOperateFileInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.url = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -3539,15 +3819,18 @@ export const OperateOperateFileInfo = {
 
   toJSON(message: OperateOperateFileInfo): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.url !== undefined && (obj.url = message.url);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.url !== "") {
+      obj.url = message.url;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateOperateFileInfo>, I>>(base?: I): OperateOperateFileInfo {
-    return OperateOperateFileInfo.fromPartial(base ?? {});
+    return OperateOperateFileInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateOperateFileInfo>, I>>(object: I): OperateOperateFileInfo {
     const message = createBaseOperateOperateFileInfo();
     message.name = object.name ?? "";
@@ -3585,35 +3868,35 @@ export const OperateOperateBanInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.banType = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.comment = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.registerTime = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -3632,17 +3915,24 @@ export const OperateOperateBanInfo = {
 
   toJSON(message: OperateOperateBanInfo): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.banType !== undefined && (obj.banType = message.banType);
-    message.comment !== undefined && (obj.comment = message.comment);
-    message.registerTime !== undefined && (obj.registerTime = message.registerTime);
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.banType !== "") {
+      obj.banType = message.banType;
+    }
+    if (message.comment !== "") {
+      obj.comment = message.comment;
+    }
+    if (message.registerTime !== "") {
+      obj.registerTime = message.registerTime;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateOperateBanInfo>, I>>(base?: I): OperateOperateBanInfo {
-    return OperateOperateBanInfo.fromPartial(base ?? {});
+    return OperateOperateBanInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateOperateBanInfo>, I>>(object: I): OperateOperateBanInfo {
     const message = createBaseOperateOperateBanInfo();
     message.accountId = object.accountId ?? "";
@@ -3682,35 +3972,35 @@ export const OperateOperateBanHardwareInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.hardwareId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.banType = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.comment = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.registerTime = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -3729,17 +4019,24 @@ export const OperateOperateBanHardwareInfo = {
 
   toJSON(message: OperateOperateBanHardwareInfo): unknown {
     const obj: any = {};
-    message.hardwareId !== undefined && (obj.hardwareId = message.hardwareId);
-    message.banType !== undefined && (obj.banType = message.banType);
-    message.comment !== undefined && (obj.comment = message.comment);
-    message.registerTime !== undefined && (obj.registerTime = message.registerTime);
+    if (message.hardwareId !== "") {
+      obj.hardwareId = message.hardwareId;
+    }
+    if (message.banType !== "") {
+      obj.banType = message.banType;
+    }
+    if (message.comment !== "") {
+      obj.comment = message.comment;
+    }
+    if (message.registerTime !== "") {
+      obj.registerTime = message.registerTime;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateOperateBanHardwareInfo>, I>>(base?: I): OperateOperateBanHardwareInfo {
-    return OperateOperateBanHardwareInfo.fromPartial(base ?? {});
+    return OperateOperateBanHardwareInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateOperateBanHardwareInfo>, I>>(
     object: I,
   ): OperateOperateBanHardwareInfo {
@@ -3826,89 +4123,90 @@ export const OperateAllHackInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.characterInfos.push(OperateCharacterInfo.decode(reader, reader.uint32()));
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.reportBodyInfos.push(OperateOperateReportBodyInfo.decode(reader, reader.uint32()));
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.ironShieldInfos.push(OperateOperateIronShieldInfo.decode(reader, reader.uint32()));
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.banUserInfos.push(OperateOperateBanUserInfos.decode(reader, reader.uint32()));
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.loginLogInfos.push(OperateOperateLoginLogInfo.decode(reader, reader.uint32()));
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.hardwareAccountInfos.push(OperateOperateHardwareAccountInfo.decode(reader, reader.uint32()));
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.duplicateHardwareInfos.push(OperateOperateDuplicateHardwareInfo.decode(reader, reader.uint32()));
           continue;
         case 8:
-          if (tag != 66) {
+          if (tag !== 66) {
             break;
           }
 
           message.fileInfos.push(OperateOperateFileInfo.decode(reader, reader.uint32()));
           continue;
         case 9:
-          if (tag != 74) {
+          if (tag !== 74) {
             break;
           }
 
           message.banInfos.push(OperateOperateBanInfo.decode(reader, reader.uint32()));
           continue;
         case 10:
-          if (tag != 82) {
+          if (tag !== 82) {
             break;
           }
 
           message.banHardwareInfos.push(OperateOperateBanHardwareInfo.decode(reader, reader.uint32()));
           continue;
         case 11:
-          if (tag != 90) {
+          if (tag !== 90) {
             break;
           }
 
           message.hackInfos = OperateHacklog.decode(reader, reader.uint32());
           continue;
         case 12:
-          if (tag == 96) {
+          if (tag === 96) {
             message.findBanList.push(longToNumber(reader.uint64() as Long));
+
             continue;
           }
 
-          if (tag == 98) {
+          if (tag === 98) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.findBanList.push(longToNumber(reader.uint64() as Long));
@@ -3919,12 +4217,13 @@ export const OperateAllHackInfo = {
 
           break;
         case 13:
-          if (tag == 104) {
+          if (tag === 104) {
             message.banList.push(longToNumber(reader.uint64() as Long));
+
             continue;
           }
 
-          if (tag == 106) {
+          if (tag === 106) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.banList.push(longToNumber(reader.uint64() as Long));
@@ -3935,7 +4234,7 @@ export const OperateAllHackInfo = {
 
           break;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -3985,81 +4284,53 @@ export const OperateAllHackInfo = {
 
   toJSON(message: OperateAllHackInfo): unknown {
     const obj: any = {};
-    if (message.characterInfos) {
-      obj.characterInfos = message.characterInfos.map((e) => e ? OperateCharacterInfo.toJSON(e) : undefined);
-    } else {
-      obj.characterInfos = [];
+    if (message.characterInfos?.length) {
+      obj.characterInfos = message.characterInfos.map((e) => OperateCharacterInfo.toJSON(e));
     }
-    if (message.reportBodyInfos) {
-      obj.reportBodyInfos = message.reportBodyInfos.map((e) => e ? OperateOperateReportBodyInfo.toJSON(e) : undefined);
-    } else {
-      obj.reportBodyInfos = [];
+    if (message.reportBodyInfos?.length) {
+      obj.reportBodyInfos = message.reportBodyInfos.map((e) => OperateOperateReportBodyInfo.toJSON(e));
     }
-    if (message.ironShieldInfos) {
-      obj.ironShieldInfos = message.ironShieldInfos.map((e) => e ? OperateOperateIronShieldInfo.toJSON(e) : undefined);
-    } else {
-      obj.ironShieldInfos = [];
+    if (message.ironShieldInfos?.length) {
+      obj.ironShieldInfos = message.ironShieldInfos.map((e) => OperateOperateIronShieldInfo.toJSON(e));
     }
-    if (message.banUserInfos) {
-      obj.banUserInfos = message.banUserInfos.map((e) => e ? OperateOperateBanUserInfos.toJSON(e) : undefined);
-    } else {
-      obj.banUserInfos = [];
+    if (message.banUserInfos?.length) {
+      obj.banUserInfos = message.banUserInfos.map((e) => OperateOperateBanUserInfos.toJSON(e));
     }
-    if (message.loginLogInfos) {
-      obj.loginLogInfos = message.loginLogInfos.map((e) => e ? OperateOperateLoginLogInfo.toJSON(e) : undefined);
-    } else {
-      obj.loginLogInfos = [];
+    if (message.loginLogInfos?.length) {
+      obj.loginLogInfos = message.loginLogInfos.map((e) => OperateOperateLoginLogInfo.toJSON(e));
     }
-    if (message.hardwareAccountInfos) {
-      obj.hardwareAccountInfos = message.hardwareAccountInfos.map((e) =>
-        e ? OperateOperateHardwareAccountInfo.toJSON(e) : undefined
-      );
-    } else {
-      obj.hardwareAccountInfos = [];
+    if (message.hardwareAccountInfos?.length) {
+      obj.hardwareAccountInfos = message.hardwareAccountInfos.map((e) => OperateOperateHardwareAccountInfo.toJSON(e));
     }
-    if (message.duplicateHardwareInfos) {
+    if (message.duplicateHardwareInfos?.length) {
       obj.duplicateHardwareInfos = message.duplicateHardwareInfos.map((e) =>
-        e ? OperateOperateDuplicateHardwareInfo.toJSON(e) : undefined
+        OperateOperateDuplicateHardwareInfo.toJSON(e)
       );
-    } else {
-      obj.duplicateHardwareInfos = [];
     }
-    if (message.fileInfos) {
-      obj.fileInfos = message.fileInfos.map((e) => e ? OperateOperateFileInfo.toJSON(e) : undefined);
-    } else {
-      obj.fileInfos = [];
+    if (message.fileInfos?.length) {
+      obj.fileInfos = message.fileInfos.map((e) => OperateOperateFileInfo.toJSON(e));
     }
-    if (message.banInfos) {
-      obj.banInfos = message.banInfos.map((e) => e ? OperateOperateBanInfo.toJSON(e) : undefined);
-    } else {
-      obj.banInfos = [];
+    if (message.banInfos?.length) {
+      obj.banInfos = message.banInfos.map((e) => OperateOperateBanInfo.toJSON(e));
     }
-    if (message.banHardwareInfos) {
-      obj.banHardwareInfos = message.banHardwareInfos.map((e) =>
-        e ? OperateOperateBanHardwareInfo.toJSON(e) : undefined
-      );
-    } else {
-      obj.banHardwareInfos = [];
+    if (message.banHardwareInfos?.length) {
+      obj.banHardwareInfos = message.banHardwareInfos.map((e) => OperateOperateBanHardwareInfo.toJSON(e));
     }
-    message.hackInfos !== undefined &&
-      (obj.hackInfos = message.hackInfos ? OperateHacklog.toJSON(message.hackInfos) : undefined);
-    if (message.findBanList) {
+    if (message.hackInfos !== undefined) {
+      obj.hackInfos = OperateHacklog.toJSON(message.hackInfos);
+    }
+    if (message.findBanList?.length) {
       obj.findBanList = message.findBanList.map((e) => Math.round(e));
-    } else {
-      obj.findBanList = [];
     }
-    if (message.banList) {
+    if (message.banList?.length) {
       obj.banList = message.banList.map((e) => Math.round(e));
-    } else {
-      obj.banList = [];
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateAllHackInfo>, I>>(base?: I): OperateAllHackInfo {
-    return OperateAllHackInfo.fromPartial(base ?? {});
+    return OperateAllHackInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateAllHackInfo>, I>>(object: I): OperateAllHackInfo {
     const message = createBaseOperateAllHackInfo();
     message.characterInfos = object.characterInfos?.map((e) => OperateCharacterInfo.fromPartial(e)) || [];
@@ -4103,14 +4374,14 @@ export const OperateAllReportList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.report.push(OperateOperateReportBodyInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -4128,18 +4399,15 @@ export const OperateAllReportList = {
 
   toJSON(message: OperateAllReportList): unknown {
     const obj: any = {};
-    if (message.report) {
-      obj.report = message.report.map((e) => e ? OperateOperateReportBodyInfo.toJSON(e) : undefined);
-    } else {
-      obj.report = [];
+    if (message.report?.length) {
+      obj.report = message.report.map((e) => OperateOperateReportBodyInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateAllReportList>, I>>(base?: I): OperateAllReportList {
-    return OperateAllReportList.fromPartial(base ?? {});
+    return OperateAllReportList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateAllReportList>, I>>(object: I): OperateAllReportList {
     const message = createBaseOperateAllReportList();
     message.report = object.report?.map((e) => OperateOperateReportBodyInfo.fromPartial(e)) || [];
@@ -4167,14 +4435,14 @@ export const OperateAllIronShieldList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.ironShield.push(OperateOperateIronShieldInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -4192,18 +4460,15 @@ export const OperateAllIronShieldList = {
 
   toJSON(message: OperateAllIronShieldList): unknown {
     const obj: any = {};
-    if (message.ironShield) {
-      obj.ironShield = message.ironShield.map((e) => e ? OperateOperateIronShieldInfo.toJSON(e) : undefined);
-    } else {
-      obj.ironShield = [];
+    if (message.ironShield?.length) {
+      obj.ironShield = message.ironShield.map((e) => OperateOperateIronShieldInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<OperateAllIronShieldList>, I>>(base?: I): OperateAllIronShieldList {
-    return OperateAllIronShieldList.fromPartial(base ?? {});
+    return OperateAllIronShieldList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OperateAllIronShieldList>, I>>(object: I): OperateAllIronShieldList {
     const message = createBaseOperateAllIronShieldList();
     message.ironShield = object.ironShield?.map((e) => OperateOperateIronShieldInfo.fromPartial(e)) || [];
@@ -4211,10 +4476,10 @@ export const OperateAllIronShieldList = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

@@ -78,10 +78,6 @@ export interface ss2cClosedGameNot {
   cyzz: number;
 }
 
-export interface ss2cHackCheckDllListNot {
-  DLLList: string[];
-}
-
 export interface sc2sUserCharacterInfoReq {
   callbackType: number;
   reportId: string;
@@ -128,14 +124,14 @@ export const sc2sMetaLocationReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.location = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -149,14 +145,15 @@ export const sc2sMetaLocationReq = {
 
   toJSON(message: sc2sMetaLocationReq): unknown {
     const obj: any = {};
-    message.location !== undefined && (obj.location = Math.round(message.location));
+    if (message.location !== 0) {
+      obj.location = Math.round(message.location);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sMetaLocationReq>, I>>(base?: I): sc2sMetaLocationReq {
-    return sc2sMetaLocationReq.fromPartial(base ?? {});
+    return sc2sMetaLocationReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sMetaLocationReq>, I>>(object: I): sc2sMetaLocationReq {
     const message = createBasesc2sMetaLocationReq();
     message.location = object.location ?? 0;
@@ -184,14 +181,14 @@ export const ss2cMetaLocationRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.location = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -205,14 +202,15 @@ export const ss2cMetaLocationRes = {
 
   toJSON(message: ss2cMetaLocationRes): unknown {
     const obj: any = {};
-    message.location !== undefined && (obj.location = Math.round(message.location));
+    if (message.location !== 0) {
+      obj.location = Math.round(message.location);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cMetaLocationRes>, I>>(base?: I): ss2cMetaLocationRes {
-    return ss2cMetaLocationRes.fromPartial(base ?? {});
+    return ss2cMetaLocationRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cMetaLocationRes>, I>>(object: I): ss2cMetaLocationRes {
     const message = createBasess2cMetaLocationRes();
     message.location = object.location ?? 0;
@@ -243,21 +241,21 @@ export const sc2sBlockCharacterReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.targetAccountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.targetCharacterId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -274,15 +272,18 @@ export const sc2sBlockCharacterReq = {
 
   toJSON(message: sc2sBlockCharacterReq): unknown {
     const obj: any = {};
-    message.targetAccountId !== undefined && (obj.targetAccountId = message.targetAccountId);
-    message.targetCharacterId !== undefined && (obj.targetCharacterId = message.targetCharacterId);
+    if (message.targetAccountId !== "") {
+      obj.targetAccountId = message.targetAccountId;
+    }
+    if (message.targetCharacterId !== "") {
+      obj.targetCharacterId = message.targetCharacterId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sBlockCharacterReq>, I>>(base?: I): sc2sBlockCharacterReq {
-    return sc2sBlockCharacterReq.fromPartial(base ?? {});
+    return sc2sBlockCharacterReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sBlockCharacterReq>, I>>(object: I): sc2sBlockCharacterReq {
     const message = createBasesc2sBlockCharacterReq();
     message.targetAccountId = object.targetAccountId ?? "";
@@ -314,21 +315,21 @@ export const ss2cBlockCharacterRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.targetCharacterInfo = sblockCharacter.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -347,17 +348,18 @@ export const ss2cBlockCharacterRes = {
 
   toJSON(message: ss2cBlockCharacterRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.targetCharacterInfo !== undefined && (obj.targetCharacterInfo = message.targetCharacterInfo
-      ? sblockCharacter.toJSON(message.targetCharacterInfo)
-      : undefined);
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.targetCharacterInfo !== undefined) {
+      obj.targetCharacterInfo = sblockCharacter.toJSON(message.targetCharacterInfo);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cBlockCharacterRes>, I>>(base?: I): ss2cBlockCharacterRes {
-    return ss2cBlockCharacterRes.fromPartial(base ?? {});
+    return ss2cBlockCharacterRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cBlockCharacterRes>, I>>(object: I): ss2cBlockCharacterRes {
     const message = createBasess2cBlockCharacterRes();
     message.result = object.result ?? 0;
@@ -391,21 +393,21 @@ export const sc2sUnblockCharacterReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.targetAccountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.targetCharacterId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -422,15 +424,18 @@ export const sc2sUnblockCharacterReq = {
 
   toJSON(message: sc2sUnblockCharacterReq): unknown {
     const obj: any = {};
-    message.targetAccountId !== undefined && (obj.targetAccountId = message.targetAccountId);
-    message.targetCharacterId !== undefined && (obj.targetCharacterId = message.targetCharacterId);
+    if (message.targetAccountId !== "") {
+      obj.targetAccountId = message.targetAccountId;
+    }
+    if (message.targetCharacterId !== "") {
+      obj.targetCharacterId = message.targetCharacterId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sUnblockCharacterReq>, I>>(base?: I): sc2sUnblockCharacterReq {
-    return sc2sUnblockCharacterReq.fromPartial(base ?? {});
+    return sc2sUnblockCharacterReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sUnblockCharacterReq>, I>>(object: I): sc2sUnblockCharacterReq {
     const message = createBasesc2sUnblockCharacterReq();
     message.targetAccountId = object.targetAccountId ?? "";
@@ -462,21 +467,21 @@ export const ss2cUnblockCharacterRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.targetCharacterId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -493,15 +498,18 @@ export const ss2cUnblockCharacterRes = {
 
   toJSON(message: ss2cUnblockCharacterRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.targetCharacterId !== undefined && (obj.targetCharacterId = message.targetCharacterId);
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.targetCharacterId !== "") {
+      obj.targetCharacterId = message.targetCharacterId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cUnblockCharacterRes>, I>>(base?: I): ss2cUnblockCharacterRes {
-    return ss2cUnblockCharacterRes.fromPartial(base ?? {});
+    return ss2cUnblockCharacterRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cUnblockCharacterRes>, I>>(object: I): ss2cUnblockCharacterRes {
     const message = createBasess2cUnblockCharacterRes();
     message.result = object.result ?? 0;
@@ -527,7 +535,7 @@ export const sc2sBlockCharacterListReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -545,9 +553,8 @@ export const sc2sBlockCharacterListReq = {
   },
 
   create<I extends Exact<DeepPartial<sc2sBlockCharacterListReq>, I>>(base?: I): sc2sBlockCharacterListReq {
-    return sc2sBlockCharacterListReq.fromPartial(base ?? {});
+    return sc2sBlockCharacterListReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sBlockCharacterListReq>, I>>(_: I): sc2sBlockCharacterListReq {
     const message = createBasesc2sBlockCharacterListReq();
     return message;
@@ -574,14 +581,14 @@ export const ss2cBlockCharacterListRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.blockCharacters.push(sblockCharacter.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -599,18 +606,15 @@ export const ss2cBlockCharacterListRes = {
 
   toJSON(message: ss2cBlockCharacterListRes): unknown {
     const obj: any = {};
-    if (message.blockCharacters) {
-      obj.blockCharacters = message.blockCharacters.map((e) => e ? sblockCharacter.toJSON(e) : undefined);
-    } else {
-      obj.blockCharacters = [];
+    if (message.blockCharacters?.length) {
+      obj.blockCharacters = message.blockCharacters.map((e) => sblockCharacter.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cBlockCharacterListRes>, I>>(base?: I): ss2cBlockCharacterListRes {
-    return ss2cBlockCharacterListRes.fromPartial(base ?? {});
+    return ss2cBlockCharacterListRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cBlockCharacterListRes>, I>>(object: I): ss2cBlockCharacterListRes {
     const message = createBasess2cBlockCharacterListRes();
     message.blockCharacters = object.blockCharacters?.map((e) => sblockCharacter.fromPartial(e)) || [];
@@ -638,14 +642,14 @@ export const sc2sHackLogReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.logMessage = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -659,14 +663,15 @@ export const sc2sHackLogReq = {
 
   toJSON(message: sc2sHackLogReq): unknown {
     const obj: any = {};
-    message.logMessage !== undefined && (obj.logMessage = message.logMessage);
+    if (message.logMessage !== "") {
+      obj.logMessage = message.logMessage;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sHackLogReq>, I>>(base?: I): sc2sHackLogReq {
-    return sc2sHackLogReq.fromPartial(base ?? {});
+    return sc2sHackLogReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sHackLogReq>, I>>(object: I): sc2sHackLogReq {
     const message = createBasesc2sHackLogReq();
     message.logMessage = object.logMessage ?? "";
@@ -691,7 +696,7 @@ export const ss2cHackLogRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -709,9 +714,8 @@ export const ss2cHackLogRes = {
   },
 
   create<I extends Exact<DeepPartial<ss2cHackLogRes>, I>>(base?: I): ss2cHackLogRes {
-    return ss2cHackLogRes.fromPartial(base ?? {});
+    return ss2cHackLogRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cHackLogRes>, I>>(_: I): ss2cHackLogRes {
     const message = createBasess2cHackLogRes();
     return message;
@@ -741,21 +745,21 @@ export const sannounceMessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.nationType = reader.int32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.announceMessage = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -772,15 +776,18 @@ export const sannounceMessage = {
 
   toJSON(message: sannounceMessage): unknown {
     const obj: any = {};
-    message.nationType !== undefined && (obj.nationType = Math.round(message.nationType));
-    message.announceMessage !== undefined && (obj.announceMessage = message.announceMessage);
+    if (message.nationType !== 0) {
+      obj.nationType = Math.round(message.nationType);
+    }
+    if (message.announceMessage !== "") {
+      obj.announceMessage = message.announceMessage;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sannounceMessage>, I>>(base?: I): sannounceMessage {
-    return sannounceMessage.fromPartial(base ?? {});
+    return sannounceMessage.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sannounceMessage>, I>>(object: I): sannounceMessage {
     const message = createBasesannounceMessage();
     message.nationType = object.nationType ?? 0;
@@ -809,14 +816,14 @@ export const ss2cOperateAnnounceNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.announceList.push(sannounceMessage.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -834,18 +841,15 @@ export const ss2cOperateAnnounceNot = {
 
   toJSON(message: ss2cOperateAnnounceNot): unknown {
     const obj: any = {};
-    if (message.announceList) {
-      obj.announceList = message.announceList.map((e) => e ? sannounceMessage.toJSON(e) : undefined);
-    } else {
-      obj.announceList = [];
+    if (message.announceList?.length) {
+      obj.announceList = message.announceList.map((e) => sannounceMessage.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cOperateAnnounceNot>, I>>(base?: I): ss2cOperateAnnounceNot {
-    return ss2cOperateAnnounceNot.fromPartial(base ?? {});
+    return ss2cOperateAnnounceNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cOperateAnnounceNot>, I>>(object: I): ss2cOperateAnnounceNot {
     const message = createBasess2cOperateAnnounceNot();
     message.announceList = object.announceList?.map((e) => sannounceMessage.fromPartial(e)) || [];
@@ -876,21 +880,21 @@ export const fservicePolicy = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.policyType = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.policyValue = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -907,15 +911,18 @@ export const fservicePolicy = {
 
   toJSON(message: fservicePolicy): unknown {
     const obj: any = {};
-    message.policyType !== undefined && (obj.policyType = Math.round(message.policyType));
-    message.policyValue !== undefined && (obj.policyValue = Math.round(message.policyValue));
+    if (message.policyType !== 0) {
+      obj.policyType = Math.round(message.policyType);
+    }
+    if (message.policyValue !== 0) {
+      obj.policyValue = Math.round(message.policyValue);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<fservicePolicy>, I>>(base?: I): fservicePolicy {
-    return fservicePolicy.fromPartial(base ?? {});
+    return fservicePolicy.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<fservicePolicy>, I>>(object: I): fservicePolicy {
     const message = createBasefservicePolicy();
     message.policyType = object.policyType ?? 0;
@@ -944,14 +951,14 @@ export const ss2cServicePolicyNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.policyList.push(fservicePolicy.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -969,18 +976,15 @@ export const ss2cServicePolicyNot = {
 
   toJSON(message: ss2cServicePolicyNot): unknown {
     const obj: any = {};
-    if (message.policyList) {
-      obj.policyList = message.policyList.map((e) => e ? fservicePolicy.toJSON(e) : undefined);
-    } else {
-      obj.policyList = [];
+    if (message.policyList?.length) {
+      obj.policyList = message.policyList.map((e) => fservicePolicy.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cServicePolicyNot>, I>>(base?: I): ss2cServicePolicyNot {
-    return ss2cServicePolicyNot.fromPartial(base ?? {});
+    return ss2cServicePolicyNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cServicePolicyNot>, I>>(object: I): ss2cServicePolicyNot {
     const message = createBasess2cServicePolicyNot();
     message.policyList = object.policyList?.map((e) => fservicePolicy.fromPartial(e)) || [];
@@ -1005,7 +1009,7 @@ export const sc2sReLoginReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1023,9 +1027,8 @@ export const sc2sReLoginReq = {
   },
 
   create<I extends Exact<DeepPartial<sc2sReLoginReq>, I>>(base?: I): sc2sReLoginReq {
-    return sc2sReLoginReq.fromPartial(base ?? {});
+    return sc2sReLoginReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sReLoginReq>, I>>(_: I): sc2sReLoginReq {
     const message = createBasesc2sReLoginReq();
     return message;
@@ -1061,35 +1064,35 @@ export const ss2cReLoginRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.isReconnect = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.address = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.sessionId = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1108,17 +1111,24 @@ export const ss2cReLoginRes = {
 
   toJSON(message: ss2cReLoginRes): unknown {
     const obj: any = {};
-    message.isReconnect !== undefined && (obj.isReconnect = Math.round(message.isReconnect));
-    message.address !== undefined && (obj.address = message.address);
-    message.sessionId !== undefined && (obj.sessionId = message.sessionId);
-    message.accountId !== undefined && (obj.accountId = message.accountId);
+    if (message.isReconnect !== 0) {
+      obj.isReconnect = Math.round(message.isReconnect);
+    }
+    if (message.address !== "") {
+      obj.address = message.address;
+    }
+    if (message.sessionId !== "") {
+      obj.sessionId = message.sessionId;
+    }
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cReLoginRes>, I>>(base?: I): ss2cReLoginRes {
-    return ss2cReLoginRes.fromPartial(base ?? {});
+    return ss2cReLoginRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cReLoginRes>, I>>(object: I): ss2cReLoginRes {
     const message = createBasess2cReLoginRes();
     message.isReconnect = object.isReconnect ?? 0;
@@ -1149,14 +1159,14 @@ export const ss2cClosedGameNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.cyzz = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1170,77 +1180,18 @@ export const ss2cClosedGameNot = {
 
   toJSON(message: ss2cClosedGameNot): unknown {
     const obj: any = {};
-    message.cyzz !== undefined && (obj.cyzz = Math.round(message.cyzz));
+    if (message.cyzz !== 0) {
+      obj.cyzz = Math.round(message.cyzz);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cClosedGameNot>, I>>(base?: I): ss2cClosedGameNot {
-    return ss2cClosedGameNot.fromPartial(base ?? {});
+    return ss2cClosedGameNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cClosedGameNot>, I>>(object: I): ss2cClosedGameNot {
     const message = createBasess2cClosedGameNot();
     message.cyzz = object.cyzz ?? 0;
-    return message;
-  },
-};
-
-function createBasess2cHackCheckDllListNot(): ss2cHackCheckDllListNot {
-  return { DLLList: [] };
-}
-
-export const ss2cHackCheckDllListNot = {
-  encode(message: ss2cHackCheckDllListNot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.DLLList) {
-      writer.uint32(10).string(v!);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cHackCheckDllListNot {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasess2cHackCheckDllListNot();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 10) {
-            break;
-          }
-
-          message.DLLList.push(reader.string());
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ss2cHackCheckDllListNot {
-    return { DLLList: Array.isArray(object?.DLLList) ? object.DLLList.map((e: any) => String(e)) : [] };
-  },
-
-  toJSON(message: ss2cHackCheckDllListNot): unknown {
-    const obj: any = {};
-    if (message.DLLList) {
-      obj.DLLList = message.DLLList.map((e) => e);
-    } else {
-      obj.DLLList = [];
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ss2cHackCheckDllListNot>, I>>(base?: I): ss2cHackCheckDllListNot {
-    return ss2cHackCheckDllListNot.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<ss2cHackCheckDllListNot>, I>>(object: I): ss2cHackCheckDllListNot {
-    const message = createBasess2cHackCheckDllListNot();
-    message.DLLList = object.DLLList?.map((e) => e) || [];
     return message;
   },
 };
@@ -1285,33 +1236,34 @@ export const sc2sUserCharacterInfoReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.callbackType = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.reportId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.hIds.push(reader.string());
           continue;
         case 4:
-          if (tag == 32) {
+          if (tag === 32) {
             message.blob.push(reader.uint32());
+
             continue;
           }
 
-          if (tag == 34) {
+          if (tag === 34) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.blob.push(reader.uint32());
@@ -1322,28 +1274,28 @@ export const sc2sUserCharacterInfoReq = {
 
           break;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.originNickname = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1365,28 +1317,33 @@ export const sc2sUserCharacterInfoReq = {
 
   toJSON(message: sc2sUserCharacterInfoReq): unknown {
     const obj: any = {};
-    message.callbackType !== undefined && (obj.callbackType = Math.round(message.callbackType));
-    message.reportId !== undefined && (obj.reportId = message.reportId);
-    if (message.hIds) {
-      obj.hIds = message.hIds.map((e) => e);
-    } else {
-      obj.hIds = [];
+    if (message.callbackType !== 0) {
+      obj.callbackType = Math.round(message.callbackType);
     }
-    if (message.blob) {
+    if (message.reportId !== "") {
+      obj.reportId = message.reportId;
+    }
+    if (message.hIds?.length) {
+      obj.hIds = message.hIds;
+    }
+    if (message.blob?.length) {
       obj.blob = message.blob.map((e) => Math.round(e));
-    } else {
-      obj.blob = [];
     }
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.originNickname !== undefined && (obj.originNickname = message.originNickname);
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.originNickname !== "") {
+      obj.originNickname = message.originNickname;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sUserCharacterInfoReq>, I>>(base?: I): sc2sUserCharacterInfoReq {
-    return sc2sUserCharacterInfoReq.fromPartial(base ?? {});
+    return sc2sUserCharacterInfoReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sUserCharacterInfoReq>, I>>(object: I): sc2sUserCharacterInfoReq {
     const message = createBasesc2sUserCharacterInfoReq();
     message.callbackType = object.callbackType ?? 0;
@@ -1417,7 +1374,7 @@ export const ss2cUserCharacterInfoRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1435,9 +1392,8 @@ export const ss2cUserCharacterInfoRes = {
   },
 
   create<I extends Exact<DeepPartial<ss2cUserCharacterInfoRes>, I>>(base?: I): ss2cUserCharacterInfoRes {
-    return ss2cUserCharacterInfoRes.fromPartial(base ?? {});
+    return ss2cUserCharacterInfoRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cUserCharacterInfoRes>, I>>(_: I): ss2cUserCharacterInfoRes {
     const message = createBasess2cUserCharacterInfoRes();
     return message;
@@ -1467,21 +1423,21 @@ export const sc2sGmEnterGameSpectatorReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.nickname = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1498,15 +1454,18 @@ export const sc2sGmEnterGameSpectatorReq = {
 
   toJSON(message: sc2sGmEnterGameSpectatorReq): unknown {
     const obj: any = {};
-    message.nickname !== undefined && (obj.nickname = message.nickname);
-    message.accountId !== undefined && (obj.accountId = message.accountId);
+    if (message.nickname !== "") {
+      obj.nickname = message.nickname;
+    }
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sGmEnterGameSpectatorReq>, I>>(base?: I): sc2sGmEnterGameSpectatorReq {
-    return sc2sGmEnterGameSpectatorReq.fromPartial(base ?? {});
+    return sc2sGmEnterGameSpectatorReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sGmEnterGameSpectatorReq>, I>>(object: I): sc2sGmEnterGameSpectatorReq {
     const message = createBasesc2sGmEnterGameSpectatorReq();
     message.nickname = object.nickname ?? "";
@@ -1547,42 +1506,42 @@ export const ss2cGmEnterGameSpectatorRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.ip = reader.string();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.port = reader.uint32();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.token = reader.string();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.serviceUrl = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1602,18 +1561,27 @@ export const ss2cGmEnterGameSpectatorRes = {
 
   toJSON(message: ss2cGmEnterGameSpectatorRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.ip !== undefined && (obj.ip = message.ip);
-    message.port !== undefined && (obj.port = Math.round(message.port));
-    message.token !== undefined && (obj.token = message.token);
-    message.serviceUrl !== undefined && (obj.serviceUrl = message.serviceUrl);
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.ip !== "") {
+      obj.ip = message.ip;
+    }
+    if (message.port !== 0) {
+      obj.port = Math.round(message.port);
+    }
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
+    if (message.serviceUrl !== "") {
+      obj.serviceUrl = message.serviceUrl;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cGmEnterGameSpectatorRes>, I>>(base?: I): ss2cGmEnterGameSpectatorRes {
-    return ss2cGmEnterGameSpectatorRes.fromPartial(base ?? {});
+    return ss2cGmEnterGameSpectatorRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cGmEnterGameSpectatorRes>, I>>(object: I): ss2cGmEnterGameSpectatorRes {
     const message = createBasess2cGmEnterGameSpectatorRes();
     message.result = object.result ?? 0;

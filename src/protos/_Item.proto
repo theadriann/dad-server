@@ -65,6 +65,11 @@ message SSpell {
   string spellId = 3;
 }
 
+message SMusic {
+  string musicId = 1;
+  uint32 slotIndex = 2;
+}
+
 message SCUSTOMIZE_CHARACTER {
   string customizeCharacterId = 1;
   int32 isEquip = 2;

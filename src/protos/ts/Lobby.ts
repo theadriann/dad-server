@@ -58,6 +58,7 @@ export interface saccountCurrencyInfo {
 
 export interface ss2cLobbyAccountCurrencyListNot {
   currencyInfos: saccountCurrencyInfo[];
+  buyRedstoneShardUrl: string;
 }
 
 export interface ss2cLobbyCharacterLobbyEmoteNot {
@@ -70,14 +71,6 @@ export interface sreportPunishInfo {
 
 export interface ss2cLobbyReportPunishListNot {
   infos: sreportPunishInfo[];
-}
-
-export interface sc2sLobbyEnterCouponCodeReq {
-  code: string;
-}
-
-export interface ss2cLobbyEnterCouponCodeRes {
-  result: number;
 }
 
 function createBasesc2sCharacterSelectEnterReq(): sc2sCharacterSelectEnterReq {
@@ -97,7 +90,7 @@ export const sc2sCharacterSelectEnterReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -115,9 +108,8 @@ export const sc2sCharacterSelectEnterReq = {
   },
 
   create<I extends Exact<DeepPartial<sc2sCharacterSelectEnterReq>, I>>(base?: I): sc2sCharacterSelectEnterReq {
-    return sc2sCharacterSelectEnterReq.fromPartial(base ?? {});
+    return sc2sCharacterSelectEnterReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sCharacterSelectEnterReq>, I>>(_: I): sc2sCharacterSelectEnterReq {
     const message = createBasesc2sCharacterSelectEnterReq();
     return message;
@@ -144,14 +136,14 @@ export const ss2cCharacterSelectEnterRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -165,14 +157,15 @@ export const ss2cCharacterSelectEnterRes = {
 
   toJSON(message: ss2cCharacterSelectEnterRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cCharacterSelectEnterRes>, I>>(base?: I): ss2cCharacterSelectEnterRes {
-    return ss2cCharacterSelectEnterRes.fromPartial(base ?? {});
+    return ss2cCharacterSelectEnterRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cCharacterSelectEnterRes>, I>>(object: I): ss2cCharacterSelectEnterRes {
     const message = createBasess2cCharacterSelectEnterRes();
     message.result = object.result ?? 0;
@@ -197,7 +190,7 @@ export const sc2sLobbyCharacterInfoReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -215,9 +208,8 @@ export const sc2sLobbyCharacterInfoReq = {
   },
 
   create<I extends Exact<DeepPartial<sc2sLobbyCharacterInfoReq>, I>>(base?: I): sc2sLobbyCharacterInfoReq {
-    return sc2sLobbyCharacterInfoReq.fromPartial(base ?? {});
+    return sc2sLobbyCharacterInfoReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sLobbyCharacterInfoReq>, I>>(_: I): sc2sLobbyCharacterInfoReq {
     const message = createBasesc2sLobbyCharacterInfoReq();
     return message;
@@ -247,21 +239,21 @@ export const ss2cLobbyCharacterInfoRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characterDataBase = scharacterInfo.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -280,18 +272,18 @@ export const ss2cLobbyCharacterInfoRes = {
 
   toJSON(message: ss2cLobbyCharacterInfoRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.characterDataBase !== undefined &&
-      (obj.characterDataBase = message.characterDataBase
-        ? scharacterInfo.toJSON(message.characterDataBase)
-        : undefined);
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.characterDataBase !== undefined) {
+      obj.characterDataBase = scharacterInfo.toJSON(message.characterDataBase);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cLobbyCharacterInfoRes>, I>>(base?: I): ss2cLobbyCharacterInfoRes {
-    return ss2cLobbyCharacterInfoRes.fromPartial(base ?? {});
+    return ss2cLobbyCharacterInfoRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cLobbyCharacterInfoRes>, I>>(object: I): ss2cLobbyCharacterInfoRes {
     const message = createBasess2cLobbyCharacterInfoRes();
     message.result = object.result ?? 0;
@@ -319,7 +311,7 @@ export const sc2sOpenLobbyMapReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -337,9 +329,8 @@ export const sc2sOpenLobbyMapReq = {
   },
 
   create<I extends Exact<DeepPartial<sc2sOpenLobbyMapReq>, I>>(base?: I): sc2sOpenLobbyMapReq {
-    return sc2sOpenLobbyMapReq.fromPartial(base ?? {});
+    return sc2sOpenLobbyMapReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sOpenLobbyMapReq>, I>>(_: I): sc2sOpenLobbyMapReq {
     const message = createBasesc2sOpenLobbyMapReq();
     return message;
@@ -363,7 +354,7 @@ export const ss2cOpenLobbyMapRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -381,9 +372,8 @@ export const ss2cOpenLobbyMapRes = {
   },
 
   create<I extends Exact<DeepPartial<ss2cOpenLobbyMapRes>, I>>(base?: I): ss2cOpenLobbyMapRes {
-    return ss2cOpenLobbyMapRes.fromPartial(base ?? {});
+    return ss2cOpenLobbyMapRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cOpenLobbyMapRes>, I>>(_: I): ss2cOpenLobbyMapRes {
     const message = createBasess2cOpenLobbyMapRes();
     return message;
@@ -410,14 +400,14 @@ export const sc2sLobbyRegionSelectReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.region = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -431,14 +421,15 @@ export const sc2sLobbyRegionSelectReq = {
 
   toJSON(message: sc2sLobbyRegionSelectReq): unknown {
     const obj: any = {};
-    message.region !== undefined && (obj.region = Math.round(message.region));
+    if (message.region !== 0) {
+      obj.region = Math.round(message.region);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sLobbyRegionSelectReq>, I>>(base?: I): sc2sLobbyRegionSelectReq {
-    return sc2sLobbyRegionSelectReq.fromPartial(base ?? {});
+    return sc2sLobbyRegionSelectReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sLobbyRegionSelectReq>, I>>(object: I): sc2sLobbyRegionSelectReq {
     const message = createBasesc2sLobbyRegionSelectReq();
     message.region = object.region ?? 0;
@@ -469,21 +460,21 @@ export const ss2cLobbyRegionSelectRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.region = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -500,15 +491,18 @@ export const ss2cLobbyRegionSelectRes = {
 
   toJSON(message: ss2cLobbyRegionSelectRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.region !== undefined && (obj.region = Math.round(message.region));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.region !== 0) {
+      obj.region = Math.round(message.region);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cLobbyRegionSelectRes>, I>>(base?: I): ss2cLobbyRegionSelectRes {
-    return ss2cLobbyRegionSelectRes.fromPartial(base ?? {});
+    return ss2cLobbyRegionSelectRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cLobbyRegionSelectRes>, I>>(object: I): ss2cLobbyRegionSelectRes {
     const message = createBasess2cLobbyRegionSelectRes();
     message.result = object.result ?? 0;
@@ -534,7 +528,7 @@ export const sc2sLobbyEnterFromGameReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -552,9 +546,8 @@ export const sc2sLobbyEnterFromGameReq = {
   },
 
   create<I extends Exact<DeepPartial<sc2sLobbyEnterFromGameReq>, I>>(base?: I): sc2sLobbyEnterFromGameReq {
-    return sc2sLobbyEnterFromGameReq.fromPartial(base ?? {});
+    return sc2sLobbyEnterFromGameReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sLobbyEnterFromGameReq>, I>>(_: I): sc2sLobbyEnterFromGameReq {
     const message = createBasesc2sLobbyEnterFromGameReq();
     return message;
@@ -581,14 +574,14 @@ export const ss2cLobbyEnterFromGameRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -602,14 +595,15 @@ export const ss2cLobbyEnterFromGameRes = {
 
   toJSON(message: ss2cLobbyEnterFromGameRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cLobbyEnterFromGameRes>, I>>(base?: I): ss2cLobbyEnterFromGameRes {
-    return ss2cLobbyEnterFromGameRes.fromPartial(base ?? {});
+    return ss2cLobbyEnterFromGameRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cLobbyEnterFromGameRes>, I>>(object: I): ss2cLobbyEnterFromGameRes {
     const message = createBasess2cLobbyEnterFromGameRes();
     message.result = object.result ?? 0;
@@ -637,14 +631,14 @@ export const sc2sLobbyGameDifficultySelectReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.gameDifficultyTypeIndex = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -660,17 +654,17 @@ export const sc2sLobbyGameDifficultySelectReq = {
 
   toJSON(message: sc2sLobbyGameDifficultySelectReq): unknown {
     const obj: any = {};
-    message.gameDifficultyTypeIndex !== undefined &&
-      (obj.gameDifficultyTypeIndex = Math.round(message.gameDifficultyTypeIndex));
+    if (message.gameDifficultyTypeIndex !== 0) {
+      obj.gameDifficultyTypeIndex = Math.round(message.gameDifficultyTypeIndex);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sLobbyGameDifficultySelectReq>, I>>(
     base?: I,
   ): sc2sLobbyGameDifficultySelectReq {
-    return sc2sLobbyGameDifficultySelectReq.fromPartial(base ?? {});
+    return sc2sLobbyGameDifficultySelectReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sLobbyGameDifficultySelectReq>, I>>(
     object: I,
   ): sc2sLobbyGameDifficultySelectReq {
@@ -703,21 +697,21 @@ export const ss2cLobbyGameDifficultySelectRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.gameDifficultyTypeIndex = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -734,18 +728,20 @@ export const ss2cLobbyGameDifficultySelectRes = {
 
   toJSON(message: ss2cLobbyGameDifficultySelectRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.gameDifficultyTypeIndex !== undefined &&
-      (obj.gameDifficultyTypeIndex = Math.round(message.gameDifficultyTypeIndex));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.gameDifficultyTypeIndex !== 0) {
+      obj.gameDifficultyTypeIndex = Math.round(message.gameDifficultyTypeIndex);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cLobbyGameDifficultySelectRes>, I>>(
     base?: I,
   ): ss2cLobbyGameDifficultySelectRes {
-    return ss2cLobbyGameDifficultySelectRes.fromPartial(base ?? {});
+    return ss2cLobbyGameDifficultySelectRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cLobbyGameDifficultySelectRes>, I>>(
     object: I,
   ): ss2cLobbyGameDifficultySelectRes {
@@ -779,21 +775,21 @@ export const saccountCurrencyInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.currencyType = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.currencyValue = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -810,15 +806,18 @@ export const saccountCurrencyInfo = {
 
   toJSON(message: saccountCurrencyInfo): unknown {
     const obj: any = {};
-    message.currencyType !== undefined && (obj.currencyType = Math.round(message.currencyType));
-    message.currencyValue !== undefined && (obj.currencyValue = Math.round(message.currencyValue));
+    if (message.currencyType !== 0) {
+      obj.currencyType = Math.round(message.currencyType);
+    }
+    if (message.currencyValue !== 0) {
+      obj.currencyValue = Math.round(message.currencyValue);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<saccountCurrencyInfo>, I>>(base?: I): saccountCurrencyInfo {
-    return saccountCurrencyInfo.fromPartial(base ?? {});
+    return saccountCurrencyInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<saccountCurrencyInfo>, I>>(object: I): saccountCurrencyInfo {
     const message = createBasesaccountCurrencyInfo();
     message.currencyType = object.currencyType ?? 0;
@@ -828,13 +827,16 @@ export const saccountCurrencyInfo = {
 };
 
 function createBasess2cLobbyAccountCurrencyListNot(): ss2cLobbyAccountCurrencyListNot {
-  return { currencyInfos: [] };
+  return { currencyInfos: [], buyRedstoneShardUrl: "" };
 }
 
 export const ss2cLobbyAccountCurrencyListNot = {
   encode(message: ss2cLobbyAccountCurrencyListNot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.currencyInfos) {
       saccountCurrencyInfo.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.buyRedstoneShardUrl !== "") {
+      writer.uint32(18).string(message.buyRedstoneShardUrl);
     }
     return writer;
   },
@@ -847,14 +849,21 @@ export const ss2cLobbyAccountCurrencyListNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.currencyInfos.push(saccountCurrencyInfo.decode(reader, reader.uint32()));
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.buyRedstoneShardUrl = reader.string();
+          continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -867,28 +876,30 @@ export const ss2cLobbyAccountCurrencyListNot = {
       currencyInfos: Array.isArray(object?.currencyInfos)
         ? object.currencyInfos.map((e: any) => saccountCurrencyInfo.fromJSON(e))
         : [],
+      buyRedstoneShardUrl: isSet(object.buyRedstoneShardUrl) ? String(object.buyRedstoneShardUrl) : "",
     };
   },
 
   toJSON(message: ss2cLobbyAccountCurrencyListNot): unknown {
     const obj: any = {};
-    if (message.currencyInfos) {
-      obj.currencyInfos = message.currencyInfos.map((e) => e ? saccountCurrencyInfo.toJSON(e) : undefined);
-    } else {
-      obj.currencyInfos = [];
+    if (message.currencyInfos?.length) {
+      obj.currencyInfos = message.currencyInfos.map((e) => saccountCurrencyInfo.toJSON(e));
+    }
+    if (message.buyRedstoneShardUrl !== "") {
+      obj.buyRedstoneShardUrl = message.buyRedstoneShardUrl;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cLobbyAccountCurrencyListNot>, I>>(base?: I): ss2cLobbyAccountCurrencyListNot {
-    return ss2cLobbyAccountCurrencyListNot.fromPartial(base ?? {});
+    return ss2cLobbyAccountCurrencyListNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cLobbyAccountCurrencyListNot>, I>>(
     object: I,
   ): ss2cLobbyAccountCurrencyListNot {
     const message = createBasess2cLobbyAccountCurrencyListNot();
     message.currencyInfos = object.currencyInfos?.map((e) => saccountCurrencyInfo.fromPartial(e)) || [];
+    message.buyRedstoneShardUrl = object.buyRedstoneShardUrl ?? "";
     return message;
   },
 };
@@ -913,14 +924,14 @@ export const ss2cLobbyCharacterLobbyEmoteNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.lobbyEmoteList.push(scustomizeLobbyEmote.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -938,18 +949,15 @@ export const ss2cLobbyCharacterLobbyEmoteNot = {
 
   toJSON(message: ss2cLobbyCharacterLobbyEmoteNot): unknown {
     const obj: any = {};
-    if (message.lobbyEmoteList) {
-      obj.lobbyEmoteList = message.lobbyEmoteList.map((e) => e ? scustomizeLobbyEmote.toJSON(e) : undefined);
-    } else {
-      obj.lobbyEmoteList = [];
+    if (message.lobbyEmoteList?.length) {
+      obj.lobbyEmoteList = message.lobbyEmoteList.map((e) => scustomizeLobbyEmote.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cLobbyCharacterLobbyEmoteNot>, I>>(base?: I): ss2cLobbyCharacterLobbyEmoteNot {
-    return ss2cLobbyCharacterLobbyEmoteNot.fromPartial(base ?? {});
+    return ss2cLobbyCharacterLobbyEmoteNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cLobbyCharacterLobbyEmoteNot>, I>>(
     object: I,
   ): ss2cLobbyCharacterLobbyEmoteNot {
@@ -979,14 +987,14 @@ export const sreportPunishInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.nickname = saccountNickname.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1000,15 +1008,15 @@ export const sreportPunishInfo = {
 
   toJSON(message: sreportPunishInfo): unknown {
     const obj: any = {};
-    message.nickname !== undefined &&
-      (obj.nickname = message.nickname ? saccountNickname.toJSON(message.nickname) : undefined);
+    if (message.nickname !== undefined) {
+      obj.nickname = saccountNickname.toJSON(message.nickname);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sreportPunishInfo>, I>>(base?: I): sreportPunishInfo {
-    return sreportPunishInfo.fromPartial(base ?? {});
+    return sreportPunishInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sreportPunishInfo>, I>>(object: I): sreportPunishInfo {
     const message = createBasesreportPunishInfo();
     message.nickname = (object.nickname !== undefined && object.nickname !== null)
@@ -1038,14 +1046,14 @@ export const ss2cLobbyReportPunishListNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.infos.push(sreportPunishInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1059,133 +1067,18 @@ export const ss2cLobbyReportPunishListNot = {
 
   toJSON(message: ss2cLobbyReportPunishListNot): unknown {
     const obj: any = {};
-    if (message.infos) {
-      obj.infos = message.infos.map((e) => e ? sreportPunishInfo.toJSON(e) : undefined);
-    } else {
-      obj.infos = [];
+    if (message.infos?.length) {
+      obj.infos = message.infos.map((e) => sreportPunishInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cLobbyReportPunishListNot>, I>>(base?: I): ss2cLobbyReportPunishListNot {
-    return ss2cLobbyReportPunishListNot.fromPartial(base ?? {});
+    return ss2cLobbyReportPunishListNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cLobbyReportPunishListNot>, I>>(object: I): ss2cLobbyReportPunishListNot {
     const message = createBasess2cLobbyReportPunishListNot();
     message.infos = object.infos?.map((e) => sreportPunishInfo.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBasesc2sLobbyEnterCouponCodeReq(): sc2sLobbyEnterCouponCodeReq {
-  return { code: "" };
-}
-
-export const sc2sLobbyEnterCouponCodeReq = {
-  encode(message: sc2sLobbyEnterCouponCodeReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.code !== "") {
-      writer.uint32(10).string(message.code);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sLobbyEnterCouponCodeReq {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasesc2sLobbyEnterCouponCodeReq();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 10) {
-            break;
-          }
-
-          message.code = reader.string();
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): sc2sLobbyEnterCouponCodeReq {
-    return { code: isSet(object.code) ? String(object.code) : "" };
-  },
-
-  toJSON(message: sc2sLobbyEnterCouponCodeReq): unknown {
-    const obj: any = {};
-    message.code !== undefined && (obj.code = message.code);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<sc2sLobbyEnterCouponCodeReq>, I>>(base?: I): sc2sLobbyEnterCouponCodeReq {
-    return sc2sLobbyEnterCouponCodeReq.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<sc2sLobbyEnterCouponCodeReq>, I>>(object: I): sc2sLobbyEnterCouponCodeReq {
-    const message = createBasesc2sLobbyEnterCouponCodeReq();
-    message.code = object.code ?? "";
-    return message;
-  },
-};
-
-function createBasess2cLobbyEnterCouponCodeRes(): ss2cLobbyEnterCouponCodeRes {
-  return { result: 0 };
-}
-
-export const ss2cLobbyEnterCouponCodeRes = {
-  encode(message: ss2cLobbyEnterCouponCodeRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.result !== 0) {
-      writer.uint32(8).uint32(message.result);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cLobbyEnterCouponCodeRes {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasess2cLobbyEnterCouponCodeRes();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 8) {
-            break;
-          }
-
-          message.result = reader.uint32();
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ss2cLobbyEnterCouponCodeRes {
-    return { result: isSet(object.result) ? Number(object.result) : 0 };
-  },
-
-  toJSON(message: ss2cLobbyEnterCouponCodeRes): unknown {
-    const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ss2cLobbyEnterCouponCodeRes>, I>>(base?: I): ss2cLobbyEnterCouponCodeRes {
-    return ss2cLobbyEnterCouponCodeRes.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<ss2cLobbyEnterCouponCodeRes>, I>>(object: I): ss2cLobbyEnterCouponCodeRes {
-    const message = createBasess2cLobbyEnterCouponCodeRes();
-    message.result = object.result ?? 0;
     return message;
   },
 };

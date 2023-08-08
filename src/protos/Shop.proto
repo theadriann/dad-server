@@ -6,113 +6,65 @@ option java_package = "com.packets.shop";
 option java_outer_classname = "shop";
 option java_multiple_files = false;
 
-message SSHOP_CHARACTER_SKIN_INFO {
-  string characterSkinId = 1;
-  uint32 isHave = 2;
+message SSHOP_ITEM_BASE_INFO {
+  uint32 shopType = 1;
+  string shopItemId = 2;
+  uint32 isHave = 3;
 }
 
-message SSHOP_ITEM_SKIN_INFO {
-  string itemSkinId = 1;
-  uint32 isHave = 2;
+message SC2S_SHOP_ITEM_LIST_REQ {
 }
 
-message SSHOP_EMOTE_INFO {
-  string emoteId = 1;
-  uint32 isHave = 2;
+message SS2C_SHOP_ITEM_LIST_RES {
+  int32 loopFlag = 1;
+  repeated .DC.Packet.SSHOP_ITEM_BASE_INFO infos = 2;
+  int32 currentTriumphLevel = 3;
+  int32 nextTriumphExp = 4;
+  int32 currentTriumphExp = 5;
 }
 
-message SSHOP_ACTION_INFO {
-  string actionId = 1;
-  uint32 isHave = 2;
+message SC2S_SHOP_ITEM_BUY_REQ {
+  uint32 shopType = 1;
+  string buyShopItemId = 2;
+  uint32 paymentMethod = 3;
 }
 
-message SSHOP_LOBBY_EMOTE_INFO {
-  string lobbyEmoteId = 1;
-  uint32 isHave = 2;
-}
-
-message SC2S_SHOP_CHARACTER_SKIN_LIST_REQ {
-}
-
-message SS2C_SHOP_CHARACTER_SKIN_LIST_RES {
-  uint32 loopFlag = 1;
-  repeated .DC.Packet.SSHOP_CHARACTER_SKIN_INFO characterSkinInfoList = 2;
-}
-
-message SC2S_SHOP_ITEM_SKIN_LIST_REQ {
-}
-
-message SS2C_SHOP_ITEM_SKIN_LIST_RES {
-  uint32 loopFlag = 1;
-  repeated .DC.Packet.SSHOP_ITEM_SKIN_INFO itemSkinInfoList = 2;
-}
-
-message SC2S_SHOP_EMOTE_LIST_REQ {
-}
-
-message SS2C_SHOP_EMOTE_LIST_RES {
-  uint32 loopFlag = 1;
-  repeated .DC.Packet.SSHOP_EMOTE_INFO emoteInfoList = 2;
-}
-
-message SC2S_SHOP_ACTION_LIST_REQ {
-}
-
-message SS2C_SHOP_ACTION_LIST_RES {
-  uint32 loopFlag = 1;
-  repeated .DC.Packet.SSHOP_ACTION_INFO actionInfoList = 2;
-}
-
-message SC2S_SHOP_LOBBY_EMOTE_LIST_REQ {
-}
-
-message SS2C_SHOP_LOBBY_EMOTE_LIST_RES {
-  uint32 loopFlag = 1;
-  repeated .DC.Packet.SSHOP_LOBBY_EMOTE_INFO lobbyEmoteInfoList = 2;
-}
-
-message SC2S_SHOP_CHARACTER_SKIN_BUY_REQ {
-  string buyShopCharacterSkinId = 1;
-}
-
-message SS2C_SHOP_CHARACTER_SKIN_BUY_RES {
+message SS2C_SHOP_ITEM_BUY_RES {
   uint32 result = 1;
-  string buyShopCharacterSkinId = 2;
+  uint32 shopType = 2;
+  string buyShopItemId = 3;
+  uint32 paymentMethod = 4;
 }
 
-message SC2S_SHOP_ITEM_SKIN_BUY_REQ {
-  string buyShopItemSkinId = 1;
+message SGIFT_CODE_REWARD_INFO {
+  string rewardType = 1;
+  string stockId = 2;
 }
 
-message SS2C_SHOP_ITEM_SKIN_BUY_RES {
+message SC2S_SHOP_ENTER_GIFT_CODE_REQ {
+  string giftCode = 1;
+}
+
+message SS2C_SHOP_ENTER_GIFT_CODE_RES {
   uint32 result = 1;
-  string buyShopItemSkinId = 2;
+  repeated .DC.Packet.SGIFT_CODE_REWARD_INFO rewards = 2;
 }
 
-message SC2S_SHOP_EMOTE_BUY_REQ {
-  string buyShopEmoteId = 1;
+message SC2S_SHOP_RED_STONE_SHARD_INFO_REQ {
 }
 
-message SS2C_SHOP_EMOTE_BUY_RES {
-  uint32 result = 1;
-  string buyShopEmoteId = 2;
+message SSHOP_RED_STONE_SHARD_INFO {
+  uint32 productIndex = 1;
+  float productPrice = 2;
+  uint32 productCount = 3;
+  string designDataId = 4;
+  string redirectionUrl = 5;
+  string customData = 6;
+  string productName = 7;
 }
 
-message SC2S_SHOP_ACTION_BUY_REQ {
-  string buyActionId = 1;
-}
-
-message SS2C_SHOP_ACTION_BUY_RES {
-  uint32 result = 1;
-  string buyActionId = 2;
-}
-
-message SC2S_SHOP_LOBBY_EMOTE_BUY_REQ {
-  string buyLobbyEmoteId = 1;
-}
-
-message SS2C_SHOP_LOBBY_EMOTE_BUY_RES {
-  uint32 result = 1;
-  string buyLobbyEmoteId = 2;
+message SS2C_SHOP_RED_STONE_SHARD_INFO_RES {
+  repeated .DC.Packet.SSHOP_RED_STONE_SHARD_INFO infos = 1;
+  uint32 loginType = 2;
 }
 

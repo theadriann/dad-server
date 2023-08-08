@@ -62,21 +62,21 @@ export const schatdataPieceItemProperty = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.pid = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.pv = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -90,15 +90,18 @@ export const schatdataPieceItemProperty = {
 
   toJSON(message: schatdataPieceItemProperty): unknown {
     const obj: any = {};
-    message.pid !== undefined && (obj.pid = message.pid);
-    message.pv !== undefined && (obj.pv = Math.round(message.pv));
+    if (message.pid !== "") {
+      obj.pid = message.pid;
+    }
+    if (message.pv !== 0) {
+      obj.pv = Math.round(message.pv);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<schatdataPieceItemProperty>, I>>(base?: I): schatdataPieceItemProperty {
-    return schatdataPieceItemProperty.fromPartial(base ?? {});
+    return schatdataPieceItemProperty.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<schatdataPieceItemProperty>, I>>(object: I): schatdataPieceItemProperty {
     const message = createBaseschatdataPieceItemProperty();
     message.pid = object.pid ?? "";
@@ -136,35 +139,35 @@ export const schatdataPieceItem = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.uid = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.iid = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.pp.push(schatdataPieceItemProperty.decode(reader, reader.uint32()));
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.sp.push(schatdataPieceItemProperty.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -183,25 +186,24 @@ export const schatdataPieceItem = {
 
   toJSON(message: schatdataPieceItem): unknown {
     const obj: any = {};
-    message.uid !== undefined && (obj.uid = Math.round(message.uid));
-    message.iid !== undefined && (obj.iid = message.iid);
-    if (message.pp) {
-      obj.pp = message.pp.map((e) => e ? schatdataPieceItemProperty.toJSON(e) : undefined);
-    } else {
-      obj.pp = [];
+    if (message.uid !== 0) {
+      obj.uid = Math.round(message.uid);
     }
-    if (message.sp) {
-      obj.sp = message.sp.map((e) => e ? schatdataPieceItemProperty.toJSON(e) : undefined);
-    } else {
-      obj.sp = [];
+    if (message.iid !== "") {
+      obj.iid = message.iid;
+    }
+    if (message.pp?.length) {
+      obj.pp = message.pp.map((e) => schatdataPieceItemProperty.toJSON(e));
+    }
+    if (message.sp?.length) {
+      obj.sp = message.sp.map((e) => schatdataPieceItemProperty.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<schatdataPieceItem>, I>>(base?: I): schatdataPieceItem {
-    return schatdataPieceItem.fromPartial(base ?? {});
+    return schatdataPieceItem.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<schatdataPieceItem>, I>>(object: I): schatdataPieceItem {
     const message = createBaseschatdataPieceItem();
     message.uid = object.uid ?? 0;
@@ -235,21 +237,21 @@ export const schatdataPiece = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.chatStr = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.chatDataPieceItem = schatdataPieceItem.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -268,17 +270,18 @@ export const schatdataPiece = {
 
   toJSON(message: schatdataPiece): unknown {
     const obj: any = {};
-    message.chatStr !== undefined && (obj.chatStr = message.chatStr);
-    message.chatDataPieceItem !== undefined && (obj.chatDataPieceItem = message.chatDataPieceItem
-      ? schatdataPieceItem.toJSON(message.chatDataPieceItem)
-      : undefined);
+    if (message.chatStr !== "") {
+      obj.chatStr = message.chatStr;
+    }
+    if (message.chatDataPieceItem !== undefined) {
+      obj.chatDataPieceItem = schatdataPieceItem.toJSON(message.chatDataPieceItem);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<schatdataPiece>, I>>(base?: I): schatdataPiece {
-    return schatdataPiece.fromPartial(base ?? {});
+    return schatdataPiece.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<schatdataPiece>, I>>(object: I): schatdataPiece {
     const message = createBaseschatdataPiece();
     message.chatStr = object.chatStr ?? "";
@@ -321,42 +324,42 @@ export const SCHATDATA = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.nickname = saccountNickname.decode(reader, reader.uint32());
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.partyId = reader.string();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.chatDataPieceArray.push(schatdataPiece.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -378,23 +381,27 @@ export const SCHATDATA = {
 
   toJSON(message: SCHATDATA): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.nickname !== undefined &&
-      (obj.nickname = message.nickname ? saccountNickname.toJSON(message.nickname) : undefined);
-    message.partyId !== undefined && (obj.partyId = message.partyId);
-    if (message.chatDataPieceArray) {
-      obj.chatDataPieceArray = message.chatDataPieceArray.map((e) => e ? schatdataPiece.toJSON(e) : undefined);
-    } else {
-      obj.chatDataPieceArray = [];
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.nickname !== undefined) {
+      obj.nickname = saccountNickname.toJSON(message.nickname);
+    }
+    if (message.partyId !== "") {
+      obj.partyId = message.partyId;
+    }
+    if (message.chatDataPieceArray?.length) {
+      obj.chatDataPieceArray = message.chatDataPieceArray.map((e) => schatdataPiece.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SCHATDATA>, I>>(base?: I): SCHATDATA {
-    return SCHATDATA.fromPartial(base ?? {});
+    return SCHATDATA.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SCHATDATA>, I>>(object: I): SCHATDATA {
     const message = createBaseSCHATDATA();
     message.accountId = object.accountId ?? "";
@@ -431,21 +438,21 @@ export const spieceItemBody = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.idx = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.pieces = schatdataPieceItem.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -462,16 +469,18 @@ export const spieceItemBody = {
 
   toJSON(message: spieceItemBody): unknown {
     const obj: any = {};
-    message.idx !== undefined && (obj.idx = Math.round(message.idx));
-    message.pieces !== undefined &&
-      (obj.pieces = message.pieces ? schatdataPieceItem.toJSON(message.pieces) : undefined);
+    if (message.idx !== 0) {
+      obj.idx = Math.round(message.idx);
+    }
+    if (message.pieces !== undefined) {
+      obj.pieces = schatdataPieceItem.toJSON(message.pieces);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<spieceItemBody>, I>>(base?: I): spieceItemBody {
-    return spieceItemBody.fromPartial(base ?? {});
+    return spieceItemBody.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<spieceItemBody>, I>>(object: I): spieceItemBody {
     const message = createBasespieceItemBody();
     message.idx = object.idx ?? 0;
@@ -502,14 +511,14 @@ export const spieceItemArray = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.links.push(spieceItemBody.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -523,18 +532,15 @@ export const spieceItemArray = {
 
   toJSON(message: spieceItemArray): unknown {
     const obj: any = {};
-    if (message.links) {
-      obj.links = message.links.map((e) => e ? spieceItemBody.toJSON(e) : undefined);
-    } else {
-      obj.links = [];
+    if (message.links?.length) {
+      obj.links = message.links.map((e) => spieceItemBody.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<spieceItemArray>, I>>(base?: I): spieceItemArray {
-    return spieceItemArray.fromPartial(base ?? {});
+    return spieceItemArray.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<spieceItemArray>, I>>(object: I): spieceItemArray {
     const message = createBasespieceItemArray();
     message.links = object.links?.map((e) => spieceItemBody.fromPartial(e)) || [];
@@ -542,10 +548,10 @@ export const spieceItemArray = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

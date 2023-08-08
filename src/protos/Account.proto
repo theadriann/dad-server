@@ -54,6 +54,7 @@ message SS2C_ACCOUNT_LOGIN_RES {
     FAIL_LOGIN_BAN_USER_INAPPROPRIATE_NAME = 14;
     FAIL_LOGIN_BAN_USER_ETC = 15;
     FAIL_LOGIN_BAN_HARDWARE = 16;
+    FAIL_UNDER_MAINTENANCE = 17;
     FAIL_BUILD_VERSION_ID = 41;
     SUCCESS_AGREE_CHECK_RES = 51;
   }
@@ -66,6 +67,8 @@ message SS2C_ACCOUNT_LOGIN_RES {
   string accountId = 6;
   uint32 serverLocation = 7;
   string secretToken = 8;
+  uint64 banTime_begin_ms = 9;
+  uint64 banTime_end_ms = 10;
 }
 
 message SC2S_ACCOUNT_CHARACTER_CREATE_REQ {
@@ -112,5 +115,15 @@ message SC2S_ACCOUNT_AGREE_ANSWER_REQ {
 
 message SS2C_ACCOUNT_AGREE_ANSWER_RES {
   uint32 result = 1;
+}
+
+message SACCOUNT_CHARACTER_CLASS_INFO {
+  string characterClassId = 1;
+  string shopId = 2;
+  uint32 isOwned = 3;
+}
+
+message SS2C_ACCOUNT_CHARACTER_CLASS_LIST_NOT {
+  repeated .DC.Packet.SACCOUNT_CHARACTER_CLASS_INFO characterClassList = 1;
 }
 

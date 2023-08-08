@@ -90,21 +90,21 @@ export const IronMaceLogin = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.loginId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.password = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -121,15 +121,18 @@ export const IronMaceLogin = {
 
   toJSON(message: IronMaceLogin): unknown {
     const obj: any = {};
-    message.loginId !== undefined && (obj.loginId = message.loginId);
-    message.password !== undefined && (obj.password = message.password);
+    if (message.loginId !== "") {
+      obj.loginId = message.loginId;
+    }
+    if (message.password !== "") {
+      obj.password = message.password;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<IronMaceLogin>, I>>(base?: I): IronMaceLogin {
-    return IronMaceLogin.fromPartial(base ?? {});
+    return IronMaceLogin.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<IronMaceLogin>, I>>(object: I): IronMaceLogin {
     const message = createBaseIronMaceLogin();
     message.loginId = object.loginId ?? "";
@@ -161,21 +164,21 @@ export const IronMaceLoginRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.errorMessage = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -192,15 +195,18 @@ export const IronMaceLoginRes = {
 
   toJSON(message: IronMaceLoginRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.errorMessage !== undefined && (obj.errorMessage = message.errorMessage);
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.errorMessage !== "") {
+      obj.errorMessage = message.errorMessage;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<IronMaceLoginRes>, I>>(base?: I): IronMaceLoginRes {
-    return IronMaceLoginRes.fromPartial(base ?? {});
+    return IronMaceLoginRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<IronMaceLoginRes>, I>>(object: I): IronMaceLoginRes {
     const message = createBaseIronMaceLoginRes();
     message.result = object.result ?? 0;
@@ -232,21 +238,21 @@ export const IronMaceToken = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.loginId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.password = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -263,15 +269,18 @@ export const IronMaceToken = {
 
   toJSON(message: IronMaceToken): unknown {
     const obj: any = {};
-    message.loginId !== undefined && (obj.loginId = message.loginId);
-    message.password !== undefined && (obj.password = message.password);
+    if (message.loginId !== "") {
+      obj.loginId = message.loginId;
+    }
+    if (message.password !== "") {
+      obj.password = message.password;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<IronMaceToken>, I>>(base?: I): IronMaceToken {
-    return IronMaceToken.fromPartial(base ?? {});
+    return IronMaceToken.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<IronMaceToken>, I>>(object: I): IronMaceToken {
     const message = createBaseIronMaceToken();
     message.loginId = object.loginId ?? "";
@@ -300,14 +309,14 @@ export const IronMaceTokenRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.token = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -321,14 +330,15 @@ export const IronMaceTokenRes = {
 
   toJSON(message: IronMaceTokenRes): unknown {
     const obj: any = {};
-    message.token !== undefined && (obj.token = message.token);
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<IronMaceTokenRes>, I>>(base?: I): IronMaceTokenRes {
-    return IronMaceTokenRes.fromPartial(base ?? {});
+    return IronMaceTokenRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<IronMaceTokenRes>, I>>(object: I): IronMaceTokenRes {
     const message = createBaseIronMaceTokenRes();
     message.token = object.token ?? "";

@@ -121,35 +121,35 @@ export const sgatheringHallChannel = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.channelIndex = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.channelId = reader.string();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.memberCount = reader.uint32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.groupIndex = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -168,17 +168,24 @@ export const sgatheringHallChannel = {
 
   toJSON(message: sgatheringHallChannel): unknown {
     const obj: any = {};
-    message.channelIndex !== undefined && (obj.channelIndex = Math.round(message.channelIndex));
-    message.channelId !== undefined && (obj.channelId = message.channelId);
-    message.memberCount !== undefined && (obj.memberCount = Math.round(message.memberCount));
-    message.groupIndex !== undefined && (obj.groupIndex = Math.round(message.groupIndex));
+    if (message.channelIndex !== 0) {
+      obj.channelIndex = Math.round(message.channelIndex);
+    }
+    if (message.channelId !== "") {
+      obj.channelId = message.channelId;
+    }
+    if (message.memberCount !== 0) {
+      obj.memberCount = Math.round(message.memberCount);
+    }
+    if (message.groupIndex !== 0) {
+      obj.groupIndex = Math.round(message.groupIndex);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sgatheringHallChannel>, I>>(base?: I): sgatheringHallChannel {
-    return sgatheringHallChannel.fromPartial(base ?? {});
+    return sgatheringHallChannel.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sgatheringHallChannel>, I>>(object: I): sgatheringHallChannel {
     const message = createBasesgatheringHallChannel();
     message.channelIndex = object.channelIndex ?? 0;
@@ -218,35 +225,35 @@ export const sgatheringHallChatC2s = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.chatType = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.targetAccountId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.targetCharacterId = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.chatData = SCHATDATA.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -265,18 +272,24 @@ export const sgatheringHallChatC2s = {
 
   toJSON(message: sgatheringHallChatC2s): unknown {
     const obj: any = {};
-    message.chatType !== undefined && (obj.chatType = Math.round(message.chatType));
-    message.targetAccountId !== undefined && (obj.targetAccountId = message.targetAccountId);
-    message.targetCharacterId !== undefined && (obj.targetCharacterId = message.targetCharacterId);
-    message.chatData !== undefined &&
-      (obj.chatData = message.chatData ? SCHATDATA.toJSON(message.chatData) : undefined);
+    if (message.chatType !== 0) {
+      obj.chatType = Math.round(message.chatType);
+    }
+    if (message.targetAccountId !== "") {
+      obj.targetAccountId = message.targetAccountId;
+    }
+    if (message.targetCharacterId !== "") {
+      obj.targetCharacterId = message.targetCharacterId;
+    }
+    if (message.chatData !== undefined) {
+      obj.chatData = SCHATDATA.toJSON(message.chatData);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sgatheringHallChatC2s>, I>>(base?: I): sgatheringHallChatC2s {
-    return sgatheringHallChatC2s.fromPartial(base ?? {});
+    return sgatheringHallChatC2s.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sgatheringHallChatC2s>, I>>(object: I): sgatheringHallChatC2s {
     const message = createBasesgatheringHallChatC2s();
     message.chatType = object.chatType ?? 0;
@@ -318,35 +331,35 @@ export const sgatheringHallChatS2c = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.chatIndex = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.chatType = reader.uint32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.time = longToNumber(reader.uint64() as Long);
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.chatData = SCHATDATA.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -365,18 +378,24 @@ export const sgatheringHallChatS2c = {
 
   toJSON(message: sgatheringHallChatS2c): unknown {
     const obj: any = {};
-    message.chatIndex !== undefined && (obj.chatIndex = Math.round(message.chatIndex));
-    message.chatType !== undefined && (obj.chatType = Math.round(message.chatType));
-    message.time !== undefined && (obj.time = Math.round(message.time));
-    message.chatData !== undefined &&
-      (obj.chatData = message.chatData ? SCHATDATA.toJSON(message.chatData) : undefined);
+    if (message.chatIndex !== 0) {
+      obj.chatIndex = Math.round(message.chatIndex);
+    }
+    if (message.chatType !== 0) {
+      obj.chatType = Math.round(message.chatType);
+    }
+    if (message.time !== 0) {
+      obj.time = Math.round(message.time);
+    }
+    if (message.chatData !== undefined) {
+      obj.chatData = SCHATDATA.toJSON(message.chatData);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sgatheringHallChatS2c>, I>>(base?: I): sgatheringHallChatS2c {
-    return sgatheringHallChatS2c.fromPartial(base ?? {});
+    return sgatheringHallChatS2c.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sgatheringHallChatS2c>, I>>(object: I): sgatheringHallChatS2c {
     const message = createBasesgatheringHallChatS2c();
     message.chatIndex = object.chatIndex ?? 0;
@@ -412,21 +431,21 @@ export const sgatheringHallUserUpdateInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.updateFlag = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.info = scharacterGatheringHallInfo.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -443,16 +462,18 @@ export const sgatheringHallUserUpdateInfo = {
 
   toJSON(message: sgatheringHallUserUpdateInfo): unknown {
     const obj: any = {};
-    message.updateFlag !== undefined && (obj.updateFlag = Math.round(message.updateFlag));
-    message.info !== undefined &&
-      (obj.info = message.info ? scharacterGatheringHallInfo.toJSON(message.info) : undefined);
+    if (message.updateFlag !== 0) {
+      obj.updateFlag = Math.round(message.updateFlag);
+    }
+    if (message.info !== undefined) {
+      obj.info = scharacterGatheringHallInfo.toJSON(message.info);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sgatheringHallUserUpdateInfo>, I>>(base?: I): sgatheringHallUserUpdateInfo {
-    return sgatheringHallUserUpdateInfo.fromPartial(base ?? {});
+    return sgatheringHallUserUpdateInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sgatheringHallUserUpdateInfo>, I>>(object: I): sgatheringHallUserUpdateInfo {
     const message = createBasesgatheringHallUserUpdateInfo();
     message.updateFlag = object.updateFlag ?? 0;
@@ -480,7 +501,7 @@ export const sc2sGatheringHallChannelListReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -498,9 +519,8 @@ export const sc2sGatheringHallChannelListReq = {
   },
 
   create<I extends Exact<DeepPartial<sc2sGatheringHallChannelListReq>, I>>(base?: I): sc2sGatheringHallChannelListReq {
-    return sc2sGatheringHallChannelListReq.fromPartial(base ?? {});
+    return sc2sGatheringHallChannelListReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sGatheringHallChannelListReq>, I>>(_: I): sc2sGatheringHallChannelListReq {
     const message = createBasesc2sGatheringHallChannelListReq();
     return message;
@@ -527,14 +547,14 @@ export const ss2cGatheringHallChannelListRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.channels.push(sgatheringHallChannel.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -552,18 +572,15 @@ export const ss2cGatheringHallChannelListRes = {
 
   toJSON(message: ss2cGatheringHallChannelListRes): unknown {
     const obj: any = {};
-    if (message.channels) {
-      obj.channels = message.channels.map((e) => e ? sgatheringHallChannel.toJSON(e) : undefined);
-    } else {
-      obj.channels = [];
+    if (message.channels?.length) {
+      obj.channels = message.channels.map((e) => sgatheringHallChannel.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cGatheringHallChannelListRes>, I>>(base?: I): ss2cGatheringHallChannelListRes {
-    return ss2cGatheringHallChannelListRes.fromPartial(base ?? {});
+    return ss2cGatheringHallChannelListRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cGatheringHallChannelListRes>, I>>(
     object: I,
   ): ss2cGatheringHallChannelListRes {
@@ -593,14 +610,14 @@ export const sc2sGatheringHallChannelSelectReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.channelIndex = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -614,16 +631,17 @@ export const sc2sGatheringHallChannelSelectReq = {
 
   toJSON(message: sc2sGatheringHallChannelSelectReq): unknown {
     const obj: any = {};
-    message.channelIndex !== undefined && (obj.channelIndex = Math.round(message.channelIndex));
+    if (message.channelIndex !== 0) {
+      obj.channelIndex = Math.round(message.channelIndex);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sGatheringHallChannelSelectReq>, I>>(
     base?: I,
   ): sc2sGatheringHallChannelSelectReq {
-    return sc2sGatheringHallChannelSelectReq.fromPartial(base ?? {});
+    return sc2sGatheringHallChannelSelectReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sGatheringHallChannelSelectReq>, I>>(
     object: I,
   ): sc2sGatheringHallChannelSelectReq {
@@ -653,14 +671,14 @@ export const ss2cGatheringHallChannelSelectRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -674,16 +692,17 @@ export const ss2cGatheringHallChannelSelectRes = {
 
   toJSON(message: ss2cGatheringHallChannelSelectRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cGatheringHallChannelSelectRes>, I>>(
     base?: I,
   ): ss2cGatheringHallChannelSelectRes {
-    return ss2cGatheringHallChannelSelectRes.fromPartial(base ?? {});
+    return ss2cGatheringHallChannelSelectRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cGatheringHallChannelSelectRes>, I>>(
     object: I,
   ): ss2cGatheringHallChannelSelectRes {
@@ -710,7 +729,7 @@ export const sc2sGatheringHallChannelExitReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -728,9 +747,8 @@ export const sc2sGatheringHallChannelExitReq = {
   },
 
   create<I extends Exact<DeepPartial<sc2sGatheringHallChannelExitReq>, I>>(base?: I): sc2sGatheringHallChannelExitReq {
-    return sc2sGatheringHallChannelExitReq.fromPartial(base ?? {});
+    return sc2sGatheringHallChannelExitReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sGatheringHallChannelExitReq>, I>>(_: I): sc2sGatheringHallChannelExitReq {
     const message = createBasesc2sGatheringHallChannelExitReq();
     return message;
@@ -757,14 +775,14 @@ export const ss2cGatheringHallChannelExitRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -778,14 +796,15 @@ export const ss2cGatheringHallChannelExitRes = {
 
   toJSON(message: ss2cGatheringHallChannelExitRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cGatheringHallChannelExitRes>, I>>(base?: I): ss2cGatheringHallChannelExitRes {
-    return ss2cGatheringHallChannelExitRes.fromPartial(base ?? {});
+    return ss2cGatheringHallChannelExitRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cGatheringHallChannelExitRes>, I>>(
     object: I,
   ): ss2cGatheringHallChannelExitRes {
@@ -812,7 +831,7 @@ export const sc2sGatheringHallChannelUserListReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -832,9 +851,8 @@ export const sc2sGatheringHallChannelUserListReq = {
   create<I extends Exact<DeepPartial<sc2sGatheringHallChannelUserListReq>, I>>(
     base?: I,
   ): sc2sGatheringHallChannelUserListReq {
-    return sc2sGatheringHallChannelUserListReq.fromPartial(base ?? {});
+    return sc2sGatheringHallChannelUserListReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sGatheringHallChannelUserListReq>, I>>(
     _: I,
   ): sc2sGatheringHallChannelUserListReq {
@@ -866,21 +884,21 @@ export const ss2cGatheringHallChannelUserListRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.loopFlag = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characters.push(scharacterGatheringHallInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -899,11 +917,11 @@ export const ss2cGatheringHallChannelUserListRes = {
 
   toJSON(message: ss2cGatheringHallChannelUserListRes): unknown {
     const obj: any = {};
-    message.loopFlag !== undefined && (obj.loopFlag = Math.round(message.loopFlag));
-    if (message.characters) {
-      obj.characters = message.characters.map((e) => e ? scharacterGatheringHallInfo.toJSON(e) : undefined);
-    } else {
-      obj.characters = [];
+    if (message.loopFlag !== 0) {
+      obj.loopFlag = Math.round(message.loopFlag);
+    }
+    if (message.characters?.length) {
+      obj.characters = message.characters.map((e) => scharacterGatheringHallInfo.toJSON(e));
     }
     return obj;
   },
@@ -911,9 +929,8 @@ export const ss2cGatheringHallChannelUserListRes = {
   create<I extends Exact<DeepPartial<ss2cGatheringHallChannelUserListRes>, I>>(
     base?: I,
   ): ss2cGatheringHallChannelUserListRes {
-    return ss2cGatheringHallChannelUserListRes.fromPartial(base ?? {});
+    return ss2cGatheringHallChannelUserListRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cGatheringHallChannelUserListRes>, I>>(
     object: I,
   ): ss2cGatheringHallChannelUserListRes {
@@ -944,14 +961,14 @@ export const ss2cGatheringHallChannelUserUpdateNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.updates.push(sgatheringHallUserUpdateInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -969,10 +986,8 @@ export const ss2cGatheringHallChannelUserUpdateNot = {
 
   toJSON(message: ss2cGatheringHallChannelUserUpdateNot): unknown {
     const obj: any = {};
-    if (message.updates) {
-      obj.updates = message.updates.map((e) => e ? sgatheringHallUserUpdateInfo.toJSON(e) : undefined);
-    } else {
-      obj.updates = [];
+    if (message.updates?.length) {
+      obj.updates = message.updates.map((e) => sgatheringHallUserUpdateInfo.toJSON(e));
     }
     return obj;
   },
@@ -980,9 +995,8 @@ export const ss2cGatheringHallChannelUserUpdateNot = {
   create<I extends Exact<DeepPartial<ss2cGatheringHallChannelUserUpdateNot>, I>>(
     base?: I,
   ): ss2cGatheringHallChannelUserUpdateNot {
-    return ss2cGatheringHallChannelUserUpdateNot.fromPartial(base ?? {});
+    return ss2cGatheringHallChannelUserUpdateNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cGatheringHallChannelUserUpdateNot>, I>>(
     object: I,
   ): ss2cGatheringHallChannelUserUpdateNot {
@@ -1012,14 +1026,14 @@ export const sc2sGatheringHallChannelChatReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.chat = sgatheringHallChatC2s.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1033,14 +1047,15 @@ export const sc2sGatheringHallChannelChatReq = {
 
   toJSON(message: sc2sGatheringHallChannelChatReq): unknown {
     const obj: any = {};
-    message.chat !== undefined && (obj.chat = message.chat ? sgatheringHallChatC2s.toJSON(message.chat) : undefined);
+    if (message.chat !== undefined) {
+      obj.chat = sgatheringHallChatC2s.toJSON(message.chat);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sGatheringHallChannelChatReq>, I>>(base?: I): sc2sGatheringHallChannelChatReq {
-    return sc2sGatheringHallChannelChatReq.fromPartial(base ?? {});
+    return sc2sGatheringHallChannelChatReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sGatheringHallChannelChatReq>, I>>(
     object: I,
   ): sc2sGatheringHallChannelChatReq {
@@ -1075,21 +1090,21 @@ export const ss2cGatheringHallChannelChatRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.chats.push(sgatheringHallChatS2c.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1106,19 +1121,18 @@ export const ss2cGatheringHallChannelChatRes = {
 
   toJSON(message: ss2cGatheringHallChannelChatRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    if (message.chats) {
-      obj.chats = message.chats.map((e) => e ? sgatheringHallChatS2c.toJSON(e) : undefined);
-    } else {
-      obj.chats = [];
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.chats?.length) {
+      obj.chats = message.chats.map((e) => sgatheringHallChatS2c.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cGatheringHallChannelChatRes>, I>>(base?: I): ss2cGatheringHallChannelChatRes {
-    return ss2cGatheringHallChannelChatRes.fromPartial(base ?? {});
+    return ss2cGatheringHallChannelChatRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cGatheringHallChannelChatRes>, I>>(
     object: I,
   ): ss2cGatheringHallChannelChatRes {
@@ -1149,14 +1163,14 @@ export const ss2cGatheringHallChannelChatNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.chats.push(sgatheringHallChatS2c.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1172,18 +1186,15 @@ export const ss2cGatheringHallChannelChatNot = {
 
   toJSON(message: ss2cGatheringHallChannelChatNot): unknown {
     const obj: any = {};
-    if (message.chats) {
-      obj.chats = message.chats.map((e) => e ? sgatheringHallChatS2c.toJSON(e) : undefined);
-    } else {
-      obj.chats = [];
+    if (message.chats?.length) {
+      obj.chats = message.chats.map((e) => sgatheringHallChatS2c.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cGatheringHallChannelChatNot>, I>>(base?: I): ss2cGatheringHallChannelChatNot {
-    return ss2cGatheringHallChannelChatNot.fromPartial(base ?? {});
+    return ss2cGatheringHallChannelChatNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cGatheringHallChannelChatNot>, I>>(
     object: I,
   ): ss2cGatheringHallChannelChatNot {
@@ -1219,28 +1230,28 @@ export const sc2sGatheringHallTargetEquippedItemReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.channelIndex = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1258,18 +1269,23 @@ export const sc2sGatheringHallTargetEquippedItemReq = {
 
   toJSON(message: sc2sGatheringHallTargetEquippedItemReq): unknown {
     const obj: any = {};
-    message.channelIndex !== undefined && (obj.channelIndex = Math.round(message.channelIndex));
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
+    if (message.channelIndex !== 0) {
+      obj.channelIndex = Math.round(message.channelIndex);
+    }
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sGatheringHallTargetEquippedItemReq>, I>>(
     base?: I,
   ): sc2sGatheringHallTargetEquippedItemReq {
-    return sc2sGatheringHallTargetEquippedItemReq.fromPartial(base ?? {});
+    return sc2sGatheringHallTargetEquippedItemReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sGatheringHallTargetEquippedItemReq>, I>>(
     object: I,
   ): sc2sGatheringHallTargetEquippedItemReq {
@@ -1307,28 +1323,28 @@ export const ss2cGatheringHallTargetEquippedItemRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.equippedItems.push(SItem.decode(reader, reader.uint32()));
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.characterInfo = scharacterGatheringHallInfo.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1350,25 +1366,23 @@ export const ss2cGatheringHallTargetEquippedItemRes = {
 
   toJSON(message: ss2cGatheringHallTargetEquippedItemRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    if (message.equippedItems) {
-      obj.equippedItems = message.equippedItems.map((e) => e ? SItem.toJSON(e) : undefined);
-    } else {
-      obj.equippedItems = [];
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
     }
-    message.characterInfo !== undefined &&
-      (obj.characterInfo = message.characterInfo
-        ? scharacterGatheringHallInfo.toJSON(message.characterInfo)
-        : undefined);
+    if (message.equippedItems?.length) {
+      obj.equippedItems = message.equippedItems.map((e) => SItem.toJSON(e));
+    }
+    if (message.characterInfo !== undefined) {
+      obj.characterInfo = scharacterGatheringHallInfo.toJSON(message.characterInfo);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cGatheringHallTargetEquippedItemRes>, I>>(
     base?: I,
   ): ss2cGatheringHallTargetEquippedItemRes {
-    return ss2cGatheringHallTargetEquippedItemRes.fromPartial(base ?? {});
+    return ss2cGatheringHallTargetEquippedItemRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cGatheringHallTargetEquippedItemRes>, I>>(
     object: I,
   ): ss2cGatheringHallTargetEquippedItemRes {
@@ -1382,10 +1396,10 @@ export const ss2cGatheringHallTargetEquippedItemRes = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

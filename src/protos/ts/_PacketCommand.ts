@@ -21,6 +21,7 @@ export enum PacketCommand {
   S2C_LOBBY_ENTER_RES = 22,
   C2S_ACCOUNT_AGREE_ANSWER_REQ = 23,
   S2C_ACCOUNT_AGREE_ANSWER_RES = 24,
+  S2C_ACCOUNT_CHARACTER_CLASS_LIST_NOT = 25,
   C2S_CHARACTER_SELECT_ENTER_REQ = 41,
   S2C_CHARACTER_SELECT_ENTER_RES = 42,
   C2S_LOBBY_CHARACTER_INFO_REQ = 43,
@@ -36,8 +37,6 @@ export enum PacketCommand {
   S2C_LOBBY_ACCOUNT_CURRENCY_LIST_NOT = 53,
   S2C_LOBBY_CHARACTER_LOBBY_EMOTE_NOT = 54,
   S2C_LOBBY_REPORT_PUNISH_LIST_NOT = 55,
-  C2S_LOBBY_ENTER_COUPON_CODE_REQ = 56,
-  S2C_LOBBY_ENTER_COUPON_CODE_RES = 57,
   MIN_INVENTORY_PACKET = 500,
   C2S_INVENTORY_INFO_REQ = 501,
   S2C_INVENTORY_INFO_RES = 502,
@@ -69,14 +68,13 @@ export enum PacketCommand {
   S2C_AUTO_MATCH_REG_TEAM_NOT = 755,
   C2S_RECONNECT_INGAME_REQ = 756,
   S2C_RECONNECT_INGAME_RES = 757,
-  S2C_FLOOR_MATCHMAKED_NOT = 758,
   MIN_RANKING_PACKET = 800,
   C2S_RANKING_RANGE_REQ = 801,
   S2C_RANKING_RANGE_RES = 802,
-  C2S_RANKING_NEARBY_REQ = 803,
-  S2C_RANKING_NEARBY_RES = 804,
   C2S_RANKING_CHARACTER_REQ = 805,
   S2C_RANKING_CHARACTER_RES = 806,
+  C2S_RANKING_INFO_REQ = 807,
+  S2C_RANKING_INFO_RES = 808,
   MAX_RANKING_PACKET = 830,
   MIN_FRIEND_PACKET = 900,
   C2S_FRIEND_LIST_REQ = 901,
@@ -199,58 +197,22 @@ export enum PacketCommand {
   C2S_CUSTOMIZE_NEW_ITEM_CHECK_REQ = 2331,
   S2C_CUSTOMIZE_NEW_ITEM_CHECK_RES = 2332,
   S2C_CUSTOMIZE_NEW_ITEM_ALERT_NOT = 2333,
-  C2S_CUSTOMIZE_CHARACTER_INFO_REQ = 2351,
-  S2C_CUSTOMIZE_CHARACTER_INFO_RES = 2352,
-  C2S_CUSTOMIZE_ITEM_INFO_REQ = 2353,
-  S2C_CUSTOMIZE_ITEM_INFO_RES = 2354,
-  C2S_CUSTOMIZE_EMOTE_INFO_REQ = 2355,
-  S2C_CUSTOMIZE_EMOTE_INFO_RES = 2356,
-  C2S_CUSTOMIZE_ACTION_INFO_REQ = 2357,
-  S2C_CUSTOMIZE_ACTION_INFO_RES = 2358,
-  C2S_CUSTOMIZE_LOBBY_EMOTE_INFO_REQ = 2359,
-  S2C_CUSTOMIZE_LOBBY_EMOTE_INFO_RES = 2360,
-  C2S_CUSTOMIZE_CHARACTER_MOUNT_REQ = 2370,
-  S2C_CUSTOMIZE_CHARACTER_MOUNT_RES = 2371,
-  C2S_CUSTOMIZE_CHARACTER_UNMOUNT_REQ = 2372,
-  S2C_CUSTOMIZE_CHARACTER_UNMOUNT_RES = 2373,
-  C2S_CUSTOMIZE_ITEM_MOUNT_REQ = 2380,
-  S2C_CUSTOMIZE_ITEM_MOUNT_RES = 2381,
-  C2S_CUSTOMIZE_ITEM_UNMOUNT_REQ = 2382,
-  S2C_CUSTOMIZE_ITEM_UNMOUNT_RES = 2383,
-  C2S_CUSTOMIZE_EMOTE_MOUNT_REQ = 2390,
-  S2C_CUSTOMIZE_EMOTE_MOUNT_RES = 2391,
-  C2S_CUSTOMIZE_EMOTE_UNMOUNT_REQ = 2392,
-  S2C_CUSTOMIZE_EMOTE_UNMOUNT_RES = 2393,
-  C2S_CUSTOMIZE_ACTION_MOUNT_REQ = 2400,
-  S2C_CUSTOMIZE_ACTION_MOUNT_RES = 2401,
-  C2S_CUSTOMIZE_ACTION_UNMOUNT_REQ = 2402,
-  S2C_CUSTOMIZE_ACTION_UNMOUNT_RES = 2403,
-  C2S_CUSTOMIZE_LOBBY_EMOTE_MOUNT_REQ = 2410,
-  S2C_CUSTOMIZE_LOBBY_EMOTE_MOUNT_RES = 2411,
-  C2S_CUSTOMIZE_LOBBY_EMOTE_UNMOUNT_REQ = 2412,
-  S2C_CUSTOMIZE_LOBBY_EMOTE_UNMOUNT_RES = 2413,
+  C2S_CUSTOMIZE_INFO_REQ = 2341,
+  S2C_CUSTOMIZE_INFO_RES = 2342,
+  C2S_CUSTOMIZE_MOUNT_REQ = 2351,
+  S2C_CUSTOMIZE_MOUNT_RES = 2352,
+  C2S_CUSTOMIZE_UNMOUNT_REQ = 2353,
+  S2C_CUSTOMIZE_UNMOUNT_RES = 2354,
   MAX_CUSTOMIZE_PACKET = 2450,
   MIN_SHOP_PACKET = 2501,
-  C2S_SHOP_CHARACTER_SKIN_LIST_REQ = 2502,
-  S2C_SHOP_CHARACTER_SKIN_LIST_RES = 2503,
-  C2S_SHOP_ITEM_SKIN_LIST_REQ = 2504,
-  S2C_SHOP_ITEM_SKIN_LIST_RES = 2505,
-  C2S_SHOP_EMOTE_LIST_REQ = 2506,
-  S2C_SHOP_EMOTE_LIST_RES = 2507,
-  C2S_SHOP_ACTION_LIST_REQ = 2508,
-  S2C_SHOP_ACTION_LIST_RES = 2509,
-  C2S_SHOP_LOBBY_EMOTE_LIST_REQ = 2510,
-  S2C_SHOP_LOBBY_EMOTE_LIST_RES = 2511,
-  C2S_SHOP_CHARACTER_SKIN_BUY_REQ = 2520,
-  S2C_SHOP_CHARACTER_SKIN_BUY_RES = 2521,
-  C2S_SHOP_ITEM_SKIN_BUY_REQ = 2522,
-  S2C_SHOP_ITEM_SKIN_BUY_RES = 2523,
-  C2S_SHOP_EMOTE_BUY_REQ = 2524,
-  S2C_SHOP_EMOTE_BUY_RES = 2525,
-  C2S_SHOP_ACTION_BUY_REQ = 2526,
-  S2C_SHOP_ACTION_BUY_RES = 2527,
-  C2S_SHOP_LOBBY_EMOTE_BUY_REQ = 2528,
-  S2C_SHOP_LOBBY_EMOTE_BUY_RES = 2529,
+  C2S_SHOP_ITEM_LIST_REQ = 2502,
+  S2C_SHOP_ITEM_LIST_RES = 2503,
+  C2S_SHOP_ITEM_BUY_REQ = 2521,
+  S2C_SHOP_ITEM_BUY_RES = 2522,
+  C2S_SHOP_ENTER_GIFT_CODE_REQ = 2550,
+  S2C_SHOP_ENTER_GIFT_CODE_RES = 2551,
+  C2S_SHOP_RED_STONE_SHARD_INFO_REQ = 2555,
+  S2C_SHOP_RED_STONE_SHARD_INFO_RES = 2556,
   MAX_SHOP_PACKET = 2600,
   MIN_CLASS_PACKET = 3000,
   C2S_CLASS_LEVEL_INFO_REQ = 3001,
@@ -263,12 +225,16 @@ export enum PacketCommand {
   S2C_CLASS_SKILL_LIST_RES = 3044,
   C2S_CLASS_SPELL_LIST_REQ = 3045,
   S2C_CLASS_SPELL_LIST_RES = 3046,
-  C2S_CLASS_ITEM_MOVE_REQ = 3051,
-  S2C_CLASS_ITEM_MOVE_RES = 3052,
-  C2S_CLASS_SPELL_SLOT_MOVE_REQ = 3053,
-  S2C_CLASS_SPELL_SLOT_MOVE_RES = 3054,
-  C2S_CLASS_SPELL_SEQUENCE_CHANGE_REQ = 3055,
-  S2C_CLASS_SPELL_SEQUENCE_CHANGE_RES = 3056,
+  C2S_CLASS_MUSIC_LIST_REQ = 3047,
+  S2C_CLASS_MUSIC_LIST_RES = 3048,
+  C2S_CLASS_ITEM_MOVE_REQ = 3071,
+  S2C_CLASS_ITEM_MOVE_RES = 3072,
+  C2S_CLASS_SPELL_SLOT_MOVE_REQ = 3073,
+  S2C_CLASS_SPELL_SLOT_MOVE_RES = 3074,
+  C2S_CLASS_SPELL_SEQUENCE_CHANGE_REQ = 3075,
+  S2C_CLASS_SPELL_SEQUENCE_CHANGE_RES = 3076,
+  C2S_CLASS_MUSIC_SLOT_MOVE_REQ = 3078,
+  S2C_CLASS_MUSIC_SLOT_MOVE_RES = 3079,
   MAX_CLASS_PACKET = 3100,
   MIN_GATHERING_HALL_PACKET = 3200,
   C2S_GATHERING_HALL_CHANNEL_LIST_REQ = 3201,
@@ -298,7 +264,6 @@ export enum PacketCommand {
   C2S_HACK_LOG_REQ = 10030,
   S2C_HACK_LOG_RES = 10031,
   S2C_SERVICE_POLICY_NOT = 10050,
-  S2C_HACK_CHECK_DLL_LIST_NOT = 10051,
   C2S_RE_LOGIN_REQ = 10060,
   S2C_RE_LOGIN_RES = 10061,
   S2C_CLOSED_GAME_NOT = 10062,
@@ -362,6 +327,9 @@ export function packetCommandFromJSON(object: any): PacketCommand {
     case 24:
     case "S2C_ACCOUNT_AGREE_ANSWER_RES":
       return PacketCommand.S2C_ACCOUNT_AGREE_ANSWER_RES;
+    case 25:
+    case "S2C_ACCOUNT_CHARACTER_CLASS_LIST_NOT":
+      return PacketCommand.S2C_ACCOUNT_CHARACTER_CLASS_LIST_NOT;
     case 41:
     case "C2S_CHARACTER_SELECT_ENTER_REQ":
       return PacketCommand.C2S_CHARACTER_SELECT_ENTER_REQ;
@@ -407,12 +375,6 @@ export function packetCommandFromJSON(object: any): PacketCommand {
     case 55:
     case "S2C_LOBBY_REPORT_PUNISH_LIST_NOT":
       return PacketCommand.S2C_LOBBY_REPORT_PUNISH_LIST_NOT;
-    case 56:
-    case "C2S_LOBBY_ENTER_COUPON_CODE_REQ":
-      return PacketCommand.C2S_LOBBY_ENTER_COUPON_CODE_REQ;
-    case 57:
-    case "S2C_LOBBY_ENTER_COUPON_CODE_RES":
-      return PacketCommand.S2C_LOBBY_ENTER_COUPON_CODE_RES;
     case 500:
     case "MIN_INVENTORY_PACKET":
       return PacketCommand.MIN_INVENTORY_PACKET;
@@ -506,9 +468,6 @@ export function packetCommandFromJSON(object: any): PacketCommand {
     case 757:
     case "S2C_RECONNECT_INGAME_RES":
       return PacketCommand.S2C_RECONNECT_INGAME_RES;
-    case 758:
-    case "S2C_FLOOR_MATCHMAKED_NOT":
-      return PacketCommand.S2C_FLOOR_MATCHMAKED_NOT;
     case 800:
     case "MIN_RANKING_PACKET":
       return PacketCommand.MIN_RANKING_PACKET;
@@ -518,18 +477,18 @@ export function packetCommandFromJSON(object: any): PacketCommand {
     case 802:
     case "S2C_RANKING_RANGE_RES":
       return PacketCommand.S2C_RANKING_RANGE_RES;
-    case 803:
-    case "C2S_RANKING_NEARBY_REQ":
-      return PacketCommand.C2S_RANKING_NEARBY_REQ;
-    case 804:
-    case "S2C_RANKING_NEARBY_RES":
-      return PacketCommand.S2C_RANKING_NEARBY_RES;
     case 805:
     case "C2S_RANKING_CHARACTER_REQ":
       return PacketCommand.C2S_RANKING_CHARACTER_REQ;
     case 806:
     case "S2C_RANKING_CHARACTER_RES":
       return PacketCommand.S2C_RANKING_CHARACTER_RES;
+    case 807:
+    case "C2S_RANKING_INFO_REQ":
+      return PacketCommand.C2S_RANKING_INFO_REQ;
+    case 808:
+    case "S2C_RANKING_INFO_RES":
+      return PacketCommand.S2C_RANKING_INFO_RES;
     case 830:
     case "MAX_RANKING_PACKET":
       return PacketCommand.MAX_RANKING_PACKET;
@@ -896,96 +855,24 @@ export function packetCommandFromJSON(object: any): PacketCommand {
     case 2333:
     case "S2C_CUSTOMIZE_NEW_ITEM_ALERT_NOT":
       return PacketCommand.S2C_CUSTOMIZE_NEW_ITEM_ALERT_NOT;
+    case 2341:
+    case "C2S_CUSTOMIZE_INFO_REQ":
+      return PacketCommand.C2S_CUSTOMIZE_INFO_REQ;
+    case 2342:
+    case "S2C_CUSTOMIZE_INFO_RES":
+      return PacketCommand.S2C_CUSTOMIZE_INFO_RES;
     case 2351:
-    case "C2S_CUSTOMIZE_CHARACTER_INFO_REQ":
-      return PacketCommand.C2S_CUSTOMIZE_CHARACTER_INFO_REQ;
+    case "C2S_CUSTOMIZE_MOUNT_REQ":
+      return PacketCommand.C2S_CUSTOMIZE_MOUNT_REQ;
     case 2352:
-    case "S2C_CUSTOMIZE_CHARACTER_INFO_RES":
-      return PacketCommand.S2C_CUSTOMIZE_CHARACTER_INFO_RES;
+    case "S2C_CUSTOMIZE_MOUNT_RES":
+      return PacketCommand.S2C_CUSTOMIZE_MOUNT_RES;
     case 2353:
-    case "C2S_CUSTOMIZE_ITEM_INFO_REQ":
-      return PacketCommand.C2S_CUSTOMIZE_ITEM_INFO_REQ;
+    case "C2S_CUSTOMIZE_UNMOUNT_REQ":
+      return PacketCommand.C2S_CUSTOMIZE_UNMOUNT_REQ;
     case 2354:
-    case "S2C_CUSTOMIZE_ITEM_INFO_RES":
-      return PacketCommand.S2C_CUSTOMIZE_ITEM_INFO_RES;
-    case 2355:
-    case "C2S_CUSTOMIZE_EMOTE_INFO_REQ":
-      return PacketCommand.C2S_CUSTOMIZE_EMOTE_INFO_REQ;
-    case 2356:
-    case "S2C_CUSTOMIZE_EMOTE_INFO_RES":
-      return PacketCommand.S2C_CUSTOMIZE_EMOTE_INFO_RES;
-    case 2357:
-    case "C2S_CUSTOMIZE_ACTION_INFO_REQ":
-      return PacketCommand.C2S_CUSTOMIZE_ACTION_INFO_REQ;
-    case 2358:
-    case "S2C_CUSTOMIZE_ACTION_INFO_RES":
-      return PacketCommand.S2C_CUSTOMIZE_ACTION_INFO_RES;
-    case 2359:
-    case "C2S_CUSTOMIZE_LOBBY_EMOTE_INFO_REQ":
-      return PacketCommand.C2S_CUSTOMIZE_LOBBY_EMOTE_INFO_REQ;
-    case 2360:
-    case "S2C_CUSTOMIZE_LOBBY_EMOTE_INFO_RES":
-      return PacketCommand.S2C_CUSTOMIZE_LOBBY_EMOTE_INFO_RES;
-    case 2370:
-    case "C2S_CUSTOMIZE_CHARACTER_MOUNT_REQ":
-      return PacketCommand.C2S_CUSTOMIZE_CHARACTER_MOUNT_REQ;
-    case 2371:
-    case "S2C_CUSTOMIZE_CHARACTER_MOUNT_RES":
-      return PacketCommand.S2C_CUSTOMIZE_CHARACTER_MOUNT_RES;
-    case 2372:
-    case "C2S_CUSTOMIZE_CHARACTER_UNMOUNT_REQ":
-      return PacketCommand.C2S_CUSTOMIZE_CHARACTER_UNMOUNT_REQ;
-    case 2373:
-    case "S2C_CUSTOMIZE_CHARACTER_UNMOUNT_RES":
-      return PacketCommand.S2C_CUSTOMIZE_CHARACTER_UNMOUNT_RES;
-    case 2380:
-    case "C2S_CUSTOMIZE_ITEM_MOUNT_REQ":
-      return PacketCommand.C2S_CUSTOMIZE_ITEM_MOUNT_REQ;
-    case 2381:
-    case "S2C_CUSTOMIZE_ITEM_MOUNT_RES":
-      return PacketCommand.S2C_CUSTOMIZE_ITEM_MOUNT_RES;
-    case 2382:
-    case "C2S_CUSTOMIZE_ITEM_UNMOUNT_REQ":
-      return PacketCommand.C2S_CUSTOMIZE_ITEM_UNMOUNT_REQ;
-    case 2383:
-    case "S2C_CUSTOMIZE_ITEM_UNMOUNT_RES":
-      return PacketCommand.S2C_CUSTOMIZE_ITEM_UNMOUNT_RES;
-    case 2390:
-    case "C2S_CUSTOMIZE_EMOTE_MOUNT_REQ":
-      return PacketCommand.C2S_CUSTOMIZE_EMOTE_MOUNT_REQ;
-    case 2391:
-    case "S2C_CUSTOMIZE_EMOTE_MOUNT_RES":
-      return PacketCommand.S2C_CUSTOMIZE_EMOTE_MOUNT_RES;
-    case 2392:
-    case "C2S_CUSTOMIZE_EMOTE_UNMOUNT_REQ":
-      return PacketCommand.C2S_CUSTOMIZE_EMOTE_UNMOUNT_REQ;
-    case 2393:
-    case "S2C_CUSTOMIZE_EMOTE_UNMOUNT_RES":
-      return PacketCommand.S2C_CUSTOMIZE_EMOTE_UNMOUNT_RES;
-    case 2400:
-    case "C2S_CUSTOMIZE_ACTION_MOUNT_REQ":
-      return PacketCommand.C2S_CUSTOMIZE_ACTION_MOUNT_REQ;
-    case 2401:
-    case "S2C_CUSTOMIZE_ACTION_MOUNT_RES":
-      return PacketCommand.S2C_CUSTOMIZE_ACTION_MOUNT_RES;
-    case 2402:
-    case "C2S_CUSTOMIZE_ACTION_UNMOUNT_REQ":
-      return PacketCommand.C2S_CUSTOMIZE_ACTION_UNMOUNT_REQ;
-    case 2403:
-    case "S2C_CUSTOMIZE_ACTION_UNMOUNT_RES":
-      return PacketCommand.S2C_CUSTOMIZE_ACTION_UNMOUNT_RES;
-    case 2410:
-    case "C2S_CUSTOMIZE_LOBBY_EMOTE_MOUNT_REQ":
-      return PacketCommand.C2S_CUSTOMIZE_LOBBY_EMOTE_MOUNT_REQ;
-    case 2411:
-    case "S2C_CUSTOMIZE_LOBBY_EMOTE_MOUNT_RES":
-      return PacketCommand.S2C_CUSTOMIZE_LOBBY_EMOTE_MOUNT_RES;
-    case 2412:
-    case "C2S_CUSTOMIZE_LOBBY_EMOTE_UNMOUNT_REQ":
-      return PacketCommand.C2S_CUSTOMIZE_LOBBY_EMOTE_UNMOUNT_REQ;
-    case 2413:
-    case "S2C_CUSTOMIZE_LOBBY_EMOTE_UNMOUNT_RES":
-      return PacketCommand.S2C_CUSTOMIZE_LOBBY_EMOTE_UNMOUNT_RES;
+    case "S2C_CUSTOMIZE_UNMOUNT_RES":
+      return PacketCommand.S2C_CUSTOMIZE_UNMOUNT_RES;
     case 2450:
     case "MAX_CUSTOMIZE_PACKET":
       return PacketCommand.MAX_CUSTOMIZE_PACKET;
@@ -993,65 +880,29 @@ export function packetCommandFromJSON(object: any): PacketCommand {
     case "MIN_SHOP_PACKET":
       return PacketCommand.MIN_SHOP_PACKET;
     case 2502:
-    case "C2S_SHOP_CHARACTER_SKIN_LIST_REQ":
-      return PacketCommand.C2S_SHOP_CHARACTER_SKIN_LIST_REQ;
+    case "C2S_SHOP_ITEM_LIST_REQ":
+      return PacketCommand.C2S_SHOP_ITEM_LIST_REQ;
     case 2503:
-    case "S2C_SHOP_CHARACTER_SKIN_LIST_RES":
-      return PacketCommand.S2C_SHOP_CHARACTER_SKIN_LIST_RES;
-    case 2504:
-    case "C2S_SHOP_ITEM_SKIN_LIST_REQ":
-      return PacketCommand.C2S_SHOP_ITEM_SKIN_LIST_REQ;
-    case 2505:
-    case "S2C_SHOP_ITEM_SKIN_LIST_RES":
-      return PacketCommand.S2C_SHOP_ITEM_SKIN_LIST_RES;
-    case 2506:
-    case "C2S_SHOP_EMOTE_LIST_REQ":
-      return PacketCommand.C2S_SHOP_EMOTE_LIST_REQ;
-    case 2507:
-    case "S2C_SHOP_EMOTE_LIST_RES":
-      return PacketCommand.S2C_SHOP_EMOTE_LIST_RES;
-    case 2508:
-    case "C2S_SHOP_ACTION_LIST_REQ":
-      return PacketCommand.C2S_SHOP_ACTION_LIST_REQ;
-    case 2509:
-    case "S2C_SHOP_ACTION_LIST_RES":
-      return PacketCommand.S2C_SHOP_ACTION_LIST_RES;
-    case 2510:
-    case "C2S_SHOP_LOBBY_EMOTE_LIST_REQ":
-      return PacketCommand.C2S_SHOP_LOBBY_EMOTE_LIST_REQ;
-    case 2511:
-    case "S2C_SHOP_LOBBY_EMOTE_LIST_RES":
-      return PacketCommand.S2C_SHOP_LOBBY_EMOTE_LIST_RES;
-    case 2520:
-    case "C2S_SHOP_CHARACTER_SKIN_BUY_REQ":
-      return PacketCommand.C2S_SHOP_CHARACTER_SKIN_BUY_REQ;
+    case "S2C_SHOP_ITEM_LIST_RES":
+      return PacketCommand.S2C_SHOP_ITEM_LIST_RES;
     case 2521:
-    case "S2C_SHOP_CHARACTER_SKIN_BUY_RES":
-      return PacketCommand.S2C_SHOP_CHARACTER_SKIN_BUY_RES;
+    case "C2S_SHOP_ITEM_BUY_REQ":
+      return PacketCommand.C2S_SHOP_ITEM_BUY_REQ;
     case 2522:
-    case "C2S_SHOP_ITEM_SKIN_BUY_REQ":
-      return PacketCommand.C2S_SHOP_ITEM_SKIN_BUY_REQ;
-    case 2523:
-    case "S2C_SHOP_ITEM_SKIN_BUY_RES":
-      return PacketCommand.S2C_SHOP_ITEM_SKIN_BUY_RES;
-    case 2524:
-    case "C2S_SHOP_EMOTE_BUY_REQ":
-      return PacketCommand.C2S_SHOP_EMOTE_BUY_REQ;
-    case 2525:
-    case "S2C_SHOP_EMOTE_BUY_RES":
-      return PacketCommand.S2C_SHOP_EMOTE_BUY_RES;
-    case 2526:
-    case "C2S_SHOP_ACTION_BUY_REQ":
-      return PacketCommand.C2S_SHOP_ACTION_BUY_REQ;
-    case 2527:
-    case "S2C_SHOP_ACTION_BUY_RES":
-      return PacketCommand.S2C_SHOP_ACTION_BUY_RES;
-    case 2528:
-    case "C2S_SHOP_LOBBY_EMOTE_BUY_REQ":
-      return PacketCommand.C2S_SHOP_LOBBY_EMOTE_BUY_REQ;
-    case 2529:
-    case "S2C_SHOP_LOBBY_EMOTE_BUY_RES":
-      return PacketCommand.S2C_SHOP_LOBBY_EMOTE_BUY_RES;
+    case "S2C_SHOP_ITEM_BUY_RES":
+      return PacketCommand.S2C_SHOP_ITEM_BUY_RES;
+    case 2550:
+    case "C2S_SHOP_ENTER_GIFT_CODE_REQ":
+      return PacketCommand.C2S_SHOP_ENTER_GIFT_CODE_REQ;
+    case 2551:
+    case "S2C_SHOP_ENTER_GIFT_CODE_RES":
+      return PacketCommand.S2C_SHOP_ENTER_GIFT_CODE_RES;
+    case 2555:
+    case "C2S_SHOP_RED_STONE_SHARD_INFO_REQ":
+      return PacketCommand.C2S_SHOP_RED_STONE_SHARD_INFO_REQ;
+    case 2556:
+    case "S2C_SHOP_RED_STONE_SHARD_INFO_RES":
+      return PacketCommand.S2C_SHOP_RED_STONE_SHARD_INFO_RES;
     case 2600:
     case "MAX_SHOP_PACKET":
       return PacketCommand.MAX_SHOP_PACKET;
@@ -1088,24 +939,36 @@ export function packetCommandFromJSON(object: any): PacketCommand {
     case 3046:
     case "S2C_CLASS_SPELL_LIST_RES":
       return PacketCommand.S2C_CLASS_SPELL_LIST_RES;
-    case 3051:
+    case 3047:
+    case "C2S_CLASS_MUSIC_LIST_REQ":
+      return PacketCommand.C2S_CLASS_MUSIC_LIST_REQ;
+    case 3048:
+    case "S2C_CLASS_MUSIC_LIST_RES":
+      return PacketCommand.S2C_CLASS_MUSIC_LIST_RES;
+    case 3071:
     case "C2S_CLASS_ITEM_MOVE_REQ":
       return PacketCommand.C2S_CLASS_ITEM_MOVE_REQ;
-    case 3052:
+    case 3072:
     case "S2C_CLASS_ITEM_MOVE_RES":
       return PacketCommand.S2C_CLASS_ITEM_MOVE_RES;
-    case 3053:
+    case 3073:
     case "C2S_CLASS_SPELL_SLOT_MOVE_REQ":
       return PacketCommand.C2S_CLASS_SPELL_SLOT_MOVE_REQ;
-    case 3054:
+    case 3074:
     case "S2C_CLASS_SPELL_SLOT_MOVE_RES":
       return PacketCommand.S2C_CLASS_SPELL_SLOT_MOVE_RES;
-    case 3055:
+    case 3075:
     case "C2S_CLASS_SPELL_SEQUENCE_CHANGE_REQ":
       return PacketCommand.C2S_CLASS_SPELL_SEQUENCE_CHANGE_REQ;
-    case 3056:
+    case 3076:
     case "S2C_CLASS_SPELL_SEQUENCE_CHANGE_RES":
       return PacketCommand.S2C_CLASS_SPELL_SEQUENCE_CHANGE_RES;
+    case 3078:
+    case "C2S_CLASS_MUSIC_SLOT_MOVE_REQ":
+      return PacketCommand.C2S_CLASS_MUSIC_SLOT_MOVE_REQ;
+    case 3079:
+    case "S2C_CLASS_MUSIC_SLOT_MOVE_RES":
+      return PacketCommand.S2C_CLASS_MUSIC_SLOT_MOVE_RES;
     case 3100:
     case "MAX_CLASS_PACKET":
       return PacketCommand.MAX_CLASS_PACKET;
@@ -1193,9 +1056,6 @@ export function packetCommandFromJSON(object: any): PacketCommand {
     case 10050:
     case "S2C_SERVICE_POLICY_NOT":
       return PacketCommand.S2C_SERVICE_POLICY_NOT;
-    case 10051:
-    case "S2C_HACK_CHECK_DLL_LIST_NOT":
-      return PacketCommand.S2C_HACK_CHECK_DLL_LIST_NOT;
     case 10060:
     case "C2S_RE_LOGIN_REQ":
       return PacketCommand.C2S_RE_LOGIN_REQ;
@@ -1260,6 +1120,8 @@ export function packetCommandToJSON(object: PacketCommand): string {
       return "C2S_ACCOUNT_AGREE_ANSWER_REQ";
     case PacketCommand.S2C_ACCOUNT_AGREE_ANSWER_RES:
       return "S2C_ACCOUNT_AGREE_ANSWER_RES";
+    case PacketCommand.S2C_ACCOUNT_CHARACTER_CLASS_LIST_NOT:
+      return "S2C_ACCOUNT_CHARACTER_CLASS_LIST_NOT";
     case PacketCommand.C2S_CHARACTER_SELECT_ENTER_REQ:
       return "C2S_CHARACTER_SELECT_ENTER_REQ";
     case PacketCommand.S2C_CHARACTER_SELECT_ENTER_RES:
@@ -1290,10 +1152,6 @@ export function packetCommandToJSON(object: PacketCommand): string {
       return "S2C_LOBBY_CHARACTER_LOBBY_EMOTE_NOT";
     case PacketCommand.S2C_LOBBY_REPORT_PUNISH_LIST_NOT:
       return "S2C_LOBBY_REPORT_PUNISH_LIST_NOT";
-    case PacketCommand.C2S_LOBBY_ENTER_COUPON_CODE_REQ:
-      return "C2S_LOBBY_ENTER_COUPON_CODE_REQ";
-    case PacketCommand.S2C_LOBBY_ENTER_COUPON_CODE_RES:
-      return "S2C_LOBBY_ENTER_COUPON_CODE_RES";
     case PacketCommand.MIN_INVENTORY_PACKET:
       return "MIN_INVENTORY_PACKET";
     case PacketCommand.C2S_INVENTORY_INFO_REQ:
@@ -1356,22 +1214,20 @@ export function packetCommandToJSON(object: PacketCommand): string {
       return "C2S_RECONNECT_INGAME_REQ";
     case PacketCommand.S2C_RECONNECT_INGAME_RES:
       return "S2C_RECONNECT_INGAME_RES";
-    case PacketCommand.S2C_FLOOR_MATCHMAKED_NOT:
-      return "S2C_FLOOR_MATCHMAKED_NOT";
     case PacketCommand.MIN_RANKING_PACKET:
       return "MIN_RANKING_PACKET";
     case PacketCommand.C2S_RANKING_RANGE_REQ:
       return "C2S_RANKING_RANGE_REQ";
     case PacketCommand.S2C_RANKING_RANGE_RES:
       return "S2C_RANKING_RANGE_RES";
-    case PacketCommand.C2S_RANKING_NEARBY_REQ:
-      return "C2S_RANKING_NEARBY_REQ";
-    case PacketCommand.S2C_RANKING_NEARBY_RES:
-      return "S2C_RANKING_NEARBY_RES";
     case PacketCommand.C2S_RANKING_CHARACTER_REQ:
       return "C2S_RANKING_CHARACTER_REQ";
     case PacketCommand.S2C_RANKING_CHARACTER_RES:
       return "S2C_RANKING_CHARACTER_RES";
+    case PacketCommand.C2S_RANKING_INFO_REQ:
+      return "C2S_RANKING_INFO_REQ";
+    case PacketCommand.S2C_RANKING_INFO_RES:
+      return "S2C_RANKING_INFO_RES";
     case PacketCommand.MAX_RANKING_PACKET:
       return "MAX_RANKING_PACKET";
     case PacketCommand.MIN_FRIEND_PACKET:
@@ -1616,110 +1472,38 @@ export function packetCommandToJSON(object: PacketCommand): string {
       return "S2C_CUSTOMIZE_NEW_ITEM_CHECK_RES";
     case PacketCommand.S2C_CUSTOMIZE_NEW_ITEM_ALERT_NOT:
       return "S2C_CUSTOMIZE_NEW_ITEM_ALERT_NOT";
-    case PacketCommand.C2S_CUSTOMIZE_CHARACTER_INFO_REQ:
-      return "C2S_CUSTOMIZE_CHARACTER_INFO_REQ";
-    case PacketCommand.S2C_CUSTOMIZE_CHARACTER_INFO_RES:
-      return "S2C_CUSTOMIZE_CHARACTER_INFO_RES";
-    case PacketCommand.C2S_CUSTOMIZE_ITEM_INFO_REQ:
-      return "C2S_CUSTOMIZE_ITEM_INFO_REQ";
-    case PacketCommand.S2C_CUSTOMIZE_ITEM_INFO_RES:
-      return "S2C_CUSTOMIZE_ITEM_INFO_RES";
-    case PacketCommand.C2S_CUSTOMIZE_EMOTE_INFO_REQ:
-      return "C2S_CUSTOMIZE_EMOTE_INFO_REQ";
-    case PacketCommand.S2C_CUSTOMIZE_EMOTE_INFO_RES:
-      return "S2C_CUSTOMIZE_EMOTE_INFO_RES";
-    case PacketCommand.C2S_CUSTOMIZE_ACTION_INFO_REQ:
-      return "C2S_CUSTOMIZE_ACTION_INFO_REQ";
-    case PacketCommand.S2C_CUSTOMIZE_ACTION_INFO_RES:
-      return "S2C_CUSTOMIZE_ACTION_INFO_RES";
-    case PacketCommand.C2S_CUSTOMIZE_LOBBY_EMOTE_INFO_REQ:
-      return "C2S_CUSTOMIZE_LOBBY_EMOTE_INFO_REQ";
-    case PacketCommand.S2C_CUSTOMIZE_LOBBY_EMOTE_INFO_RES:
-      return "S2C_CUSTOMIZE_LOBBY_EMOTE_INFO_RES";
-    case PacketCommand.C2S_CUSTOMIZE_CHARACTER_MOUNT_REQ:
-      return "C2S_CUSTOMIZE_CHARACTER_MOUNT_REQ";
-    case PacketCommand.S2C_CUSTOMIZE_CHARACTER_MOUNT_RES:
-      return "S2C_CUSTOMIZE_CHARACTER_MOUNT_RES";
-    case PacketCommand.C2S_CUSTOMIZE_CHARACTER_UNMOUNT_REQ:
-      return "C2S_CUSTOMIZE_CHARACTER_UNMOUNT_REQ";
-    case PacketCommand.S2C_CUSTOMIZE_CHARACTER_UNMOUNT_RES:
-      return "S2C_CUSTOMIZE_CHARACTER_UNMOUNT_RES";
-    case PacketCommand.C2S_CUSTOMIZE_ITEM_MOUNT_REQ:
-      return "C2S_CUSTOMIZE_ITEM_MOUNT_REQ";
-    case PacketCommand.S2C_CUSTOMIZE_ITEM_MOUNT_RES:
-      return "S2C_CUSTOMIZE_ITEM_MOUNT_RES";
-    case PacketCommand.C2S_CUSTOMIZE_ITEM_UNMOUNT_REQ:
-      return "C2S_CUSTOMIZE_ITEM_UNMOUNT_REQ";
-    case PacketCommand.S2C_CUSTOMIZE_ITEM_UNMOUNT_RES:
-      return "S2C_CUSTOMIZE_ITEM_UNMOUNT_RES";
-    case PacketCommand.C2S_CUSTOMIZE_EMOTE_MOUNT_REQ:
-      return "C2S_CUSTOMIZE_EMOTE_MOUNT_REQ";
-    case PacketCommand.S2C_CUSTOMIZE_EMOTE_MOUNT_RES:
-      return "S2C_CUSTOMIZE_EMOTE_MOUNT_RES";
-    case PacketCommand.C2S_CUSTOMIZE_EMOTE_UNMOUNT_REQ:
-      return "C2S_CUSTOMIZE_EMOTE_UNMOUNT_REQ";
-    case PacketCommand.S2C_CUSTOMIZE_EMOTE_UNMOUNT_RES:
-      return "S2C_CUSTOMIZE_EMOTE_UNMOUNT_RES";
-    case PacketCommand.C2S_CUSTOMIZE_ACTION_MOUNT_REQ:
-      return "C2S_CUSTOMIZE_ACTION_MOUNT_REQ";
-    case PacketCommand.S2C_CUSTOMIZE_ACTION_MOUNT_RES:
-      return "S2C_CUSTOMIZE_ACTION_MOUNT_RES";
-    case PacketCommand.C2S_CUSTOMIZE_ACTION_UNMOUNT_REQ:
-      return "C2S_CUSTOMIZE_ACTION_UNMOUNT_REQ";
-    case PacketCommand.S2C_CUSTOMIZE_ACTION_UNMOUNT_RES:
-      return "S2C_CUSTOMIZE_ACTION_UNMOUNT_RES";
-    case PacketCommand.C2S_CUSTOMIZE_LOBBY_EMOTE_MOUNT_REQ:
-      return "C2S_CUSTOMIZE_LOBBY_EMOTE_MOUNT_REQ";
-    case PacketCommand.S2C_CUSTOMIZE_LOBBY_EMOTE_MOUNT_RES:
-      return "S2C_CUSTOMIZE_LOBBY_EMOTE_MOUNT_RES";
-    case PacketCommand.C2S_CUSTOMIZE_LOBBY_EMOTE_UNMOUNT_REQ:
-      return "C2S_CUSTOMIZE_LOBBY_EMOTE_UNMOUNT_REQ";
-    case PacketCommand.S2C_CUSTOMIZE_LOBBY_EMOTE_UNMOUNT_RES:
-      return "S2C_CUSTOMIZE_LOBBY_EMOTE_UNMOUNT_RES";
+    case PacketCommand.C2S_CUSTOMIZE_INFO_REQ:
+      return "C2S_CUSTOMIZE_INFO_REQ";
+    case PacketCommand.S2C_CUSTOMIZE_INFO_RES:
+      return "S2C_CUSTOMIZE_INFO_RES";
+    case PacketCommand.C2S_CUSTOMIZE_MOUNT_REQ:
+      return "C2S_CUSTOMIZE_MOUNT_REQ";
+    case PacketCommand.S2C_CUSTOMIZE_MOUNT_RES:
+      return "S2C_CUSTOMIZE_MOUNT_RES";
+    case PacketCommand.C2S_CUSTOMIZE_UNMOUNT_REQ:
+      return "C2S_CUSTOMIZE_UNMOUNT_REQ";
+    case PacketCommand.S2C_CUSTOMIZE_UNMOUNT_RES:
+      return "S2C_CUSTOMIZE_UNMOUNT_RES";
     case PacketCommand.MAX_CUSTOMIZE_PACKET:
       return "MAX_CUSTOMIZE_PACKET";
     case PacketCommand.MIN_SHOP_PACKET:
       return "MIN_SHOP_PACKET";
-    case PacketCommand.C2S_SHOP_CHARACTER_SKIN_LIST_REQ:
-      return "C2S_SHOP_CHARACTER_SKIN_LIST_REQ";
-    case PacketCommand.S2C_SHOP_CHARACTER_SKIN_LIST_RES:
-      return "S2C_SHOP_CHARACTER_SKIN_LIST_RES";
-    case PacketCommand.C2S_SHOP_ITEM_SKIN_LIST_REQ:
-      return "C2S_SHOP_ITEM_SKIN_LIST_REQ";
-    case PacketCommand.S2C_SHOP_ITEM_SKIN_LIST_RES:
-      return "S2C_SHOP_ITEM_SKIN_LIST_RES";
-    case PacketCommand.C2S_SHOP_EMOTE_LIST_REQ:
-      return "C2S_SHOP_EMOTE_LIST_REQ";
-    case PacketCommand.S2C_SHOP_EMOTE_LIST_RES:
-      return "S2C_SHOP_EMOTE_LIST_RES";
-    case PacketCommand.C2S_SHOP_ACTION_LIST_REQ:
-      return "C2S_SHOP_ACTION_LIST_REQ";
-    case PacketCommand.S2C_SHOP_ACTION_LIST_RES:
-      return "S2C_SHOP_ACTION_LIST_RES";
-    case PacketCommand.C2S_SHOP_LOBBY_EMOTE_LIST_REQ:
-      return "C2S_SHOP_LOBBY_EMOTE_LIST_REQ";
-    case PacketCommand.S2C_SHOP_LOBBY_EMOTE_LIST_RES:
-      return "S2C_SHOP_LOBBY_EMOTE_LIST_RES";
-    case PacketCommand.C2S_SHOP_CHARACTER_SKIN_BUY_REQ:
-      return "C2S_SHOP_CHARACTER_SKIN_BUY_REQ";
-    case PacketCommand.S2C_SHOP_CHARACTER_SKIN_BUY_RES:
-      return "S2C_SHOP_CHARACTER_SKIN_BUY_RES";
-    case PacketCommand.C2S_SHOP_ITEM_SKIN_BUY_REQ:
-      return "C2S_SHOP_ITEM_SKIN_BUY_REQ";
-    case PacketCommand.S2C_SHOP_ITEM_SKIN_BUY_RES:
-      return "S2C_SHOP_ITEM_SKIN_BUY_RES";
-    case PacketCommand.C2S_SHOP_EMOTE_BUY_REQ:
-      return "C2S_SHOP_EMOTE_BUY_REQ";
-    case PacketCommand.S2C_SHOP_EMOTE_BUY_RES:
-      return "S2C_SHOP_EMOTE_BUY_RES";
-    case PacketCommand.C2S_SHOP_ACTION_BUY_REQ:
-      return "C2S_SHOP_ACTION_BUY_REQ";
-    case PacketCommand.S2C_SHOP_ACTION_BUY_RES:
-      return "S2C_SHOP_ACTION_BUY_RES";
-    case PacketCommand.C2S_SHOP_LOBBY_EMOTE_BUY_REQ:
-      return "C2S_SHOP_LOBBY_EMOTE_BUY_REQ";
-    case PacketCommand.S2C_SHOP_LOBBY_EMOTE_BUY_RES:
-      return "S2C_SHOP_LOBBY_EMOTE_BUY_RES";
+    case PacketCommand.C2S_SHOP_ITEM_LIST_REQ:
+      return "C2S_SHOP_ITEM_LIST_REQ";
+    case PacketCommand.S2C_SHOP_ITEM_LIST_RES:
+      return "S2C_SHOP_ITEM_LIST_RES";
+    case PacketCommand.C2S_SHOP_ITEM_BUY_REQ:
+      return "C2S_SHOP_ITEM_BUY_REQ";
+    case PacketCommand.S2C_SHOP_ITEM_BUY_RES:
+      return "S2C_SHOP_ITEM_BUY_RES";
+    case PacketCommand.C2S_SHOP_ENTER_GIFT_CODE_REQ:
+      return "C2S_SHOP_ENTER_GIFT_CODE_REQ";
+    case PacketCommand.S2C_SHOP_ENTER_GIFT_CODE_RES:
+      return "S2C_SHOP_ENTER_GIFT_CODE_RES";
+    case PacketCommand.C2S_SHOP_RED_STONE_SHARD_INFO_REQ:
+      return "C2S_SHOP_RED_STONE_SHARD_INFO_REQ";
+    case PacketCommand.S2C_SHOP_RED_STONE_SHARD_INFO_RES:
+      return "S2C_SHOP_RED_STONE_SHARD_INFO_RES";
     case PacketCommand.MAX_SHOP_PACKET:
       return "MAX_SHOP_PACKET";
     case PacketCommand.MIN_CLASS_PACKET:
@@ -1744,6 +1528,10 @@ export function packetCommandToJSON(object: PacketCommand): string {
       return "C2S_CLASS_SPELL_LIST_REQ";
     case PacketCommand.S2C_CLASS_SPELL_LIST_RES:
       return "S2C_CLASS_SPELL_LIST_RES";
+    case PacketCommand.C2S_CLASS_MUSIC_LIST_REQ:
+      return "C2S_CLASS_MUSIC_LIST_REQ";
+    case PacketCommand.S2C_CLASS_MUSIC_LIST_RES:
+      return "S2C_CLASS_MUSIC_LIST_RES";
     case PacketCommand.C2S_CLASS_ITEM_MOVE_REQ:
       return "C2S_CLASS_ITEM_MOVE_REQ";
     case PacketCommand.S2C_CLASS_ITEM_MOVE_RES:
@@ -1756,6 +1544,10 @@ export function packetCommandToJSON(object: PacketCommand): string {
       return "C2S_CLASS_SPELL_SEQUENCE_CHANGE_REQ";
     case PacketCommand.S2C_CLASS_SPELL_SEQUENCE_CHANGE_RES:
       return "S2C_CLASS_SPELL_SEQUENCE_CHANGE_RES";
+    case PacketCommand.C2S_CLASS_MUSIC_SLOT_MOVE_REQ:
+      return "C2S_CLASS_MUSIC_SLOT_MOVE_REQ";
+    case PacketCommand.S2C_CLASS_MUSIC_SLOT_MOVE_RES:
+      return "S2C_CLASS_MUSIC_SLOT_MOVE_RES";
     case PacketCommand.MAX_CLASS_PACKET:
       return "MAX_CLASS_PACKET";
     case PacketCommand.MIN_GATHERING_HALL_PACKET:
@@ -1814,8 +1606,6 @@ export function packetCommandToJSON(object: PacketCommand): string {
       return "S2C_HACK_LOG_RES";
     case PacketCommand.S2C_SERVICE_POLICY_NOT:
       return "S2C_SERVICE_POLICY_NOT";
-    case PacketCommand.S2C_HACK_CHECK_DLL_LIST_NOT:
-      return "S2C_HACK_CHECK_DLL_LIST_NOT";
     case PacketCommand.C2S_RE_LOGIN_REQ:
       return "C2S_RE_LOGIN_REQ";
     case PacketCommand.S2C_RE_LOGIN_RES:
@@ -1839,6 +1629,7 @@ export function packetCommandToJSON(object: PacketCommand): string {
 export enum PacketResult {
   RESULT_NONE = 0,
   SUCCESS = 1,
+  SUCCESS_REQUEST_PAYMENT_CHAF_GAMES = 2,
   FAIL_GENERAL = 10,
   FAIL_SHORTAGE = 11,
   FAIL_NO_VALUE = 12,
@@ -1848,6 +1639,7 @@ export enum PacketResult {
   FAIL_CHATACTER_CLASS = 16,
   FAIL_CHARACTER_BAD_NICKNAME = 17,
   FAIL_CHARACTER_MAX_COUNT = 18,
+  FAIL_CHARACTER_NOT_PURCHASED = 19,
   FAIL_PARTY_INVITE_OFFLINE_CHARACTER = 25,
   FAIL_PARTY_INVITE_NO_LOBBY_CHARACTER = 26,
   FAIL_PARTY_INVITE_ALREADY_PARTY = 27,
@@ -1863,6 +1655,7 @@ export enum PacketResult {
   FAIL_PARTY_IS_MATCHING = 38,
   FAIL_PARTY_READY_SHORTAGE_ENTRANCE_FEE = 39,
   FAIL_PARTY_READY_SHORTAGE_ENTRANCE_LEVEL = 40,
+  FAIL_PARTY_INVITE_TOO_OFTEN = 41,
   FAIL_CHARACTER_SELECT_ENTER_IS_MATCHING = 50,
   FAIL_CHARACTER_SELECT_ENTER_NOT_LOBBY = 51,
   FAIL_PARTY_READY_IS_MATCHING = 55,
@@ -1871,9 +1664,11 @@ export enum PacketResult {
   FAIL_CLASS_NOT_FOUND_NEW_ITEM = 101,
   FAIL_CLASS_NEW_ITEM_CONDITION = 102,
   FAIL_CLASS_SWAP = 103,
-  FAIL_CLASS_EQUIP_WEAPON_MASTERY_OLD_ITEM = 104,
+  FAIL_CLASS_ITEM_LOCKED_BY_PERK = 104,
   FAIL_CLASS_NOT_FOUND_SPELL_ITEM = 105,
   FAIL_CLASS_DUPLICATE_EQUIP_SPELL_ITEM = 106,
+  FAIL_CLASS_NOT_FOUND_MUSIC_ITEM = 107,
+  FAIL_CLASS_DUPLICATE_EQUIP_MUSIC_ITEM = 108,
   FAIL_CHAT_MAX_ROOM_USER = 130,
   FAIL_CHAT_SELECT_ALREADY_ROOM = 131,
   FAIL_CHAT_SELECT_NOT_MEMBERSHIP = 132,
@@ -1920,9 +1715,13 @@ export enum PacketResult {
   FAIL_ENTER_GAME_SPECTATOR_NOT_PLAY_GAME = 500,
   FAIL_ENTER_GAME_SPECTATOR_NOT_FOUND_USER = 501,
   FAIL_NOT_GM = 502,
-  FAIL_LOBBY_ENTER_COUPON_CODE_INVALID = 550,
-  FAIL_LOBBY_ENTER_COUPON_CODE_ALREADY = 551,
-  FAIL_LOBBY_ENTER_COUPON_CODE_NOT_VALID_TIME = 552,
+  FAIL_SHOP_ENTER_GIFT_CODE_INVALID = 550,
+  FAIL_SHOP_ENTER_GIFT_CODE_ALREADY = 551,
+  FAIL_SHOP_ENTER_GIFT_CODE_NOT_VALID_TIME = 552,
+  FAIL_SHOP_ENTER_GIFT_CODE_INVALID_REWARD_TYPE = 553,
+  FAIL_SHOP_ENTER_GIFT_CODE_INVALID_REWARD_ID = 554,
+  FAIL_SHOP_ENTER_GIFT_CODE_MAXIMUM_ALLOWED_QUANTITY_EXCEEDED = 555,
+  FAIL_SHOP_ENTER_GIFT_CODE_ALREADY_USED_IN_GROUP = 556,
   UNRECOGNIZED = -1,
 }
 
@@ -1934,6 +1733,9 @@ export function packetResultFromJSON(object: any): PacketResult {
     case 1:
     case "SUCCESS":
       return PacketResult.SUCCESS;
+    case 2:
+    case "SUCCESS_REQUEST_PAYMENT_CHAF_GAMES":
+      return PacketResult.SUCCESS_REQUEST_PAYMENT_CHAF_GAMES;
     case 10:
     case "FAIL_GENERAL":
       return PacketResult.FAIL_GENERAL;
@@ -1961,6 +1763,9 @@ export function packetResultFromJSON(object: any): PacketResult {
     case 18:
     case "FAIL_CHARACTER_MAX_COUNT":
       return PacketResult.FAIL_CHARACTER_MAX_COUNT;
+    case 19:
+    case "FAIL_CHARACTER_NOT_PURCHASED":
+      return PacketResult.FAIL_CHARACTER_NOT_PURCHASED;
     case 25:
     case "FAIL_PARTY_INVITE_OFFLINE_CHARACTER":
       return PacketResult.FAIL_PARTY_INVITE_OFFLINE_CHARACTER;
@@ -2006,6 +1811,9 @@ export function packetResultFromJSON(object: any): PacketResult {
     case 40:
     case "FAIL_PARTY_READY_SHORTAGE_ENTRANCE_LEVEL":
       return PacketResult.FAIL_PARTY_READY_SHORTAGE_ENTRANCE_LEVEL;
+    case 41:
+    case "FAIL_PARTY_INVITE_TOO_OFTEN":
+      return PacketResult.FAIL_PARTY_INVITE_TOO_OFTEN;
     case 50:
     case "FAIL_CHARACTER_SELECT_ENTER_IS_MATCHING":
       return PacketResult.FAIL_CHARACTER_SELECT_ENTER_IS_MATCHING;
@@ -2031,14 +1839,20 @@ export function packetResultFromJSON(object: any): PacketResult {
     case "FAIL_CLASS_SWAP":
       return PacketResult.FAIL_CLASS_SWAP;
     case 104:
-    case "FAIL_CLASS_EQUIP_WEAPON_MASTERY_OLD_ITEM":
-      return PacketResult.FAIL_CLASS_EQUIP_WEAPON_MASTERY_OLD_ITEM;
+    case "FAIL_CLASS_ITEM_LOCKED_BY_PERK":
+      return PacketResult.FAIL_CLASS_ITEM_LOCKED_BY_PERK;
     case 105:
     case "FAIL_CLASS_NOT_FOUND_SPELL_ITEM":
       return PacketResult.FAIL_CLASS_NOT_FOUND_SPELL_ITEM;
     case 106:
     case "FAIL_CLASS_DUPLICATE_EQUIP_SPELL_ITEM":
       return PacketResult.FAIL_CLASS_DUPLICATE_EQUIP_SPELL_ITEM;
+    case 107:
+    case "FAIL_CLASS_NOT_FOUND_MUSIC_ITEM":
+      return PacketResult.FAIL_CLASS_NOT_FOUND_MUSIC_ITEM;
+    case 108:
+    case "FAIL_CLASS_DUPLICATE_EQUIP_MUSIC_ITEM":
+      return PacketResult.FAIL_CLASS_DUPLICATE_EQUIP_MUSIC_ITEM;
     case 130:
     case "FAIL_CHAT_MAX_ROOM_USER":
       return PacketResult.FAIL_CHAT_MAX_ROOM_USER;
@@ -2178,14 +1992,26 @@ export function packetResultFromJSON(object: any): PacketResult {
     case "FAIL_NOT_GM":
       return PacketResult.FAIL_NOT_GM;
     case 550:
-    case "FAIL_LOBBY_ENTER_COUPON_CODE_INVALID":
-      return PacketResult.FAIL_LOBBY_ENTER_COUPON_CODE_INVALID;
+    case "FAIL_SHOP_ENTER_GIFT_CODE_INVALID":
+      return PacketResult.FAIL_SHOP_ENTER_GIFT_CODE_INVALID;
     case 551:
-    case "FAIL_LOBBY_ENTER_COUPON_CODE_ALREADY":
-      return PacketResult.FAIL_LOBBY_ENTER_COUPON_CODE_ALREADY;
+    case "FAIL_SHOP_ENTER_GIFT_CODE_ALREADY":
+      return PacketResult.FAIL_SHOP_ENTER_GIFT_CODE_ALREADY;
     case 552:
-    case "FAIL_LOBBY_ENTER_COUPON_CODE_NOT_VALID_TIME":
-      return PacketResult.FAIL_LOBBY_ENTER_COUPON_CODE_NOT_VALID_TIME;
+    case "FAIL_SHOP_ENTER_GIFT_CODE_NOT_VALID_TIME":
+      return PacketResult.FAIL_SHOP_ENTER_GIFT_CODE_NOT_VALID_TIME;
+    case 553:
+    case "FAIL_SHOP_ENTER_GIFT_CODE_INVALID_REWARD_TYPE":
+      return PacketResult.FAIL_SHOP_ENTER_GIFT_CODE_INVALID_REWARD_TYPE;
+    case 554:
+    case "FAIL_SHOP_ENTER_GIFT_CODE_INVALID_REWARD_ID":
+      return PacketResult.FAIL_SHOP_ENTER_GIFT_CODE_INVALID_REWARD_ID;
+    case 555:
+    case "FAIL_SHOP_ENTER_GIFT_CODE_MAXIMUM_ALLOWED_QUANTITY_EXCEEDED":
+      return PacketResult.FAIL_SHOP_ENTER_GIFT_CODE_MAXIMUM_ALLOWED_QUANTITY_EXCEEDED;
+    case 556:
+    case "FAIL_SHOP_ENTER_GIFT_CODE_ALREADY_USED_IN_GROUP":
+      return PacketResult.FAIL_SHOP_ENTER_GIFT_CODE_ALREADY_USED_IN_GROUP;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -2199,6 +2025,8 @@ export function packetResultToJSON(object: PacketResult): string {
       return "RESULT_NONE";
     case PacketResult.SUCCESS:
       return "SUCCESS";
+    case PacketResult.SUCCESS_REQUEST_PAYMENT_CHAF_GAMES:
+      return "SUCCESS_REQUEST_PAYMENT_CHAF_GAMES";
     case PacketResult.FAIL_GENERAL:
       return "FAIL_GENERAL";
     case PacketResult.FAIL_SHORTAGE:
@@ -2217,6 +2045,8 @@ export function packetResultToJSON(object: PacketResult): string {
       return "FAIL_CHARACTER_BAD_NICKNAME";
     case PacketResult.FAIL_CHARACTER_MAX_COUNT:
       return "FAIL_CHARACTER_MAX_COUNT";
+    case PacketResult.FAIL_CHARACTER_NOT_PURCHASED:
+      return "FAIL_CHARACTER_NOT_PURCHASED";
     case PacketResult.FAIL_PARTY_INVITE_OFFLINE_CHARACTER:
       return "FAIL_PARTY_INVITE_OFFLINE_CHARACTER";
     case PacketResult.FAIL_PARTY_INVITE_NO_LOBBY_CHARACTER:
@@ -2247,6 +2077,8 @@ export function packetResultToJSON(object: PacketResult): string {
       return "FAIL_PARTY_READY_SHORTAGE_ENTRANCE_FEE";
     case PacketResult.FAIL_PARTY_READY_SHORTAGE_ENTRANCE_LEVEL:
       return "FAIL_PARTY_READY_SHORTAGE_ENTRANCE_LEVEL";
+    case PacketResult.FAIL_PARTY_INVITE_TOO_OFTEN:
+      return "FAIL_PARTY_INVITE_TOO_OFTEN";
     case PacketResult.FAIL_CHARACTER_SELECT_ENTER_IS_MATCHING:
       return "FAIL_CHARACTER_SELECT_ENTER_IS_MATCHING";
     case PacketResult.FAIL_CHARACTER_SELECT_ENTER_NOT_LOBBY:
@@ -2263,12 +2095,16 @@ export function packetResultToJSON(object: PacketResult): string {
       return "FAIL_CLASS_NEW_ITEM_CONDITION";
     case PacketResult.FAIL_CLASS_SWAP:
       return "FAIL_CLASS_SWAP";
-    case PacketResult.FAIL_CLASS_EQUIP_WEAPON_MASTERY_OLD_ITEM:
-      return "FAIL_CLASS_EQUIP_WEAPON_MASTERY_OLD_ITEM";
+    case PacketResult.FAIL_CLASS_ITEM_LOCKED_BY_PERK:
+      return "FAIL_CLASS_ITEM_LOCKED_BY_PERK";
     case PacketResult.FAIL_CLASS_NOT_FOUND_SPELL_ITEM:
       return "FAIL_CLASS_NOT_FOUND_SPELL_ITEM";
     case PacketResult.FAIL_CLASS_DUPLICATE_EQUIP_SPELL_ITEM:
       return "FAIL_CLASS_DUPLICATE_EQUIP_SPELL_ITEM";
+    case PacketResult.FAIL_CLASS_NOT_FOUND_MUSIC_ITEM:
+      return "FAIL_CLASS_NOT_FOUND_MUSIC_ITEM";
+    case PacketResult.FAIL_CLASS_DUPLICATE_EQUIP_MUSIC_ITEM:
+      return "FAIL_CLASS_DUPLICATE_EQUIP_MUSIC_ITEM";
     case PacketResult.FAIL_CHAT_MAX_ROOM_USER:
       return "FAIL_CHAT_MAX_ROOM_USER";
     case PacketResult.FAIL_CHAT_SELECT_ALREADY_ROOM:
@@ -2361,12 +2197,20 @@ export function packetResultToJSON(object: PacketResult): string {
       return "FAIL_ENTER_GAME_SPECTATOR_NOT_FOUND_USER";
     case PacketResult.FAIL_NOT_GM:
       return "FAIL_NOT_GM";
-    case PacketResult.FAIL_LOBBY_ENTER_COUPON_CODE_INVALID:
-      return "FAIL_LOBBY_ENTER_COUPON_CODE_INVALID";
-    case PacketResult.FAIL_LOBBY_ENTER_COUPON_CODE_ALREADY:
-      return "FAIL_LOBBY_ENTER_COUPON_CODE_ALREADY";
-    case PacketResult.FAIL_LOBBY_ENTER_COUPON_CODE_NOT_VALID_TIME:
-      return "FAIL_LOBBY_ENTER_COUPON_CODE_NOT_VALID_TIME";
+    case PacketResult.FAIL_SHOP_ENTER_GIFT_CODE_INVALID:
+      return "FAIL_SHOP_ENTER_GIFT_CODE_INVALID";
+    case PacketResult.FAIL_SHOP_ENTER_GIFT_CODE_ALREADY:
+      return "FAIL_SHOP_ENTER_GIFT_CODE_ALREADY";
+    case PacketResult.FAIL_SHOP_ENTER_GIFT_CODE_NOT_VALID_TIME:
+      return "FAIL_SHOP_ENTER_GIFT_CODE_NOT_VALID_TIME";
+    case PacketResult.FAIL_SHOP_ENTER_GIFT_CODE_INVALID_REWARD_TYPE:
+      return "FAIL_SHOP_ENTER_GIFT_CODE_INVALID_REWARD_TYPE";
+    case PacketResult.FAIL_SHOP_ENTER_GIFT_CODE_INVALID_REWARD_ID:
+      return "FAIL_SHOP_ENTER_GIFT_CODE_INVALID_REWARD_ID";
+    case PacketResult.FAIL_SHOP_ENTER_GIFT_CODE_MAXIMUM_ALLOWED_QUANTITY_EXCEEDED:
+      return "FAIL_SHOP_ENTER_GIFT_CODE_MAXIMUM_ALLOWED_QUANTITY_EXCEEDED";
+    case PacketResult.FAIL_SHOP_ENTER_GIFT_CODE_ALREADY_USED_IN_GROUP:
+      return "FAIL_SHOP_ENTER_GIFT_CODE_ALREADY_USED_IN_GROUP";
     case PacketResult.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -2408,7 +2252,7 @@ export const sc2sAliveReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2426,9 +2270,8 @@ export const sc2sAliveReq = {
   },
 
   create<I extends Exact<DeepPartial<sc2sAliveReq>, I>>(base?: I): sc2sAliveReq {
-    return sc2sAliveReq.fromPartial(base ?? {});
+    return sc2sAliveReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sAliveReq>, I>>(_: I): sc2sAliveReq {
     const message = createBasesc2sAliveReq();
     return message;
@@ -2452,7 +2295,7 @@ export const ss2cAliveRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2470,9 +2313,8 @@ export const ss2cAliveRes = {
   },
 
   create<I extends Exact<DeepPartial<ss2cAliveRes>, I>>(base?: I): ss2cAliveRes {
-    return ss2cAliveRes.fromPartial(base ?? {});
+    return ss2cAliveRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cAliveRes>, I>>(_: I): ss2cAliveRes {
     const message = createBasess2cAliveRes();
     return message;
@@ -2496,7 +2338,7 @@ export const sc2sReconnectReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2514,9 +2356,8 @@ export const sc2sReconnectReq = {
   },
 
   create<I extends Exact<DeepPartial<sc2sReconnectReq>, I>>(base?: I): sc2sReconnectReq {
-    return sc2sReconnectReq.fromPartial(base ?? {});
+    return sc2sReconnectReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sReconnectReq>, I>>(_: I): sc2sReconnectReq {
     const message = createBasesc2sReconnectReq();
     return message;
@@ -2543,14 +2384,14 @@ export const ss2cReconnectRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2564,14 +2405,15 @@ export const ss2cReconnectRes = {
 
   toJSON(message: ss2cReconnectRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cReconnectRes>, I>>(base?: I): ss2cReconnectRes {
-    return ss2cReconnectRes.fromPartial(base ?? {});
+    return ss2cReconnectRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cReconnectRes>, I>>(object: I): ss2cReconnectRes {
     const message = createBasess2cReconnectRes();
     message.result = object.result ?? 0;
@@ -2602,21 +2444,21 @@ export const ss2cConnectServiceInfoJson = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.ipAddress = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.port = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2633,15 +2475,18 @@ export const ss2cConnectServiceInfoJson = {
 
   toJSON(message: ss2cConnectServiceInfoJson): unknown {
     const obj: any = {};
-    message.ipAddress !== undefined && (obj.ipAddress = message.ipAddress);
-    message.port !== undefined && (obj.port = Math.round(message.port));
+    if (message.ipAddress !== "") {
+      obj.ipAddress = message.ipAddress;
+    }
+    if (message.port !== 0) {
+      obj.port = Math.round(message.port);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cConnectServiceInfoJson>, I>>(base?: I): ss2cConnectServiceInfoJson {
-    return ss2cConnectServiceInfoJson.fromPartial(base ?? {});
+    return ss2cConnectServiceInfoJson.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cConnectServiceInfoJson>, I>>(object: I): ss2cConnectServiceInfoJson {
     const message = createBasess2cConnectServiceInfoJson();
     message.ipAddress = object.ipAddress ?? "";

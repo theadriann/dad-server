@@ -147,35 +147,35 @@ export const smerchantInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.merchantId = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.faction = reader.uint32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.remainTime = longToNumber(reader.uint64() as Long);
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.isUnidentified = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -194,17 +194,24 @@ export const smerchantInfo = {
 
   toJSON(message: smerchantInfo): unknown {
     const obj: any = {};
-    message.merchantId !== undefined && (obj.merchantId = message.merchantId);
-    message.faction !== undefined && (obj.faction = Math.round(message.faction));
-    message.remainTime !== undefined && (obj.remainTime = Math.round(message.remainTime));
-    message.isUnidentified !== undefined && (obj.isUnidentified = Math.round(message.isUnidentified));
+    if (message.merchantId !== "") {
+      obj.merchantId = message.merchantId;
+    }
+    if (message.faction !== 0) {
+      obj.faction = Math.round(message.faction);
+    }
+    if (message.remainTime !== 0) {
+      obj.remainTime = Math.round(message.remainTime);
+    }
+    if (message.isUnidentified !== 0) {
+      obj.isUnidentified = Math.round(message.isUnidentified);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<smerchantInfo>, I>>(base?: I): smerchantInfo {
-    return smerchantInfo.fromPartial(base ?? {});
+    return smerchantInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<smerchantInfo>, I>>(object: I): smerchantInfo {
     const message = createBasesmerchantInfo();
     message.merchantId = object.merchantId ?? "";
@@ -232,7 +239,7 @@ export const sc2sMerchantListReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -250,9 +257,8 @@ export const sc2sMerchantListReq = {
   },
 
   create<I extends Exact<DeepPartial<sc2sMerchantListReq>, I>>(base?: I): sc2sMerchantListReq {
-    return sc2sMerchantListReq.fromPartial(base ?? {});
+    return sc2sMerchantListReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sMerchantListReq>, I>>(_: I): sc2sMerchantListReq {
     const message = createBasesc2sMerchantListReq();
     return message;
@@ -279,14 +285,14 @@ export const ss2cMerchantListRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.merchantList.push(smerchantInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -304,18 +310,15 @@ export const ss2cMerchantListRes = {
 
   toJSON(message: ss2cMerchantListRes): unknown {
     const obj: any = {};
-    if (message.merchantList) {
-      obj.merchantList = message.merchantList.map((e) => e ? smerchantInfo.toJSON(e) : undefined);
-    } else {
-      obj.merchantList = [];
+    if (message.merchantList?.length) {
+      obj.merchantList = message.merchantList.map((e) => smerchantInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cMerchantListRes>, I>>(base?: I): ss2cMerchantListRes {
-    return ss2cMerchantListRes.fromPartial(base ?? {});
+    return ss2cMerchantListRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cMerchantListRes>, I>>(object: I): ss2cMerchantListRes {
     const message = createBasess2cMerchantListRes();
     message.merchantList = object.merchantList?.map((e) => smerchantInfo.fromPartial(e)) || [];
@@ -343,14 +346,14 @@ export const sc2sMerchantStockBuyItemListReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.merchantId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -364,14 +367,15 @@ export const sc2sMerchantStockBuyItemListReq = {
 
   toJSON(message: sc2sMerchantStockBuyItemListReq): unknown {
     const obj: any = {};
-    message.merchantId !== undefined && (obj.merchantId = message.merchantId);
+    if (message.merchantId !== "") {
+      obj.merchantId = message.merchantId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sMerchantStockBuyItemListReq>, I>>(base?: I): sc2sMerchantStockBuyItemListReq {
-    return sc2sMerchantStockBuyItemListReq.fromPartial(base ?? {});
+    return sc2sMerchantStockBuyItemListReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sMerchantStockBuyItemListReq>, I>>(
     object: I,
   ): sc2sMerchantStockBuyItemListReq {
@@ -407,28 +411,28 @@ export const smerchantStockBuyItemInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.stockBuyId = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.stockUniqueId = longToNumber(reader.uint64() as Long);
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.itemInfo = SItem.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -446,16 +450,21 @@ export const smerchantStockBuyItemInfo = {
 
   toJSON(message: smerchantStockBuyItemInfo): unknown {
     const obj: any = {};
-    message.stockBuyId !== undefined && (obj.stockBuyId = message.stockBuyId);
-    message.stockUniqueId !== undefined && (obj.stockUniqueId = Math.round(message.stockUniqueId));
-    message.itemInfo !== undefined && (obj.itemInfo = message.itemInfo ? SItem.toJSON(message.itemInfo) : undefined);
+    if (message.stockBuyId !== "") {
+      obj.stockBuyId = message.stockBuyId;
+    }
+    if (message.stockUniqueId !== 0) {
+      obj.stockUniqueId = Math.round(message.stockUniqueId);
+    }
+    if (message.itemInfo !== undefined) {
+      obj.itemInfo = SItem.toJSON(message.itemInfo);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<smerchantStockBuyItemInfo>, I>>(base?: I): smerchantStockBuyItemInfo {
-    return smerchantStockBuyItemInfo.fromPartial(base ?? {});
+    return smerchantStockBuyItemInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<smerchantStockBuyItemInfo>, I>>(object: I): smerchantStockBuyItemInfo {
     const message = createBasesmerchantStockBuyItemInfo();
     message.stockBuyId = object.stockBuyId ?? "";
@@ -493,28 +502,28 @@ export const smerchantStockCraftItemInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.stockCraftId = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.stockUniqueId = longToNumber(reader.uint64() as Long);
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.itemInfo = SItem.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -532,16 +541,21 @@ export const smerchantStockCraftItemInfo = {
 
   toJSON(message: smerchantStockCraftItemInfo): unknown {
     const obj: any = {};
-    message.stockCraftId !== undefined && (obj.stockCraftId = message.stockCraftId);
-    message.stockUniqueId !== undefined && (obj.stockUniqueId = Math.round(message.stockUniqueId));
-    message.itemInfo !== undefined && (obj.itemInfo = message.itemInfo ? SItem.toJSON(message.itemInfo) : undefined);
+    if (message.stockCraftId !== "") {
+      obj.stockCraftId = message.stockCraftId;
+    }
+    if (message.stockUniqueId !== 0) {
+      obj.stockUniqueId = Math.round(message.stockUniqueId);
+    }
+    if (message.itemInfo !== undefined) {
+      obj.itemInfo = SItem.toJSON(message.itemInfo);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<smerchantStockCraftItemInfo>, I>>(base?: I): smerchantStockCraftItemInfo {
-    return smerchantStockCraftItemInfo.fromPartial(base ?? {});
+    return smerchantStockCraftItemInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<smerchantStockCraftItemInfo>, I>>(object: I): smerchantStockCraftItemInfo {
     const message = createBasesmerchantStockCraftItemInfo();
     message.stockCraftId = object.stockCraftId ?? "";
@@ -579,28 +593,28 @@ export const ss2cMerchantStockBuyItemListRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.loopMessageFlag = reader.uint32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.stockList.push(smerchantStockBuyItemInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -620,20 +634,21 @@ export const ss2cMerchantStockBuyItemListRes = {
 
   toJSON(message: ss2cMerchantStockBuyItemListRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.loopMessageFlag !== undefined && (obj.loopMessageFlag = Math.round(message.loopMessageFlag));
-    if (message.stockList) {
-      obj.stockList = message.stockList.map((e) => e ? smerchantStockBuyItemInfo.toJSON(e) : undefined);
-    } else {
-      obj.stockList = [];
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.loopMessageFlag !== 0) {
+      obj.loopMessageFlag = Math.round(message.loopMessageFlag);
+    }
+    if (message.stockList?.length) {
+      obj.stockList = message.stockList.map((e) => smerchantStockBuyItemInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cMerchantStockBuyItemListRes>, I>>(base?: I): ss2cMerchantStockBuyItemListRes {
-    return ss2cMerchantStockBuyItemListRes.fromPartial(base ?? {});
+    return ss2cMerchantStockBuyItemListRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cMerchantStockBuyItemListRes>, I>>(
     object: I,
   ): ss2cMerchantStockBuyItemListRes {
@@ -665,14 +680,14 @@ export const sc2sMerchantStockSellBackItemListReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.merchantId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -686,16 +701,17 @@ export const sc2sMerchantStockSellBackItemListReq = {
 
   toJSON(message: sc2sMerchantStockSellBackItemListReq): unknown {
     const obj: any = {};
-    message.merchantId !== undefined && (obj.merchantId = message.merchantId);
+    if (message.merchantId !== "") {
+      obj.merchantId = message.merchantId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sMerchantStockSellBackItemListReq>, I>>(
     base?: I,
   ): sc2sMerchantStockSellBackItemListReq {
-    return sc2sMerchantStockSellBackItemListReq.fromPartial(base ?? {});
+    return sc2sMerchantStockSellBackItemListReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sMerchantStockSellBackItemListReq>, I>>(
     object: I,
   ): sc2sMerchantStockSellBackItemListReq {
@@ -728,21 +744,21 @@ export const smerchantStockSellBackItemInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.stockSellBackId = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.stockUniqueId = longToNumber(reader.uint64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -759,15 +775,18 @@ export const smerchantStockSellBackItemInfo = {
 
   toJSON(message: smerchantStockSellBackItemInfo): unknown {
     const obj: any = {};
-    message.stockSellBackId !== undefined && (obj.stockSellBackId = message.stockSellBackId);
-    message.stockUniqueId !== undefined && (obj.stockUniqueId = Math.round(message.stockUniqueId));
+    if (message.stockSellBackId !== "") {
+      obj.stockSellBackId = message.stockSellBackId;
+    }
+    if (message.stockUniqueId !== 0) {
+      obj.stockUniqueId = Math.round(message.stockUniqueId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<smerchantStockSellBackItemInfo>, I>>(base?: I): smerchantStockSellBackItemInfo {
-    return smerchantStockSellBackItemInfo.fromPartial(base ?? {});
+    return smerchantStockSellBackItemInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<smerchantStockSellBackItemInfo>, I>>(
     object: I,
   ): smerchantStockSellBackItemInfo {
@@ -804,28 +823,28 @@ export const ss2cMerchantStockSellBackItemListRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.loopMessageFlag = reader.uint32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.stockList.push(smerchantStockSellBackItemInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -845,12 +864,14 @@ export const ss2cMerchantStockSellBackItemListRes = {
 
   toJSON(message: ss2cMerchantStockSellBackItemListRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.loopMessageFlag !== undefined && (obj.loopMessageFlag = Math.round(message.loopMessageFlag));
-    if (message.stockList) {
-      obj.stockList = message.stockList.map((e) => e ? smerchantStockSellBackItemInfo.toJSON(e) : undefined);
-    } else {
-      obj.stockList = [];
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.loopMessageFlag !== 0) {
+      obj.loopMessageFlag = Math.round(message.loopMessageFlag);
+    }
+    if (message.stockList?.length) {
+      obj.stockList = message.stockList.map((e) => smerchantStockSellBackItemInfo.toJSON(e));
     }
     return obj;
   },
@@ -858,9 +879,8 @@ export const ss2cMerchantStockSellBackItemListRes = {
   create<I extends Exact<DeepPartial<ss2cMerchantStockSellBackItemListRes>, I>>(
     base?: I,
   ): ss2cMerchantStockSellBackItemListRes {
-    return ss2cMerchantStockSellBackItemListRes.fromPartial(base ?? {});
+    return ss2cMerchantStockSellBackItemListRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cMerchantStockSellBackItemListRes>, I>>(
     object: I,
   ): ss2cMerchantStockSellBackItemListRes {
@@ -898,28 +918,28 @@ export const merchantTradeItemInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.itemUniqueId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.itemCount = reader.uint32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.itemContentsCount = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -937,16 +957,21 @@ export const merchantTradeItemInfo = {
 
   toJSON(message: merchantTradeItemInfo): unknown {
     const obj: any = {};
-    message.itemUniqueId !== undefined && (obj.itemUniqueId = Math.round(message.itemUniqueId));
-    message.itemCount !== undefined && (obj.itemCount = Math.round(message.itemCount));
-    message.itemContentsCount !== undefined && (obj.itemContentsCount = Math.round(message.itemContentsCount));
+    if (message.itemUniqueId !== 0) {
+      obj.itemUniqueId = Math.round(message.itemUniqueId);
+    }
+    if (message.itemCount !== 0) {
+      obj.itemCount = Math.round(message.itemCount);
+    }
+    if (message.itemContentsCount !== 0) {
+      obj.itemContentsCount = Math.round(message.itemContentsCount);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<merchantTradeItemInfo>, I>>(base?: I): merchantTradeItemInfo {
-    return merchantTradeItemInfo.fromPartial(base ?? {});
+    return merchantTradeItemInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<merchantTradeItemInfo>, I>>(object: I): merchantTradeItemInfo {
     const message = createBasemerchantTradeItemInfo();
     message.itemUniqueId = object.itemUniqueId ?? 0;
@@ -991,49 +1016,49 @@ export const smerchantTradeSlotInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.inventoryId = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.slotId = reader.uint32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.itemId = reader.string();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.itemUniqueId = longToNumber(reader.uint64() as Long);
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.itemCount = reader.uint32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.itemContentsCount = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1054,19 +1079,30 @@ export const smerchantTradeSlotInfo = {
 
   toJSON(message: smerchantTradeSlotInfo): unknown {
     const obj: any = {};
-    message.inventoryId !== undefined && (obj.inventoryId = Math.round(message.inventoryId));
-    message.slotId !== undefined && (obj.slotId = Math.round(message.slotId));
-    message.itemId !== undefined && (obj.itemId = message.itemId);
-    message.itemUniqueId !== undefined && (obj.itemUniqueId = Math.round(message.itemUniqueId));
-    message.itemCount !== undefined && (obj.itemCount = Math.round(message.itemCount));
-    message.itemContentsCount !== undefined && (obj.itemContentsCount = Math.round(message.itemContentsCount));
+    if (message.inventoryId !== 0) {
+      obj.inventoryId = Math.round(message.inventoryId);
+    }
+    if (message.slotId !== 0) {
+      obj.slotId = Math.round(message.slotId);
+    }
+    if (message.itemId !== "") {
+      obj.itemId = message.itemId;
+    }
+    if (message.itemUniqueId !== 0) {
+      obj.itemUniqueId = Math.round(message.itemUniqueId);
+    }
+    if (message.itemCount !== 0) {
+      obj.itemCount = Math.round(message.itemCount);
+    }
+    if (message.itemContentsCount !== 0) {
+      obj.itemContentsCount = Math.round(message.itemContentsCount);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<smerchantTradeSlotInfo>, I>>(base?: I): smerchantTradeSlotInfo {
-    return smerchantTradeSlotInfo.fromPartial(base ?? {});
+    return smerchantTradeSlotInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<smerchantTradeSlotInfo>, I>>(object: I): smerchantTradeSlotInfo {
     const message = createBasesmerchantTradeSlotInfo();
     message.inventoryId = object.inventoryId ?? 0;
@@ -1108,35 +1144,35 @@ export const sc2sMerchantStockBuyReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.tradeId = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.stockUniqueId = longToNumber(reader.uint64() as Long);
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.dealItemList.push(merchantTradeItemInfo.decode(reader, reader.uint32()));
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.merchantSlotInfo.push(smerchantTradeSlotInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1159,25 +1195,24 @@ export const sc2sMerchantStockBuyReq = {
 
   toJSON(message: sc2sMerchantStockBuyReq): unknown {
     const obj: any = {};
-    message.tradeId !== undefined && (obj.tradeId = message.tradeId);
-    message.stockUniqueId !== undefined && (obj.stockUniqueId = Math.round(message.stockUniqueId));
-    if (message.dealItemList) {
-      obj.dealItemList = message.dealItemList.map((e) => e ? merchantTradeItemInfo.toJSON(e) : undefined);
-    } else {
-      obj.dealItemList = [];
+    if (message.tradeId !== "") {
+      obj.tradeId = message.tradeId;
     }
-    if (message.merchantSlotInfo) {
-      obj.merchantSlotInfo = message.merchantSlotInfo.map((e) => e ? smerchantTradeSlotInfo.toJSON(e) : undefined);
-    } else {
-      obj.merchantSlotInfo = [];
+    if (message.stockUniqueId !== 0) {
+      obj.stockUniqueId = Math.round(message.stockUniqueId);
+    }
+    if (message.dealItemList?.length) {
+      obj.dealItemList = message.dealItemList.map((e) => merchantTradeItemInfo.toJSON(e));
+    }
+    if (message.merchantSlotInfo?.length) {
+      obj.merchantSlotInfo = message.merchantSlotInfo.map((e) => smerchantTradeSlotInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sMerchantStockBuyReq>, I>>(base?: I): sc2sMerchantStockBuyReq {
-    return sc2sMerchantStockBuyReq.fromPartial(base ?? {});
+    return sc2sMerchantStockBuyReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sMerchantStockBuyReq>, I>>(object: I): sc2sMerchantStockBuyReq {
     const message = createBasesc2sMerchantStockBuyReq();
     message.tradeId = object.tradeId ?? "";
@@ -1208,14 +1243,14 @@ export const ss2cMerchantStockBuyRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1229,14 +1264,15 @@ export const ss2cMerchantStockBuyRes = {
 
   toJSON(message: ss2cMerchantStockBuyRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cMerchantStockBuyRes>, I>>(base?: I): ss2cMerchantStockBuyRes {
-    return ss2cMerchantStockBuyRes.fromPartial(base ?? {});
+    return ss2cMerchantStockBuyRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cMerchantStockBuyRes>, I>>(object: I): ss2cMerchantStockBuyRes {
     const message = createBasess2cMerchantStockBuyRes();
     message.result = object.result ?? 0;
@@ -1270,28 +1306,28 @@ export const smerchantStockSellBackInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.tradeId = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.stockUniqueId = longToNumber(reader.uint64() as Long);
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.itemUniqueId = longToNumber(reader.uint64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1309,16 +1345,21 @@ export const smerchantStockSellBackInfo = {
 
   toJSON(message: smerchantStockSellBackInfo): unknown {
     const obj: any = {};
-    message.tradeId !== undefined && (obj.tradeId = message.tradeId);
-    message.stockUniqueId !== undefined && (obj.stockUniqueId = Math.round(message.stockUniqueId));
-    message.itemUniqueId !== undefined && (obj.itemUniqueId = Math.round(message.itemUniqueId));
+    if (message.tradeId !== "") {
+      obj.tradeId = message.tradeId;
+    }
+    if (message.stockUniqueId !== 0) {
+      obj.stockUniqueId = Math.round(message.stockUniqueId);
+    }
+    if (message.itemUniqueId !== 0) {
+      obj.itemUniqueId = Math.round(message.itemUniqueId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<smerchantStockSellBackInfo>, I>>(base?: I): smerchantStockSellBackInfo {
-    return smerchantStockSellBackInfo.fromPartial(base ?? {});
+    return smerchantStockSellBackInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<smerchantStockSellBackInfo>, I>>(object: I): smerchantStockSellBackInfo {
     const message = createBasesmerchantStockSellBackInfo();
     message.tradeId = object.tradeId ?? "";
@@ -1351,21 +1392,21 @@ export const sc2sMerchantStockSellBackReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.sellBackInfos.push(smerchantStockSellBackInfo.decode(reader, reader.uint32()));
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.receivedInfos.push(smerchantTradeSlotInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1386,23 +1427,18 @@ export const sc2sMerchantStockSellBackReq = {
 
   toJSON(message: sc2sMerchantStockSellBackReq): unknown {
     const obj: any = {};
-    if (message.sellBackInfos) {
-      obj.sellBackInfos = message.sellBackInfos.map((e) => e ? smerchantStockSellBackInfo.toJSON(e) : undefined);
-    } else {
-      obj.sellBackInfos = [];
+    if (message.sellBackInfos?.length) {
+      obj.sellBackInfos = message.sellBackInfos.map((e) => smerchantStockSellBackInfo.toJSON(e));
     }
-    if (message.receivedInfos) {
-      obj.receivedInfos = message.receivedInfos.map((e) => e ? smerchantTradeSlotInfo.toJSON(e) : undefined);
-    } else {
-      obj.receivedInfos = [];
+    if (message.receivedInfos?.length) {
+      obj.receivedInfos = message.receivedInfos.map((e) => smerchantTradeSlotInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sMerchantStockSellBackReq>, I>>(base?: I): sc2sMerchantStockSellBackReq {
-    return sc2sMerchantStockSellBackReq.fromPartial(base ?? {});
+    return sc2sMerchantStockSellBackReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sMerchantStockSellBackReq>, I>>(object: I): sc2sMerchantStockSellBackReq {
     const message = createBasesc2sMerchantStockSellBackReq();
     message.sellBackInfos = object.sellBackInfos?.map((e) => smerchantStockSellBackInfo.fromPartial(e)) || [];
@@ -1431,14 +1467,14 @@ export const ss2cMerchantStockSellBackRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1452,14 +1488,15 @@ export const ss2cMerchantStockSellBackRes = {
 
   toJSON(message: ss2cMerchantStockSellBackRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cMerchantStockSellBackRes>, I>>(base?: I): ss2cMerchantStockSellBackRes {
-    return ss2cMerchantStockSellBackRes.fromPartial(base ?? {});
+    return ss2cMerchantStockSellBackRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cMerchantStockSellBackRes>, I>>(object: I): ss2cMerchantStockSellBackRes {
     const message = createBasess2cMerchantStockSellBackRes();
     message.result = object.result ?? 0;
@@ -1487,14 +1524,14 @@ export const sc2sMerchantServiceCraftListReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.merchantId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1508,14 +1545,15 @@ export const sc2sMerchantServiceCraftListReq = {
 
   toJSON(message: sc2sMerchantServiceCraftListReq): unknown {
     const obj: any = {};
-    message.merchantId !== undefined && (obj.merchantId = message.merchantId);
+    if (message.merchantId !== "") {
+      obj.merchantId = message.merchantId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sMerchantServiceCraftListReq>, I>>(base?: I): sc2sMerchantServiceCraftListReq {
-    return sc2sMerchantServiceCraftListReq.fromPartial(base ?? {});
+    return sc2sMerchantServiceCraftListReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sMerchantServiceCraftListReq>, I>>(
     object: I,
   ): sc2sMerchantServiceCraftListReq {
@@ -1551,28 +1589,28 @@ export const ss2cMerchantServiceCraftListRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.loopMessageFlag = reader.uint32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.stockCraftList.push(smerchantStockCraftItemInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1592,20 +1630,21 @@ export const ss2cMerchantServiceCraftListRes = {
 
   toJSON(message: ss2cMerchantServiceCraftListRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.loopMessageFlag !== undefined && (obj.loopMessageFlag = Math.round(message.loopMessageFlag));
-    if (message.stockCraftList) {
-      obj.stockCraftList = message.stockCraftList.map((e) => e ? smerchantStockCraftItemInfo.toJSON(e) : undefined);
-    } else {
-      obj.stockCraftList = [];
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.loopMessageFlag !== 0) {
+      obj.loopMessageFlag = Math.round(message.loopMessageFlag);
+    }
+    if (message.stockCraftList?.length) {
+      obj.stockCraftList = message.stockCraftList.map((e) => smerchantStockCraftItemInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cMerchantServiceCraftListRes>, I>>(base?: I): ss2cMerchantServiceCraftListRes {
-    return ss2cMerchantServiceCraftListRes.fromPartial(base ?? {});
+    return ss2cMerchantServiceCraftListRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cMerchantServiceCraftListRes>, I>>(
     object: I,
   ): ss2cMerchantServiceCraftListRes {
@@ -1646,35 +1685,35 @@ export const sc2sMerchantServiceCraftReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.tradeId = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.stockUniqueId = longToNumber(reader.uint64() as Long);
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.stockCraftList.push(merchantTradeItemInfo.decode(reader, reader.uint32()));
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.merchantSlotInfo = smerchantTradeSlotInfo.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1697,23 +1736,24 @@ export const sc2sMerchantServiceCraftReq = {
 
   toJSON(message: sc2sMerchantServiceCraftReq): unknown {
     const obj: any = {};
-    message.tradeId !== undefined && (obj.tradeId = message.tradeId);
-    message.stockUniqueId !== undefined && (obj.stockUniqueId = Math.round(message.stockUniqueId));
-    if (message.stockCraftList) {
-      obj.stockCraftList = message.stockCraftList.map((e) => e ? merchantTradeItemInfo.toJSON(e) : undefined);
-    } else {
-      obj.stockCraftList = [];
+    if (message.tradeId !== "") {
+      obj.tradeId = message.tradeId;
     }
-    message.merchantSlotInfo !== undefined && (obj.merchantSlotInfo = message.merchantSlotInfo
-      ? smerchantTradeSlotInfo.toJSON(message.merchantSlotInfo)
-      : undefined);
+    if (message.stockUniqueId !== 0) {
+      obj.stockUniqueId = Math.round(message.stockUniqueId);
+    }
+    if (message.stockCraftList?.length) {
+      obj.stockCraftList = message.stockCraftList.map((e) => merchantTradeItemInfo.toJSON(e));
+    }
+    if (message.merchantSlotInfo !== undefined) {
+      obj.merchantSlotInfo = smerchantTradeSlotInfo.toJSON(message.merchantSlotInfo);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sMerchantServiceCraftReq>, I>>(base?: I): sc2sMerchantServiceCraftReq {
-    return sc2sMerchantServiceCraftReq.fromPartial(base ?? {});
+    return sc2sMerchantServiceCraftReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sMerchantServiceCraftReq>, I>>(object: I): sc2sMerchantServiceCraftReq {
     const message = createBasesc2sMerchantServiceCraftReq();
     message.tradeId = object.tradeId ?? "";
@@ -1746,14 +1786,14 @@ export const ss2cMerchantServiceCraftRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1767,14 +1807,15 @@ export const ss2cMerchantServiceCraftRes = {
 
   toJSON(message: ss2cMerchantServiceCraftRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cMerchantServiceCraftRes>, I>>(base?: I): ss2cMerchantServiceCraftRes {
-    return ss2cMerchantServiceCraftRes.fromPartial(base ?? {});
+    return ss2cMerchantServiceCraftRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cMerchantServiceCraftRes>, I>>(object: I): ss2cMerchantServiceCraftRes {
     const message = createBasess2cMerchantServiceCraftRes();
     message.result = object.result ?? 0;
@@ -1782,10 +1823,10 @@ export const ss2cMerchantServiceCraftRes = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

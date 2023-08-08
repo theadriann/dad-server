@@ -57,6 +57,8 @@ message Operate_Ban_Report_User {
   string securityCode = 1;
   string reportId = 2;
   string nickName = 3;
+  uint32 banTime_min = 4;
+  string banReason = 5;
 }
 
 message Operate_hack_report_list {
@@ -164,12 +166,14 @@ message Operate_Ban_User {
   string nickName = 2;
   string reason = 3;
   uint32 banType = 4;
+  uint32 banTime_min = 5;
 }
 
 message Operate_Ban_Hardware {
   string hardwareId = 1;
   string reason = 2;
   uint32 banType = 3;
+  uint32 banTime_min = 4;
 }
 
 message Operate_characterInfo {
@@ -230,6 +234,11 @@ message Operate_OperateDuplicateHardwareInfo {
   uint64 accountId = 1;
   string hardwareId = 2;
   string isAccountBan = 3;
+}
+
+message Operate_OperateHardwareInfo {
+  repeated .DC.Packet.Operate_OperateHardwareAccountInfo hardwareAccountInfos = 1;
+  repeated .DC.Packet.Operate_OperateDuplicateHardwareInfo duplicateHardwareInfos = 2;
 }
 
 message Operate_OperateFileInfo {

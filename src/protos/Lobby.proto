@@ -62,6 +62,7 @@ message SACCOUNT_CURRENCY_INFO {
 
 message SS2C_LOBBY_ACCOUNT_CURRENCY_LIST_NOT {
   repeated .DC.Packet.SACCOUNT_CURRENCY_INFO currencyInfos = 1;
+  string buyRedstoneShardUrl = 2;
 }
 
 message SS2C_LOBBY_CHARACTER_LOBBY_EMOTE_NOT {
@@ -74,13 +75,5 @@ message SREPORT_PUNISH_INFO {
 
 message SS2C_LOBBY_REPORT_PUNISH_LIST_NOT {
   repeated .DC.Packet.SREPORT_PUNISH_INFO infos = 1;
-}
-
-message SC2S_LOBBY_ENTER_COUPON_CODE_REQ {
-  string code = 1;
-}
-
-message SS2C_LOBBY_ENTER_COUPON_CODE_RES {
-  uint32 result = 1;
 }
 

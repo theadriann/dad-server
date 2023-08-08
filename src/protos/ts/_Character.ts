@@ -174,70 +174,70 @@ export const scharacterInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.nickName = saccountNickname.decode(reader, reader.uint32());
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.characterClass = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.gender = reader.uint32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.level = reader.uint32();
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.serviceGrpc = reader.string();
           continue;
         case 8:
-          if (tag != 66) {
+          if (tag !== 66) {
             break;
           }
 
           message.CharacterItemList.push(SItem.decode(reader, reader.uint32()));
           continue;
         case 9:
-          if (tag != 74) {
+          if (tag !== 74) {
             break;
           }
 
           message.CharacterStorageItemList.push(SItem.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -265,31 +265,39 @@ export const scharacterInfo = {
 
   toJSON(message: scharacterInfo): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.nickName !== undefined &&
-      (obj.nickName = message.nickName ? saccountNickname.toJSON(message.nickName) : undefined);
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.gender !== undefined && (obj.gender = Math.round(message.gender));
-    message.level !== undefined && (obj.level = Math.round(message.level));
-    message.serviceGrpc !== undefined && (obj.serviceGrpc = message.serviceGrpc);
-    if (message.CharacterItemList) {
-      obj.CharacterItemList = message.CharacterItemList.map((e) => e ? SItem.toJSON(e) : undefined);
-    } else {
-      obj.CharacterItemList = [];
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
     }
-    if (message.CharacterStorageItemList) {
-      obj.CharacterStorageItemList = message.CharacterStorageItemList.map((e) => e ? SItem.toJSON(e) : undefined);
-    } else {
-      obj.CharacterStorageItemList = [];
+    if (message.nickName !== undefined) {
+      obj.nickName = saccountNickname.toJSON(message.nickName);
+    }
+    if (message.characterClass !== "") {
+      obj.characterClass = message.characterClass;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.gender !== 0) {
+      obj.gender = Math.round(message.gender);
+    }
+    if (message.level !== 0) {
+      obj.level = Math.round(message.level);
+    }
+    if (message.serviceGrpc !== "") {
+      obj.serviceGrpc = message.serviceGrpc;
+    }
+    if (message.CharacterItemList?.length) {
+      obj.CharacterItemList = message.CharacterItemList.map((e) => SItem.toJSON(e));
+    }
+    if (message.CharacterStorageItemList?.length) {
+      obj.CharacterStorageItemList = message.CharacterStorageItemList.map((e) => SItem.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<scharacterInfo>, I>>(base?: I): scharacterInfo {
-    return scharacterInfo.fromPartial(base ?? {});
+    return scharacterInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<scharacterInfo>, I>>(object: I): scharacterInfo {
     const message = createBasescharacterInfo();
     message.accountId = object.accountId ?? "";
@@ -361,70 +369,70 @@ export const scharacterFriendInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.nickName = saccountNickname.decode(reader, reader.uint32());
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.characterClass = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.gender = reader.uint32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.level = reader.uint32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.locationStatus = reader.uint32();
           continue;
         case 8:
-          if (tag != 64) {
+          if (tag !== 64) {
             break;
           }
 
           message.PartyMemeberCount = reader.uint32();
           continue;
         case 9:
-          if (tag != 72) {
+          if (tag !== 72) {
             break;
           }
 
           message.PartyMaxMemeberCount = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -448,23 +456,39 @@ export const scharacterFriendInfo = {
 
   toJSON(message: scharacterFriendInfo): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.nickName !== undefined &&
-      (obj.nickName = message.nickName ? saccountNickname.toJSON(message.nickName) : undefined);
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.gender !== undefined && (obj.gender = Math.round(message.gender));
-    message.level !== undefined && (obj.level = Math.round(message.level));
-    message.locationStatus !== undefined && (obj.locationStatus = Math.round(message.locationStatus));
-    message.PartyMemeberCount !== undefined && (obj.PartyMemeberCount = Math.round(message.PartyMemeberCount));
-    message.PartyMaxMemeberCount !== undefined && (obj.PartyMaxMemeberCount = Math.round(message.PartyMaxMemeberCount));
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.nickName !== undefined) {
+      obj.nickName = saccountNickname.toJSON(message.nickName);
+    }
+    if (message.characterClass !== "") {
+      obj.characterClass = message.characterClass;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.gender !== 0) {
+      obj.gender = Math.round(message.gender);
+    }
+    if (message.level !== 0) {
+      obj.level = Math.round(message.level);
+    }
+    if (message.locationStatus !== 0) {
+      obj.locationStatus = Math.round(message.locationStatus);
+    }
+    if (message.PartyMemeberCount !== 0) {
+      obj.PartyMemeberCount = Math.round(message.PartyMemeberCount);
+    }
+    if (message.PartyMaxMemeberCount !== 0) {
+      obj.PartyMaxMemeberCount = Math.round(message.PartyMaxMemeberCount);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<scharacterFriendInfo>, I>>(base?: I): scharacterFriendInfo {
-    return scharacterFriendInfo.fromPartial(base ?? {});
+    return scharacterFriendInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<scharacterFriendInfo>, I>>(object: I): scharacterFriendInfo {
     const message = createBasescharacterFriendInfo();
     message.accountId = object.accountId ?? "";
@@ -544,84 +568,84 @@ export const scharacterPartyInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.nickName = saccountNickname.decode(reader, reader.uint32());
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.characterClass = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.gender = reader.uint32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.level = reader.uint32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.isPartyLeader = reader.uint32();
           continue;
         case 8:
-          if (tag != 64) {
+          if (tag !== 64) {
             break;
           }
 
           message.isReady = reader.uint32();
           continue;
         case 9:
-          if (tag != 72) {
+          if (tag !== 72) {
             break;
           }
 
           message.isInGame = reader.uint32();
           continue;
         case 10:
-          if (tag != 82) {
+          if (tag !== 82) {
             break;
           }
 
           message.equipItemList.push(SItem.decode(reader, reader.uint32()));
           continue;
         case 11:
-          if (tag != 88) {
+          if (tag !== 88) {
             break;
           }
 
           message.partyIdx = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -649,29 +673,45 @@ export const scharacterPartyInfo = {
 
   toJSON(message: scharacterPartyInfo): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.nickName !== undefined &&
-      (obj.nickName = message.nickName ? saccountNickname.toJSON(message.nickName) : undefined);
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.gender !== undefined && (obj.gender = Math.round(message.gender));
-    message.level !== undefined && (obj.level = Math.round(message.level));
-    message.isPartyLeader !== undefined && (obj.isPartyLeader = Math.round(message.isPartyLeader));
-    message.isReady !== undefined && (obj.isReady = Math.round(message.isReady));
-    message.isInGame !== undefined && (obj.isInGame = Math.round(message.isInGame));
-    if (message.equipItemList) {
-      obj.equipItemList = message.equipItemList.map((e) => e ? SItem.toJSON(e) : undefined);
-    } else {
-      obj.equipItemList = [];
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
     }
-    message.partyIdx !== undefined && (obj.partyIdx = Math.round(message.partyIdx));
+    if (message.nickName !== undefined) {
+      obj.nickName = saccountNickname.toJSON(message.nickName);
+    }
+    if (message.characterClass !== "") {
+      obj.characterClass = message.characterClass;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.gender !== 0) {
+      obj.gender = Math.round(message.gender);
+    }
+    if (message.level !== 0) {
+      obj.level = Math.round(message.level);
+    }
+    if (message.isPartyLeader !== 0) {
+      obj.isPartyLeader = Math.round(message.isPartyLeader);
+    }
+    if (message.isReady !== 0) {
+      obj.isReady = Math.round(message.isReady);
+    }
+    if (message.isInGame !== 0) {
+      obj.isInGame = Math.round(message.isInGame);
+    }
+    if (message.equipItemList?.length) {
+      obj.equipItemList = message.equipItemList.map((e) => SItem.toJSON(e));
+    }
+    if (message.partyIdx !== 0) {
+      obj.partyIdx = Math.round(message.partyIdx);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<scharacterPartyInfo>, I>>(base?: I): scharacterPartyInfo {
-    return scharacterPartyInfo.fromPartial(base ?? {});
+    return scharacterPartyInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<scharacterPartyInfo>, I>>(object: I): scharacterPartyInfo {
     const message = createBasescharacterPartyInfo();
     message.accountId = object.accountId ?? "";
@@ -737,56 +777,56 @@ export const scharacterTradeInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.nickName = saccountNickname.decode(reader, reader.uint32());
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.characterClass = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.gender = reader.uint32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.level = reader.uint32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.characterLocation = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -808,21 +848,33 @@ export const scharacterTradeInfo = {
 
   toJSON(message: scharacterTradeInfo): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.nickName !== undefined &&
-      (obj.nickName = message.nickName ? saccountNickname.toJSON(message.nickName) : undefined);
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.gender !== undefined && (obj.gender = Math.round(message.gender));
-    message.level !== undefined && (obj.level = Math.round(message.level));
-    message.characterLocation !== undefined && (obj.characterLocation = Math.round(message.characterLocation));
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.nickName !== undefined) {
+      obj.nickName = saccountNickname.toJSON(message.nickName);
+    }
+    if (message.characterClass !== "") {
+      obj.characterClass = message.characterClass;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.gender !== 0) {
+      obj.gender = Math.round(message.gender);
+    }
+    if (message.level !== 0) {
+      obj.level = Math.round(message.level);
+    }
+    if (message.characterLocation !== 0) {
+      obj.characterLocation = Math.round(message.characterLocation);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<scharacterTradeInfo>, I>>(base?: I): scharacterTradeInfo {
-    return scharacterTradeInfo.fromPartial(base ?? {});
+    return scharacterTradeInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<scharacterTradeInfo>, I>>(object: I): scharacterTradeInfo {
     const message = createBasescharacterTradeInfo();
     message.accountId = object.accountId ?? "";
@@ -864,28 +916,28 @@ export const saccountNickname = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.originalNickName = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.streamingModeNickName = reader.string();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.karmaRating = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -903,16 +955,21 @@ export const saccountNickname = {
 
   toJSON(message: saccountNickname): unknown {
     const obj: any = {};
-    message.originalNickName !== undefined && (obj.originalNickName = message.originalNickName);
-    message.streamingModeNickName !== undefined && (obj.streamingModeNickName = message.streamingModeNickName);
-    message.karmaRating !== undefined && (obj.karmaRating = Math.round(message.karmaRating));
+    if (message.originalNickName !== "") {
+      obj.originalNickName = message.originalNickName;
+    }
+    if (message.streamingModeNickName !== "") {
+      obj.streamingModeNickName = message.streamingModeNickName;
+    }
+    if (message.karmaRating !== 0) {
+      obj.karmaRating = Math.round(message.karmaRating);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<saccountNickname>, I>>(base?: I): saccountNickname {
-    return saccountNickname.fromPartial(base ?? {});
+    return saccountNickname.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<saccountNickname>, I>>(object: I): saccountNickname {
     const message = createBasesaccountNickname();
     message.originalNickName = object.originalNickName ?? "";
@@ -954,42 +1011,42 @@ export const sblockCharacter = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.nickName = saccountNickname.decode(reader, reader.uint32());
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.characterClass = reader.string();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.gender = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1009,19 +1066,27 @@ export const sblockCharacter = {
 
   toJSON(message: sblockCharacter): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.nickName !== undefined &&
-      (obj.nickName = message.nickName ? saccountNickname.toJSON(message.nickName) : undefined);
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
-    message.gender !== undefined && (obj.gender = Math.round(message.gender));
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.nickName !== undefined) {
+      obj.nickName = saccountNickname.toJSON(message.nickName);
+    }
+    if (message.characterClass !== "") {
+      obj.characterClass = message.characterClass;
+    }
+    if (message.gender !== 0) {
+      obj.gender = Math.round(message.gender);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sblockCharacter>, I>>(base?: I): sblockCharacter {
-    return sblockCharacter.fromPartial(base ?? {});
+    return sblockCharacter.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sblockCharacter>, I>>(object: I): sblockCharacter {
     const message = createBasesblockCharacter();
     message.accountId = object.accountId ?? "";
@@ -1070,49 +1135,49 @@ export const scharacterGatheringHallInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.nickName = saccountNickname.decode(reader, reader.uint32());
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.characterClass = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.gender = reader.uint32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.level = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1133,20 +1198,30 @@ export const scharacterGatheringHallInfo = {
 
   toJSON(message: scharacterGatheringHallInfo): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.nickName !== undefined &&
-      (obj.nickName = message.nickName ? saccountNickname.toJSON(message.nickName) : undefined);
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.gender !== undefined && (obj.gender = Math.round(message.gender));
-    message.level !== undefined && (obj.level = Math.round(message.level));
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.nickName !== undefined) {
+      obj.nickName = saccountNickname.toJSON(message.nickName);
+    }
+    if (message.characterClass !== "") {
+      obj.characterClass = message.characterClass;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.gender !== 0) {
+      obj.gender = Math.round(message.gender);
+    }
+    if (message.level !== 0) {
+      obj.level = Math.round(message.level);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<scharacterGatheringHallInfo>, I>>(base?: I): scharacterGatheringHallInfo {
-    return scharacterGatheringHallInfo.fromPartial(base ?? {});
+    return scharacterGatheringHallInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<scharacterGatheringHallInfo>, I>>(object: I): scharacterGatheringHallInfo {
     const message = createBasescharacterGatheringHallInfo();
     message.accountId = object.accountId ?? "";

@@ -2,7 +2,7 @@
 import Long from "long";
 import _m0 from "protobufjs/minimal";
 import { saccountNickname } from "./_Character";
-import { SDownItem, SEMOTE, SItem, SPerk, SSkill, SSpell } from "./_Item";
+import { SDownItem, SEMOTE, SItem, SMusic, SPerk, SSkill, SSpell } from "./_Item";
 
 export const protobufPackage = "DC.Packet";
 
@@ -106,49 +106,66 @@ export interface C2SGameEnterUserPost {
   isSuccess: number;
 }
 
-export interface StartGameSessionDataDiscrepancy {
-  movementTimeDiscrepancyDetection: number;
-  movementTimeDiscrepancyResolution: number;
-  movementTimeDiscrepancyMaxTimeMargin: number;
-  movementTimeDiscrepancyMinTimeMargin: number;
-  movementTimeDiscrepancyResolutionRate: number;
-  movementTimeDiscrepancyDriftAllowance: number;
-  movementTimeDiscrepancyForceCorrectionsDuringResolution: number;
-}
-
-export interface StartGameSessionDataHackPolicy {
-  hackIronShieldScanSpeedHack: number;
-  hackIronShieldScanDllInjection: number;
-  hackMovementScan: number;
-  hackMeleeAttackScan: number;
-  hackInvalidItemScan: number;
-  hackInteractionScan: number;
-  hackIronShieldScanEspHack: number;
-}
-
 export interface S2CGameStartServerJson {
   restUrl: string;
   gameId: number;
   maxGameUser: number;
   waitTimeSec: number;
-  discrepancy: StartGameSessionDataDiscrepancy | undefined;
+  dungeonMapIds: string[];
   gameHackPolicy: number;
   validPlayerMeleeAttackRange: number;
   gameDifficultyType: number;
   shippingLogOnOffPolicy: number;
   shippingLogLevelPolicy: number;
   gmOnOffPolicy: number;
-  allowedInteractionPolicy: number;
-  allowedInteractionDistance: number;
-  allowedInteractionXyDistance: number;
-  hackPolicy: StartGameSessionDataHackPolicy | undefined;
   currentFloor: number;
-  isFloorMatchmaking: number;
+  floorMatchmakingOnOff: number;
+  matchmakingType: number;
+}
+
+export enum S2CGameStartServerJson_matchMake {
+  NONE = 0,
+  NORMAL = 1,
+  FLOOR = 2,
+  UNRECOGNIZED = -1,
+}
+
+export function s2CGameStartServerJson_matchMakeFromJSON(object: any): S2CGameStartServerJson_matchMake {
+  switch (object) {
+    case 0:
+    case "NONE":
+      return S2CGameStartServerJson_matchMake.NONE;
+    case 1:
+    case "NORMAL":
+      return S2CGameStartServerJson_matchMake.NORMAL;
+    case 2:
+    case "FLOOR":
+      return S2CGameStartServerJson_matchMake.FLOOR;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return S2CGameStartServerJson_matchMake.UNRECOGNIZED;
+  }
+}
+
+export function s2CGameStartServerJson_matchMakeToJSON(object: S2CGameStartServerJson_matchMake): string {
+  switch (object) {
+    case S2CGameStartServerJson_matchMake.NONE:
+      return "NONE";
+    case S2CGameStartServerJson_matchMake.NORMAL:
+      return "NORMAL";
+    case S2CGameStartServerJson_matchMake.FLOOR:
+      return "FLOOR";
+    case S2CGameStartServerJson_matchMake.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
 }
 
 export interface C2SGameEndServerPOST {
   users: GameEndUserInfo[];
   gameId: number;
+  circles: Circle[];
 }
 
 export interface GameEndUserInfo {
@@ -180,6 +197,7 @@ export interface S2CGameCharacterInfoJson {
   itemSkinIds: string[];
   emotes: SEMOTE[];
   actionIds: string[];
+  musics: SMusic[];
 }
 
 export interface C2SGameAliveCheckGET {
@@ -217,6 +235,17 @@ export interface S2CUserReportPOSTResponse {
   category: number;
 }
 
+export interface Location {
+  x: number;
+  y: number;
+  z: number;
+}
+
+export interface Circle {
+  pos: Location | undefined;
+  radius: number;
+}
+
 export interface GameResultInfo {
   accountId: string;
   characterId: string;
@@ -232,15 +261,9 @@ export interface GameResultInfo {
   gameDifficultyType: number;
   needBlock: number;
   needHWBlock: number;
-}
-
-export interface C2SGameDownUserPOST {
-  resultInfo: GameResultInfo | undefined;
-  downItems: SDownItem[];
-  currentFloor: number;
-  hp: number;
-  partyAccountIds: string[];
-  partyIdx: number;
+  blockTimeMin: number;
+  addTriumphExpValue: number;
+  locations: Location[];
 }
 
 export interface C2SGameEscapeUserPOST {
@@ -258,18 +281,38 @@ export interface C2SGameExitEscapedUserPOST {
   gameId: number;
 }
 
-export interface S2CGameCharacterInfoDownJson {
-  gameId: number;
+export interface SSkillFloor {
+  skill: SSkill | undefined;
+  count: number;
+}
+
+export interface SSpellFloor {
+  spell: SSpell | undefined;
+  count: number;
+}
+
+export interface SMusicFloor {
+  music: SMusic | undefined;
+  count: number;
+}
+
+export interface FloorMatchMakingCharacterInfo {
   accountId: string;
   characterId: string;
   downItems: SDownItem[];
   perks: SPerk[];
-  skills: SSkill[];
-  spells: SSpell[];
+  skills: SSkillFloor[];
+  spells: SSpellFloor[];
+  musics: SMusicFloor[];
   characterSkinIds: string[];
   itemSkinIds: string[];
   emotes: SEMOTE[];
   hp: number;
+}
+
+export interface C2SPrepareFloorMatchMaking {
+  info: FloorMatchMakingCharacterInfo | undefined;
+  resultInfo: GameResultInfo | undefined;
 }
 
 export interface S2CGamePolicyGET {
@@ -296,6 +339,45 @@ export interface GameDownUserPartyInfo {
 
 export interface S2CGameDownUserPartyGET {
   partyMember: GameDownUserPartyInfo[];
+}
+
+export interface C2SGameReadyPOST {
+  gameId: number;
+}
+
+export interface GameFloorMatchMakingUserInfo {
+  accountId: string;
+  characterId: string;
+  partyId: string;
+}
+
+export interface C2SFloorMatchMakingPOST {
+  infos: GameFloorMatchMakingUserInfo[];
+  gameId: number;
+  currentFloor: number;
+  dungeonId: string;
+}
+
+export interface GameFloorMatchMakingUserInfoResponse {
+  accountId: string;
+  characterId: string;
+  ip: string;
+  port: number;
+  sessionId: string;
+}
+
+export interface S2CFloorMatchMakingPOSTResponse {
+  infos: GameFloorMatchMakingUserInfoResponse[];
+}
+
+export interface C2SIronShieldReportPOST {
+  callbackType: number;
+  reportId: string;
+  hIds: string[];
+  blob: number[];
+  accountId: string;
+  characterId: string;
+  originNickname: string;
 }
 
 function createBaseS2CGameEnterUserJson(): S2CGameEnterUserJson {
@@ -352,70 +434,70 @@ export const S2CGameEnterUserJson = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.restUrl = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.nickName = reader.bytes() as Buffer;
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.streamingNickName = reader.bytes() as Buffer;
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.characterClass = reader.string();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.gender = reader.uint32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.level = reader.uint32();
           continue;
         case 8:
-          if (tag != 66) {
+          if (tag !== 66) {
             break;
           }
 
           message.partyId = reader.string();
           continue;
         case 9:
-          if (tag != 72) {
+          if (tag !== 72) {
             break;
           }
 
           message.karmaRating = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -441,26 +523,39 @@ export const S2CGameEnterUserJson = {
 
   toJSON(message: S2CGameEnterUserJson): unknown {
     const obj: any = {};
-    message.restUrl !== undefined && (obj.restUrl = message.restUrl);
-    message.nickName !== undefined &&
-      (obj.nickName = base64FromBytes(message.nickName !== undefined ? message.nickName : Buffer.alloc(0)));
-    message.streamingNickName !== undefined &&
-      (obj.streamingNickName = base64FromBytes(
-        message.streamingNickName !== undefined ? message.streamingNickName : Buffer.alloc(0),
-      ));
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.gender !== undefined && (obj.gender = Math.round(message.gender));
-    message.level !== undefined && (obj.level = Math.round(message.level));
-    message.partyId !== undefined && (obj.partyId = message.partyId);
-    message.karmaRating !== undefined && (obj.karmaRating = Math.round(message.karmaRating));
+    if (message.restUrl !== "") {
+      obj.restUrl = message.restUrl;
+    }
+    if (message.nickName.length !== 0) {
+      obj.nickName = base64FromBytes(message.nickName);
+    }
+    if (message.streamingNickName.length !== 0) {
+      obj.streamingNickName = base64FromBytes(message.streamingNickName);
+    }
+    if (message.characterClass !== "") {
+      obj.characterClass = message.characterClass;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.gender !== 0) {
+      obj.gender = Math.round(message.gender);
+    }
+    if (message.level !== 0) {
+      obj.level = Math.round(message.level);
+    }
+    if (message.partyId !== "") {
+      obj.partyId = message.partyId;
+    }
+    if (message.karmaRating !== 0) {
+      obj.karmaRating = Math.round(message.karmaRating);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<S2CGameEnterUserJson>, I>>(base?: I): S2CGameEnterUserJson {
-    return S2CGameEnterUserJson.fromPartial(base ?? {});
+    return S2CGameEnterUserJson.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<S2CGameEnterUserJson>, I>>(object: I): S2CGameEnterUserJson {
     const message = createBaseS2CGameEnterUserJson();
     message.restUrl = object.restUrl ?? "";
@@ -499,21 +594,21 @@ export const GameExitAdvPoint = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.advPointType = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.advPoint = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -530,15 +625,18 @@ export const GameExitAdvPoint = {
 
   toJSON(message: GameExitAdvPoint): unknown {
     const obj: any = {};
-    message.advPointType !== undefined && (obj.advPointType = Math.round(message.advPointType));
-    message.advPoint !== undefined && (obj.advPoint = Math.round(message.advPoint));
+    if (message.advPointType !== 0) {
+      obj.advPointType = Math.round(message.advPointType);
+    }
+    if (message.advPoint !== 0) {
+      obj.advPoint = Math.round(message.advPoint);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GameExitAdvPoint>, I>>(base?: I): GameExitAdvPoint {
-    return GameExitAdvPoint.fromPartial(base ?? {});
+    return GameExitAdvPoint.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GameExitAdvPoint>, I>>(object: I): GameExitAdvPoint {
     const message = createBaseGameExitAdvPoint();
     message.advPointType = object.advPointType ?? 0;
@@ -570,21 +668,21 @@ export const GameExitExpPoint = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.expPointType = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.expPoint = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -601,15 +699,18 @@ export const GameExitExpPoint = {
 
   toJSON(message: GameExitExpPoint): unknown {
     const obj: any = {};
-    message.expPointType !== undefined && (obj.expPointType = Math.round(message.expPointType));
-    message.expPoint !== undefined && (obj.expPoint = Math.round(message.expPoint));
+    if (message.expPointType !== 0) {
+      obj.expPointType = Math.round(message.expPointType);
+    }
+    if (message.expPoint !== 0) {
+      obj.expPoint = Math.round(message.expPoint);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GameExitExpPoint>, I>>(base?: I): GameExitExpPoint {
-    return GameExitExpPoint.fromPartial(base ?? {});
+    return GameExitExpPoint.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GameExitExpPoint>, I>>(object: I): GameExitExpPoint {
     const message = createBaseGameExitExpPoint();
     message.expPointType = object.expPointType ?? 0;
@@ -647,35 +748,35 @@ export const Killlog = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.instigatorAccountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.instigatorName = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.effectCauserName = reader.string();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.hitBoxType = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -694,17 +795,24 @@ export const Killlog = {
 
   toJSON(message: Killlog): unknown {
     const obj: any = {};
-    message.instigatorAccountId !== undefined && (obj.instigatorAccountId = message.instigatorAccountId);
-    message.instigatorName !== undefined && (obj.instigatorName = message.instigatorName);
-    message.effectCauserName !== undefined && (obj.effectCauserName = message.effectCauserName);
-    message.hitBoxType !== undefined && (obj.hitBoxType = Math.round(message.hitBoxType));
+    if (message.instigatorAccountId !== "") {
+      obj.instigatorAccountId = message.instigatorAccountId;
+    }
+    if (message.instigatorName !== "") {
+      obj.instigatorName = message.instigatorName;
+    }
+    if (message.effectCauserName !== "") {
+      obj.effectCauserName = message.effectCauserName;
+    }
+    if (message.hitBoxType !== 0) {
+      obj.hitBoxType = Math.round(message.hitBoxType);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Killlog>, I>>(base?: I): Killlog {
-    return Killlog.fromPartial(base ?? {});
+    return Killlog.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Killlog>, I>>(object: I): Killlog {
     const message = createBaseKilllog();
     message.instigatorAccountId = object.instigatorAccountId ?? "";
@@ -738,21 +846,21 @@ export const MonsterKillLog = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.monsterName = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.monsterKillCount = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -769,15 +877,18 @@ export const MonsterKillLog = {
 
   toJSON(message: MonsterKillLog): unknown {
     const obj: any = {};
-    message.monsterName !== undefined && (obj.monsterName = message.monsterName);
-    message.monsterKillCount !== undefined && (obj.monsterKillCount = Math.round(message.monsterKillCount));
+    if (message.monsterName !== "") {
+      obj.monsterName = message.monsterName;
+    }
+    if (message.monsterKillCount !== 0) {
+      obj.monsterKillCount = Math.round(message.monsterKillCount);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MonsterKillLog>, I>>(base?: I): MonsterKillLog {
-    return MonsterKillLog.fromPartial(base ?? {});
+    return MonsterKillLog.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<MonsterKillLog>, I>>(object: I): MonsterKillLog {
     const message = createBaseMonsterKillLog();
     message.monsterName = object.monsterName ?? "";
@@ -872,126 +983,126 @@ export const C2SGameExitUserPOST = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.escape = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.gameId = longToNumber(reader.uint64() as Long);
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.items.push(SItem.decode(reader, reader.uint32()));
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.guaranteedItems.push(SItem.decode(reader, reader.uint32()));
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.characterClass = reader.string();
           continue;
         case 8:
-          if (tag != 64) {
+          if (tag !== 64) {
             break;
           }
 
           message.killCount = reader.uint32();
           continue;
         case 9:
-          if (tag != 74) {
+          if (tag !== 74) {
             break;
           }
 
           message.advPoints.push(GameExitAdvPoint.decode(reader, reader.uint32()));
           continue;
         case 10:
-          if (tag != 82) {
+          if (tag !== 82) {
             break;
           }
 
           message.escapeMapName = reader.string();
           continue;
         case 11:
-          if (tag != 90) {
+          if (tag !== 90) {
             break;
           }
 
           message.reason = reader.string();
           continue;
         case 12:
-          if (tag != 98) {
+          if (tag !== 98) {
             break;
           }
 
           message.expPoints.push(GameExitExpPoint.decode(reader, reader.uint32()));
           continue;
         case 13:
-          if (tag != 106) {
+          if (tag !== 106) {
             break;
           }
 
           message.killLogData.push(Killlog.decode(reader, reader.uint32()));
           continue;
         case 14:
-          if (tag != 114) {
+          if (tag !== 114) {
             break;
           }
 
           message.monsterKillLogs.push(MonsterKillLog.decode(reader, reader.uint32()));
           continue;
         case 15:
-          if (tag != 120) {
+          if (tag !== 120) {
             break;
           }
 
           message.gameDifficultyType = reader.uint32();
           continue;
         case 16:
-          if (tag != 128) {
+          if (tag !== 128) {
             break;
           }
 
           message.needBlock = reader.uint32();
           continue;
         case 17:
-          if (tag != 136) {
+          if (tag !== 136) {
             break;
           }
 
           message.needHWBlock = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1027,54 +1138,63 @@ export const C2SGameExitUserPOST = {
 
   toJSON(message: C2SGameExitUserPOST): unknown {
     const obj: any = {};
-    message.escape !== undefined && (obj.escape = Math.round(message.escape));
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.gameId !== undefined && (obj.gameId = Math.round(message.gameId));
-    if (message.items) {
-      obj.items = message.items.map((e) => e ? SItem.toJSON(e) : undefined);
-    } else {
-      obj.items = [];
+    if (message.escape !== 0) {
+      obj.escape = Math.round(message.escape);
     }
-    if (message.guaranteedItems) {
-      obj.guaranteedItems = message.guaranteedItems.map((e) => e ? SItem.toJSON(e) : undefined);
-    } else {
-      obj.guaranteedItems = [];
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
     }
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
-    message.killCount !== undefined && (obj.killCount = Math.round(message.killCount));
-    if (message.advPoints) {
-      obj.advPoints = message.advPoints.map((e) => e ? GameExitAdvPoint.toJSON(e) : undefined);
-    } else {
-      obj.advPoints = [];
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
     }
-    message.escapeMapName !== undefined && (obj.escapeMapName = message.escapeMapName);
-    message.reason !== undefined && (obj.reason = message.reason);
-    if (message.expPoints) {
-      obj.expPoints = message.expPoints.map((e) => e ? GameExitExpPoint.toJSON(e) : undefined);
-    } else {
-      obj.expPoints = [];
+    if (message.gameId !== 0) {
+      obj.gameId = Math.round(message.gameId);
     }
-    if (message.killLogData) {
-      obj.killLogData = message.killLogData.map((e) => e ? Killlog.toJSON(e) : undefined);
-    } else {
-      obj.killLogData = [];
+    if (message.items?.length) {
+      obj.items = message.items.map((e) => SItem.toJSON(e));
     }
-    if (message.monsterKillLogs) {
-      obj.monsterKillLogs = message.monsterKillLogs.map((e) => e ? MonsterKillLog.toJSON(e) : undefined);
-    } else {
-      obj.monsterKillLogs = [];
+    if (message.guaranteedItems?.length) {
+      obj.guaranteedItems = message.guaranteedItems.map((e) => SItem.toJSON(e));
     }
-    message.gameDifficultyType !== undefined && (obj.gameDifficultyType = Math.round(message.gameDifficultyType));
-    message.needBlock !== undefined && (obj.needBlock = Math.round(message.needBlock));
-    message.needHWBlock !== undefined && (obj.needHWBlock = Math.round(message.needHWBlock));
+    if (message.characterClass !== "") {
+      obj.characterClass = message.characterClass;
+    }
+    if (message.killCount !== 0) {
+      obj.killCount = Math.round(message.killCount);
+    }
+    if (message.advPoints?.length) {
+      obj.advPoints = message.advPoints.map((e) => GameExitAdvPoint.toJSON(e));
+    }
+    if (message.escapeMapName !== "") {
+      obj.escapeMapName = message.escapeMapName;
+    }
+    if (message.reason !== "") {
+      obj.reason = message.reason;
+    }
+    if (message.expPoints?.length) {
+      obj.expPoints = message.expPoints.map((e) => GameExitExpPoint.toJSON(e));
+    }
+    if (message.killLogData?.length) {
+      obj.killLogData = message.killLogData.map((e) => Killlog.toJSON(e));
+    }
+    if (message.monsterKillLogs?.length) {
+      obj.monsterKillLogs = message.monsterKillLogs.map((e) => MonsterKillLog.toJSON(e));
+    }
+    if (message.gameDifficultyType !== 0) {
+      obj.gameDifficultyType = Math.round(message.gameDifficultyType);
+    }
+    if (message.needBlock !== 0) {
+      obj.needBlock = Math.round(message.needBlock);
+    }
+    if (message.needHWBlock !== 0) {
+      obj.needHWBlock = Math.round(message.needHWBlock);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<C2SGameExitUserPOST>, I>>(base?: I): C2SGameExitUserPOST {
-    return C2SGameExitUserPOST.fromPartial(base ?? {});
+    return C2SGameExitUserPOST.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<C2SGameExitUserPOST>, I>>(object: I): C2SGameExitUserPOST {
     const message = createBaseC2SGameExitUserPOST();
     message.escape = object.escape ?? 0;
@@ -1127,35 +1247,35 @@ export const C2SGameEnterUserPost = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.gameId = longToNumber(reader.uint64() as Long);
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.isSuccess = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1174,17 +1294,24 @@ export const C2SGameEnterUserPost = {
 
   toJSON(message: C2SGameEnterUserPost): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.gameId !== undefined && (obj.gameId = Math.round(message.gameId));
-    message.isSuccess !== undefined && (obj.isSuccess = Math.round(message.isSuccess));
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.gameId !== 0) {
+      obj.gameId = Math.round(message.gameId);
+    }
+    if (message.isSuccess !== 0) {
+      obj.isSuccess = Math.round(message.isSuccess);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<C2SGameEnterUserPost>, I>>(base?: I): C2SGameEnterUserPost {
-    return C2SGameEnterUserPost.fromPartial(base ?? {});
+    return C2SGameEnterUserPost.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<C2SGameEnterUserPost>, I>>(object: I): C2SGameEnterUserPost {
     const message = createBaseC2SGameEnterUserPost();
     message.accountId = object.accountId ?? "";
@@ -1195,349 +1322,22 @@ export const C2SGameEnterUserPost = {
   },
 };
 
-function createBaseStartGameSessionDataDiscrepancy(): StartGameSessionDataDiscrepancy {
-  return {
-    movementTimeDiscrepancyDetection: 0,
-    movementTimeDiscrepancyResolution: 0,
-    movementTimeDiscrepancyMaxTimeMargin: 0,
-    movementTimeDiscrepancyMinTimeMargin: 0,
-    movementTimeDiscrepancyResolutionRate: 0,
-    movementTimeDiscrepancyDriftAllowance: 0,
-    movementTimeDiscrepancyForceCorrectionsDuringResolution: 0,
-  };
-}
-
-export const StartGameSessionDataDiscrepancy = {
-  encode(message: StartGameSessionDataDiscrepancy, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.movementTimeDiscrepancyDetection !== 0) {
-      writer.uint32(8).uint32(message.movementTimeDiscrepancyDetection);
-    }
-    if (message.movementTimeDiscrepancyResolution !== 0) {
-      writer.uint32(16).uint32(message.movementTimeDiscrepancyResolution);
-    }
-    if (message.movementTimeDiscrepancyMaxTimeMargin !== 0) {
-      writer.uint32(29).float(message.movementTimeDiscrepancyMaxTimeMargin);
-    }
-    if (message.movementTimeDiscrepancyMinTimeMargin !== 0) {
-      writer.uint32(37).float(message.movementTimeDiscrepancyMinTimeMargin);
-    }
-    if (message.movementTimeDiscrepancyResolutionRate !== 0) {
-      writer.uint32(45).float(message.movementTimeDiscrepancyResolutionRate);
-    }
-    if (message.movementTimeDiscrepancyDriftAllowance !== 0) {
-      writer.uint32(53).float(message.movementTimeDiscrepancyDriftAllowance);
-    }
-    if (message.movementTimeDiscrepancyForceCorrectionsDuringResolution !== 0) {
-      writer.uint32(56).uint32(message.movementTimeDiscrepancyForceCorrectionsDuringResolution);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): StartGameSessionDataDiscrepancy {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseStartGameSessionDataDiscrepancy();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 8) {
-            break;
-          }
-
-          message.movementTimeDiscrepancyDetection = reader.uint32();
-          continue;
-        case 2:
-          if (tag != 16) {
-            break;
-          }
-
-          message.movementTimeDiscrepancyResolution = reader.uint32();
-          continue;
-        case 3:
-          if (tag != 29) {
-            break;
-          }
-
-          message.movementTimeDiscrepancyMaxTimeMargin = reader.float();
-          continue;
-        case 4:
-          if (tag != 37) {
-            break;
-          }
-
-          message.movementTimeDiscrepancyMinTimeMargin = reader.float();
-          continue;
-        case 5:
-          if (tag != 45) {
-            break;
-          }
-
-          message.movementTimeDiscrepancyResolutionRate = reader.float();
-          continue;
-        case 6:
-          if (tag != 53) {
-            break;
-          }
-
-          message.movementTimeDiscrepancyDriftAllowance = reader.float();
-          continue;
-        case 7:
-          if (tag != 56) {
-            break;
-          }
-
-          message.movementTimeDiscrepancyForceCorrectionsDuringResolution = reader.uint32();
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): StartGameSessionDataDiscrepancy {
-    return {
-      movementTimeDiscrepancyDetection: isSet(object.movementTimeDiscrepancyDetection)
-        ? Number(object.movementTimeDiscrepancyDetection)
-        : 0,
-      movementTimeDiscrepancyResolution: isSet(object.movementTimeDiscrepancyResolution)
-        ? Number(object.movementTimeDiscrepancyResolution)
-        : 0,
-      movementTimeDiscrepancyMaxTimeMargin: isSet(object.movementTimeDiscrepancyMaxTimeMargin)
-        ? Number(object.movementTimeDiscrepancyMaxTimeMargin)
-        : 0,
-      movementTimeDiscrepancyMinTimeMargin: isSet(object.movementTimeDiscrepancyMinTimeMargin)
-        ? Number(object.movementTimeDiscrepancyMinTimeMargin)
-        : 0,
-      movementTimeDiscrepancyResolutionRate: isSet(object.movementTimeDiscrepancyResolutionRate)
-        ? Number(object.movementTimeDiscrepancyResolutionRate)
-        : 0,
-      movementTimeDiscrepancyDriftAllowance: isSet(object.movementTimeDiscrepancyDriftAllowance)
-        ? Number(object.movementTimeDiscrepancyDriftAllowance)
-        : 0,
-      movementTimeDiscrepancyForceCorrectionsDuringResolution:
-        isSet(object.movementTimeDiscrepancyForceCorrectionsDuringResolution)
-          ? Number(object.movementTimeDiscrepancyForceCorrectionsDuringResolution)
-          : 0,
-    };
-  },
-
-  toJSON(message: StartGameSessionDataDiscrepancy): unknown {
-    const obj: any = {};
-    message.movementTimeDiscrepancyDetection !== undefined &&
-      (obj.movementTimeDiscrepancyDetection = Math.round(message.movementTimeDiscrepancyDetection));
-    message.movementTimeDiscrepancyResolution !== undefined &&
-      (obj.movementTimeDiscrepancyResolution = Math.round(message.movementTimeDiscrepancyResolution));
-    message.movementTimeDiscrepancyMaxTimeMargin !== undefined &&
-      (obj.movementTimeDiscrepancyMaxTimeMargin = message.movementTimeDiscrepancyMaxTimeMargin);
-    message.movementTimeDiscrepancyMinTimeMargin !== undefined &&
-      (obj.movementTimeDiscrepancyMinTimeMargin = message.movementTimeDiscrepancyMinTimeMargin);
-    message.movementTimeDiscrepancyResolutionRate !== undefined &&
-      (obj.movementTimeDiscrepancyResolutionRate = message.movementTimeDiscrepancyResolutionRate);
-    message.movementTimeDiscrepancyDriftAllowance !== undefined &&
-      (obj.movementTimeDiscrepancyDriftAllowance = message.movementTimeDiscrepancyDriftAllowance);
-    message.movementTimeDiscrepancyForceCorrectionsDuringResolution !== undefined &&
-      (obj.movementTimeDiscrepancyForceCorrectionsDuringResolution = Math.round(
-        message.movementTimeDiscrepancyForceCorrectionsDuringResolution,
-      ));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<StartGameSessionDataDiscrepancy>, I>>(base?: I): StartGameSessionDataDiscrepancy {
-    return StartGameSessionDataDiscrepancy.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<StartGameSessionDataDiscrepancy>, I>>(
-    object: I,
-  ): StartGameSessionDataDiscrepancy {
-    const message = createBaseStartGameSessionDataDiscrepancy();
-    message.movementTimeDiscrepancyDetection = object.movementTimeDiscrepancyDetection ?? 0;
-    message.movementTimeDiscrepancyResolution = object.movementTimeDiscrepancyResolution ?? 0;
-    message.movementTimeDiscrepancyMaxTimeMargin = object.movementTimeDiscrepancyMaxTimeMargin ?? 0;
-    message.movementTimeDiscrepancyMinTimeMargin = object.movementTimeDiscrepancyMinTimeMargin ?? 0;
-    message.movementTimeDiscrepancyResolutionRate = object.movementTimeDiscrepancyResolutionRate ?? 0;
-    message.movementTimeDiscrepancyDriftAllowance = object.movementTimeDiscrepancyDriftAllowance ?? 0;
-    message.movementTimeDiscrepancyForceCorrectionsDuringResolution =
-      object.movementTimeDiscrepancyForceCorrectionsDuringResolution ?? 0;
-    return message;
-  },
-};
-
-function createBaseStartGameSessionDataHackPolicy(): StartGameSessionDataHackPolicy {
-  return {
-    hackIronShieldScanSpeedHack: 0,
-    hackIronShieldScanDllInjection: 0,
-    hackMovementScan: 0,
-    hackMeleeAttackScan: 0,
-    hackInvalidItemScan: 0,
-    hackInteractionScan: 0,
-    hackIronShieldScanEspHack: 0,
-  };
-}
-
-export const StartGameSessionDataHackPolicy = {
-  encode(message: StartGameSessionDataHackPolicy, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.hackIronShieldScanSpeedHack !== 0) {
-      writer.uint32(8).uint32(message.hackIronShieldScanSpeedHack);
-    }
-    if (message.hackIronShieldScanDllInjection !== 0) {
-      writer.uint32(16).uint32(message.hackIronShieldScanDllInjection);
-    }
-    if (message.hackMovementScan !== 0) {
-      writer.uint32(24).uint32(message.hackMovementScan);
-    }
-    if (message.hackMeleeAttackScan !== 0) {
-      writer.uint32(32).uint32(message.hackMeleeAttackScan);
-    }
-    if (message.hackInvalidItemScan !== 0) {
-      writer.uint32(40).uint32(message.hackInvalidItemScan);
-    }
-    if (message.hackInteractionScan !== 0) {
-      writer.uint32(48).uint32(message.hackInteractionScan);
-    }
-    if (message.hackIronShieldScanEspHack !== 0) {
-      writer.uint32(56).uint32(message.hackIronShieldScanEspHack);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): StartGameSessionDataHackPolicy {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseStartGameSessionDataHackPolicy();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 8) {
-            break;
-          }
-
-          message.hackIronShieldScanSpeedHack = reader.uint32();
-          continue;
-        case 2:
-          if (tag != 16) {
-            break;
-          }
-
-          message.hackIronShieldScanDllInjection = reader.uint32();
-          continue;
-        case 3:
-          if (tag != 24) {
-            break;
-          }
-
-          message.hackMovementScan = reader.uint32();
-          continue;
-        case 4:
-          if (tag != 32) {
-            break;
-          }
-
-          message.hackMeleeAttackScan = reader.uint32();
-          continue;
-        case 5:
-          if (tag != 40) {
-            break;
-          }
-
-          message.hackInvalidItemScan = reader.uint32();
-          continue;
-        case 6:
-          if (tag != 48) {
-            break;
-          }
-
-          message.hackInteractionScan = reader.uint32();
-          continue;
-        case 7:
-          if (tag != 56) {
-            break;
-          }
-
-          message.hackIronShieldScanEspHack = reader.uint32();
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): StartGameSessionDataHackPolicy {
-    return {
-      hackIronShieldScanSpeedHack: isSet(object.hackIronShieldScanSpeedHack)
-        ? Number(object.hackIronShieldScanSpeedHack)
-        : 0,
-      hackIronShieldScanDllInjection: isSet(object.hackIronShieldScanDllInjection)
-        ? Number(object.hackIronShieldScanDllInjection)
-        : 0,
-      hackMovementScan: isSet(object.hackMovementScan) ? Number(object.hackMovementScan) : 0,
-      hackMeleeAttackScan: isSet(object.hackMeleeAttackScan) ? Number(object.hackMeleeAttackScan) : 0,
-      hackInvalidItemScan: isSet(object.hackInvalidItemScan) ? Number(object.hackInvalidItemScan) : 0,
-      hackInteractionScan: isSet(object.hackInteractionScan) ? Number(object.hackInteractionScan) : 0,
-      hackIronShieldScanEspHack: isSet(object.hackIronShieldScanEspHack) ? Number(object.hackIronShieldScanEspHack) : 0,
-    };
-  },
-
-  toJSON(message: StartGameSessionDataHackPolicy): unknown {
-    const obj: any = {};
-    message.hackIronShieldScanSpeedHack !== undefined &&
-      (obj.hackIronShieldScanSpeedHack = Math.round(message.hackIronShieldScanSpeedHack));
-    message.hackIronShieldScanDllInjection !== undefined &&
-      (obj.hackIronShieldScanDllInjection = Math.round(message.hackIronShieldScanDllInjection));
-    message.hackMovementScan !== undefined && (obj.hackMovementScan = Math.round(message.hackMovementScan));
-    message.hackMeleeAttackScan !== undefined && (obj.hackMeleeAttackScan = Math.round(message.hackMeleeAttackScan));
-    message.hackInvalidItemScan !== undefined && (obj.hackInvalidItemScan = Math.round(message.hackInvalidItemScan));
-    message.hackInteractionScan !== undefined && (obj.hackInteractionScan = Math.round(message.hackInteractionScan));
-    message.hackIronShieldScanEspHack !== undefined &&
-      (obj.hackIronShieldScanEspHack = Math.round(message.hackIronShieldScanEspHack));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<StartGameSessionDataHackPolicy>, I>>(base?: I): StartGameSessionDataHackPolicy {
-    return StartGameSessionDataHackPolicy.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<StartGameSessionDataHackPolicy>, I>>(
-    object: I,
-  ): StartGameSessionDataHackPolicy {
-    const message = createBaseStartGameSessionDataHackPolicy();
-    message.hackIronShieldScanSpeedHack = object.hackIronShieldScanSpeedHack ?? 0;
-    message.hackIronShieldScanDllInjection = object.hackIronShieldScanDllInjection ?? 0;
-    message.hackMovementScan = object.hackMovementScan ?? 0;
-    message.hackMeleeAttackScan = object.hackMeleeAttackScan ?? 0;
-    message.hackInvalidItemScan = object.hackInvalidItemScan ?? 0;
-    message.hackInteractionScan = object.hackInteractionScan ?? 0;
-    message.hackIronShieldScanEspHack = object.hackIronShieldScanEspHack ?? 0;
-    return message;
-  },
-};
-
 function createBaseS2CGameStartServerJson(): S2CGameStartServerJson {
   return {
     restUrl: "",
     gameId: 0,
     maxGameUser: 0,
     waitTimeSec: 0,
-    discrepancy: undefined,
+    dungeonMapIds: [],
     gameHackPolicy: 0,
     validPlayerMeleeAttackRange: 0,
     gameDifficultyType: 0,
     shippingLogOnOffPolicy: 0,
     shippingLogLevelPolicy: 0,
     gmOnOffPolicy: 0,
-    allowedInteractionPolicy: 0,
-    allowedInteractionDistance: 0,
-    allowedInteractionXyDistance: 0,
-    hackPolicy: undefined,
     currentFloor: 0,
-    isFloorMatchmaking: 0,
+    floorMatchmakingOnOff: 0,
+    matchmakingType: 0,
   };
 }
 
@@ -1555,8 +1355,8 @@ export const S2CGameStartServerJson = {
     if (message.waitTimeSec !== 0) {
       writer.uint32(32).uint32(message.waitTimeSec);
     }
-    if (message.discrepancy !== undefined) {
-      StartGameSessionDataDiscrepancy.encode(message.discrepancy, writer.uint32(42).fork()).ldelim();
+    for (const v of message.dungeonMapIds) {
+      writer.uint32(42).string(v!);
     }
     if (message.gameHackPolicy !== 0) {
       writer.uint32(48).uint32(message.gameHackPolicy);
@@ -1576,23 +1376,14 @@ export const S2CGameStartServerJson = {
     if (message.gmOnOffPolicy !== 0) {
       writer.uint32(88).uint32(message.gmOnOffPolicy);
     }
-    if (message.allowedInteractionPolicy !== 0) {
-      writer.uint32(96).uint32(message.allowedInteractionPolicy);
-    }
-    if (message.allowedInteractionDistance !== 0) {
-      writer.uint32(109).float(message.allowedInteractionDistance);
-    }
-    if (message.allowedInteractionXyDistance !== 0) {
-      writer.uint32(117).float(message.allowedInteractionXyDistance);
-    }
-    if (message.hackPolicy !== undefined) {
-      StartGameSessionDataHackPolicy.encode(message.hackPolicy, writer.uint32(122).fork()).ldelim();
-    }
     if (message.currentFloor !== 0) {
       writer.uint32(128).uint32(message.currentFloor);
     }
-    if (message.isFloorMatchmaking !== 0) {
-      writer.uint32(136).uint32(message.isFloorMatchmaking);
+    if (message.floorMatchmakingOnOff !== 0) {
+      writer.uint32(136).uint32(message.floorMatchmakingOnOff);
+    }
+    if (message.matchmakingType !== 0) {
+      writer.uint32(144).uint32(message.matchmakingType);
     }
     return writer;
   },
@@ -1605,126 +1396,105 @@ export const S2CGameStartServerJson = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.restUrl = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.gameId = longToNumber(reader.uint64() as Long);
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.maxGameUser = reader.uint32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.waitTimeSec = reader.uint32();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
-          message.discrepancy = StartGameSessionDataDiscrepancy.decode(reader, reader.uint32());
+          message.dungeonMapIds.push(reader.string());
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.gameHackPolicy = reader.uint32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.validPlayerMeleeAttackRange = reader.uint32();
           continue;
         case 8:
-          if (tag != 64) {
+          if (tag !== 64) {
             break;
           }
 
           message.gameDifficultyType = reader.uint32();
           continue;
         case 9:
-          if (tag != 72) {
+          if (tag !== 72) {
             break;
           }
 
           message.shippingLogOnOffPolicy = reader.uint32();
           continue;
         case 10:
-          if (tag != 80) {
+          if (tag !== 80) {
             break;
           }
 
           message.shippingLogLevelPolicy = reader.uint32();
           continue;
         case 11:
-          if (tag != 88) {
+          if (tag !== 88) {
             break;
           }
 
           message.gmOnOffPolicy = reader.uint32();
           continue;
-        case 12:
-          if (tag != 96) {
-            break;
-          }
-
-          message.allowedInteractionPolicy = reader.uint32();
-          continue;
-        case 13:
-          if (tag != 109) {
-            break;
-          }
-
-          message.allowedInteractionDistance = reader.float();
-          continue;
-        case 14:
-          if (tag != 117) {
-            break;
-          }
-
-          message.allowedInteractionXyDistance = reader.float();
-          continue;
-        case 15:
-          if (tag != 122) {
-            break;
-          }
-
-          message.hackPolicy = StartGameSessionDataHackPolicy.decode(reader, reader.uint32());
-          continue;
         case 16:
-          if (tag != 128) {
+          if (tag !== 128) {
             break;
           }
 
           message.currentFloor = reader.uint32();
           continue;
         case 17:
-          if (tag != 136) {
+          if (tag !== 136) {
             break;
           }
 
-          message.isFloorMatchmaking = reader.uint32();
+          message.floorMatchmakingOnOff = reader.uint32();
+          continue;
+        case 18:
+          if (tag !== 144) {
+            break;
+          }
+
+          message.matchmakingType = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1738,7 +1508,7 @@ export const S2CGameStartServerJson = {
       gameId: isSet(object.gameId) ? Number(object.gameId) : 0,
       maxGameUser: isSet(object.maxGameUser) ? Number(object.maxGameUser) : 0,
       waitTimeSec: isSet(object.waitTimeSec) ? Number(object.waitTimeSec) : 0,
-      discrepancy: isSet(object.discrepancy) ? StartGameSessionDataDiscrepancy.fromJSON(object.discrepancy) : undefined,
+      dungeonMapIds: Array.isArray(object?.dungeonMapIds) ? object.dungeonMapIds.map((e: any) => String(e)) : [],
       gameHackPolicy: isSet(object.gameHackPolicy) ? Number(object.gameHackPolicy) : 0,
       validPlayerMeleeAttackRange: isSet(object.validPlayerMeleeAttackRange)
         ? Number(object.validPlayerMeleeAttackRange)
@@ -1747,82 +1517,84 @@ export const S2CGameStartServerJson = {
       shippingLogOnOffPolicy: isSet(object.shippingLogOnOffPolicy) ? Number(object.shippingLogOnOffPolicy) : 0,
       shippingLogLevelPolicy: isSet(object.shippingLogLevelPolicy) ? Number(object.shippingLogLevelPolicy) : 0,
       gmOnOffPolicy: isSet(object.gmOnOffPolicy) ? Number(object.gmOnOffPolicy) : 0,
-      allowedInteractionPolicy: isSet(object.allowedInteractionPolicy) ? Number(object.allowedInteractionPolicy) : 0,
-      allowedInteractionDistance: isSet(object.allowedInteractionDistance)
-        ? Number(object.allowedInteractionDistance)
-        : 0,
-      allowedInteractionXyDistance: isSet(object.allowedInteractionXyDistance)
-        ? Number(object.allowedInteractionXyDistance)
-        : 0,
-      hackPolicy: isSet(object.hackPolicy) ? StartGameSessionDataHackPolicy.fromJSON(object.hackPolicy) : undefined,
       currentFloor: isSet(object.currentFloor) ? Number(object.currentFloor) : 0,
-      isFloorMatchmaking: isSet(object.isFloorMatchmaking) ? Number(object.isFloorMatchmaking) : 0,
+      floorMatchmakingOnOff: isSet(object.floorMatchmakingOnOff) ? Number(object.floorMatchmakingOnOff) : 0,
+      matchmakingType: isSet(object.matchmakingType) ? Number(object.matchmakingType) : 0,
     };
   },
 
   toJSON(message: S2CGameStartServerJson): unknown {
     const obj: any = {};
-    message.restUrl !== undefined && (obj.restUrl = message.restUrl);
-    message.gameId !== undefined && (obj.gameId = Math.round(message.gameId));
-    message.maxGameUser !== undefined && (obj.maxGameUser = Math.round(message.maxGameUser));
-    message.waitTimeSec !== undefined && (obj.waitTimeSec = Math.round(message.waitTimeSec));
-    message.discrepancy !== undefined &&
-      (obj.discrepancy = message.discrepancy ? StartGameSessionDataDiscrepancy.toJSON(message.discrepancy) : undefined);
-    message.gameHackPolicy !== undefined && (obj.gameHackPolicy = Math.round(message.gameHackPolicy));
-    message.validPlayerMeleeAttackRange !== undefined &&
-      (obj.validPlayerMeleeAttackRange = Math.round(message.validPlayerMeleeAttackRange));
-    message.gameDifficultyType !== undefined && (obj.gameDifficultyType = Math.round(message.gameDifficultyType));
-    message.shippingLogOnOffPolicy !== undefined &&
-      (obj.shippingLogOnOffPolicy = Math.round(message.shippingLogOnOffPolicy));
-    message.shippingLogLevelPolicy !== undefined &&
-      (obj.shippingLogLevelPolicy = Math.round(message.shippingLogLevelPolicy));
-    message.gmOnOffPolicy !== undefined && (obj.gmOnOffPolicy = Math.round(message.gmOnOffPolicy));
-    message.allowedInteractionPolicy !== undefined &&
-      (obj.allowedInteractionPolicy = Math.round(message.allowedInteractionPolicy));
-    message.allowedInteractionDistance !== undefined &&
-      (obj.allowedInteractionDistance = message.allowedInteractionDistance);
-    message.allowedInteractionXyDistance !== undefined &&
-      (obj.allowedInteractionXyDistance = message.allowedInteractionXyDistance);
-    message.hackPolicy !== undefined &&
-      (obj.hackPolicy = message.hackPolicy ? StartGameSessionDataHackPolicy.toJSON(message.hackPolicy) : undefined);
-    message.currentFloor !== undefined && (obj.currentFloor = Math.round(message.currentFloor));
-    message.isFloorMatchmaking !== undefined && (obj.isFloorMatchmaking = Math.round(message.isFloorMatchmaking));
+    if (message.restUrl !== "") {
+      obj.restUrl = message.restUrl;
+    }
+    if (message.gameId !== 0) {
+      obj.gameId = Math.round(message.gameId);
+    }
+    if (message.maxGameUser !== 0) {
+      obj.maxGameUser = Math.round(message.maxGameUser);
+    }
+    if (message.waitTimeSec !== 0) {
+      obj.waitTimeSec = Math.round(message.waitTimeSec);
+    }
+    if (message.dungeonMapIds?.length) {
+      obj.dungeonMapIds = message.dungeonMapIds;
+    }
+    if (message.gameHackPolicy !== 0) {
+      obj.gameHackPolicy = Math.round(message.gameHackPolicy);
+    }
+    if (message.validPlayerMeleeAttackRange !== 0) {
+      obj.validPlayerMeleeAttackRange = Math.round(message.validPlayerMeleeAttackRange);
+    }
+    if (message.gameDifficultyType !== 0) {
+      obj.gameDifficultyType = Math.round(message.gameDifficultyType);
+    }
+    if (message.shippingLogOnOffPolicy !== 0) {
+      obj.shippingLogOnOffPolicy = Math.round(message.shippingLogOnOffPolicy);
+    }
+    if (message.shippingLogLevelPolicy !== 0) {
+      obj.shippingLogLevelPolicy = Math.round(message.shippingLogLevelPolicy);
+    }
+    if (message.gmOnOffPolicy !== 0) {
+      obj.gmOnOffPolicy = Math.round(message.gmOnOffPolicy);
+    }
+    if (message.currentFloor !== 0) {
+      obj.currentFloor = Math.round(message.currentFloor);
+    }
+    if (message.floorMatchmakingOnOff !== 0) {
+      obj.floorMatchmakingOnOff = Math.round(message.floorMatchmakingOnOff);
+    }
+    if (message.matchmakingType !== 0) {
+      obj.matchmakingType = Math.round(message.matchmakingType);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<S2CGameStartServerJson>, I>>(base?: I): S2CGameStartServerJson {
-    return S2CGameStartServerJson.fromPartial(base ?? {});
+    return S2CGameStartServerJson.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<S2CGameStartServerJson>, I>>(object: I): S2CGameStartServerJson {
     const message = createBaseS2CGameStartServerJson();
     message.restUrl = object.restUrl ?? "";
     message.gameId = object.gameId ?? 0;
     message.maxGameUser = object.maxGameUser ?? 0;
     message.waitTimeSec = object.waitTimeSec ?? 0;
-    message.discrepancy = (object.discrepancy !== undefined && object.discrepancy !== null)
-      ? StartGameSessionDataDiscrepancy.fromPartial(object.discrepancy)
-      : undefined;
+    message.dungeonMapIds = object.dungeonMapIds?.map((e) => e) || [];
     message.gameHackPolicy = object.gameHackPolicy ?? 0;
     message.validPlayerMeleeAttackRange = object.validPlayerMeleeAttackRange ?? 0;
     message.gameDifficultyType = object.gameDifficultyType ?? 0;
     message.shippingLogOnOffPolicy = object.shippingLogOnOffPolicy ?? 0;
     message.shippingLogLevelPolicy = object.shippingLogLevelPolicy ?? 0;
     message.gmOnOffPolicy = object.gmOnOffPolicy ?? 0;
-    message.allowedInteractionPolicy = object.allowedInteractionPolicy ?? 0;
-    message.allowedInteractionDistance = object.allowedInteractionDistance ?? 0;
-    message.allowedInteractionXyDistance = object.allowedInteractionXyDistance ?? 0;
-    message.hackPolicy = (object.hackPolicy !== undefined && object.hackPolicy !== null)
-      ? StartGameSessionDataHackPolicy.fromPartial(object.hackPolicy)
-      : undefined;
     message.currentFloor = object.currentFloor ?? 0;
-    message.isFloorMatchmaking = object.isFloorMatchmaking ?? 0;
+    message.floorMatchmakingOnOff = object.floorMatchmakingOnOff ?? 0;
+    message.matchmakingType = object.matchmakingType ?? 0;
     return message;
   },
 };
 
 function createBaseC2SGameEndServerPOST(): C2SGameEndServerPOST {
-  return { users: [], gameId: 0 };
+  return { users: [], gameId: 0, circles: [] };
 }
 
 export const C2SGameEndServerPOST = {
@@ -1832,6 +1604,9 @@ export const C2SGameEndServerPOST = {
     }
     if (message.gameId !== 0) {
       writer.uint32(16).uint64(message.gameId);
+    }
+    for (const v of message.circles) {
+      Circle.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -1844,21 +1619,28 @@ export const C2SGameEndServerPOST = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.users.push(GameEndUserInfo.decode(reader, reader.uint32()));
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.gameId = longToNumber(reader.uint64() as Long);
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.circles.push(Circle.decode(reader, reader.uint32()));
+          continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1870,28 +1652,32 @@ export const C2SGameEndServerPOST = {
     return {
       users: Array.isArray(object?.users) ? object.users.map((e: any) => GameEndUserInfo.fromJSON(e)) : [],
       gameId: isSet(object.gameId) ? Number(object.gameId) : 0,
+      circles: Array.isArray(object?.circles) ? object.circles.map((e: any) => Circle.fromJSON(e)) : [],
     };
   },
 
   toJSON(message: C2SGameEndServerPOST): unknown {
     const obj: any = {};
-    if (message.users) {
-      obj.users = message.users.map((e) => e ? GameEndUserInfo.toJSON(e) : undefined);
-    } else {
-      obj.users = [];
+    if (message.users?.length) {
+      obj.users = message.users.map((e) => GameEndUserInfo.toJSON(e));
     }
-    message.gameId !== undefined && (obj.gameId = Math.round(message.gameId));
+    if (message.gameId !== 0) {
+      obj.gameId = Math.round(message.gameId);
+    }
+    if (message.circles?.length) {
+      obj.circles = message.circles.map((e) => Circle.toJSON(e));
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<C2SGameEndServerPOST>, I>>(base?: I): C2SGameEndServerPOST {
-    return C2SGameEndServerPOST.fromPartial(base ?? {});
+    return C2SGameEndServerPOST.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<C2SGameEndServerPOST>, I>>(object: I): C2SGameEndServerPOST {
     const message = createBaseC2SGameEndServerPOST();
     message.users = object.users?.map((e) => GameEndUserInfo.fromPartial(e)) || [];
     message.gameId = object.gameId ?? 0;
+    message.circles = object.circles?.map((e) => Circle.fromPartial(e)) || [];
     return message;
   },
 };
@@ -1922,28 +1708,28 @@ export const GameEndUserInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.kill = reader.uint32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.death = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1961,16 +1747,21 @@ export const GameEndUserInfo = {
 
   toJSON(message: GameEndUserInfo): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.kill !== undefined && (obj.kill = Math.round(message.kill));
-    message.death !== undefined && (obj.death = Math.round(message.death));
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.kill !== 0) {
+      obj.kill = Math.round(message.kill);
+    }
+    if (message.death !== 0) {
+      obj.death = Math.round(message.death);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GameEndUserInfo>, I>>(base?: I): GameEndUserInfo {
-    return GameEndUserInfo.fromPartial(base ?? {});
+    return GameEndUserInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GameEndUserInfo>, I>>(object: I): GameEndUserInfo {
     const message = createBaseGameEndUserInfo();
     message.accountId = object.accountId ?? "";
@@ -2003,21 +1794,21 @@ export const C2SGameStartPOST = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.gameId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.mapNames.push(reader.string());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2034,19 +1825,18 @@ export const C2SGameStartPOST = {
 
   toJSON(message: C2SGameStartPOST): unknown {
     const obj: any = {};
-    message.gameId !== undefined && (obj.gameId = Math.round(message.gameId));
-    if (message.mapNames) {
-      obj.mapNames = message.mapNames.map((e) => e);
-    } else {
-      obj.mapNames = [];
+    if (message.gameId !== 0) {
+      obj.gameId = Math.round(message.gameId);
+    }
+    if (message.mapNames?.length) {
+      obj.mapNames = message.mapNames;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<C2SGameStartPOST>, I>>(base?: I): C2SGameStartPOST {
-    return C2SGameStartPOST.fromPartial(base ?? {});
+    return C2SGameStartPOST.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<C2SGameStartPOST>, I>>(object: I): C2SGameStartPOST {
     const message = createBaseC2SGameStartPOST();
     message.gameId = object.gameId ?? 0;
@@ -2081,28 +1871,28 @@ export const C2SGameCharacterInfoGet = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.gameId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2120,16 +1910,21 @@ export const C2SGameCharacterInfoGet = {
 
   toJSON(message: C2SGameCharacterInfoGet): unknown {
     const obj: any = {};
-    message.gameId !== undefined && (obj.gameId = Math.round(message.gameId));
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
+    if (message.gameId !== 0) {
+      obj.gameId = Math.round(message.gameId);
+    }
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<C2SGameCharacterInfoGet>, I>>(base?: I): C2SGameCharacterInfoGet {
-    return C2SGameCharacterInfoGet.fromPartial(base ?? {});
+    return C2SGameCharacterInfoGet.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<C2SGameCharacterInfoGet>, I>>(object: I): C2SGameCharacterInfoGet {
     const message = createBaseC2SGameCharacterInfoGet();
     message.gameId = object.gameId ?? 0;
@@ -2152,6 +1947,7 @@ function createBaseS2CGameCharacterInfoJson(): S2CGameCharacterInfoJson {
     itemSkinIds: [],
     emotes: [],
     actionIds: [],
+    musics: [],
   };
 }
 
@@ -2190,6 +1986,9 @@ export const S2CGameCharacterInfoJson = {
     for (const v of message.actionIds) {
       writer.uint32(90).string(v!);
     }
+    for (const v of message.musics) {
+      SMusic.encode(v!, writer.uint32(98).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -2201,84 +2000,91 @@ export const S2CGameCharacterInfoJson = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.gameId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.items.push(SItem.decode(reader, reader.uint32()));
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.perks.push(SPerk.decode(reader, reader.uint32()));
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.skills.push(SSkill.decode(reader, reader.uint32()));
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.spells.push(SSpell.decode(reader, reader.uint32()));
           continue;
         case 8:
-          if (tag != 66) {
+          if (tag !== 66) {
             break;
           }
 
           message.characterSkinIds.push(reader.string());
           continue;
         case 9:
-          if (tag != 74) {
+          if (tag !== 74) {
             break;
           }
 
           message.itemSkinIds.push(reader.string());
           continue;
         case 10:
-          if (tag != 82) {
+          if (tag !== 82) {
             break;
           }
 
           message.emotes.push(SEMOTE.decode(reader, reader.uint32()));
           continue;
         case 11:
-          if (tag != 90) {
+          if (tag !== 90) {
             break;
           }
 
           message.actionIds.push(reader.string());
           continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.musics.push(SMusic.decode(reader, reader.uint32()));
+          continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2301,61 +2107,54 @@ export const S2CGameCharacterInfoJson = {
       itemSkinIds: Array.isArray(object?.itemSkinIds) ? object.itemSkinIds.map((e: any) => String(e)) : [],
       emotes: Array.isArray(object?.emotes) ? object.emotes.map((e: any) => SEMOTE.fromJSON(e)) : [],
       actionIds: Array.isArray(object?.actionIds) ? object.actionIds.map((e: any) => String(e)) : [],
+      musics: Array.isArray(object?.musics) ? object.musics.map((e: any) => SMusic.fromJSON(e)) : [],
     };
   },
 
   toJSON(message: S2CGameCharacterInfoJson): unknown {
     const obj: any = {};
-    message.gameId !== undefined && (obj.gameId = Math.round(message.gameId));
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    if (message.items) {
-      obj.items = message.items.map((e) => e ? SItem.toJSON(e) : undefined);
-    } else {
-      obj.items = [];
+    if (message.gameId !== 0) {
+      obj.gameId = Math.round(message.gameId);
     }
-    if (message.perks) {
-      obj.perks = message.perks.map((e) => e ? SPerk.toJSON(e) : undefined);
-    } else {
-      obj.perks = [];
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
     }
-    if (message.skills) {
-      obj.skills = message.skills.map((e) => e ? SSkill.toJSON(e) : undefined);
-    } else {
-      obj.skills = [];
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
     }
-    if (message.spells) {
-      obj.spells = message.spells.map((e) => e ? SSpell.toJSON(e) : undefined);
-    } else {
-      obj.spells = [];
+    if (message.items?.length) {
+      obj.items = message.items.map((e) => SItem.toJSON(e));
     }
-    if (message.characterSkinIds) {
-      obj.characterSkinIds = message.characterSkinIds.map((e) => e);
-    } else {
-      obj.characterSkinIds = [];
+    if (message.perks?.length) {
+      obj.perks = message.perks.map((e) => SPerk.toJSON(e));
     }
-    if (message.itemSkinIds) {
-      obj.itemSkinIds = message.itemSkinIds.map((e) => e);
-    } else {
-      obj.itemSkinIds = [];
+    if (message.skills?.length) {
+      obj.skills = message.skills.map((e) => SSkill.toJSON(e));
     }
-    if (message.emotes) {
-      obj.emotes = message.emotes.map((e) => e ? SEMOTE.toJSON(e) : undefined);
-    } else {
-      obj.emotes = [];
+    if (message.spells?.length) {
+      obj.spells = message.spells.map((e) => SSpell.toJSON(e));
     }
-    if (message.actionIds) {
-      obj.actionIds = message.actionIds.map((e) => e);
-    } else {
-      obj.actionIds = [];
+    if (message.characterSkinIds?.length) {
+      obj.characterSkinIds = message.characterSkinIds;
+    }
+    if (message.itemSkinIds?.length) {
+      obj.itemSkinIds = message.itemSkinIds;
+    }
+    if (message.emotes?.length) {
+      obj.emotes = message.emotes.map((e) => SEMOTE.toJSON(e));
+    }
+    if (message.actionIds?.length) {
+      obj.actionIds = message.actionIds;
+    }
+    if (message.musics?.length) {
+      obj.musics = message.musics.map((e) => SMusic.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<S2CGameCharacterInfoJson>, I>>(base?: I): S2CGameCharacterInfoJson {
-    return S2CGameCharacterInfoJson.fromPartial(base ?? {});
+    return S2CGameCharacterInfoJson.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<S2CGameCharacterInfoJson>, I>>(object: I): S2CGameCharacterInfoJson {
     const message = createBaseS2CGameCharacterInfoJson();
     message.gameId = object.gameId ?? 0;
@@ -2369,6 +2168,7 @@ export const S2CGameCharacterInfoJson = {
     message.itemSkinIds = object.itemSkinIds?.map((e) => e) || [];
     message.emotes = object.emotes?.map((e) => SEMOTE.fromPartial(e)) || [];
     message.actionIds = object.actionIds?.map((e) => e) || [];
+    message.musics = object.musics?.map((e) => SMusic.fromPartial(e)) || [];
     return message;
   },
 };
@@ -2393,14 +2193,14 @@ export const C2SGameAliveCheckGET = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.gameId = longToNumber(reader.uint64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2414,14 +2214,15 @@ export const C2SGameAliveCheckGET = {
 
   toJSON(message: C2SGameAliveCheckGET): unknown {
     const obj: any = {};
-    message.gameId !== undefined && (obj.gameId = Math.round(message.gameId));
+    if (message.gameId !== 0) {
+      obj.gameId = Math.round(message.gameId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<C2SGameAliveCheckGET>, I>>(base?: I): C2SGameAliveCheckGET {
-    return C2SGameAliveCheckGET.fromPartial(base ?? {});
+    return C2SGameAliveCheckGET.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<C2SGameAliveCheckGET>, I>>(object: I): C2SGameAliveCheckGET {
     const message = createBaseC2SGameAliveCheckGET();
     message.gameId = object.gameId ?? 0;
@@ -2452,21 +2253,21 @@ export const AliveDataInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.Id = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.Us.push(reader.string());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2483,19 +2284,18 @@ export const AliveDataInfo = {
 
   toJSON(message: AliveDataInfo): unknown {
     const obj: any = {};
-    message.Id !== undefined && (obj.Id = message.Id);
-    if (message.Us) {
-      obj.Us = message.Us.map((e) => e);
-    } else {
-      obj.Us = [];
+    if (message.Id !== "") {
+      obj.Id = message.Id;
+    }
+    if (message.Us?.length) {
+      obj.Us = message.Us;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AliveDataInfo>, I>>(base?: I): AliveDataInfo {
-    return AliveDataInfo.fromPartial(base ?? {});
+    return AliveDataInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AliveDataInfo>, I>>(object: I): AliveDataInfo {
     const message = createBaseAliveDataInfo();
     message.Id = object.Id ?? "";
@@ -2527,21 +2327,21 @@ export const C2SAliveAppendDataGET = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.Gs = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.infos.push(AliveDataInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2558,19 +2358,18 @@ export const C2SAliveAppendDataGET = {
 
   toJSON(message: C2SAliveAppendDataGET): unknown {
     const obj: any = {};
-    message.Gs !== undefined && (obj.Gs = message.Gs);
-    if (message.infos) {
-      obj.infos = message.infos.map((e) => e ? AliveDataInfo.toJSON(e) : undefined);
-    } else {
-      obj.infos = [];
+    if (message.Gs !== "") {
+      obj.Gs = message.Gs;
+    }
+    if (message.infos?.length) {
+      obj.infos = message.infos.map((e) => AliveDataInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<C2SAliveAppendDataGET>, I>>(base?: I): C2SAliveAppendDataGET {
-    return C2SAliveAppendDataGET.fromPartial(base ?? {});
+    return C2SAliveAppendDataGET.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<C2SAliveAppendDataGET>, I>>(object: I): C2SAliveAppendDataGET {
     const message = createBaseC2SAliveAppendDataGET();
     message.Gs = object.Gs ?? "";
@@ -2599,14 +2398,14 @@ export const C2SGameInterruptPOST = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.gameId = longToNumber(reader.uint64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2620,14 +2419,15 @@ export const C2SGameInterruptPOST = {
 
   toJSON(message: C2SGameInterruptPOST): unknown {
     const obj: any = {};
-    message.gameId !== undefined && (obj.gameId = Math.round(message.gameId));
+    if (message.gameId !== 0) {
+      obj.gameId = Math.round(message.gameId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<C2SGameInterruptPOST>, I>>(base?: I): C2SGameInterruptPOST {
-    return C2SGameInterruptPOST.fromPartial(base ?? {});
+    return C2SGameInterruptPOST.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<C2SGameInterruptPOST>, I>>(object: I): C2SGameInterruptPOST {
     const message = createBaseC2SGameInterruptPOST();
     message.gameId = object.gameId ?? 0;
@@ -2683,26 +2483,27 @@ export const C2SUserReportPOST = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.gameId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.reportAccountId = reader.string();
           continue;
         case 3:
-          if (tag == 24) {
+          if (tag === 24) {
             message.category.push(reader.uint32());
+
             continue;
           }
 
-          if (tag == 26) {
+          if (tag === 26) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.category.push(reader.uint32());
@@ -2713,35 +2514,35 @@ export const C2SUserReportPOST = {
 
           break;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.targetAccountId = reader.string();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.targetNickName = saccountNickname.decode(reader, reader.uint32());
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.targetCharacterId = reader.string();
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.reportContent = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2763,25 +2564,33 @@ export const C2SUserReportPOST = {
 
   toJSON(message: C2SUserReportPOST): unknown {
     const obj: any = {};
-    message.gameId !== undefined && (obj.gameId = Math.round(message.gameId));
-    message.reportAccountId !== undefined && (obj.reportAccountId = message.reportAccountId);
-    if (message.category) {
-      obj.category = message.category.map((e) => Math.round(e));
-    } else {
-      obj.category = [];
+    if (message.gameId !== 0) {
+      obj.gameId = Math.round(message.gameId);
     }
-    message.targetAccountId !== undefined && (obj.targetAccountId = message.targetAccountId);
-    message.targetNickName !== undefined &&
-      (obj.targetNickName = message.targetNickName ? saccountNickname.toJSON(message.targetNickName) : undefined);
-    message.targetCharacterId !== undefined && (obj.targetCharacterId = message.targetCharacterId);
-    message.reportContent !== undefined && (obj.reportContent = message.reportContent);
+    if (message.reportAccountId !== "") {
+      obj.reportAccountId = message.reportAccountId;
+    }
+    if (message.category?.length) {
+      obj.category = message.category.map((e) => Math.round(e));
+    }
+    if (message.targetAccountId !== "") {
+      obj.targetAccountId = message.targetAccountId;
+    }
+    if (message.targetNickName !== undefined) {
+      obj.targetNickName = saccountNickname.toJSON(message.targetNickName);
+    }
+    if (message.targetCharacterId !== "") {
+      obj.targetCharacterId = message.targetCharacterId;
+    }
+    if (message.reportContent !== "") {
+      obj.reportContent = message.reportContent;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<C2SUserReportPOST>, I>>(base?: I): C2SUserReportPOST {
-    return C2SUserReportPOST.fromPartial(base ?? {});
+    return C2SUserReportPOST.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<C2SUserReportPOST>, I>>(object: I): C2SUserReportPOST {
     const message = createBaseC2SUserReportPOST();
     message.gameId = object.gameId ?? 0;
@@ -2826,35 +2635,35 @@ export const S2CUserReportPOSTResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.reportAccountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.targetAccountId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.reportKey = reader.string();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.category = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2873,23 +2682,193 @@ export const S2CUserReportPOSTResponse = {
 
   toJSON(message: S2CUserReportPOSTResponse): unknown {
     const obj: any = {};
-    message.reportAccountId !== undefined && (obj.reportAccountId = message.reportAccountId);
-    message.targetAccountId !== undefined && (obj.targetAccountId = message.targetAccountId);
-    message.reportKey !== undefined && (obj.reportKey = message.reportKey);
-    message.category !== undefined && (obj.category = Math.round(message.category));
+    if (message.reportAccountId !== "") {
+      obj.reportAccountId = message.reportAccountId;
+    }
+    if (message.targetAccountId !== "") {
+      obj.targetAccountId = message.targetAccountId;
+    }
+    if (message.reportKey !== "") {
+      obj.reportKey = message.reportKey;
+    }
+    if (message.category !== 0) {
+      obj.category = Math.round(message.category);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<S2CUserReportPOSTResponse>, I>>(base?: I): S2CUserReportPOSTResponse {
-    return S2CUserReportPOSTResponse.fromPartial(base ?? {});
+    return S2CUserReportPOSTResponse.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<S2CUserReportPOSTResponse>, I>>(object: I): S2CUserReportPOSTResponse {
     const message = createBaseS2CUserReportPOSTResponse();
     message.reportAccountId = object.reportAccountId ?? "";
     message.targetAccountId = object.targetAccountId ?? "";
     message.reportKey = object.reportKey ?? "";
     message.category = object.category ?? 0;
+    return message;
+  },
+};
+
+function createBaseLocation(): Location {
+  return { x: 0, y: 0, z: 0 };
+}
+
+export const Location = {
+  encode(message: Location, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.x !== 0) {
+      writer.uint32(8).int32(message.x);
+    }
+    if (message.y !== 0) {
+      writer.uint32(16).int32(message.y);
+    }
+    if (message.z !== 0) {
+      writer.uint32(24).int32(message.z);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Location {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseLocation();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.x = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.y = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.z = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Location {
+    return {
+      x: isSet(object.x) ? Number(object.x) : 0,
+      y: isSet(object.y) ? Number(object.y) : 0,
+      z: isSet(object.z) ? Number(object.z) : 0,
+    };
+  },
+
+  toJSON(message: Location): unknown {
+    const obj: any = {};
+    if (message.x !== 0) {
+      obj.x = Math.round(message.x);
+    }
+    if (message.y !== 0) {
+      obj.y = Math.round(message.y);
+    }
+    if (message.z !== 0) {
+      obj.z = Math.round(message.z);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Location>, I>>(base?: I): Location {
+    return Location.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<Location>, I>>(object: I): Location {
+    const message = createBaseLocation();
+    message.x = object.x ?? 0;
+    message.y = object.y ?? 0;
+    message.z = object.z ?? 0;
+    return message;
+  },
+};
+
+function createBaseCircle(): Circle {
+  return { pos: undefined, radius: 0 };
+}
+
+export const Circle = {
+  encode(message: Circle, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.pos !== undefined) {
+      Location.encode(message.pos, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.radius !== 0) {
+      writer.uint32(21).float(message.radius);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Circle {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCircle();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.pos = Location.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 21) {
+            break;
+          }
+
+          message.radius = reader.float();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Circle {
+    return {
+      pos: isSet(object.pos) ? Location.fromJSON(object.pos) : undefined,
+      radius: isSet(object.radius) ? Number(object.radius) : 0,
+    };
+  },
+
+  toJSON(message: Circle): unknown {
+    const obj: any = {};
+    if (message.pos !== undefined) {
+      obj.pos = Location.toJSON(message.pos);
+    }
+    if (message.radius !== 0) {
+      obj.radius = message.radius;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Circle>, I>>(base?: I): Circle {
+    return Circle.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<Circle>, I>>(object: I): Circle {
+    const message = createBaseCircle();
+    message.pos = (object.pos !== undefined && object.pos !== null) ? Location.fromPartial(object.pos) : undefined;
+    message.radius = object.radius ?? 0;
     return message;
   },
 };
@@ -2910,6 +2889,9 @@ function createBaseGameResultInfo(): GameResultInfo {
     gameDifficultyType: 0,
     needBlock: 0,
     needHWBlock: 0,
+    blockTimeMin: 0,
+    addTriumphExpValue: 0,
+    locations: [],
   };
 }
 
@@ -2957,6 +2939,15 @@ export const GameResultInfo = {
     if (message.needHWBlock !== 0) {
       writer.uint32(112).uint32(message.needHWBlock);
     }
+    if (message.blockTimeMin !== 0) {
+      writer.uint32(120).uint32(message.blockTimeMin);
+    }
+    if (message.addTriumphExpValue !== 0) {
+      writer.uint32(128).int32(message.addTriumphExpValue);
+    }
+    for (const v of message.locations) {
+      Location.encode(v!, writer.uint32(138).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -2968,105 +2959,126 @@ export const GameResultInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.gameId = longToNumber(reader.uint64() as Long);
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.characterClass = reader.string();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.killCount = reader.uint32();
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.advPoints.push(GameExitAdvPoint.decode(reader, reader.uint32()));
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.escapeMapName = reader.string();
           continue;
         case 8:
-          if (tag != 66) {
+          if (tag !== 66) {
             break;
           }
 
           message.reason = reader.string();
           continue;
         case 9:
-          if (tag != 74) {
+          if (tag !== 74) {
             break;
           }
 
           message.expPoints.push(GameExitExpPoint.decode(reader, reader.uint32()));
           continue;
         case 10:
-          if (tag != 82) {
+          if (tag !== 82) {
             break;
           }
 
           message.killLogData.push(Killlog.decode(reader, reader.uint32()));
           continue;
         case 11:
-          if (tag != 90) {
+          if (tag !== 90) {
             break;
           }
 
           message.monsterKillLogs.push(MonsterKillLog.decode(reader, reader.uint32()));
           continue;
         case 12:
-          if (tag != 96) {
+          if (tag !== 96) {
             break;
           }
 
           message.gameDifficultyType = reader.uint32();
           continue;
         case 13:
-          if (tag != 104) {
+          if (tag !== 104) {
             break;
           }
 
           message.needBlock = reader.uint32();
           continue;
         case 14:
-          if (tag != 112) {
+          if (tag !== 112) {
             break;
           }
 
           message.needHWBlock = reader.uint32();
           continue;
+        case 15:
+          if (tag !== 120) {
+            break;
+          }
+
+          message.blockTimeMin = reader.uint32();
+          continue;
+        case 16:
+          if (tag !== 128) {
+            break;
+          }
+
+          message.addTriumphExpValue = reader.int32();
+          continue;
+        case 17:
+          if (tag !== 138) {
+            break;
+          }
+
+          message.locations.push(Location.decode(reader, reader.uint32()));
+          continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -3092,48 +3104,71 @@ export const GameResultInfo = {
       gameDifficultyType: isSet(object.gameDifficultyType) ? Number(object.gameDifficultyType) : 0,
       needBlock: isSet(object.needBlock) ? Number(object.needBlock) : 0,
       needHWBlock: isSet(object.needHWBlock) ? Number(object.needHWBlock) : 0,
+      blockTimeMin: isSet(object.blockTimeMin) ? Number(object.blockTimeMin) : 0,
+      addTriumphExpValue: isSet(object.addTriumphExpValue) ? Number(object.addTriumphExpValue) : 0,
+      locations: Array.isArray(object?.locations) ? object.locations.map((e: any) => Location.fromJSON(e)) : [],
     };
   },
 
   toJSON(message: GameResultInfo): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.gameId !== undefined && (obj.gameId = Math.round(message.gameId));
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
-    message.killCount !== undefined && (obj.killCount = Math.round(message.killCount));
-    if (message.advPoints) {
-      obj.advPoints = message.advPoints.map((e) => e ? GameExitAdvPoint.toJSON(e) : undefined);
-    } else {
-      obj.advPoints = [];
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
     }
-    message.escapeMapName !== undefined && (obj.escapeMapName = message.escapeMapName);
-    message.reason !== undefined && (obj.reason = message.reason);
-    if (message.expPoints) {
-      obj.expPoints = message.expPoints.map((e) => e ? GameExitExpPoint.toJSON(e) : undefined);
-    } else {
-      obj.expPoints = [];
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
     }
-    if (message.killLogData) {
-      obj.killLogData = message.killLogData.map((e) => e ? Killlog.toJSON(e) : undefined);
-    } else {
-      obj.killLogData = [];
+    if (message.gameId !== 0) {
+      obj.gameId = Math.round(message.gameId);
     }
-    if (message.monsterKillLogs) {
-      obj.monsterKillLogs = message.monsterKillLogs.map((e) => e ? MonsterKillLog.toJSON(e) : undefined);
-    } else {
-      obj.monsterKillLogs = [];
+    if (message.characterClass !== "") {
+      obj.characterClass = message.characterClass;
     }
-    message.gameDifficultyType !== undefined && (obj.gameDifficultyType = Math.round(message.gameDifficultyType));
-    message.needBlock !== undefined && (obj.needBlock = Math.round(message.needBlock));
-    message.needHWBlock !== undefined && (obj.needHWBlock = Math.round(message.needHWBlock));
+    if (message.killCount !== 0) {
+      obj.killCount = Math.round(message.killCount);
+    }
+    if (message.advPoints?.length) {
+      obj.advPoints = message.advPoints.map((e) => GameExitAdvPoint.toJSON(e));
+    }
+    if (message.escapeMapName !== "") {
+      obj.escapeMapName = message.escapeMapName;
+    }
+    if (message.reason !== "") {
+      obj.reason = message.reason;
+    }
+    if (message.expPoints?.length) {
+      obj.expPoints = message.expPoints.map((e) => GameExitExpPoint.toJSON(e));
+    }
+    if (message.killLogData?.length) {
+      obj.killLogData = message.killLogData.map((e) => Killlog.toJSON(e));
+    }
+    if (message.monsterKillLogs?.length) {
+      obj.monsterKillLogs = message.monsterKillLogs.map((e) => MonsterKillLog.toJSON(e));
+    }
+    if (message.gameDifficultyType !== 0) {
+      obj.gameDifficultyType = Math.round(message.gameDifficultyType);
+    }
+    if (message.needBlock !== 0) {
+      obj.needBlock = Math.round(message.needBlock);
+    }
+    if (message.needHWBlock !== 0) {
+      obj.needHWBlock = Math.round(message.needHWBlock);
+    }
+    if (message.blockTimeMin !== 0) {
+      obj.blockTimeMin = Math.round(message.blockTimeMin);
+    }
+    if (message.addTriumphExpValue !== 0) {
+      obj.addTriumphExpValue = Math.round(message.addTriumphExpValue);
+    }
+    if (message.locations?.length) {
+      obj.locations = message.locations.map((e) => Location.toJSON(e));
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GameResultInfo>, I>>(base?: I): GameResultInfo {
-    return GameResultInfo.fromPartial(base ?? {});
+    return GameResultInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GameResultInfo>, I>>(object: I): GameResultInfo {
     const message = createBaseGameResultInfo();
     message.accountId = object.accountId ?? "";
@@ -3150,140 +3185,9 @@ export const GameResultInfo = {
     message.gameDifficultyType = object.gameDifficultyType ?? 0;
     message.needBlock = object.needBlock ?? 0;
     message.needHWBlock = object.needHWBlock ?? 0;
-    return message;
-  },
-};
-
-function createBaseC2SGameDownUserPOST(): C2SGameDownUserPOST {
-  return { resultInfo: undefined, downItems: [], currentFloor: 0, hp: 0, partyAccountIds: [], partyIdx: 0 };
-}
-
-export const C2SGameDownUserPOST = {
-  encode(message: C2SGameDownUserPOST, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.resultInfo !== undefined) {
-      GameResultInfo.encode(message.resultInfo, writer.uint32(10).fork()).ldelim();
-    }
-    for (const v of message.downItems) {
-      SDownItem.encode(v!, writer.uint32(18).fork()).ldelim();
-    }
-    if (message.currentFloor !== 0) {
-      writer.uint32(24).uint32(message.currentFloor);
-    }
-    if (message.hp !== 0) {
-      writer.uint32(32).uint32(message.hp);
-    }
-    for (const v of message.partyAccountIds) {
-      writer.uint32(42).string(v!);
-    }
-    if (message.partyIdx !== 0) {
-      writer.uint32(48).uint64(message.partyIdx);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): C2SGameDownUserPOST {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseC2SGameDownUserPOST();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 10) {
-            break;
-          }
-
-          message.resultInfo = GameResultInfo.decode(reader, reader.uint32());
-          continue;
-        case 2:
-          if (tag != 18) {
-            break;
-          }
-
-          message.downItems.push(SDownItem.decode(reader, reader.uint32()));
-          continue;
-        case 3:
-          if (tag != 24) {
-            break;
-          }
-
-          message.currentFloor = reader.uint32();
-          continue;
-        case 4:
-          if (tag != 32) {
-            break;
-          }
-
-          message.hp = reader.uint32();
-          continue;
-        case 5:
-          if (tag != 42) {
-            break;
-          }
-
-          message.partyAccountIds.push(reader.string());
-          continue;
-        case 6:
-          if (tag != 48) {
-            break;
-          }
-
-          message.partyIdx = longToNumber(reader.uint64() as Long);
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): C2SGameDownUserPOST {
-    return {
-      resultInfo: isSet(object.resultInfo) ? GameResultInfo.fromJSON(object.resultInfo) : undefined,
-      downItems: Array.isArray(object?.downItems) ? object.downItems.map((e: any) => SDownItem.fromJSON(e)) : [],
-      currentFloor: isSet(object.currentFloor) ? Number(object.currentFloor) : 0,
-      hp: isSet(object.hp) ? Number(object.hp) : 0,
-      partyAccountIds: Array.isArray(object?.partyAccountIds) ? object.partyAccountIds.map((e: any) => String(e)) : [],
-      partyIdx: isSet(object.partyIdx) ? Number(object.partyIdx) : 0,
-    };
-  },
-
-  toJSON(message: C2SGameDownUserPOST): unknown {
-    const obj: any = {};
-    message.resultInfo !== undefined &&
-      (obj.resultInfo = message.resultInfo ? GameResultInfo.toJSON(message.resultInfo) : undefined);
-    if (message.downItems) {
-      obj.downItems = message.downItems.map((e) => e ? SDownItem.toJSON(e) : undefined);
-    } else {
-      obj.downItems = [];
-    }
-    message.currentFloor !== undefined && (obj.currentFloor = Math.round(message.currentFloor));
-    message.hp !== undefined && (obj.hp = Math.round(message.hp));
-    if (message.partyAccountIds) {
-      obj.partyAccountIds = message.partyAccountIds.map((e) => e);
-    } else {
-      obj.partyAccountIds = [];
-    }
-    message.partyIdx !== undefined && (obj.partyIdx = Math.round(message.partyIdx));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<C2SGameDownUserPOST>, I>>(base?: I): C2SGameDownUserPOST {
-    return C2SGameDownUserPOST.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<C2SGameDownUserPOST>, I>>(object: I): C2SGameDownUserPOST {
-    const message = createBaseC2SGameDownUserPOST();
-    message.resultInfo = (object.resultInfo !== undefined && object.resultInfo !== null)
-      ? GameResultInfo.fromPartial(object.resultInfo)
-      : undefined;
-    message.downItems = object.downItems?.map((e) => SDownItem.fromPartial(e)) || [];
-    message.currentFloor = object.currentFloor ?? 0;
-    message.hp = object.hp ?? 0;
-    message.partyAccountIds = object.partyAccountIds?.map((e) => e) || [];
-    message.partyIdx = object.partyIdx ?? 0;
+    message.blockTimeMin = object.blockTimeMin ?? 0;
+    message.addTriumphExpValue = object.addTriumphExpValue ?? 0;
+    message.locations = object.locations?.map((e) => Location.fromPartial(e)) || [];
     return message;
   },
 };
@@ -3311,21 +3215,21 @@ export const C2SGameEscapeUserPOST = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.resultInfo = GameResultInfo.decode(reader, reader.uint32());
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.items.push(SItem.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -3342,20 +3246,18 @@ export const C2SGameEscapeUserPOST = {
 
   toJSON(message: C2SGameEscapeUserPOST): unknown {
     const obj: any = {};
-    message.resultInfo !== undefined &&
-      (obj.resultInfo = message.resultInfo ? GameResultInfo.toJSON(message.resultInfo) : undefined);
-    if (message.items) {
-      obj.items = message.items.map((e) => e ? SItem.toJSON(e) : undefined);
-    } else {
-      obj.items = [];
+    if (message.resultInfo !== undefined) {
+      obj.resultInfo = GameResultInfo.toJSON(message.resultInfo);
+    }
+    if (message.items?.length) {
+      obj.items = message.items.map((e) => SItem.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<C2SGameEscapeUserPOST>, I>>(base?: I): C2SGameEscapeUserPOST {
-    return C2SGameEscapeUserPOST.fromPartial(base ?? {});
+    return C2SGameEscapeUserPOST.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<C2SGameEscapeUserPOST>, I>>(object: I): C2SGameEscapeUserPOST {
     const message = createBaseC2SGameEscapeUserPOST();
     message.resultInfo = (object.resultInfo !== undefined && object.resultInfo !== null)
@@ -3386,14 +3288,14 @@ export const C2SGameExitUserV2POST = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.resultInfo = GameResultInfo.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -3407,15 +3309,15 @@ export const C2SGameExitUserV2POST = {
 
   toJSON(message: C2SGameExitUserV2POST): unknown {
     const obj: any = {};
-    message.resultInfo !== undefined &&
-      (obj.resultInfo = message.resultInfo ? GameResultInfo.toJSON(message.resultInfo) : undefined);
+    if (message.resultInfo !== undefined) {
+      obj.resultInfo = GameResultInfo.toJSON(message.resultInfo);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<C2SGameExitUserV2POST>, I>>(base?: I): C2SGameExitUserV2POST {
-    return C2SGameExitUserV2POST.fromPartial(base ?? {});
+    return C2SGameExitUserV2POST.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<C2SGameExitUserV2POST>, I>>(object: I): C2SGameExitUserV2POST {
     const message = createBaseC2SGameExitUserV2POST();
     message.resultInfo = (object.resultInfo !== undefined && object.resultInfo !== null)
@@ -3451,28 +3353,28 @@ export const C2SGameExitEscapedUserPOST = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.gameId = longToNumber(reader.uint64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -3490,16 +3392,21 @@ export const C2SGameExitEscapedUserPOST = {
 
   toJSON(message: C2SGameExitEscapedUserPOST): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.gameId !== undefined && (obj.gameId = Math.round(message.gameId));
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.gameId !== 0) {
+      obj.gameId = Math.round(message.gameId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<C2SGameExitEscapedUserPOST>, I>>(base?: I): C2SGameExitEscapedUserPOST {
-    return C2SGameExitEscapedUserPOST.fromPartial(base ?? {});
+    return C2SGameExitEscapedUserPOST.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<C2SGameExitEscapedUserPOST>, I>>(object: I): C2SGameExitEscapedUserPOST {
     const message = createBaseC2SGameExitEscapedUserPOST();
     message.accountId = object.accountId ?? "";
@@ -3509,15 +3416,243 @@ export const C2SGameExitEscapedUserPOST = {
   },
 };
 
-function createBaseS2CGameCharacterInfoDownJson(): S2CGameCharacterInfoDownJson {
+function createBaseSSkillFloor(): SSkillFloor {
+  return { skill: undefined, count: 0 };
+}
+
+export const SSkillFloor = {
+  encode(message: SSkillFloor, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.skill !== undefined) {
+      SSkill.encode(message.skill, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.count !== 0) {
+      writer.uint32(16).int32(message.count);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SSkillFloor {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSSkillFloor();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.skill = SSkill.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.count = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SSkillFloor {
+    return {
+      skill: isSet(object.skill) ? SSkill.fromJSON(object.skill) : undefined,
+      count: isSet(object.count) ? Number(object.count) : 0,
+    };
+  },
+
+  toJSON(message: SSkillFloor): unknown {
+    const obj: any = {};
+    if (message.skill !== undefined) {
+      obj.skill = SSkill.toJSON(message.skill);
+    }
+    if (message.count !== 0) {
+      obj.count = Math.round(message.count);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SSkillFloor>, I>>(base?: I): SSkillFloor {
+    return SSkillFloor.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SSkillFloor>, I>>(object: I): SSkillFloor {
+    const message = createBaseSSkillFloor();
+    message.skill = (object.skill !== undefined && object.skill !== null)
+      ? SSkill.fromPartial(object.skill)
+      : undefined;
+    message.count = object.count ?? 0;
+    return message;
+  },
+};
+
+function createBaseSSpellFloor(): SSpellFloor {
+  return { spell: undefined, count: 0 };
+}
+
+export const SSpellFloor = {
+  encode(message: SSpellFloor, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.spell !== undefined) {
+      SSpell.encode(message.spell, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.count !== 0) {
+      writer.uint32(16).int32(message.count);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SSpellFloor {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSSpellFloor();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.spell = SSpell.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.count = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SSpellFloor {
+    return {
+      spell: isSet(object.spell) ? SSpell.fromJSON(object.spell) : undefined,
+      count: isSet(object.count) ? Number(object.count) : 0,
+    };
+  },
+
+  toJSON(message: SSpellFloor): unknown {
+    const obj: any = {};
+    if (message.spell !== undefined) {
+      obj.spell = SSpell.toJSON(message.spell);
+    }
+    if (message.count !== 0) {
+      obj.count = Math.round(message.count);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SSpellFloor>, I>>(base?: I): SSpellFloor {
+    return SSpellFloor.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SSpellFloor>, I>>(object: I): SSpellFloor {
+    const message = createBaseSSpellFloor();
+    message.spell = (object.spell !== undefined && object.spell !== null)
+      ? SSpell.fromPartial(object.spell)
+      : undefined;
+    message.count = object.count ?? 0;
+    return message;
+  },
+};
+
+function createBaseSMusicFloor(): SMusicFloor {
+  return { music: undefined, count: 0 };
+}
+
+export const SMusicFloor = {
+  encode(message: SMusicFloor, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.music !== undefined) {
+      SMusic.encode(message.music, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.count !== 0) {
+      writer.uint32(16).int32(message.count);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SMusicFloor {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSMusicFloor();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.music = SMusic.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.count = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SMusicFloor {
+    return {
+      music: isSet(object.music) ? SMusic.fromJSON(object.music) : undefined,
+      count: isSet(object.count) ? Number(object.count) : 0,
+    };
+  },
+
+  toJSON(message: SMusicFloor): unknown {
+    const obj: any = {};
+    if (message.music !== undefined) {
+      obj.music = SMusic.toJSON(message.music);
+    }
+    if (message.count !== 0) {
+      obj.count = Math.round(message.count);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SMusicFloor>, I>>(base?: I): SMusicFloor {
+    return SMusicFloor.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SMusicFloor>, I>>(object: I): SMusicFloor {
+    const message = createBaseSMusicFloor();
+    message.music = (object.music !== undefined && object.music !== null)
+      ? SMusic.fromPartial(object.music)
+      : undefined;
+    message.count = object.count ?? 0;
+    return message;
+  },
+};
+
+function createBaseFloorMatchMakingCharacterInfo(): FloorMatchMakingCharacterInfo {
   return {
-    gameId: 0,
     accountId: "",
     characterId: "",
     downItems: [],
     perks: [],
     skills: [],
     spells: [],
+    musics: [],
     characterSkinIds: [],
     itemSkinIds: [],
     emotes: [],
@@ -3525,28 +3660,28 @@ function createBaseS2CGameCharacterInfoDownJson(): S2CGameCharacterInfoDownJson 
   };
 }
 
-export const S2CGameCharacterInfoDownJson = {
-  encode(message: S2CGameCharacterInfoDownJson, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.gameId !== 0) {
-      writer.uint32(8).uint64(message.gameId);
-    }
+export const FloorMatchMakingCharacterInfo = {
+  encode(message: FloorMatchMakingCharacterInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.accountId !== "") {
-      writer.uint32(18).string(message.accountId);
+      writer.uint32(10).string(message.accountId);
     }
     if (message.characterId !== "") {
-      writer.uint32(26).string(message.characterId);
+      writer.uint32(18).string(message.characterId);
     }
     for (const v of message.downItems) {
-      SDownItem.encode(v!, writer.uint32(34).fork()).ldelim();
+      SDownItem.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     for (const v of message.perks) {
-      SPerk.encode(v!, writer.uint32(42).fork()).ldelim();
+      SPerk.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     for (const v of message.skills) {
-      SSkill.encode(v!, writer.uint32(50).fork()).ldelim();
+      SSkillFloor.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     for (const v of message.spells) {
-      SSpell.encode(v!, writer.uint32(58).fork()).ldelim();
+      SSpellFloor.encode(v!, writer.uint32(50).fork()).ldelim();
+    }
+    for (const v of message.musics) {
+      SMusicFloor.encode(v!, writer.uint32(58).fork()).ldelim();
     }
     for (const v of message.characterSkinIds) {
       writer.uint32(66).string(v!);
@@ -3558,97 +3693,97 @@ export const S2CGameCharacterInfoDownJson = {
       SEMOTE.encode(v!, writer.uint32(82).fork()).ldelim();
     }
     if (message.hp !== 0) {
-      writer.uint32(88).uint32(message.hp);
+      writer.uint32(88).int32(message.hp);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): S2CGameCharacterInfoDownJson {
+  decode(input: _m0.Reader | Uint8Array, length?: number): FloorMatchMakingCharacterInfo {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseS2CGameCharacterInfoDownJson();
+    const message = createBaseFloorMatchMakingCharacterInfo();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
-            break;
-          }
-
-          message.gameId = longToNumber(reader.uint64() as Long);
-          continue;
-        case 2:
-          if (tag != 18) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
-        case 3:
-          if (tag != 26) {
+        case 2:
+          if (tag !== 18) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
-        case 4:
-          if (tag != 34) {
+        case 3:
+          if (tag !== 26) {
             break;
           }
 
           message.downItems.push(SDownItem.decode(reader, reader.uint32()));
           continue;
-        case 5:
-          if (tag != 42) {
+        case 4:
+          if (tag !== 34) {
             break;
           }
 
           message.perks.push(SPerk.decode(reader, reader.uint32()));
           continue;
-        case 6:
-          if (tag != 50) {
+        case 5:
+          if (tag !== 42) {
             break;
           }
 
-          message.skills.push(SSkill.decode(reader, reader.uint32()));
+          message.skills.push(SSkillFloor.decode(reader, reader.uint32()));
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.spells.push(SSpellFloor.decode(reader, reader.uint32()));
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
-          message.spells.push(SSpell.decode(reader, reader.uint32()));
+          message.musics.push(SMusicFloor.decode(reader, reader.uint32()));
           continue;
         case 8:
-          if (tag != 66) {
+          if (tag !== 66) {
             break;
           }
 
           message.characterSkinIds.push(reader.string());
           continue;
         case 9:
-          if (tag != 74) {
+          if (tag !== 74) {
             break;
           }
 
           message.itemSkinIds.push(reader.string());
           continue;
         case 10:
-          if (tag != 82) {
+          if (tag !== 82) {
             break;
           }
 
           message.emotes.push(SEMOTE.decode(reader, reader.uint32()));
           continue;
         case 11:
-          if (tag != 88) {
+          if (tag !== 88) {
             break;
           }
 
-          message.hp = reader.uint32();
+          message.hp = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -3656,15 +3791,15 @@ export const S2CGameCharacterInfoDownJson = {
     return message;
   },
 
-  fromJSON(object: any): S2CGameCharacterInfoDownJson {
+  fromJSON(object: any): FloorMatchMakingCharacterInfo {
     return {
-      gameId: isSet(object.gameId) ? Number(object.gameId) : 0,
       accountId: isSet(object.accountId) ? String(object.accountId) : "",
       characterId: isSet(object.characterId) ? String(object.characterId) : "",
       downItems: Array.isArray(object?.downItems) ? object.downItems.map((e: any) => SDownItem.fromJSON(e)) : [],
       perks: Array.isArray(object?.perks) ? object.perks.map((e: any) => SPerk.fromJSON(e)) : [],
-      skills: Array.isArray(object?.skills) ? object.skills.map((e: any) => SSkill.fromJSON(e)) : [],
-      spells: Array.isArray(object?.spells) ? object.spells.map((e: any) => SSpell.fromJSON(e)) : [],
+      skills: Array.isArray(object?.skills) ? object.skills.map((e: any) => SSkillFloor.fromJSON(e)) : [],
+      spells: Array.isArray(object?.spells) ? object.spells.map((e: any) => SSpellFloor.fromJSON(e)) : [],
+      musics: Array.isArray(object?.musics) ? object.musics.map((e: any) => SMusicFloor.fromJSON(e)) : [],
       characterSkinIds: Array.isArray(object?.characterSkinIds)
         ? object.characterSkinIds.map((e: any) => String(e))
         : [],
@@ -3674,67 +3809,140 @@ export const S2CGameCharacterInfoDownJson = {
     };
   },
 
-  toJSON(message: S2CGameCharacterInfoDownJson): unknown {
+  toJSON(message: FloorMatchMakingCharacterInfo): unknown {
     const obj: any = {};
-    message.gameId !== undefined && (obj.gameId = Math.round(message.gameId));
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    if (message.downItems) {
-      obj.downItems = message.downItems.map((e) => e ? SDownItem.toJSON(e) : undefined);
-    } else {
-      obj.downItems = [];
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
     }
-    if (message.perks) {
-      obj.perks = message.perks.map((e) => e ? SPerk.toJSON(e) : undefined);
-    } else {
-      obj.perks = [];
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
     }
-    if (message.skills) {
-      obj.skills = message.skills.map((e) => e ? SSkill.toJSON(e) : undefined);
-    } else {
-      obj.skills = [];
+    if (message.downItems?.length) {
+      obj.downItems = message.downItems.map((e) => SDownItem.toJSON(e));
     }
-    if (message.spells) {
-      obj.spells = message.spells.map((e) => e ? SSpell.toJSON(e) : undefined);
-    } else {
-      obj.spells = [];
+    if (message.perks?.length) {
+      obj.perks = message.perks.map((e) => SPerk.toJSON(e));
     }
-    if (message.characterSkinIds) {
-      obj.characterSkinIds = message.characterSkinIds.map((e) => e);
-    } else {
-      obj.characterSkinIds = [];
+    if (message.skills?.length) {
+      obj.skills = message.skills.map((e) => SSkillFloor.toJSON(e));
     }
-    if (message.itemSkinIds) {
-      obj.itemSkinIds = message.itemSkinIds.map((e) => e);
-    } else {
-      obj.itemSkinIds = [];
+    if (message.spells?.length) {
+      obj.spells = message.spells.map((e) => SSpellFloor.toJSON(e));
     }
-    if (message.emotes) {
-      obj.emotes = message.emotes.map((e) => e ? SEMOTE.toJSON(e) : undefined);
-    } else {
-      obj.emotes = [];
+    if (message.musics?.length) {
+      obj.musics = message.musics.map((e) => SMusicFloor.toJSON(e));
     }
-    message.hp !== undefined && (obj.hp = Math.round(message.hp));
+    if (message.characterSkinIds?.length) {
+      obj.characterSkinIds = message.characterSkinIds;
+    }
+    if (message.itemSkinIds?.length) {
+      obj.itemSkinIds = message.itemSkinIds;
+    }
+    if (message.emotes?.length) {
+      obj.emotes = message.emotes.map((e) => SEMOTE.toJSON(e));
+    }
+    if (message.hp !== 0) {
+      obj.hp = Math.round(message.hp);
+    }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<S2CGameCharacterInfoDownJson>, I>>(base?: I): S2CGameCharacterInfoDownJson {
-    return S2CGameCharacterInfoDownJson.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<FloorMatchMakingCharacterInfo>, I>>(base?: I): FloorMatchMakingCharacterInfo {
+    return FloorMatchMakingCharacterInfo.fromPartial(base ?? ({} as any));
   },
-
-  fromPartial<I extends Exact<DeepPartial<S2CGameCharacterInfoDownJson>, I>>(object: I): S2CGameCharacterInfoDownJson {
-    const message = createBaseS2CGameCharacterInfoDownJson();
-    message.gameId = object.gameId ?? 0;
+  fromPartial<I extends Exact<DeepPartial<FloorMatchMakingCharacterInfo>, I>>(
+    object: I,
+  ): FloorMatchMakingCharacterInfo {
+    const message = createBaseFloorMatchMakingCharacterInfo();
     message.accountId = object.accountId ?? "";
     message.characterId = object.characterId ?? "";
     message.downItems = object.downItems?.map((e) => SDownItem.fromPartial(e)) || [];
     message.perks = object.perks?.map((e) => SPerk.fromPartial(e)) || [];
-    message.skills = object.skills?.map((e) => SSkill.fromPartial(e)) || [];
-    message.spells = object.spells?.map((e) => SSpell.fromPartial(e)) || [];
+    message.skills = object.skills?.map((e) => SSkillFloor.fromPartial(e)) || [];
+    message.spells = object.spells?.map((e) => SSpellFloor.fromPartial(e)) || [];
+    message.musics = object.musics?.map((e) => SMusicFloor.fromPartial(e)) || [];
     message.characterSkinIds = object.characterSkinIds?.map((e) => e) || [];
     message.itemSkinIds = object.itemSkinIds?.map((e) => e) || [];
     message.emotes = object.emotes?.map((e) => SEMOTE.fromPartial(e)) || [];
     message.hp = object.hp ?? 0;
+    return message;
+  },
+};
+
+function createBaseC2SPrepareFloorMatchMaking(): C2SPrepareFloorMatchMaking {
+  return { info: undefined, resultInfo: undefined };
+}
+
+export const C2SPrepareFloorMatchMaking = {
+  encode(message: C2SPrepareFloorMatchMaking, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.info !== undefined) {
+      FloorMatchMakingCharacterInfo.encode(message.info, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.resultInfo !== undefined) {
+      GameResultInfo.encode(message.resultInfo, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): C2SPrepareFloorMatchMaking {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseC2SPrepareFloorMatchMaking();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.info = FloorMatchMakingCharacterInfo.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.resultInfo = GameResultInfo.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): C2SPrepareFloorMatchMaking {
+    return {
+      info: isSet(object.info) ? FloorMatchMakingCharacterInfo.fromJSON(object.info) : undefined,
+      resultInfo: isSet(object.resultInfo) ? GameResultInfo.fromJSON(object.resultInfo) : undefined,
+    };
+  },
+
+  toJSON(message: C2SPrepareFloorMatchMaking): unknown {
+    const obj: any = {};
+    if (message.info !== undefined) {
+      obj.info = FloorMatchMakingCharacterInfo.toJSON(message.info);
+    }
+    if (message.resultInfo !== undefined) {
+      obj.resultInfo = GameResultInfo.toJSON(message.resultInfo);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<C2SPrepareFloorMatchMaking>, I>>(base?: I): C2SPrepareFloorMatchMaking {
+    return C2SPrepareFloorMatchMaking.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<C2SPrepareFloorMatchMaking>, I>>(object: I): C2SPrepareFloorMatchMaking {
+    const message = createBaseC2SPrepareFloorMatchMaking();
+    message.info = (object.info !== undefined && object.info !== null)
+      ? FloorMatchMakingCharacterInfo.fromPartial(object.info)
+      : undefined;
+    message.resultInfo = (object.resultInfo !== undefined && object.resultInfo !== null)
+      ? GameResultInfo.fromPartial(object.resultInfo)
+      : undefined;
     return message;
   },
 };
@@ -3762,21 +3970,21 @@ export const S2CGamePolicyGET = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.appHash.push(reader.string());
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.policyJson = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -3793,19 +4001,18 @@ export const S2CGamePolicyGET = {
 
   toJSON(message: S2CGamePolicyGET): unknown {
     const obj: any = {};
-    if (message.appHash) {
-      obj.appHash = message.appHash.map((e) => e);
-    } else {
-      obj.appHash = [];
+    if (message.appHash?.length) {
+      obj.appHash = message.appHash;
     }
-    message.policyJson !== undefined && (obj.policyJson = message.policyJson);
+    if (message.policyJson !== "") {
+      obj.policyJson = message.policyJson;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<S2CGamePolicyGET>, I>>(base?: I): S2CGamePolicyGET {
-    return S2CGamePolicyGET.fromPartial(base ?? {});
+    return S2CGamePolicyGET.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<S2CGamePolicyGET>, I>>(object: I): S2CGamePolicyGET {
     const message = createBaseS2CGamePolicyGET();
     message.appHash = object.appHash?.map((e) => e) || [];
@@ -3837,21 +4044,21 @@ export const C2SGameSpectatorCheckPOST = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.token = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -3868,15 +4075,18 @@ export const C2SGameSpectatorCheckPOST = {
 
   toJSON(message: C2SGameSpectatorCheckPOST): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.token !== undefined && (obj.token = message.token);
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<C2SGameSpectatorCheckPOST>, I>>(base?: I): C2SGameSpectatorCheckPOST {
-    return C2SGameSpectatorCheckPOST.fromPartial(base ?? {});
+    return C2SGameSpectatorCheckPOST.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<C2SGameSpectatorCheckPOST>, I>>(object: I): C2SGameSpectatorCheckPOST {
     const message = createBaseC2SGameSpectatorCheckPOST();
     message.accountId = object.accountId ?? "";
@@ -3905,14 +4115,14 @@ export const S2CGameSpectatorCheckJson = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.isSuccess = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -3926,14 +4136,15 @@ export const S2CGameSpectatorCheckJson = {
 
   toJSON(message: S2CGameSpectatorCheckJson): unknown {
     const obj: any = {};
-    message.isSuccess !== undefined && (obj.isSuccess = Math.round(message.isSuccess));
+    if (message.isSuccess !== 0) {
+      obj.isSuccess = Math.round(message.isSuccess);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<S2CGameSpectatorCheckJson>, I>>(base?: I): S2CGameSpectatorCheckJson {
-    return S2CGameSpectatorCheckJson.fromPartial(base ?? {});
+    return S2CGameSpectatorCheckJson.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<S2CGameSpectatorCheckJson>, I>>(object: I): S2CGameSpectatorCheckJson {
     const message = createBaseS2CGameSpectatorCheckJson();
     message.isSuccess = object.isSuccess ?? 0;
@@ -3973,42 +4184,42 @@ export const GameDownUserPartyInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.nickname = saccountNickname.decode(reader, reader.uint32());
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.characterClass = reader.string();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.gender = reader.uint32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.level = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -4028,19 +4239,27 @@ export const GameDownUserPartyInfo = {
 
   toJSON(message: GameDownUserPartyInfo): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.nickname !== undefined &&
-      (obj.nickname = message.nickname ? saccountNickname.toJSON(message.nickname) : undefined);
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
-    message.gender !== undefined && (obj.gender = Math.round(message.gender));
-    message.level !== undefined && (obj.level = Math.round(message.level));
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.nickname !== undefined) {
+      obj.nickname = saccountNickname.toJSON(message.nickname);
+    }
+    if (message.characterClass !== "") {
+      obj.characterClass = message.characterClass;
+    }
+    if (message.gender !== 0) {
+      obj.gender = Math.round(message.gender);
+    }
+    if (message.level !== 0) {
+      obj.level = Math.round(message.level);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GameDownUserPartyInfo>, I>>(base?: I): GameDownUserPartyInfo {
-    return GameDownUserPartyInfo.fromPartial(base ?? {});
+    return GameDownUserPartyInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GameDownUserPartyInfo>, I>>(object: I): GameDownUserPartyInfo {
     const message = createBaseGameDownUserPartyInfo();
     message.accountId = object.accountId ?? "";
@@ -4074,14 +4293,14 @@ export const S2CGameDownUserPartyGET = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.partyMember.push(GameDownUserPartyInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -4099,18 +4318,15 @@ export const S2CGameDownUserPartyGET = {
 
   toJSON(message: S2CGameDownUserPartyGET): unknown {
     const obj: any = {};
-    if (message.partyMember) {
-      obj.partyMember = message.partyMember.map((e) => e ? GameDownUserPartyInfo.toJSON(e) : undefined);
-    } else {
-      obj.partyMember = [];
+    if (message.partyMember?.length) {
+      obj.partyMember = message.partyMember.map((e) => GameDownUserPartyInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<S2CGameDownUserPartyGET>, I>>(base?: I): S2CGameDownUserPartyGET {
-    return S2CGameDownUserPartyGET.fromPartial(base ?? {});
+    return S2CGameDownUserPartyGET.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<S2CGameDownUserPartyGET>, I>>(object: I): S2CGameDownUserPartyGET {
     const message = createBaseS2CGameDownUserPartyGET();
     message.partyMember = object.partyMember?.map((e) => GameDownUserPartyInfo.fromPartial(e)) || [];
@@ -4118,10 +4334,607 @@ export const S2CGameDownUserPartyGET = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+function createBaseC2SGameReadyPOST(): C2SGameReadyPOST {
+  return { gameId: 0 };
+}
+
+export const C2SGameReadyPOST = {
+  encode(message: C2SGameReadyPOST, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.gameId !== 0) {
+      writer.uint32(8).uint64(message.gameId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): C2SGameReadyPOST {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseC2SGameReadyPOST();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.gameId = longToNumber(reader.uint64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): C2SGameReadyPOST {
+    return { gameId: isSet(object.gameId) ? Number(object.gameId) : 0 };
+  },
+
+  toJSON(message: C2SGameReadyPOST): unknown {
+    const obj: any = {};
+    if (message.gameId !== 0) {
+      obj.gameId = Math.round(message.gameId);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<C2SGameReadyPOST>, I>>(base?: I): C2SGameReadyPOST {
+    return C2SGameReadyPOST.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<C2SGameReadyPOST>, I>>(object: I): C2SGameReadyPOST {
+    const message = createBaseC2SGameReadyPOST();
+    message.gameId = object.gameId ?? 0;
+    return message;
+  },
+};
+
+function createBaseGameFloorMatchMakingUserInfo(): GameFloorMatchMakingUserInfo {
+  return { accountId: "", characterId: "", partyId: "" };
+}
+
+export const GameFloorMatchMakingUserInfo = {
+  encode(message: GameFloorMatchMakingUserInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.accountId !== "") {
+      writer.uint32(10).string(message.accountId);
+    }
+    if (message.characterId !== "") {
+      writer.uint32(18).string(message.characterId);
+    }
+    if (message.partyId !== "") {
+      writer.uint32(26).string(message.partyId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GameFloorMatchMakingUserInfo {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGameFloorMatchMakingUserInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.accountId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.characterId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.partyId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GameFloorMatchMakingUserInfo {
+    return {
+      accountId: isSet(object.accountId) ? String(object.accountId) : "",
+      characterId: isSet(object.characterId) ? String(object.characterId) : "",
+      partyId: isSet(object.partyId) ? String(object.partyId) : "",
+    };
+  },
+
+  toJSON(message: GameFloorMatchMakingUserInfo): unknown {
+    const obj: any = {};
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.partyId !== "") {
+      obj.partyId = message.partyId;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GameFloorMatchMakingUserInfo>, I>>(base?: I): GameFloorMatchMakingUserInfo {
+    return GameFloorMatchMakingUserInfo.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GameFloorMatchMakingUserInfo>, I>>(object: I): GameFloorMatchMakingUserInfo {
+    const message = createBaseGameFloorMatchMakingUserInfo();
+    message.accountId = object.accountId ?? "";
+    message.characterId = object.characterId ?? "";
+    message.partyId = object.partyId ?? "";
+    return message;
+  },
+};
+
+function createBaseC2SFloorMatchMakingPOST(): C2SFloorMatchMakingPOST {
+  return { infos: [], gameId: 0, currentFloor: 0, dungeonId: "" };
+}
+
+export const C2SFloorMatchMakingPOST = {
+  encode(message: C2SFloorMatchMakingPOST, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.infos) {
+      GameFloorMatchMakingUserInfo.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.gameId !== 0) {
+      writer.uint32(16).uint64(message.gameId);
+    }
+    if (message.currentFloor !== 0) {
+      writer.uint32(24).uint32(message.currentFloor);
+    }
+    if (message.dungeonId !== "") {
+      writer.uint32(34).string(message.dungeonId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): C2SFloorMatchMakingPOST {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseC2SFloorMatchMakingPOST();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.infos.push(GameFloorMatchMakingUserInfo.decode(reader, reader.uint32()));
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.gameId = longToNumber(reader.uint64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.currentFloor = reader.uint32();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.dungeonId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): C2SFloorMatchMakingPOST {
+    return {
+      infos: Array.isArray(object?.infos) ? object.infos.map((e: any) => GameFloorMatchMakingUserInfo.fromJSON(e)) : [],
+      gameId: isSet(object.gameId) ? Number(object.gameId) : 0,
+      currentFloor: isSet(object.currentFloor) ? Number(object.currentFloor) : 0,
+      dungeonId: isSet(object.dungeonId) ? String(object.dungeonId) : "",
+    };
+  },
+
+  toJSON(message: C2SFloorMatchMakingPOST): unknown {
+    const obj: any = {};
+    if (message.infos?.length) {
+      obj.infos = message.infos.map((e) => GameFloorMatchMakingUserInfo.toJSON(e));
+    }
+    if (message.gameId !== 0) {
+      obj.gameId = Math.round(message.gameId);
+    }
+    if (message.currentFloor !== 0) {
+      obj.currentFloor = Math.round(message.currentFloor);
+    }
+    if (message.dungeonId !== "") {
+      obj.dungeonId = message.dungeonId;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<C2SFloorMatchMakingPOST>, I>>(base?: I): C2SFloorMatchMakingPOST {
+    return C2SFloorMatchMakingPOST.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<C2SFloorMatchMakingPOST>, I>>(object: I): C2SFloorMatchMakingPOST {
+    const message = createBaseC2SFloorMatchMakingPOST();
+    message.infos = object.infos?.map((e) => GameFloorMatchMakingUserInfo.fromPartial(e)) || [];
+    message.gameId = object.gameId ?? 0;
+    message.currentFloor = object.currentFloor ?? 0;
+    message.dungeonId = object.dungeonId ?? "";
+    return message;
+  },
+};
+
+function createBaseGameFloorMatchMakingUserInfoResponse(): GameFloorMatchMakingUserInfoResponse {
+  return { accountId: "", characterId: "", ip: "", port: 0, sessionId: "" };
+}
+
+export const GameFloorMatchMakingUserInfoResponse = {
+  encode(message: GameFloorMatchMakingUserInfoResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.accountId !== "") {
+      writer.uint32(10).string(message.accountId);
+    }
+    if (message.characterId !== "") {
+      writer.uint32(18).string(message.characterId);
+    }
+    if (message.ip !== "") {
+      writer.uint32(26).string(message.ip);
+    }
+    if (message.port !== 0) {
+      writer.uint32(32).int32(message.port);
+    }
+    if (message.sessionId !== "") {
+      writer.uint32(42).string(message.sessionId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GameFloorMatchMakingUserInfoResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGameFloorMatchMakingUserInfoResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.accountId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.characterId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.ip = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.port = reader.int32();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.sessionId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GameFloorMatchMakingUserInfoResponse {
+    return {
+      accountId: isSet(object.accountId) ? String(object.accountId) : "",
+      characterId: isSet(object.characterId) ? String(object.characterId) : "",
+      ip: isSet(object.ip) ? String(object.ip) : "",
+      port: isSet(object.port) ? Number(object.port) : 0,
+      sessionId: isSet(object.sessionId) ? String(object.sessionId) : "",
+    };
+  },
+
+  toJSON(message: GameFloorMatchMakingUserInfoResponse): unknown {
+    const obj: any = {};
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.ip !== "") {
+      obj.ip = message.ip;
+    }
+    if (message.port !== 0) {
+      obj.port = Math.round(message.port);
+    }
+    if (message.sessionId !== "") {
+      obj.sessionId = message.sessionId;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GameFloorMatchMakingUserInfoResponse>, I>>(
+    base?: I,
+  ): GameFloorMatchMakingUserInfoResponse {
+    return GameFloorMatchMakingUserInfoResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GameFloorMatchMakingUserInfoResponse>, I>>(
+    object: I,
+  ): GameFloorMatchMakingUserInfoResponse {
+    const message = createBaseGameFloorMatchMakingUserInfoResponse();
+    message.accountId = object.accountId ?? "";
+    message.characterId = object.characterId ?? "";
+    message.ip = object.ip ?? "";
+    message.port = object.port ?? 0;
+    message.sessionId = object.sessionId ?? "";
+    return message;
+  },
+};
+
+function createBaseS2CFloorMatchMakingPOSTResponse(): S2CFloorMatchMakingPOSTResponse {
+  return { infos: [] };
+}
+
+export const S2CFloorMatchMakingPOSTResponse = {
+  encode(message: S2CFloorMatchMakingPOSTResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.infos) {
+      GameFloorMatchMakingUserInfoResponse.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): S2CFloorMatchMakingPOSTResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseS2CFloorMatchMakingPOSTResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.infos.push(GameFloorMatchMakingUserInfoResponse.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): S2CFloorMatchMakingPOSTResponse {
+    return {
+      infos: Array.isArray(object?.infos)
+        ? object.infos.map((e: any) => GameFloorMatchMakingUserInfoResponse.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: S2CFloorMatchMakingPOSTResponse): unknown {
+    const obj: any = {};
+    if (message.infos?.length) {
+      obj.infos = message.infos.map((e) => GameFloorMatchMakingUserInfoResponse.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<S2CFloorMatchMakingPOSTResponse>, I>>(base?: I): S2CFloorMatchMakingPOSTResponse {
+    return S2CFloorMatchMakingPOSTResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<S2CFloorMatchMakingPOSTResponse>, I>>(
+    object: I,
+  ): S2CFloorMatchMakingPOSTResponse {
+    const message = createBaseS2CFloorMatchMakingPOSTResponse();
+    message.infos = object.infos?.map((e) => GameFloorMatchMakingUserInfoResponse.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseC2SIronShieldReportPOST(): C2SIronShieldReportPOST {
+  return { callbackType: 0, reportId: "", hIds: [], blob: [], accountId: "", characterId: "", originNickname: "" };
+}
+
+export const C2SIronShieldReportPOST = {
+  encode(message: C2SIronShieldReportPOST, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.callbackType !== 0) {
+      writer.uint32(8).uint32(message.callbackType);
+    }
+    if (message.reportId !== "") {
+      writer.uint32(18).string(message.reportId);
+    }
+    for (const v of message.hIds) {
+      writer.uint32(26).string(v!);
+    }
+    writer.uint32(34).fork();
+    for (const v of message.blob) {
+      writer.uint32(v);
+    }
+    writer.ldelim();
+    if (message.accountId !== "") {
+      writer.uint32(42).string(message.accountId);
+    }
+    if (message.characterId !== "") {
+      writer.uint32(50).string(message.characterId);
+    }
+    if (message.originNickname !== "") {
+      writer.uint32(58).string(message.originNickname);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): C2SIronShieldReportPOST {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseC2SIronShieldReportPOST();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.callbackType = reader.uint32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.reportId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.hIds.push(reader.string());
+          continue;
+        case 4:
+          if (tag === 32) {
+            message.blob.push(reader.uint32());
+
+            continue;
+          }
+
+          if (tag === 34) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.blob.push(reader.uint32());
+            }
+
+            continue;
+          }
+
+          break;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.accountId = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.characterId = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.originNickname = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): C2SIronShieldReportPOST {
+    return {
+      callbackType: isSet(object.callbackType) ? Number(object.callbackType) : 0,
+      reportId: isSet(object.reportId) ? String(object.reportId) : "",
+      hIds: Array.isArray(object?.hIds) ? object.hIds.map((e: any) => String(e)) : [],
+      blob: Array.isArray(object?.blob) ? object.blob.map((e: any) => Number(e)) : [],
+      accountId: isSet(object.accountId) ? String(object.accountId) : "",
+      characterId: isSet(object.characterId) ? String(object.characterId) : "",
+      originNickname: isSet(object.originNickname) ? String(object.originNickname) : "",
+    };
+  },
+
+  toJSON(message: C2SIronShieldReportPOST): unknown {
+    const obj: any = {};
+    if (message.callbackType !== 0) {
+      obj.callbackType = Math.round(message.callbackType);
+    }
+    if (message.reportId !== "") {
+      obj.reportId = message.reportId;
+    }
+    if (message.hIds?.length) {
+      obj.hIds = message.hIds;
+    }
+    if (message.blob?.length) {
+      obj.blob = message.blob.map((e) => Math.round(e));
+    }
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.originNickname !== "") {
+      obj.originNickname = message.originNickname;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<C2SIronShieldReportPOST>, I>>(base?: I): C2SIronShieldReportPOST {
+    return C2SIronShieldReportPOST.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<C2SIronShieldReportPOST>, I>>(object: I): C2SIronShieldReportPOST {
+    const message = createBaseC2SIronShieldReportPOST();
+    message.callbackType = object.callbackType ?? 0;
+    message.reportId = object.reportId ?? "";
+    message.hIds = object.hIds?.map((e) => e) || [];
+    message.blob = object.blob?.map((e) => e) || [];
+    message.accountId = object.accountId ?? "";
+    message.characterId = object.characterId ?? "";
+    message.originNickname = object.originNickname ?? "";
+    return message;
+  },
+};
+
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

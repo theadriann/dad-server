@@ -1,6 +1,6 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
-import { SPerk, SSkill, SSpell } from "./_Item";
+import { SMusic, SPerk, SSkill, SSpell } from "./_Item";
 
 export const protobufPackage = "DC.Packet";
 
@@ -59,6 +59,13 @@ export interface ss2cClassSpellListRes {
   spells: SSpell[];
 }
 
+export interface sc2sClassMusicListReq {
+}
+
+export interface ss2cClassMusicListRes {
+  musics: SMusic[];
+}
+
 export interface sc2sClassSpellSlotMoveReq {
   spellId: string;
   dstSlotIndex: number;
@@ -88,6 +95,16 @@ export interface ss2cClassItemMoveRes {
   result: number;
   oldMove: sclassMoveInfo | undefined;
   newMove: sclassMoveInfo | undefined;
+}
+
+export interface sc2sClassMusicSlotMoveReq {
+  musicId: string;
+  dstSlotIndex: number;
+}
+
+export interface ss2cClassMusicSlotMoveRes {
+  result: number;
+  equipMusicList: SMusic[];
 }
 
 function createBasesclassEquipInfo(): sclassEquipInfo {
@@ -122,42 +139,42 @@ export const sclassEquipInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.index = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.isAvailableSlot = reader.uint32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.requiredLevel = reader.uint32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.type = reader.uint32();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.equipId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -177,18 +194,27 @@ export const sclassEquipInfo = {
 
   toJSON(message: sclassEquipInfo): unknown {
     const obj: any = {};
-    message.index !== undefined && (obj.index = Math.round(message.index));
-    message.isAvailableSlot !== undefined && (obj.isAvailableSlot = Math.round(message.isAvailableSlot));
-    message.requiredLevel !== undefined && (obj.requiredLevel = Math.round(message.requiredLevel));
-    message.type !== undefined && (obj.type = Math.round(message.type));
-    message.equipId !== undefined && (obj.equipId = message.equipId);
+    if (message.index !== 0) {
+      obj.index = Math.round(message.index);
+    }
+    if (message.isAvailableSlot !== 0) {
+      obj.isAvailableSlot = Math.round(message.isAvailableSlot);
+    }
+    if (message.requiredLevel !== 0) {
+      obj.requiredLevel = Math.round(message.requiredLevel);
+    }
+    if (message.type !== 0) {
+      obj.type = Math.round(message.type);
+    }
+    if (message.equipId !== "") {
+      obj.equipId = message.equipId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sclassEquipInfo>, I>>(base?: I): sclassEquipInfo {
-    return sclassEquipInfo.fromPartial(base ?? {});
+    return sclassEquipInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sclassEquipInfo>, I>>(object: I): sclassEquipInfo {
     const message = createBasesclassEquipInfo();
     message.index = object.index ?? 0;
@@ -229,35 +255,35 @@ export const sclassMoveInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.index = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.type = reader.uint32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.moveId = reader.string();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.move = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -276,17 +302,24 @@ export const sclassMoveInfo = {
 
   toJSON(message: sclassMoveInfo): unknown {
     const obj: any = {};
-    message.index !== undefined && (obj.index = Math.round(message.index));
-    message.type !== undefined && (obj.type = Math.round(message.type));
-    message.moveId !== undefined && (obj.moveId = message.moveId);
-    message.move !== undefined && (obj.move = Math.round(message.move));
+    if (message.index !== 0) {
+      obj.index = Math.round(message.index);
+    }
+    if (message.type !== 0) {
+      obj.type = Math.round(message.type);
+    }
+    if (message.moveId !== "") {
+      obj.moveId = message.moveId;
+    }
+    if (message.move !== 0) {
+      obj.move = Math.round(message.move);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sclassMoveInfo>, I>>(base?: I): sclassMoveInfo {
-    return sclassMoveInfo.fromPartial(base ?? {});
+    return sclassMoveInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sclassMoveInfo>, I>>(object: I): sclassMoveInfo {
     const message = createBasesclassMoveInfo();
     message.index = object.index ?? 0;
@@ -314,7 +347,7 @@ export const sc2sClassLevelInfoReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -332,9 +365,8 @@ export const sc2sClassLevelInfoReq = {
   },
 
   create<I extends Exact<DeepPartial<sc2sClassLevelInfoReq>, I>>(base?: I): sc2sClassLevelInfoReq {
-    return sc2sClassLevelInfoReq.fromPartial(base ?? {});
+    return sc2sClassLevelInfoReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sClassLevelInfoReq>, I>>(_: I): sc2sClassLevelInfoReq {
     const message = createBasesc2sClassLevelInfoReq();
     return message;
@@ -373,42 +405,42 @@ export const ss2cClassLevelInfoRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.level = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.exp = reader.uint32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.expBegin = reader.uint32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.expLimit = reader.uint32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.rewardPoint = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -428,18 +460,27 @@ export const ss2cClassLevelInfoRes = {
 
   toJSON(message: ss2cClassLevelInfoRes): unknown {
     const obj: any = {};
-    message.level !== undefined && (obj.level = Math.round(message.level));
-    message.exp !== undefined && (obj.exp = Math.round(message.exp));
-    message.expBegin !== undefined && (obj.expBegin = Math.round(message.expBegin));
-    message.expLimit !== undefined && (obj.expLimit = Math.round(message.expLimit));
-    message.rewardPoint !== undefined && (obj.rewardPoint = Math.round(message.rewardPoint));
+    if (message.level !== 0) {
+      obj.level = Math.round(message.level);
+    }
+    if (message.exp !== 0) {
+      obj.exp = Math.round(message.exp);
+    }
+    if (message.expBegin !== 0) {
+      obj.expBegin = Math.round(message.expBegin);
+    }
+    if (message.expLimit !== 0) {
+      obj.expLimit = Math.round(message.expLimit);
+    }
+    if (message.rewardPoint !== 0) {
+      obj.rewardPoint = Math.round(message.rewardPoint);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cClassLevelInfoRes>, I>>(base?: I): ss2cClassLevelInfoRes {
-    return ss2cClassLevelInfoRes.fromPartial(base ?? {});
+    return ss2cClassLevelInfoRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cClassLevelInfoRes>, I>>(object: I): ss2cClassLevelInfoRes {
     const message = createBasess2cClassLevelInfoRes();
     message.level = object.level ?? 0;
@@ -468,7 +509,7 @@ export const sc2sClassEquipInfoReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -486,9 +527,8 @@ export const sc2sClassEquipInfoReq = {
   },
 
   create<I extends Exact<DeepPartial<sc2sClassEquipInfoReq>, I>>(base?: I): sc2sClassEquipInfoReq {
-    return sc2sClassEquipInfoReq.fromPartial(base ?? {});
+    return sc2sClassEquipInfoReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sClassEquipInfoReq>, I>>(_: I): sc2sClassEquipInfoReq {
     const message = createBasesc2sClassEquipInfoReq();
     return message;
@@ -515,14 +555,14 @@ export const ss2cClassEquipInfoRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.equips.push(sclassEquipInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -536,18 +576,15 @@ export const ss2cClassEquipInfoRes = {
 
   toJSON(message: ss2cClassEquipInfoRes): unknown {
     const obj: any = {};
-    if (message.equips) {
-      obj.equips = message.equips.map((e) => e ? sclassEquipInfo.toJSON(e) : undefined);
-    } else {
-      obj.equips = [];
+    if (message.equips?.length) {
+      obj.equips = message.equips.map((e) => sclassEquipInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cClassEquipInfoRes>, I>>(base?: I): ss2cClassEquipInfoRes {
-    return ss2cClassEquipInfoRes.fromPartial(base ?? {});
+    return ss2cClassEquipInfoRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cClassEquipInfoRes>, I>>(object: I): ss2cClassEquipInfoRes {
     const message = createBasess2cClassEquipInfoRes();
     message.equips = object.equips?.map((e) => sclassEquipInfo.fromPartial(e)) || [];
@@ -572,7 +609,7 @@ export const sc2sClassPerkListReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -590,9 +627,8 @@ export const sc2sClassPerkListReq = {
   },
 
   create<I extends Exact<DeepPartial<sc2sClassPerkListReq>, I>>(base?: I): sc2sClassPerkListReq {
-    return sc2sClassPerkListReq.fromPartial(base ?? {});
+    return sc2sClassPerkListReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sClassPerkListReq>, I>>(_: I): sc2sClassPerkListReq {
     const message = createBasesc2sClassPerkListReq();
     return message;
@@ -619,14 +655,14 @@ export const ss2cClassPerkListRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.perks.push(SPerk.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -640,18 +676,15 @@ export const ss2cClassPerkListRes = {
 
   toJSON(message: ss2cClassPerkListRes): unknown {
     const obj: any = {};
-    if (message.perks) {
-      obj.perks = message.perks.map((e) => e ? SPerk.toJSON(e) : undefined);
-    } else {
-      obj.perks = [];
+    if (message.perks?.length) {
+      obj.perks = message.perks.map((e) => SPerk.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cClassPerkListRes>, I>>(base?: I): ss2cClassPerkListRes {
-    return ss2cClassPerkListRes.fromPartial(base ?? {});
+    return ss2cClassPerkListRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cClassPerkListRes>, I>>(object: I): ss2cClassPerkListRes {
     const message = createBasess2cClassPerkListRes();
     message.perks = object.perks?.map((e) => SPerk.fromPartial(e)) || [];
@@ -676,7 +709,7 @@ export const sc2sClassSkillListReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -694,9 +727,8 @@ export const sc2sClassSkillListReq = {
   },
 
   create<I extends Exact<DeepPartial<sc2sClassSkillListReq>, I>>(base?: I): sc2sClassSkillListReq {
-    return sc2sClassSkillListReq.fromPartial(base ?? {});
+    return sc2sClassSkillListReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sClassSkillListReq>, I>>(_: I): sc2sClassSkillListReq {
     const message = createBasesc2sClassSkillListReq();
     return message;
@@ -723,14 +755,14 @@ export const ss2cClassSkillListRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.skills.push(SSkill.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -744,18 +776,15 @@ export const ss2cClassSkillListRes = {
 
   toJSON(message: ss2cClassSkillListRes): unknown {
     const obj: any = {};
-    if (message.skills) {
-      obj.skills = message.skills.map((e) => e ? SSkill.toJSON(e) : undefined);
-    } else {
-      obj.skills = [];
+    if (message.skills?.length) {
+      obj.skills = message.skills.map((e) => SSkill.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cClassSkillListRes>, I>>(base?: I): ss2cClassSkillListRes {
-    return ss2cClassSkillListRes.fromPartial(base ?? {});
+    return ss2cClassSkillListRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cClassSkillListRes>, I>>(object: I): ss2cClassSkillListRes {
     const message = createBasess2cClassSkillListRes();
     message.skills = object.skills?.map((e) => SSkill.fromPartial(e)) || [];
@@ -783,14 +812,14 @@ export const sc2sClassSpellListReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.maxSpellMemory = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -804,14 +833,15 @@ export const sc2sClassSpellListReq = {
 
   toJSON(message: sc2sClassSpellListReq): unknown {
     const obj: any = {};
-    message.maxSpellMemory !== undefined && (obj.maxSpellMemory = Math.round(message.maxSpellMemory));
+    if (message.maxSpellMemory !== 0) {
+      obj.maxSpellMemory = Math.round(message.maxSpellMemory);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sClassSpellListReq>, I>>(base?: I): sc2sClassSpellListReq {
-    return sc2sClassSpellListReq.fromPartial(base ?? {});
+    return sc2sClassSpellListReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sClassSpellListReq>, I>>(object: I): sc2sClassSpellListReq {
     const message = createBasesc2sClassSpellListReq();
     message.maxSpellMemory = object.maxSpellMemory ?? 0;
@@ -839,14 +869,14 @@ export const ss2cClassSpellListRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.spells.push(SSpell.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -860,21 +890,118 @@ export const ss2cClassSpellListRes = {
 
   toJSON(message: ss2cClassSpellListRes): unknown {
     const obj: any = {};
-    if (message.spells) {
-      obj.spells = message.spells.map((e) => e ? SSpell.toJSON(e) : undefined);
-    } else {
-      obj.spells = [];
+    if (message.spells?.length) {
+      obj.spells = message.spells.map((e) => SSpell.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cClassSpellListRes>, I>>(base?: I): ss2cClassSpellListRes {
-    return ss2cClassSpellListRes.fromPartial(base ?? {});
+    return ss2cClassSpellListRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cClassSpellListRes>, I>>(object: I): ss2cClassSpellListRes {
     const message = createBasess2cClassSpellListRes();
     message.spells = object.spells?.map((e) => SSpell.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBasesc2sClassMusicListReq(): sc2sClassMusicListReq {
+  return {};
+}
+
+export const sc2sClassMusicListReq = {
+  encode(_: sc2sClassMusicListReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sClassMusicListReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sClassMusicListReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): sc2sClassMusicListReq {
+    return {};
+  },
+
+  toJSON(_: sc2sClassMusicListReq): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sClassMusicListReq>, I>>(base?: I): sc2sClassMusicListReq {
+    return sc2sClassMusicListReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sClassMusicListReq>, I>>(_: I): sc2sClassMusicListReq {
+    const message = createBasesc2sClassMusicListReq();
+    return message;
+  },
+};
+
+function createBasess2cClassMusicListRes(): ss2cClassMusicListRes {
+  return { musics: [] };
+}
+
+export const ss2cClassMusicListRes = {
+  encode(message: ss2cClassMusicListRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.musics) {
+      SMusic.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cClassMusicListRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cClassMusicListRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.musics.push(SMusic.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cClassMusicListRes {
+    return { musics: Array.isArray(object?.musics) ? object.musics.map((e: any) => SMusic.fromJSON(e)) : [] };
+  },
+
+  toJSON(message: ss2cClassMusicListRes): unknown {
+    const obj: any = {};
+    if (message.musics?.length) {
+      obj.musics = message.musics.map((e) => SMusic.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cClassMusicListRes>, I>>(base?: I): ss2cClassMusicListRes {
+    return ss2cClassMusicListRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cClassMusicListRes>, I>>(object: I): ss2cClassMusicListRes {
+    const message = createBasess2cClassMusicListRes();
+    message.musics = object.musics?.map((e) => SMusic.fromPartial(e)) || [];
     return message;
   },
 };
@@ -902,21 +1029,21 @@ export const sc2sClassSpellSlotMoveReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.spellId = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.dstSlotIndex = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -933,15 +1060,18 @@ export const sc2sClassSpellSlotMoveReq = {
 
   toJSON(message: sc2sClassSpellSlotMoveReq): unknown {
     const obj: any = {};
-    message.spellId !== undefined && (obj.spellId = message.spellId);
-    message.dstSlotIndex !== undefined && (obj.dstSlotIndex = Math.round(message.dstSlotIndex));
+    if (message.spellId !== "") {
+      obj.spellId = message.spellId;
+    }
+    if (message.dstSlotIndex !== 0) {
+      obj.dstSlotIndex = Math.round(message.dstSlotIndex);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sClassSpellSlotMoveReq>, I>>(base?: I): sc2sClassSpellSlotMoveReq {
-    return sc2sClassSpellSlotMoveReq.fromPartial(base ?? {});
+    return sc2sClassSpellSlotMoveReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sClassSpellSlotMoveReq>, I>>(object: I): sc2sClassSpellSlotMoveReq {
     const message = createBasesc2sClassSpellSlotMoveReq();
     message.spellId = object.spellId ?? "";
@@ -973,21 +1103,21 @@ export const ss2cClassSpellSlotMoveRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.equipSpellList.push(SSpell.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1006,19 +1136,18 @@ export const ss2cClassSpellSlotMoveRes = {
 
   toJSON(message: ss2cClassSpellSlotMoveRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    if (message.equipSpellList) {
-      obj.equipSpellList = message.equipSpellList.map((e) => e ? SSpell.toJSON(e) : undefined);
-    } else {
-      obj.equipSpellList = [];
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.equipSpellList?.length) {
+      obj.equipSpellList = message.equipSpellList.map((e) => SSpell.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cClassSpellSlotMoveRes>, I>>(base?: I): ss2cClassSpellSlotMoveRes {
-    return ss2cClassSpellSlotMoveRes.fromPartial(base ?? {});
+    return ss2cClassSpellSlotMoveRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cClassSpellSlotMoveRes>, I>>(object: I): ss2cClassSpellSlotMoveRes {
     const message = createBasess2cClassSpellSlotMoveRes();
     message.result = object.result ?? 0;
@@ -1050,21 +1179,21 @@ export const sc2sClassSpellSequenceChangeReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.spellId = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.dstSequenceIndex = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1081,15 +1210,18 @@ export const sc2sClassSpellSequenceChangeReq = {
 
   toJSON(message: sc2sClassSpellSequenceChangeReq): unknown {
     const obj: any = {};
-    message.spellId !== undefined && (obj.spellId = message.spellId);
-    message.dstSequenceIndex !== undefined && (obj.dstSequenceIndex = Math.round(message.dstSequenceIndex));
+    if (message.spellId !== "") {
+      obj.spellId = message.spellId;
+    }
+    if (message.dstSequenceIndex !== 0) {
+      obj.dstSequenceIndex = Math.round(message.dstSequenceIndex);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sClassSpellSequenceChangeReq>, I>>(base?: I): sc2sClassSpellSequenceChangeReq {
-    return sc2sClassSpellSequenceChangeReq.fromPartial(base ?? {});
+    return sc2sClassSpellSequenceChangeReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sClassSpellSequenceChangeReq>, I>>(
     object: I,
   ): sc2sClassSpellSequenceChangeReq {
@@ -1123,21 +1255,21 @@ export const ss2cClassSpellSequenceChangeRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.equipSpellList.push(SSpell.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1156,19 +1288,18 @@ export const ss2cClassSpellSequenceChangeRes = {
 
   toJSON(message: ss2cClassSpellSequenceChangeRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    if (message.equipSpellList) {
-      obj.equipSpellList = message.equipSpellList.map((e) => e ? SSpell.toJSON(e) : undefined);
-    } else {
-      obj.equipSpellList = [];
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.equipSpellList?.length) {
+      obj.equipSpellList = message.equipSpellList.map((e) => SSpell.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cClassSpellSequenceChangeRes>, I>>(base?: I): ss2cClassSpellSequenceChangeRes {
-    return ss2cClassSpellSequenceChangeRes.fromPartial(base ?? {});
+    return ss2cClassSpellSequenceChangeRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cClassSpellSequenceChangeRes>, I>>(
     object: I,
   ): ss2cClassSpellSequenceChangeRes {
@@ -1202,21 +1333,21 @@ export const sc2sClassItemMoveReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.oldMove = sclassMoveInfo.decode(reader, reader.uint32());
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.newMove = sclassMoveInfo.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1233,17 +1364,18 @@ export const sc2sClassItemMoveReq = {
 
   toJSON(message: sc2sClassItemMoveReq): unknown {
     const obj: any = {};
-    message.oldMove !== undefined &&
-      (obj.oldMove = message.oldMove ? sclassMoveInfo.toJSON(message.oldMove) : undefined);
-    message.newMove !== undefined &&
-      (obj.newMove = message.newMove ? sclassMoveInfo.toJSON(message.newMove) : undefined);
+    if (message.oldMove !== undefined) {
+      obj.oldMove = sclassMoveInfo.toJSON(message.oldMove);
+    }
+    if (message.newMove !== undefined) {
+      obj.newMove = sclassMoveInfo.toJSON(message.newMove);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sClassItemMoveReq>, I>>(base?: I): sc2sClassItemMoveReq {
-    return sc2sClassItemMoveReq.fromPartial(base ?? {});
+    return sc2sClassItemMoveReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sClassItemMoveReq>, I>>(object: I): sc2sClassItemMoveReq {
     const message = createBasesc2sClassItemMoveReq();
     message.oldMove = (object.oldMove !== undefined && object.oldMove !== null)
@@ -1282,28 +1414,28 @@ export const ss2cClassItemMoveRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.oldMove = sclassMoveInfo.decode(reader, reader.uint32());
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.newMove = sclassMoveInfo.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1321,18 +1453,21 @@ export const ss2cClassItemMoveRes = {
 
   toJSON(message: ss2cClassItemMoveRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.oldMove !== undefined &&
-      (obj.oldMove = message.oldMove ? sclassMoveInfo.toJSON(message.oldMove) : undefined);
-    message.newMove !== undefined &&
-      (obj.newMove = message.newMove ? sclassMoveInfo.toJSON(message.newMove) : undefined);
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.oldMove !== undefined) {
+      obj.oldMove = sclassMoveInfo.toJSON(message.oldMove);
+    }
+    if (message.newMove !== undefined) {
+      obj.newMove = sclassMoveInfo.toJSON(message.newMove);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cClassItemMoveRes>, I>>(base?: I): ss2cClassItemMoveRes {
-    return ss2cClassItemMoveRes.fromPartial(base ?? {});
+    return ss2cClassItemMoveRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cClassItemMoveRes>, I>>(object: I): ss2cClassItemMoveRes {
     const message = createBasess2cClassItemMoveRes();
     message.result = object.result ?? 0;
@@ -1342,6 +1477,156 @@ export const ss2cClassItemMoveRes = {
     message.newMove = (object.newMove !== undefined && object.newMove !== null)
       ? sclassMoveInfo.fromPartial(object.newMove)
       : undefined;
+    return message;
+  },
+};
+
+function createBasesc2sClassMusicSlotMoveReq(): sc2sClassMusicSlotMoveReq {
+  return { musicId: "", dstSlotIndex: 0 };
+}
+
+export const sc2sClassMusicSlotMoveReq = {
+  encode(message: sc2sClassMusicSlotMoveReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.musicId !== "") {
+      writer.uint32(10).string(message.musicId);
+    }
+    if (message.dstSlotIndex !== 0) {
+      writer.uint32(16).int32(message.dstSlotIndex);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sClassMusicSlotMoveReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sClassMusicSlotMoveReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.musicId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.dstSlotIndex = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): sc2sClassMusicSlotMoveReq {
+    return {
+      musicId: isSet(object.musicId) ? String(object.musicId) : "",
+      dstSlotIndex: isSet(object.dstSlotIndex) ? Number(object.dstSlotIndex) : 0,
+    };
+  },
+
+  toJSON(message: sc2sClassMusicSlotMoveReq): unknown {
+    const obj: any = {};
+    if (message.musicId !== "") {
+      obj.musicId = message.musicId;
+    }
+    if (message.dstSlotIndex !== 0) {
+      obj.dstSlotIndex = Math.round(message.dstSlotIndex);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sClassMusicSlotMoveReq>, I>>(base?: I): sc2sClassMusicSlotMoveReq {
+    return sc2sClassMusicSlotMoveReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sClassMusicSlotMoveReq>, I>>(object: I): sc2sClassMusicSlotMoveReq {
+    const message = createBasesc2sClassMusicSlotMoveReq();
+    message.musicId = object.musicId ?? "";
+    message.dstSlotIndex = object.dstSlotIndex ?? 0;
+    return message;
+  },
+};
+
+function createBasess2cClassMusicSlotMoveRes(): ss2cClassMusicSlotMoveRes {
+  return { result: 0, equipMusicList: [] };
+}
+
+export const ss2cClassMusicSlotMoveRes = {
+  encode(message: ss2cClassMusicSlotMoveRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.result !== 0) {
+      writer.uint32(8).uint32(message.result);
+    }
+    for (const v of message.equipMusicList) {
+      SMusic.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cClassMusicSlotMoveRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cClassMusicSlotMoveRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.result = reader.uint32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.equipMusicList.push(SMusic.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cClassMusicSlotMoveRes {
+    return {
+      result: isSet(object.result) ? Number(object.result) : 0,
+      equipMusicList: Array.isArray(object?.equipMusicList)
+        ? object.equipMusicList.map((e: any) => SMusic.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ss2cClassMusicSlotMoveRes): unknown {
+    const obj: any = {};
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.equipMusicList?.length) {
+      obj.equipMusicList = message.equipMusicList.map((e) => SMusic.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cClassMusicSlotMoveRes>, I>>(base?: I): ss2cClassMusicSlotMoveRes {
+    return ss2cClassMusicSlotMoveRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cClassMusicSlotMoveRes>, I>>(object: I): ss2cClassMusicSlotMoveRes {
+    const message = createBasess2cClassMusicSlotMoveRes();
+    message.result = object.result ?? 0;
+    message.equipMusicList = object.equipMusicList?.map((e) => SMusic.fromPartial(e)) || [];
     return message;
   },
 };

@@ -26,7 +26,7 @@ export const sc2sGmPartyAllRandomReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -44,9 +44,8 @@ export const sc2sGmPartyAllRandomReq = {
   },
 
   create<I extends Exact<DeepPartial<sc2sGmPartyAllRandomReq>, I>>(base?: I): sc2sGmPartyAllRandomReq {
-    return sc2sGmPartyAllRandomReq.fromPartial(base ?? {});
+    return sc2sGmPartyAllRandomReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sGmPartyAllRandomReq>, I>>(_: I): sc2sGmPartyAllRandomReq {
     const message = createBasesc2sGmPartyAllRandomReq();
     return message;
@@ -70,7 +69,7 @@ export const ss2cGmPartyAllRandomRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -88,9 +87,8 @@ export const ss2cGmPartyAllRandomRes = {
   },
 
   create<I extends Exact<DeepPartial<ss2cGmPartyAllRandomRes>, I>>(base?: I): ss2cGmPartyAllRandomRes {
-    return ss2cGmPartyAllRandomRes.fromPartial(base ?? {});
+    return ss2cGmPartyAllRandomRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cGmPartyAllRandomRes>, I>>(_: I): ss2cGmPartyAllRandomRes {
     const message = createBasess2cGmPartyAllRandomRes();
     return message;

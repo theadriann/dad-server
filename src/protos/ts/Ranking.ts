@@ -6,12 +6,14 @@ export const protobufPackage = "DC.Packet";
 
 export enum rankingType {
   NONE = 0,
-  COIN = 1,
-  KILL = 2,
-  ESCAPE = 3,
-  ADVENTURE = 4,
-  BOSSKILL_LICH = 5,
-  BOSSKILL_GHOSTKING = 6,
+  TreasureCollector = 1,
+  KillerOutlaw = 2,
+  EscapeArtist = 3,
+  VeteranAdventurer = 4,
+  Slayer_Lich = 5,
+  Slayer_GhostKing = 6,
+  Slayer_SkeletonWarlord = 7,
+  Slayer_CaveTroll = 8,
   UNRECOGNIZED = -1,
 }
 
@@ -21,23 +23,29 @@ export function rankingTypeFromJSON(object: any): rankingType {
     case "NONE":
       return rankingType.NONE;
     case 1:
-    case "COIN":
-      return rankingType.COIN;
+    case "TreasureCollector":
+      return rankingType.TreasureCollector;
     case 2:
-    case "KILL":
-      return rankingType.KILL;
+    case "KillerOutlaw":
+      return rankingType.KillerOutlaw;
     case 3:
-    case "ESCAPE":
-      return rankingType.ESCAPE;
+    case "EscapeArtist":
+      return rankingType.EscapeArtist;
     case 4:
-    case "ADVENTURE":
-      return rankingType.ADVENTURE;
+    case "VeteranAdventurer":
+      return rankingType.VeteranAdventurer;
     case 5:
-    case "BOSSKILL_LICH":
-      return rankingType.BOSSKILL_LICH;
+    case "Slayer_Lich":
+      return rankingType.Slayer_Lich;
     case 6:
-    case "BOSSKILL_GHOSTKING":
-      return rankingType.BOSSKILL_GHOSTKING;
+    case "Slayer_GhostKing":
+      return rankingType.Slayer_GhostKing;
+    case 7:
+    case "Slayer_SkeletonWarlord":
+      return rankingType.Slayer_SkeletonWarlord;
+    case 8:
+    case "Slayer_CaveTroll":
+      return rankingType.Slayer_CaveTroll;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -49,19 +57,131 @@ export function rankingTypeToJSON(object: rankingType): string {
   switch (object) {
     case rankingType.NONE:
       return "NONE";
-    case rankingType.COIN:
-      return "COIN";
-    case rankingType.KILL:
-      return "KILL";
-    case rankingType.ESCAPE:
-      return "ESCAPE";
-    case rankingType.ADVENTURE:
-      return "ADVENTURE";
-    case rankingType.BOSSKILL_LICH:
-      return "BOSSKILL_LICH";
-    case rankingType.BOSSKILL_GHOSTKING:
-      return "BOSSKILL_GHOSTKING";
+    case rankingType.TreasureCollector:
+      return "TreasureCollector";
+    case rankingType.KillerOutlaw:
+      return "KillerOutlaw";
+    case rankingType.EscapeArtist:
+      return "EscapeArtist";
+    case rankingType.VeteranAdventurer:
+      return "VeteranAdventurer";
+    case rankingType.Slayer_Lich:
+      return "Slayer_Lich";
+    case rankingType.Slayer_GhostKing:
+      return "Slayer_GhostKing";
+    case rankingType.Slayer_SkeletonWarlord:
+      return "Slayer_SkeletonWarlord";
+    case rankingType.Slayer_CaveTroll:
+      return "Slayer_CaveTroll";
     case rankingType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum contentType {
+  NONE_CONTENT = 0,
+  TREASURE_COLLECTOR = 1,
+  KILLER_OUTLAW = 2,
+  ESCAPE_ARTIST = 3,
+  VETERAN_ADVENTURER = 4,
+  SLAYER = 5,
+  UNRECOGNIZED = -1,
+}
+
+export function contentTypeFromJSON(object: any): contentType {
+  switch (object) {
+    case 0:
+    case "NONE_CONTENT":
+      return contentType.NONE_CONTENT;
+    case 1:
+    case "TREASURE_COLLECTOR":
+      return contentType.TREASURE_COLLECTOR;
+    case 2:
+    case "KILLER_OUTLAW":
+      return contentType.KILLER_OUTLAW;
+    case 3:
+    case "ESCAPE_ARTIST":
+      return contentType.ESCAPE_ARTIST;
+    case 4:
+    case "VETERAN_ADVENTURER":
+      return contentType.VETERAN_ADVENTURER;
+    case 5:
+    case "SLAYER":
+      return contentType.SLAYER;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return contentType.UNRECOGNIZED;
+  }
+}
+
+export function contentTypeToJSON(object: contentType): string {
+  switch (object) {
+    case contentType.NONE_CONTENT:
+      return "NONE_CONTENT";
+    case contentType.TREASURE_COLLECTOR:
+      return "TREASURE_COLLECTOR";
+    case contentType.KILLER_OUTLAW:
+      return "KILLER_OUTLAW";
+    case contentType.ESCAPE_ARTIST:
+      return "ESCAPE_ARTIST";
+    case contentType.VETERAN_ADVENTURER:
+      return "VETERAN_ADVENTURER";
+    case contentType.SLAYER:
+      return "SLAYER";
+    case contentType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export interface sc2sRankingInfoReq {
+}
+
+export interface ss2cRankingInfoRes {
+  seasonState: number;
+  seasonId: string;
+  beginDate: string;
+  beginTime: string;
+  endDate: string;
+  endTime: string;
+}
+
+export enum ss2cRankingInfoRes_STATE {
+  NONE = 0,
+  PRESEASON = 1,
+  SEASON = 2,
+  UNRECOGNIZED = -1,
+}
+
+export function ss2cRankingInfoRes_STATEFromJSON(object: any): ss2cRankingInfoRes_STATE {
+  switch (object) {
+    case 0:
+    case "NONE":
+      return ss2cRankingInfoRes_STATE.NONE;
+    case 1:
+    case "PRESEASON":
+      return ss2cRankingInfoRes_STATE.PRESEASON;
+    case 2:
+    case "SEASON":
+      return ss2cRankingInfoRes_STATE.SEASON;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return ss2cRankingInfoRes_STATE.UNRECOGNIZED;
+  }
+}
+
+export function ss2cRankingInfoRes_STATEToJSON(object: ss2cRankingInfoRes_STATE): string {
+  switch (object) {
+    case ss2cRankingInfoRes_STATE.NONE:
+      return "NONE";
+    case ss2cRankingInfoRes_STATE.PRESEASON:
+      return "PRESEASON";
+    case ss2cRankingInfoRes_STATE.SEASON:
+      return "SEASON";
+    case ss2cRankingInfoRes_STATE.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }
@@ -78,7 +198,8 @@ export interface SRankRecord {
 }
 
 export interface sc2sRankingRangeReq {
-  rankType: number;
+  sheetId: string;
+  contentId: string;
   startIndex: number;
   endIndex: number;
   characterClass: string;
@@ -87,31 +208,17 @@ export interface sc2sRankingRangeReq {
 export interface ss2cRankingRangeRes {
   result: number;
   records: SRankRecord[];
-  rankType: number;
+  sheetId: string;
+  contentId: string;
   allRowCount: number;
   startIndex: number;
   endIndex: number;
   characterClass: string;
 }
 
-export interface sc2sRankingNearbyReq {
-  rankType: number;
-  searchRange: number;
-  searchIndex: number;
-  characterClass: string;
-}
-
-export interface ss2cRankingNearbyRes {
-  result: number;
-  records: SRankRecord[];
-  rankType: number;
-  allRowCount: number;
-  searchRange: number;
-  characterClass: string;
-}
-
 export interface sc2sRankingCharacterReq {
-  rankType: number;
+  sheetId: string;
+  contentId: string;
   nickName: saccountNickname | undefined;
   characterClass: string;
 }
@@ -119,10 +226,188 @@ export interface sc2sRankingCharacterReq {
 export interface ss2cRankingCharacterRes {
   result: number;
   rankRecord: SRankRecord | undefined;
-  rankType: number;
+  sheetId: string;
+  contentId: string;
   allRowCount: number;
   characterClass: string;
 }
+
+function createBasesc2sRankingInfoReq(): sc2sRankingInfoReq {
+  return {};
+}
+
+export const sc2sRankingInfoReq = {
+  encode(_: sc2sRankingInfoReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sRankingInfoReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sRankingInfoReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): sc2sRankingInfoReq {
+    return {};
+  },
+
+  toJSON(_: sc2sRankingInfoReq): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sRankingInfoReq>, I>>(base?: I): sc2sRankingInfoReq {
+    return sc2sRankingInfoReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sRankingInfoReq>, I>>(_: I): sc2sRankingInfoReq {
+    const message = createBasesc2sRankingInfoReq();
+    return message;
+  },
+};
+
+function createBasess2cRankingInfoRes(): ss2cRankingInfoRes {
+  return { seasonState: 0, seasonId: "", beginDate: "", beginTime: "", endDate: "", endTime: "" };
+}
+
+export const ss2cRankingInfoRes = {
+  encode(message: ss2cRankingInfoRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.seasonState !== 0) {
+      writer.uint32(8).uint32(message.seasonState);
+    }
+    if (message.seasonId !== "") {
+      writer.uint32(34).string(message.seasonId);
+    }
+    if (message.beginDate !== "") {
+      writer.uint32(18).string(message.beginDate);
+    }
+    if (message.beginTime !== "") {
+      writer.uint32(26).string(message.beginTime);
+    }
+    if (message.endDate !== "") {
+      writer.uint32(42).string(message.endDate);
+    }
+    if (message.endTime !== "") {
+      writer.uint32(50).string(message.endTime);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cRankingInfoRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cRankingInfoRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.seasonState = reader.uint32();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.seasonId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.beginDate = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.beginTime = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.endDate = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.endTime = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cRankingInfoRes {
+    return {
+      seasonState: isSet(object.seasonState) ? Number(object.seasonState) : 0,
+      seasonId: isSet(object.seasonId) ? String(object.seasonId) : "",
+      beginDate: isSet(object.beginDate) ? String(object.beginDate) : "",
+      beginTime: isSet(object.beginTime) ? String(object.beginTime) : "",
+      endDate: isSet(object.endDate) ? String(object.endDate) : "",
+      endTime: isSet(object.endTime) ? String(object.endTime) : "",
+    };
+  },
+
+  toJSON(message: ss2cRankingInfoRes): unknown {
+    const obj: any = {};
+    if (message.seasonState !== 0) {
+      obj.seasonState = Math.round(message.seasonState);
+    }
+    if (message.seasonId !== "") {
+      obj.seasonId = message.seasonId;
+    }
+    if (message.beginDate !== "") {
+      obj.beginDate = message.beginDate;
+    }
+    if (message.beginTime !== "") {
+      obj.beginTime = message.beginTime;
+    }
+    if (message.endDate !== "") {
+      obj.endDate = message.endDate;
+    }
+    if (message.endTime !== "") {
+      obj.endTime = message.endTime;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cRankingInfoRes>, I>>(base?: I): ss2cRankingInfoRes {
+    return ss2cRankingInfoRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cRankingInfoRes>, I>>(object: I): ss2cRankingInfoRes {
+    const message = createBasess2cRankingInfoRes();
+    message.seasonState = object.seasonState ?? 0;
+    message.seasonId = object.seasonId ?? "";
+    message.beginDate = object.beginDate ?? "";
+    message.beginTime = object.beginTime ?? "";
+    message.endDate = object.endDate ?? "";
+    message.endTime = object.endTime ?? "";
+    return message;
+  },
+};
 
 function createBaseSRankRecord(): SRankRecord {
   return { pageIndex: 0, rank: 0, score: 0, percentage: 0, accountId: "", nickName: undefined, characterClass: "" };
@@ -162,56 +447,56 @@ export const SRankRecord = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.pageIndex = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.rank = reader.uint32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.score = reader.uint32();
           continue;
         case 4:
-          if (tag != 37) {
+          if (tag !== 37) {
             break;
           }
 
           message.percentage = reader.float();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.nickName = saccountNickname.decode(reader, reader.uint32());
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.characterClass = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -233,21 +518,33 @@ export const SRankRecord = {
 
   toJSON(message: SRankRecord): unknown {
     const obj: any = {};
-    message.pageIndex !== undefined && (obj.pageIndex = Math.round(message.pageIndex));
-    message.rank !== undefined && (obj.rank = Math.round(message.rank));
-    message.score !== undefined && (obj.score = Math.round(message.score));
-    message.percentage !== undefined && (obj.percentage = message.percentage);
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.nickName !== undefined &&
-      (obj.nickName = message.nickName ? saccountNickname.toJSON(message.nickName) : undefined);
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
+    if (message.pageIndex !== 0) {
+      obj.pageIndex = Math.round(message.pageIndex);
+    }
+    if (message.rank !== 0) {
+      obj.rank = Math.round(message.rank);
+    }
+    if (message.score !== 0) {
+      obj.score = Math.round(message.score);
+    }
+    if (message.percentage !== 0) {
+      obj.percentage = message.percentage;
+    }
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.nickName !== undefined) {
+      obj.nickName = saccountNickname.toJSON(message.nickName);
+    }
+    if (message.characterClass !== "") {
+      obj.characterClass = message.characterClass;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SRankRecord>, I>>(base?: I): SRankRecord {
-    return SRankRecord.fromPartial(base ?? {});
+    return SRankRecord.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SRankRecord>, I>>(object: I): SRankRecord {
     const message = createBaseSRankRecord();
     message.pageIndex = object.pageIndex ?? 0;
@@ -264,22 +561,25 @@ export const SRankRecord = {
 };
 
 function createBasesc2sRankingRangeReq(): sc2sRankingRangeReq {
-  return { rankType: 0, startIndex: 0, endIndex: 0, characterClass: "" };
+  return { sheetId: "", contentId: "", startIndex: 0, endIndex: 0, characterClass: "" };
 }
 
 export const sc2sRankingRangeReq = {
   encode(message: sc2sRankingRangeReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.rankType !== 0) {
-      writer.uint32(8).uint32(message.rankType);
+    if (message.sheetId !== "") {
+      writer.uint32(10).string(message.sheetId);
+    }
+    if (message.contentId !== "") {
+      writer.uint32(18).string(message.contentId);
     }
     if (message.startIndex !== 0) {
-      writer.uint32(16).uint32(message.startIndex);
+      writer.uint32(24).uint32(message.startIndex);
     }
     if (message.endIndex !== 0) {
-      writer.uint32(24).uint32(message.endIndex);
+      writer.uint32(32).uint32(message.endIndex);
     }
     if (message.characterClass !== "") {
-      writer.uint32(34).string(message.characterClass);
+      writer.uint32(42).string(message.characterClass);
     }
     return writer;
   },
@@ -292,35 +592,42 @@ export const sc2sRankingRangeReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.rankType = reader.uint32();
+          message.sheetId = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.contentId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
             break;
           }
 
           message.startIndex = reader.uint32();
           continue;
-        case 3:
-          if (tag != 24) {
+        case 4:
+          if (tag !== 32) {
             break;
           }
 
           message.endIndex = reader.uint32();
           continue;
-        case 4:
-          if (tag != 34) {
+        case 5:
+          if (tag !== 42) {
             break;
           }
 
           message.characterClass = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -330,7 +637,8 @@ export const sc2sRankingRangeReq = {
 
   fromJSON(object: any): sc2sRankingRangeReq {
     return {
-      rankType: isSet(object.rankType) ? Number(object.rankType) : 0,
+      sheetId: isSet(object.sheetId) ? String(object.sheetId) : "",
+      contentId: isSet(object.contentId) ? String(object.contentId) : "",
       startIndex: isSet(object.startIndex) ? Number(object.startIndex) : 0,
       endIndex: isSet(object.endIndex) ? Number(object.endIndex) : 0,
       characterClass: isSet(object.characterClass) ? String(object.characterClass) : "",
@@ -339,20 +647,31 @@ export const sc2sRankingRangeReq = {
 
   toJSON(message: sc2sRankingRangeReq): unknown {
     const obj: any = {};
-    message.rankType !== undefined && (obj.rankType = Math.round(message.rankType));
-    message.startIndex !== undefined && (obj.startIndex = Math.round(message.startIndex));
-    message.endIndex !== undefined && (obj.endIndex = Math.round(message.endIndex));
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
+    if (message.sheetId !== "") {
+      obj.sheetId = message.sheetId;
+    }
+    if (message.contentId !== "") {
+      obj.contentId = message.contentId;
+    }
+    if (message.startIndex !== 0) {
+      obj.startIndex = Math.round(message.startIndex);
+    }
+    if (message.endIndex !== 0) {
+      obj.endIndex = Math.round(message.endIndex);
+    }
+    if (message.characterClass !== "") {
+      obj.characterClass = message.characterClass;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sRankingRangeReq>, I>>(base?: I): sc2sRankingRangeReq {
-    return sc2sRankingRangeReq.fromPartial(base ?? {});
+    return sc2sRankingRangeReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sRankingRangeReq>, I>>(object: I): sc2sRankingRangeReq {
     const message = createBasesc2sRankingRangeReq();
-    message.rankType = object.rankType ?? 0;
+    message.sheetId = object.sheetId ?? "";
+    message.contentId = object.contentId ?? "";
     message.startIndex = object.startIndex ?? 0;
     message.endIndex = object.endIndex ?? 0;
     message.characterClass = object.characterClass ?? "";
@@ -361,7 +680,16 @@ export const sc2sRankingRangeReq = {
 };
 
 function createBasess2cRankingRangeRes(): ss2cRankingRangeRes {
-  return { result: 0, records: [], rankType: 0, allRowCount: 0, startIndex: 0, endIndex: 0, characterClass: "" };
+  return {
+    result: 0,
+    records: [],
+    sheetId: "",
+    contentId: "",
+    allRowCount: 0,
+    startIndex: 0,
+    endIndex: 0,
+    characterClass: "",
+  };
 }
 
 export const ss2cRankingRangeRes = {
@@ -372,20 +700,23 @@ export const ss2cRankingRangeRes = {
     for (const v of message.records) {
       SRankRecord.encode(v!, writer.uint32(18).fork()).ldelim();
     }
-    if (message.rankType !== 0) {
-      writer.uint32(24).uint32(message.rankType);
+    if (message.sheetId !== "") {
+      writer.uint32(26).string(message.sheetId);
+    }
+    if (message.contentId !== "") {
+      writer.uint32(34).string(message.contentId);
     }
     if (message.allRowCount !== 0) {
-      writer.uint32(32).uint32(message.allRowCount);
+      writer.uint32(40).uint32(message.allRowCount);
     }
     if (message.startIndex !== 0) {
-      writer.uint32(40).uint32(message.startIndex);
+      writer.uint32(48).uint32(message.startIndex);
     }
     if (message.endIndex !== 0) {
-      writer.uint32(48).uint32(message.endIndex);
+      writer.uint32(56).uint32(message.endIndex);
     }
     if (message.characterClass !== "") {
-      writer.uint32(58).string(message.characterClass);
+      writer.uint32(66).string(message.characterClass);
     }
     return writer;
   },
@@ -398,56 +729,63 @@ export const ss2cRankingRangeRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.records.push(SRankRecord.decode(reader, reader.uint32()));
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 26) {
             break;
           }
 
-          message.rankType = reader.uint32();
+          message.sheetId = reader.string();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.contentId = reader.string();
+          continue;
+        case 5:
+          if (tag !== 40) {
             break;
           }
 
           message.allRowCount = reader.uint32();
           continue;
-        case 5:
-          if (tag != 40) {
+        case 6:
+          if (tag !== 48) {
             break;
           }
 
           message.startIndex = reader.uint32();
           continue;
-        case 6:
-          if (tag != 48) {
+        case 7:
+          if (tag !== 56) {
             break;
           }
 
           message.endIndex = reader.uint32();
           continue;
-        case 7:
-          if (tag != 58) {
+        case 8:
+          if (tag !== 66) {
             break;
           }
 
           message.characterClass = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -459,7 +797,8 @@ export const ss2cRankingRangeRes = {
     return {
       result: isSet(object.result) ? Number(object.result) : 0,
       records: Array.isArray(object?.records) ? object.records.map((e: any) => SRankRecord.fromJSON(e)) : [],
-      rankType: isSet(object.rankType) ? Number(object.rankType) : 0,
+      sheetId: isSet(object.sheetId) ? String(object.sheetId) : "",
+      contentId: isSet(object.contentId) ? String(object.contentId) : "",
       allRowCount: isSet(object.allRowCount) ? Number(object.allRowCount) : 0,
       startIndex: isSet(object.startIndex) ? Number(object.startIndex) : 0,
       endIndex: isSet(object.endIndex) ? Number(object.endIndex) : 0,
@@ -469,29 +808,42 @@ export const ss2cRankingRangeRes = {
 
   toJSON(message: ss2cRankingRangeRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    if (message.records) {
-      obj.records = message.records.map((e) => e ? SRankRecord.toJSON(e) : undefined);
-    } else {
-      obj.records = [];
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
     }
-    message.rankType !== undefined && (obj.rankType = Math.round(message.rankType));
-    message.allRowCount !== undefined && (obj.allRowCount = Math.round(message.allRowCount));
-    message.startIndex !== undefined && (obj.startIndex = Math.round(message.startIndex));
-    message.endIndex !== undefined && (obj.endIndex = Math.round(message.endIndex));
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
+    if (message.records?.length) {
+      obj.records = message.records.map((e) => SRankRecord.toJSON(e));
+    }
+    if (message.sheetId !== "") {
+      obj.sheetId = message.sheetId;
+    }
+    if (message.contentId !== "") {
+      obj.contentId = message.contentId;
+    }
+    if (message.allRowCount !== 0) {
+      obj.allRowCount = Math.round(message.allRowCount);
+    }
+    if (message.startIndex !== 0) {
+      obj.startIndex = Math.round(message.startIndex);
+    }
+    if (message.endIndex !== 0) {
+      obj.endIndex = Math.round(message.endIndex);
+    }
+    if (message.characterClass !== "") {
+      obj.characterClass = message.characterClass;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cRankingRangeRes>, I>>(base?: I): ss2cRankingRangeRes {
-    return ss2cRankingRangeRes.fromPartial(base ?? {});
+    return ss2cRankingRangeRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cRankingRangeRes>, I>>(object: I): ss2cRankingRangeRes {
     const message = createBasess2cRankingRangeRes();
     message.result = object.result ?? 0;
     message.records = object.records?.map((e) => SRankRecord.fromPartial(e)) || [];
-    message.rankType = object.rankType ?? 0;
+    message.sheetId = object.sheetId ?? "";
+    message.contentId = object.contentId ?? "";
     message.allRowCount = object.allRowCount ?? 0;
     message.startIndex = object.startIndex ?? 0;
     message.endIndex = object.endIndex ?? 0;
@@ -500,244 +852,23 @@ export const ss2cRankingRangeRes = {
   },
 };
 
-function createBasesc2sRankingNearbyReq(): sc2sRankingNearbyReq {
-  return { rankType: 0, searchRange: 0, searchIndex: 0, characterClass: "" };
-}
-
-export const sc2sRankingNearbyReq = {
-  encode(message: sc2sRankingNearbyReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.rankType !== 0) {
-      writer.uint32(8).uint32(message.rankType);
-    }
-    if (message.searchRange !== 0) {
-      writer.uint32(16).uint32(message.searchRange);
-    }
-    if (message.searchIndex !== 0) {
-      writer.uint32(24).uint32(message.searchIndex);
-    }
-    if (message.characterClass !== "") {
-      writer.uint32(34).string(message.characterClass);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sRankingNearbyReq {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasesc2sRankingNearbyReq();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 8) {
-            break;
-          }
-
-          message.rankType = reader.uint32();
-          continue;
-        case 2:
-          if (tag != 16) {
-            break;
-          }
-
-          message.searchRange = reader.uint32();
-          continue;
-        case 3:
-          if (tag != 24) {
-            break;
-          }
-
-          message.searchIndex = reader.uint32();
-          continue;
-        case 4:
-          if (tag != 34) {
-            break;
-          }
-
-          message.characterClass = reader.string();
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): sc2sRankingNearbyReq {
-    return {
-      rankType: isSet(object.rankType) ? Number(object.rankType) : 0,
-      searchRange: isSet(object.searchRange) ? Number(object.searchRange) : 0,
-      searchIndex: isSet(object.searchIndex) ? Number(object.searchIndex) : 0,
-      characterClass: isSet(object.characterClass) ? String(object.characterClass) : "",
-    };
-  },
-
-  toJSON(message: sc2sRankingNearbyReq): unknown {
-    const obj: any = {};
-    message.rankType !== undefined && (obj.rankType = Math.round(message.rankType));
-    message.searchRange !== undefined && (obj.searchRange = Math.round(message.searchRange));
-    message.searchIndex !== undefined && (obj.searchIndex = Math.round(message.searchIndex));
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<sc2sRankingNearbyReq>, I>>(base?: I): sc2sRankingNearbyReq {
-    return sc2sRankingNearbyReq.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<sc2sRankingNearbyReq>, I>>(object: I): sc2sRankingNearbyReq {
-    const message = createBasesc2sRankingNearbyReq();
-    message.rankType = object.rankType ?? 0;
-    message.searchRange = object.searchRange ?? 0;
-    message.searchIndex = object.searchIndex ?? 0;
-    message.characterClass = object.characterClass ?? "";
-    return message;
-  },
-};
-
-function createBasess2cRankingNearbyRes(): ss2cRankingNearbyRes {
-  return { result: 0, records: [], rankType: 0, allRowCount: 0, searchRange: 0, characterClass: "" };
-}
-
-export const ss2cRankingNearbyRes = {
-  encode(message: ss2cRankingNearbyRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.result !== 0) {
-      writer.uint32(8).uint32(message.result);
-    }
-    for (const v of message.records) {
-      SRankRecord.encode(v!, writer.uint32(18).fork()).ldelim();
-    }
-    if (message.rankType !== 0) {
-      writer.uint32(24).uint32(message.rankType);
-    }
-    if (message.allRowCount !== 0) {
-      writer.uint32(32).uint32(message.allRowCount);
-    }
-    if (message.searchRange !== 0) {
-      writer.uint32(40).uint32(message.searchRange);
-    }
-    if (message.characterClass !== "") {
-      writer.uint32(50).string(message.characterClass);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cRankingNearbyRes {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasess2cRankingNearbyRes();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 8) {
-            break;
-          }
-
-          message.result = reader.uint32();
-          continue;
-        case 2:
-          if (tag != 18) {
-            break;
-          }
-
-          message.records.push(SRankRecord.decode(reader, reader.uint32()));
-          continue;
-        case 3:
-          if (tag != 24) {
-            break;
-          }
-
-          message.rankType = reader.uint32();
-          continue;
-        case 4:
-          if (tag != 32) {
-            break;
-          }
-
-          message.allRowCount = reader.uint32();
-          continue;
-        case 5:
-          if (tag != 40) {
-            break;
-          }
-
-          message.searchRange = reader.uint32();
-          continue;
-        case 6:
-          if (tag != 50) {
-            break;
-          }
-
-          message.characterClass = reader.string();
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ss2cRankingNearbyRes {
-    return {
-      result: isSet(object.result) ? Number(object.result) : 0,
-      records: Array.isArray(object?.records) ? object.records.map((e: any) => SRankRecord.fromJSON(e)) : [],
-      rankType: isSet(object.rankType) ? Number(object.rankType) : 0,
-      allRowCount: isSet(object.allRowCount) ? Number(object.allRowCount) : 0,
-      searchRange: isSet(object.searchRange) ? Number(object.searchRange) : 0,
-      characterClass: isSet(object.characterClass) ? String(object.characterClass) : "",
-    };
-  },
-
-  toJSON(message: ss2cRankingNearbyRes): unknown {
-    const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    if (message.records) {
-      obj.records = message.records.map((e) => e ? SRankRecord.toJSON(e) : undefined);
-    } else {
-      obj.records = [];
-    }
-    message.rankType !== undefined && (obj.rankType = Math.round(message.rankType));
-    message.allRowCount !== undefined && (obj.allRowCount = Math.round(message.allRowCount));
-    message.searchRange !== undefined && (obj.searchRange = Math.round(message.searchRange));
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ss2cRankingNearbyRes>, I>>(base?: I): ss2cRankingNearbyRes {
-    return ss2cRankingNearbyRes.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<ss2cRankingNearbyRes>, I>>(object: I): ss2cRankingNearbyRes {
-    const message = createBasess2cRankingNearbyRes();
-    message.result = object.result ?? 0;
-    message.records = object.records?.map((e) => SRankRecord.fromPartial(e)) || [];
-    message.rankType = object.rankType ?? 0;
-    message.allRowCount = object.allRowCount ?? 0;
-    message.searchRange = object.searchRange ?? 0;
-    message.characterClass = object.characterClass ?? "";
-    return message;
-  },
-};
-
 function createBasesc2sRankingCharacterReq(): sc2sRankingCharacterReq {
-  return { rankType: 0, nickName: undefined, characterClass: "" };
+  return { sheetId: "", contentId: "", nickName: undefined, characterClass: "" };
 }
 
 export const sc2sRankingCharacterReq = {
   encode(message: sc2sRankingCharacterReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.rankType !== 0) {
-      writer.uint32(8).uint32(message.rankType);
+    if (message.sheetId !== "") {
+      writer.uint32(10).string(message.sheetId);
+    }
+    if (message.contentId !== "") {
+      writer.uint32(18).string(message.contentId);
     }
     if (message.nickName !== undefined) {
-      saccountNickname.encode(message.nickName, writer.uint32(18).fork()).ldelim();
+      saccountNickname.encode(message.nickName, writer.uint32(26).fork()).ldelim();
     }
     if (message.characterClass !== "") {
-      writer.uint32(26).string(message.characterClass);
+      writer.uint32(34).string(message.characterClass);
     }
     return writer;
   },
@@ -750,28 +881,35 @@ export const sc2sRankingCharacterReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.rankType = reader.uint32();
+          message.sheetId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.contentId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
             break;
           }
 
           message.nickName = saccountNickname.decode(reader, reader.uint32());
           continue;
-        case 3:
-          if (tag != 26) {
+        case 4:
+          if (tag !== 34) {
             break;
           }
 
           message.characterClass = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -781,7 +919,8 @@ export const sc2sRankingCharacterReq = {
 
   fromJSON(object: any): sc2sRankingCharacterReq {
     return {
-      rankType: isSet(object.rankType) ? Number(object.rankType) : 0,
+      sheetId: isSet(object.sheetId) ? String(object.sheetId) : "",
+      contentId: isSet(object.contentId) ? String(object.contentId) : "",
       nickName: isSet(object.nickName) ? saccountNickname.fromJSON(object.nickName) : undefined,
       characterClass: isSet(object.characterClass) ? String(object.characterClass) : "",
     };
@@ -789,20 +928,28 @@ export const sc2sRankingCharacterReq = {
 
   toJSON(message: sc2sRankingCharacterReq): unknown {
     const obj: any = {};
-    message.rankType !== undefined && (obj.rankType = Math.round(message.rankType));
-    message.nickName !== undefined &&
-      (obj.nickName = message.nickName ? saccountNickname.toJSON(message.nickName) : undefined);
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
+    if (message.sheetId !== "") {
+      obj.sheetId = message.sheetId;
+    }
+    if (message.contentId !== "") {
+      obj.contentId = message.contentId;
+    }
+    if (message.nickName !== undefined) {
+      obj.nickName = saccountNickname.toJSON(message.nickName);
+    }
+    if (message.characterClass !== "") {
+      obj.characterClass = message.characterClass;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sRankingCharacterReq>, I>>(base?: I): sc2sRankingCharacterReq {
-    return sc2sRankingCharacterReq.fromPartial(base ?? {});
+    return sc2sRankingCharacterReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sRankingCharacterReq>, I>>(object: I): sc2sRankingCharacterReq {
     const message = createBasesc2sRankingCharacterReq();
-    message.rankType = object.rankType ?? 0;
+    message.sheetId = object.sheetId ?? "";
+    message.contentId = object.contentId ?? "";
     message.nickName = (object.nickName !== undefined && object.nickName !== null)
       ? saccountNickname.fromPartial(object.nickName)
       : undefined;
@@ -812,7 +959,7 @@ export const sc2sRankingCharacterReq = {
 };
 
 function createBasess2cRankingCharacterRes(): ss2cRankingCharacterRes {
-  return { result: 0, rankRecord: undefined, rankType: 0, allRowCount: 0, characterClass: "" };
+  return { result: 0, rankRecord: undefined, sheetId: "", contentId: "", allRowCount: 0, characterClass: "" };
 }
 
 export const ss2cRankingCharacterRes = {
@@ -823,14 +970,17 @@ export const ss2cRankingCharacterRes = {
     if (message.rankRecord !== undefined) {
       SRankRecord.encode(message.rankRecord, writer.uint32(18).fork()).ldelim();
     }
-    if (message.rankType !== 0) {
-      writer.uint32(24).uint32(message.rankType);
+    if (message.sheetId !== "") {
+      writer.uint32(26).string(message.sheetId);
+    }
+    if (message.contentId !== "") {
+      writer.uint32(34).string(message.contentId);
     }
     if (message.allRowCount !== 0) {
-      writer.uint32(32).uint32(message.allRowCount);
+      writer.uint32(40).uint32(message.allRowCount);
     }
     if (message.characterClass !== "") {
-      writer.uint32(42).string(message.characterClass);
+      writer.uint32(50).string(message.characterClass);
     }
     return writer;
   },
@@ -843,42 +993,49 @@ export const ss2cRankingCharacterRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.rankRecord = SRankRecord.decode(reader, reader.uint32());
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 26) {
             break;
           }
 
-          message.rankType = reader.uint32();
+          message.sheetId = reader.string();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.contentId = reader.string();
+          continue;
+        case 5:
+          if (tag !== 40) {
             break;
           }
 
           message.allRowCount = reader.uint32();
           continue;
-        case 5:
-          if (tag != 42) {
+        case 6:
+          if (tag !== 50) {
             break;
           }
 
           message.characterClass = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -890,7 +1047,8 @@ export const ss2cRankingCharacterRes = {
     return {
       result: isSet(object.result) ? Number(object.result) : 0,
       rankRecord: isSet(object.rankRecord) ? SRankRecord.fromJSON(object.rankRecord) : undefined,
-      rankType: isSet(object.rankType) ? Number(object.rankType) : 0,
+      sheetId: isSet(object.sheetId) ? String(object.sheetId) : "",
+      contentId: isSet(object.contentId) ? String(object.contentId) : "",
       allRowCount: isSet(object.allRowCount) ? Number(object.allRowCount) : 0,
       characterClass: isSet(object.characterClass) ? String(object.characterClass) : "",
     };
@@ -898,26 +1056,38 @@ export const ss2cRankingCharacterRes = {
 
   toJSON(message: ss2cRankingCharacterRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.rankRecord !== undefined &&
-      (obj.rankRecord = message.rankRecord ? SRankRecord.toJSON(message.rankRecord) : undefined);
-    message.rankType !== undefined && (obj.rankType = Math.round(message.rankType));
-    message.allRowCount !== undefined && (obj.allRowCount = Math.round(message.allRowCount));
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.rankRecord !== undefined) {
+      obj.rankRecord = SRankRecord.toJSON(message.rankRecord);
+    }
+    if (message.sheetId !== "") {
+      obj.sheetId = message.sheetId;
+    }
+    if (message.contentId !== "") {
+      obj.contentId = message.contentId;
+    }
+    if (message.allRowCount !== 0) {
+      obj.allRowCount = Math.round(message.allRowCount);
+    }
+    if (message.characterClass !== "") {
+      obj.characterClass = message.characterClass;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cRankingCharacterRes>, I>>(base?: I): ss2cRankingCharacterRes {
-    return ss2cRankingCharacterRes.fromPartial(base ?? {});
+    return ss2cRankingCharacterRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cRankingCharacterRes>, I>>(object: I): ss2cRankingCharacterRes {
     const message = createBasess2cRankingCharacterRes();
     message.result = object.result ?? 0;
     message.rankRecord = (object.rankRecord !== undefined && object.rankRecord !== null)
       ? SRankRecord.fromPartial(object.rankRecord)
       : undefined;
-    message.rankType = object.rankType ?? 0;
+    message.sheetId = object.sheetId ?? "";
+    message.contentId = object.contentId ?? "";
     message.allRowCount = object.allRowCount ?? 0;
     message.characterClass = object.characterClass ?? "";
     return message;

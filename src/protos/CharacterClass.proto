@@ -63,6 +63,13 @@ message SS2C_CLASS_SPELL_LIST_RES {
   repeated .DC.Packet.SSpell spells = 1;
 }
 
+message SC2S_CLASS_MUSIC_LIST_REQ {
+}
+
+message SS2C_CLASS_MUSIC_LIST_RES {
+  repeated .DC.Packet.SMusic musics = 1;
+}
+
 message SC2S_CLASS_SPELL_SLOT_MOVE_REQ {
   string spellId = 1;
   int32 dstSlotIndex = 2;
@@ -92,5 +99,15 @@ message SS2C_CLASS_ITEM_MOVE_RES {
   uint32 result = 1;
   .DC.Packet.SCLASS_MOVE_INFO oldMove = 2;
   .DC.Packet.SCLASS_MOVE_INFO newMove = 3;
+}
+
+message SC2S_CLASS_MUSIC_SLOT_MOVE_REQ {
+  string musicId = 1;
+  int32 dstSlotIndex = 2;
+}
+
+message SS2C_CLASS_MUSIC_SLOT_MOVE_RES {
+  uint32 result = 1;
+  repeated .DC.Packet.SMusic equipMusicList = 2;
 }
 

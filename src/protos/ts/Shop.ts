@@ -3,154 +3,116 @@ import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "DC.Packet";
 
-export interface sshopCharacterSkinInfo {
-  characterSkinId: string;
+export interface sshopItemBaseInfo {
+  shopType: number;
+  shopItemId: string;
   isHave: number;
 }
 
-export interface sshopItemSkinInfo {
-  itemSkinId: string;
-  isHave: number;
+export interface sc2sShopItemListReq {
 }
 
-export interface sshopEmoteInfo {
-  emoteId: string;
-  isHave: number;
-}
-
-export interface sshopActionInfo {
-  actionId: string;
-  isHave: number;
-}
-
-export interface sshopLobbyEmoteInfo {
-  lobbyEmoteId: string;
-  isHave: number;
-}
-
-export interface sc2sShopCharacterSkinListReq {
-}
-
-export interface ss2cShopCharacterSkinListRes {
+export interface ss2cShopItemListRes {
   loopFlag: number;
-  characterSkinInfoList: sshopCharacterSkinInfo[];
+  infos: sshopItemBaseInfo[];
+  currentTriumphLevel: number;
+  nextTriumphExp: number;
+  currentTriumphExp: number;
 }
 
-export interface sc2sShopItemSkinListReq {
+export interface sc2sShopItemBuyReq {
+  shopType: number;
+  buyShopItemId: string;
+  paymentMethod: number;
 }
 
-export interface ss2cShopItemSkinListRes {
-  loopFlag: number;
-  itemSkinInfoList: sshopItemSkinInfo[];
-}
-
-export interface sc2sShopEmoteListReq {
-}
-
-export interface ss2cShopEmoteListRes {
-  loopFlag: number;
-  emoteInfoList: sshopEmoteInfo[];
-}
-
-export interface sc2sShopActionListReq {
-}
-
-export interface ss2cShopActionListRes {
-  loopFlag: number;
-  actionInfoList: sshopActionInfo[];
-}
-
-export interface sc2sShopLobbyEmoteListReq {
-}
-
-export interface ss2cShopLobbyEmoteListRes {
-  loopFlag: number;
-  lobbyEmoteInfoList: sshopLobbyEmoteInfo[];
-}
-
-export interface sc2sShopCharacterSkinBuyReq {
-  buyShopCharacterSkinId: string;
-}
-
-export interface ss2cShopCharacterSkinBuyRes {
+export interface ss2cShopItemBuyRes {
   result: number;
-  buyShopCharacterSkinId: string;
+  shopType: number;
+  buyShopItemId: string;
+  paymentMethod: number;
 }
 
-export interface sc2sShopItemSkinBuyReq {
-  buyShopItemSkinId: string;
+export interface sgiftCodeRewardInfo {
+  rewardType: string;
+  stockId: string;
 }
 
-export interface ss2cShopItemSkinBuyRes {
+export interface sc2sShopEnterGiftCodeReq {
+  giftCode: string;
+}
+
+export interface ss2cShopEnterGiftCodeRes {
   result: number;
-  buyShopItemSkinId: string;
+  rewards: sgiftCodeRewardInfo[];
 }
 
-export interface sc2sShopEmoteBuyReq {
-  buyShopEmoteId: string;
+export interface sc2sShopRedStoneShardInfoReq {
 }
 
-export interface ss2cShopEmoteBuyRes {
-  result: number;
-  buyShopEmoteId: string;
+export interface sshopRedStoneShardInfo {
+  productIndex: number;
+  productPrice: number;
+  productCount: number;
+  designDataId: string;
+  redirectionUrl: string;
+  customData: string;
+  productName: string;
 }
 
-export interface sc2sShopActionBuyReq {
-  buyActionId: string;
+export interface ss2cShopRedStoneShardInfoRes {
+  infos: sshopRedStoneShardInfo[];
+  loginType: number;
 }
 
-export interface ss2cShopActionBuyRes {
-  result: number;
-  buyActionId: string;
+function createBasesshopItemBaseInfo(): sshopItemBaseInfo {
+  return { shopType: 0, shopItemId: "", isHave: 0 };
 }
 
-export interface sc2sShopLobbyEmoteBuyReq {
-  buyLobbyEmoteId: string;
-}
-
-export interface ss2cShopLobbyEmoteBuyRes {
-  result: number;
-  buyLobbyEmoteId: string;
-}
-
-function createBasesshopCharacterSkinInfo(): sshopCharacterSkinInfo {
-  return { characterSkinId: "", isHave: 0 };
-}
-
-export const sshopCharacterSkinInfo = {
-  encode(message: sshopCharacterSkinInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.characterSkinId !== "") {
-      writer.uint32(10).string(message.characterSkinId);
+export const sshopItemBaseInfo = {
+  encode(message: sshopItemBaseInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.shopType !== 0) {
+      writer.uint32(8).uint32(message.shopType);
+    }
+    if (message.shopItemId !== "") {
+      writer.uint32(18).string(message.shopItemId);
     }
     if (message.isHave !== 0) {
-      writer.uint32(16).uint32(message.isHave);
+      writer.uint32(24).uint32(message.isHave);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): sshopCharacterSkinInfo {
+  decode(input: _m0.Reader | Uint8Array, length?: number): sshopItemBaseInfo {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasesshopCharacterSkinInfo();
+    const message = createBasesshopItemBaseInfo();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.characterSkinId = reader.string();
+          message.shopType = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.shopItemId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
             break;
           }
 
           message.isHave = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -158,334 +120,58 @@ export const sshopCharacterSkinInfo = {
     return message;
   },
 
-  fromJSON(object: any): sshopCharacterSkinInfo {
+  fromJSON(object: any): sshopItemBaseInfo {
     return {
-      characterSkinId: isSet(object.characterSkinId) ? String(object.characterSkinId) : "",
+      shopType: isSet(object.shopType) ? Number(object.shopType) : 0,
+      shopItemId: isSet(object.shopItemId) ? String(object.shopItemId) : "",
       isHave: isSet(object.isHave) ? Number(object.isHave) : 0,
     };
   },
 
-  toJSON(message: sshopCharacterSkinInfo): unknown {
+  toJSON(message: sshopItemBaseInfo): unknown {
     const obj: any = {};
-    message.characterSkinId !== undefined && (obj.characterSkinId = message.characterSkinId);
-    message.isHave !== undefined && (obj.isHave = Math.round(message.isHave));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<sshopCharacterSkinInfo>, I>>(base?: I): sshopCharacterSkinInfo {
-    return sshopCharacterSkinInfo.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<sshopCharacterSkinInfo>, I>>(object: I): sshopCharacterSkinInfo {
-    const message = createBasesshopCharacterSkinInfo();
-    message.characterSkinId = object.characterSkinId ?? "";
-    message.isHave = object.isHave ?? 0;
-    return message;
-  },
-};
-
-function createBasesshopItemSkinInfo(): sshopItemSkinInfo {
-  return { itemSkinId: "", isHave: 0 };
-}
-
-export const sshopItemSkinInfo = {
-  encode(message: sshopItemSkinInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.itemSkinId !== "") {
-      writer.uint32(10).string(message.itemSkinId);
+    if (message.shopType !== 0) {
+      obj.shopType = Math.round(message.shopType);
+    }
+    if (message.shopItemId !== "") {
+      obj.shopItemId = message.shopItemId;
     }
     if (message.isHave !== 0) {
-      writer.uint32(16).uint32(message.isHave);
+      obj.isHave = Math.round(message.isHave);
     }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): sshopItemSkinInfo {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasesshopItemSkinInfo();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 10) {
-            break;
-          }
-
-          message.itemSkinId = reader.string();
-          continue;
-        case 2:
-          if (tag != 16) {
-            break;
-          }
-
-          message.isHave = reader.uint32();
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): sshopItemSkinInfo {
-    return {
-      itemSkinId: isSet(object.itemSkinId) ? String(object.itemSkinId) : "",
-      isHave: isSet(object.isHave) ? Number(object.isHave) : 0,
-    };
-  },
-
-  toJSON(message: sshopItemSkinInfo): unknown {
-    const obj: any = {};
-    message.itemSkinId !== undefined && (obj.itemSkinId = message.itemSkinId);
-    message.isHave !== undefined && (obj.isHave = Math.round(message.isHave));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<sshopItemSkinInfo>, I>>(base?: I): sshopItemSkinInfo {
-    return sshopItemSkinInfo.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<sshopItemBaseInfo>, I>>(base?: I): sshopItemBaseInfo {
+    return sshopItemBaseInfo.fromPartial(base ?? ({} as any));
   },
-
-  fromPartial<I extends Exact<DeepPartial<sshopItemSkinInfo>, I>>(object: I): sshopItemSkinInfo {
-    const message = createBasesshopItemSkinInfo();
-    message.itemSkinId = object.itemSkinId ?? "";
+  fromPartial<I extends Exact<DeepPartial<sshopItemBaseInfo>, I>>(object: I): sshopItemBaseInfo {
+    const message = createBasesshopItemBaseInfo();
+    message.shopType = object.shopType ?? 0;
+    message.shopItemId = object.shopItemId ?? "";
     message.isHave = object.isHave ?? 0;
     return message;
   },
 };
 
-function createBasesshopEmoteInfo(): sshopEmoteInfo {
-  return { emoteId: "", isHave: 0 };
-}
-
-export const sshopEmoteInfo = {
-  encode(message: sshopEmoteInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.emoteId !== "") {
-      writer.uint32(10).string(message.emoteId);
-    }
-    if (message.isHave !== 0) {
-      writer.uint32(16).uint32(message.isHave);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): sshopEmoteInfo {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasesshopEmoteInfo();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 10) {
-            break;
-          }
-
-          message.emoteId = reader.string();
-          continue;
-        case 2:
-          if (tag != 16) {
-            break;
-          }
-
-          message.isHave = reader.uint32();
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): sshopEmoteInfo {
-    return {
-      emoteId: isSet(object.emoteId) ? String(object.emoteId) : "",
-      isHave: isSet(object.isHave) ? Number(object.isHave) : 0,
-    };
-  },
-
-  toJSON(message: sshopEmoteInfo): unknown {
-    const obj: any = {};
-    message.emoteId !== undefined && (obj.emoteId = message.emoteId);
-    message.isHave !== undefined && (obj.isHave = Math.round(message.isHave));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<sshopEmoteInfo>, I>>(base?: I): sshopEmoteInfo {
-    return sshopEmoteInfo.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<sshopEmoteInfo>, I>>(object: I): sshopEmoteInfo {
-    const message = createBasesshopEmoteInfo();
-    message.emoteId = object.emoteId ?? "";
-    message.isHave = object.isHave ?? 0;
-    return message;
-  },
-};
-
-function createBasesshopActionInfo(): sshopActionInfo {
-  return { actionId: "", isHave: 0 };
-}
-
-export const sshopActionInfo = {
-  encode(message: sshopActionInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.actionId !== "") {
-      writer.uint32(10).string(message.actionId);
-    }
-    if (message.isHave !== 0) {
-      writer.uint32(16).uint32(message.isHave);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): sshopActionInfo {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasesshopActionInfo();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 10) {
-            break;
-          }
-
-          message.actionId = reader.string();
-          continue;
-        case 2:
-          if (tag != 16) {
-            break;
-          }
-
-          message.isHave = reader.uint32();
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): sshopActionInfo {
-    return {
-      actionId: isSet(object.actionId) ? String(object.actionId) : "",
-      isHave: isSet(object.isHave) ? Number(object.isHave) : 0,
-    };
-  },
-
-  toJSON(message: sshopActionInfo): unknown {
-    const obj: any = {};
-    message.actionId !== undefined && (obj.actionId = message.actionId);
-    message.isHave !== undefined && (obj.isHave = Math.round(message.isHave));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<sshopActionInfo>, I>>(base?: I): sshopActionInfo {
-    return sshopActionInfo.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<sshopActionInfo>, I>>(object: I): sshopActionInfo {
-    const message = createBasesshopActionInfo();
-    message.actionId = object.actionId ?? "";
-    message.isHave = object.isHave ?? 0;
-    return message;
-  },
-};
-
-function createBasesshopLobbyEmoteInfo(): sshopLobbyEmoteInfo {
-  return { lobbyEmoteId: "", isHave: 0 };
-}
-
-export const sshopLobbyEmoteInfo = {
-  encode(message: sshopLobbyEmoteInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.lobbyEmoteId !== "") {
-      writer.uint32(10).string(message.lobbyEmoteId);
-    }
-    if (message.isHave !== 0) {
-      writer.uint32(16).uint32(message.isHave);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): sshopLobbyEmoteInfo {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasesshopLobbyEmoteInfo();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 10) {
-            break;
-          }
-
-          message.lobbyEmoteId = reader.string();
-          continue;
-        case 2:
-          if (tag != 16) {
-            break;
-          }
-
-          message.isHave = reader.uint32();
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): sshopLobbyEmoteInfo {
-    return {
-      lobbyEmoteId: isSet(object.lobbyEmoteId) ? String(object.lobbyEmoteId) : "",
-      isHave: isSet(object.isHave) ? Number(object.isHave) : 0,
-    };
-  },
-
-  toJSON(message: sshopLobbyEmoteInfo): unknown {
-    const obj: any = {};
-    message.lobbyEmoteId !== undefined && (obj.lobbyEmoteId = message.lobbyEmoteId);
-    message.isHave !== undefined && (obj.isHave = Math.round(message.isHave));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<sshopLobbyEmoteInfo>, I>>(base?: I): sshopLobbyEmoteInfo {
-    return sshopLobbyEmoteInfo.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<sshopLobbyEmoteInfo>, I>>(object: I): sshopLobbyEmoteInfo {
-    const message = createBasesshopLobbyEmoteInfo();
-    message.lobbyEmoteId = object.lobbyEmoteId ?? "";
-    message.isHave = object.isHave ?? 0;
-    return message;
-  },
-};
-
-function createBasesc2sShopCharacterSkinListReq(): sc2sShopCharacterSkinListReq {
+function createBasesc2sShopItemListReq(): sc2sShopItemListReq {
   return {};
 }
 
-export const sc2sShopCharacterSkinListReq = {
-  encode(_: sc2sShopCharacterSkinListReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const sc2sShopItemListReq = {
+  encode(_: sc2sShopItemListReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sShopCharacterSkinListReq {
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sShopItemListReq {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasesc2sShopCharacterSkinListReq();
+    const message = createBasesc2sShopItemListReq();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -493,63 +179,92 @@ export const sc2sShopCharacterSkinListReq = {
     return message;
   },
 
-  fromJSON(_: any): sc2sShopCharacterSkinListReq {
+  fromJSON(_: any): sc2sShopItemListReq {
     return {};
   },
 
-  toJSON(_: sc2sShopCharacterSkinListReq): unknown {
+  toJSON(_: sc2sShopItemListReq): unknown {
     const obj: any = {};
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<sc2sShopCharacterSkinListReq>, I>>(base?: I): sc2sShopCharacterSkinListReq {
-    return sc2sShopCharacterSkinListReq.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<sc2sShopItemListReq>, I>>(base?: I): sc2sShopItemListReq {
+    return sc2sShopItemListReq.fromPartial(base ?? ({} as any));
   },
-
-  fromPartial<I extends Exact<DeepPartial<sc2sShopCharacterSkinListReq>, I>>(_: I): sc2sShopCharacterSkinListReq {
-    const message = createBasesc2sShopCharacterSkinListReq();
+  fromPartial<I extends Exact<DeepPartial<sc2sShopItemListReq>, I>>(_: I): sc2sShopItemListReq {
+    const message = createBasesc2sShopItemListReq();
     return message;
   },
 };
 
-function createBasess2cShopCharacterSkinListRes(): ss2cShopCharacterSkinListRes {
-  return { loopFlag: 0, characterSkinInfoList: [] };
+function createBasess2cShopItemListRes(): ss2cShopItemListRes {
+  return { loopFlag: 0, infos: [], currentTriumphLevel: 0, nextTriumphExp: 0, currentTriumphExp: 0 };
 }
 
-export const ss2cShopCharacterSkinListRes = {
-  encode(message: ss2cShopCharacterSkinListRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const ss2cShopItemListRes = {
+  encode(message: ss2cShopItemListRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.loopFlag !== 0) {
-      writer.uint32(8).uint32(message.loopFlag);
+      writer.uint32(8).int32(message.loopFlag);
     }
-    for (const v of message.characterSkinInfoList) {
-      sshopCharacterSkinInfo.encode(v!, writer.uint32(18).fork()).ldelim();
+    for (const v of message.infos) {
+      sshopItemBaseInfo.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.currentTriumphLevel !== 0) {
+      writer.uint32(24).int32(message.currentTriumphLevel);
+    }
+    if (message.nextTriumphExp !== 0) {
+      writer.uint32(32).int32(message.nextTriumphExp);
+    }
+    if (message.currentTriumphExp !== 0) {
+      writer.uint32(40).int32(message.currentTriumphExp);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cShopCharacterSkinListRes {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cShopItemListRes {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasess2cShopCharacterSkinListRes();
+    const message = createBasess2cShopItemListRes();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
-          message.loopFlag = reader.uint32();
+          message.loopFlag = reader.int32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
-          message.characterSkinInfoList.push(sshopCharacterSkinInfo.decode(reader, reader.uint32()));
+          message.infos.push(sshopItemBaseInfo.decode(reader, reader.uint32()));
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.currentTriumphLevel = reader.int32();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.nextTriumphExp = reader.int32();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.currentTriumphExp = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -557,123 +272,98 @@ export const ss2cShopCharacterSkinListRes = {
     return message;
   },
 
-  fromJSON(object: any): ss2cShopCharacterSkinListRes {
+  fromJSON(object: any): ss2cShopItemListRes {
     return {
       loopFlag: isSet(object.loopFlag) ? Number(object.loopFlag) : 0,
-      characterSkinInfoList: Array.isArray(object?.characterSkinInfoList)
-        ? object.characterSkinInfoList.map((e: any) => sshopCharacterSkinInfo.fromJSON(e))
-        : [],
+      infos: Array.isArray(object?.infos) ? object.infos.map((e: any) => sshopItemBaseInfo.fromJSON(e)) : [],
+      currentTriumphLevel: isSet(object.currentTriumphLevel) ? Number(object.currentTriumphLevel) : 0,
+      nextTriumphExp: isSet(object.nextTriumphExp) ? Number(object.nextTriumphExp) : 0,
+      currentTriumphExp: isSet(object.currentTriumphExp) ? Number(object.currentTriumphExp) : 0,
     };
   },
 
-  toJSON(message: ss2cShopCharacterSkinListRes): unknown {
+  toJSON(message: ss2cShopItemListRes): unknown {
     const obj: any = {};
-    message.loopFlag !== undefined && (obj.loopFlag = Math.round(message.loopFlag));
-    if (message.characterSkinInfoList) {
-      obj.characterSkinInfoList = message.characterSkinInfoList.map((e) =>
-        e ? sshopCharacterSkinInfo.toJSON(e) : undefined
-      );
-    } else {
-      obj.characterSkinInfoList = [];
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ss2cShopCharacterSkinListRes>, I>>(base?: I): ss2cShopCharacterSkinListRes {
-    return ss2cShopCharacterSkinListRes.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<ss2cShopCharacterSkinListRes>, I>>(object: I): ss2cShopCharacterSkinListRes {
-    const message = createBasess2cShopCharacterSkinListRes();
-    message.loopFlag = object.loopFlag ?? 0;
-    message.characterSkinInfoList = object.characterSkinInfoList?.map((e) => sshopCharacterSkinInfo.fromPartial(e)) ||
-      [];
-    return message;
-  },
-};
-
-function createBasesc2sShopItemSkinListReq(): sc2sShopItemSkinListReq {
-  return {};
-}
-
-export const sc2sShopItemSkinListReq = {
-  encode(_: sc2sShopItemSkinListReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sShopItemSkinListReq {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasesc2sShopItemSkinListReq();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(_: any): sc2sShopItemSkinListReq {
-    return {};
-  },
-
-  toJSON(_: sc2sShopItemSkinListReq): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<sc2sShopItemSkinListReq>, I>>(base?: I): sc2sShopItemSkinListReq {
-    return sc2sShopItemSkinListReq.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<sc2sShopItemSkinListReq>, I>>(_: I): sc2sShopItemSkinListReq {
-    const message = createBasesc2sShopItemSkinListReq();
-    return message;
-  },
-};
-
-function createBasess2cShopItemSkinListRes(): ss2cShopItemSkinListRes {
-  return { loopFlag: 0, itemSkinInfoList: [] };
-}
-
-export const ss2cShopItemSkinListRes = {
-  encode(message: ss2cShopItemSkinListRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.loopFlag !== 0) {
-      writer.uint32(8).uint32(message.loopFlag);
+      obj.loopFlag = Math.round(message.loopFlag);
     }
-    for (const v of message.itemSkinInfoList) {
-      sshopItemSkinInfo.encode(v!, writer.uint32(18).fork()).ldelim();
+    if (message.infos?.length) {
+      obj.infos = message.infos.map((e) => sshopItemBaseInfo.toJSON(e));
+    }
+    if (message.currentTriumphLevel !== 0) {
+      obj.currentTriumphLevel = Math.round(message.currentTriumphLevel);
+    }
+    if (message.nextTriumphExp !== 0) {
+      obj.nextTriumphExp = Math.round(message.nextTriumphExp);
+    }
+    if (message.currentTriumphExp !== 0) {
+      obj.currentTriumphExp = Math.round(message.currentTriumphExp);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cShopItemListRes>, I>>(base?: I): ss2cShopItemListRes {
+    return ss2cShopItemListRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cShopItemListRes>, I>>(object: I): ss2cShopItemListRes {
+    const message = createBasess2cShopItemListRes();
+    message.loopFlag = object.loopFlag ?? 0;
+    message.infos = object.infos?.map((e) => sshopItemBaseInfo.fromPartial(e)) || [];
+    message.currentTriumphLevel = object.currentTriumphLevel ?? 0;
+    message.nextTriumphExp = object.nextTriumphExp ?? 0;
+    message.currentTriumphExp = object.currentTriumphExp ?? 0;
+    return message;
+  },
+};
+
+function createBasesc2sShopItemBuyReq(): sc2sShopItemBuyReq {
+  return { shopType: 0, buyShopItemId: "", paymentMethod: 0 };
+}
+
+export const sc2sShopItemBuyReq = {
+  encode(message: sc2sShopItemBuyReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.shopType !== 0) {
+      writer.uint32(8).uint32(message.shopType);
+    }
+    if (message.buyShopItemId !== "") {
+      writer.uint32(18).string(message.buyShopItemId);
+    }
+    if (message.paymentMethod !== 0) {
+      writer.uint32(24).uint32(message.paymentMethod);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cShopItemSkinListRes {
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sShopItemBuyReq {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasess2cShopItemSkinListRes();
+    const message = createBasesc2sShopItemBuyReq();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
-          message.loopFlag = reader.uint32();
+          message.shopType = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
-          message.itemSkinInfoList.push(sshopItemSkinInfo.decode(reader, reader.uint32()));
+          message.buyShopItemId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.paymentMethod = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -681,497 +371,98 @@ export const ss2cShopItemSkinListRes = {
     return message;
   },
 
-  fromJSON(object: any): ss2cShopItemSkinListRes {
+  fromJSON(object: any): sc2sShopItemBuyReq {
     return {
-      loopFlag: isSet(object.loopFlag) ? Number(object.loopFlag) : 0,
-      itemSkinInfoList: Array.isArray(object?.itemSkinInfoList)
-        ? object.itemSkinInfoList.map((e: any) => sshopItemSkinInfo.fromJSON(e))
-        : [],
+      shopType: isSet(object.shopType) ? Number(object.shopType) : 0,
+      buyShopItemId: isSet(object.buyShopItemId) ? String(object.buyShopItemId) : "",
+      paymentMethod: isSet(object.paymentMethod) ? Number(object.paymentMethod) : 0,
     };
   },
 
-  toJSON(message: ss2cShopItemSkinListRes): unknown {
+  toJSON(message: sc2sShopItemBuyReq): unknown {
     const obj: any = {};
-    message.loopFlag !== undefined && (obj.loopFlag = Math.round(message.loopFlag));
-    if (message.itemSkinInfoList) {
-      obj.itemSkinInfoList = message.itemSkinInfoList.map((e) => e ? sshopItemSkinInfo.toJSON(e) : undefined);
-    } else {
-      obj.itemSkinInfoList = [];
+    if (message.shopType !== 0) {
+      obj.shopType = Math.round(message.shopType);
+    }
+    if (message.buyShopItemId !== "") {
+      obj.buyShopItemId = message.buyShopItemId;
+    }
+    if (message.paymentMethod !== 0) {
+      obj.paymentMethod = Math.round(message.paymentMethod);
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ss2cShopItemSkinListRes>, I>>(base?: I): ss2cShopItemSkinListRes {
-    return ss2cShopItemSkinListRes.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<sc2sShopItemBuyReq>, I>>(base?: I): sc2sShopItemBuyReq {
+    return sc2sShopItemBuyReq.fromPartial(base ?? ({} as any));
   },
-
-  fromPartial<I extends Exact<DeepPartial<ss2cShopItemSkinListRes>, I>>(object: I): ss2cShopItemSkinListRes {
-    const message = createBasess2cShopItemSkinListRes();
-    message.loopFlag = object.loopFlag ?? 0;
-    message.itemSkinInfoList = object.itemSkinInfoList?.map((e) => sshopItemSkinInfo.fromPartial(e)) || [];
+  fromPartial<I extends Exact<DeepPartial<sc2sShopItemBuyReq>, I>>(object: I): sc2sShopItemBuyReq {
+    const message = createBasesc2sShopItemBuyReq();
+    message.shopType = object.shopType ?? 0;
+    message.buyShopItemId = object.buyShopItemId ?? "";
+    message.paymentMethod = object.paymentMethod ?? 0;
     return message;
   },
 };
 
-function createBasesc2sShopEmoteListReq(): sc2sShopEmoteListReq {
-  return {};
+function createBasess2cShopItemBuyRes(): ss2cShopItemBuyRes {
+  return { result: 0, shopType: 0, buyShopItemId: "", paymentMethod: 0 };
 }
 
-export const sc2sShopEmoteListReq = {
-  encode(_: sc2sShopEmoteListReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sShopEmoteListReq {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasesc2sShopEmoteListReq();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(_: any): sc2sShopEmoteListReq {
-    return {};
-  },
-
-  toJSON(_: sc2sShopEmoteListReq): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<sc2sShopEmoteListReq>, I>>(base?: I): sc2sShopEmoteListReq {
-    return sc2sShopEmoteListReq.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<sc2sShopEmoteListReq>, I>>(_: I): sc2sShopEmoteListReq {
-    const message = createBasesc2sShopEmoteListReq();
-    return message;
-  },
-};
-
-function createBasess2cShopEmoteListRes(): ss2cShopEmoteListRes {
-  return { loopFlag: 0, emoteInfoList: [] };
-}
-
-export const ss2cShopEmoteListRes = {
-  encode(message: ss2cShopEmoteListRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.loopFlag !== 0) {
-      writer.uint32(8).uint32(message.loopFlag);
-    }
-    for (const v of message.emoteInfoList) {
-      sshopEmoteInfo.encode(v!, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cShopEmoteListRes {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasess2cShopEmoteListRes();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 8) {
-            break;
-          }
-
-          message.loopFlag = reader.uint32();
-          continue;
-        case 2:
-          if (tag != 18) {
-            break;
-          }
-
-          message.emoteInfoList.push(sshopEmoteInfo.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ss2cShopEmoteListRes {
-    return {
-      loopFlag: isSet(object.loopFlag) ? Number(object.loopFlag) : 0,
-      emoteInfoList: Array.isArray(object?.emoteInfoList)
-        ? object.emoteInfoList.map((e: any) => sshopEmoteInfo.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: ss2cShopEmoteListRes): unknown {
-    const obj: any = {};
-    message.loopFlag !== undefined && (obj.loopFlag = Math.round(message.loopFlag));
-    if (message.emoteInfoList) {
-      obj.emoteInfoList = message.emoteInfoList.map((e) => e ? sshopEmoteInfo.toJSON(e) : undefined);
-    } else {
-      obj.emoteInfoList = [];
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ss2cShopEmoteListRes>, I>>(base?: I): ss2cShopEmoteListRes {
-    return ss2cShopEmoteListRes.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<ss2cShopEmoteListRes>, I>>(object: I): ss2cShopEmoteListRes {
-    const message = createBasess2cShopEmoteListRes();
-    message.loopFlag = object.loopFlag ?? 0;
-    message.emoteInfoList = object.emoteInfoList?.map((e) => sshopEmoteInfo.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBasesc2sShopActionListReq(): sc2sShopActionListReq {
-  return {};
-}
-
-export const sc2sShopActionListReq = {
-  encode(_: sc2sShopActionListReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sShopActionListReq {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasesc2sShopActionListReq();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(_: any): sc2sShopActionListReq {
-    return {};
-  },
-
-  toJSON(_: sc2sShopActionListReq): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<sc2sShopActionListReq>, I>>(base?: I): sc2sShopActionListReq {
-    return sc2sShopActionListReq.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<sc2sShopActionListReq>, I>>(_: I): sc2sShopActionListReq {
-    const message = createBasesc2sShopActionListReq();
-    return message;
-  },
-};
-
-function createBasess2cShopActionListRes(): ss2cShopActionListRes {
-  return { loopFlag: 0, actionInfoList: [] };
-}
-
-export const ss2cShopActionListRes = {
-  encode(message: ss2cShopActionListRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.loopFlag !== 0) {
-      writer.uint32(8).uint32(message.loopFlag);
-    }
-    for (const v of message.actionInfoList) {
-      sshopActionInfo.encode(v!, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cShopActionListRes {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasess2cShopActionListRes();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 8) {
-            break;
-          }
-
-          message.loopFlag = reader.uint32();
-          continue;
-        case 2:
-          if (tag != 18) {
-            break;
-          }
-
-          message.actionInfoList.push(sshopActionInfo.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ss2cShopActionListRes {
-    return {
-      loopFlag: isSet(object.loopFlag) ? Number(object.loopFlag) : 0,
-      actionInfoList: Array.isArray(object?.actionInfoList)
-        ? object.actionInfoList.map((e: any) => sshopActionInfo.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: ss2cShopActionListRes): unknown {
-    const obj: any = {};
-    message.loopFlag !== undefined && (obj.loopFlag = Math.round(message.loopFlag));
-    if (message.actionInfoList) {
-      obj.actionInfoList = message.actionInfoList.map((e) => e ? sshopActionInfo.toJSON(e) : undefined);
-    } else {
-      obj.actionInfoList = [];
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ss2cShopActionListRes>, I>>(base?: I): ss2cShopActionListRes {
-    return ss2cShopActionListRes.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<ss2cShopActionListRes>, I>>(object: I): ss2cShopActionListRes {
-    const message = createBasess2cShopActionListRes();
-    message.loopFlag = object.loopFlag ?? 0;
-    message.actionInfoList = object.actionInfoList?.map((e) => sshopActionInfo.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBasesc2sShopLobbyEmoteListReq(): sc2sShopLobbyEmoteListReq {
-  return {};
-}
-
-export const sc2sShopLobbyEmoteListReq = {
-  encode(_: sc2sShopLobbyEmoteListReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sShopLobbyEmoteListReq {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasesc2sShopLobbyEmoteListReq();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(_: any): sc2sShopLobbyEmoteListReq {
-    return {};
-  },
-
-  toJSON(_: sc2sShopLobbyEmoteListReq): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<sc2sShopLobbyEmoteListReq>, I>>(base?: I): sc2sShopLobbyEmoteListReq {
-    return sc2sShopLobbyEmoteListReq.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<sc2sShopLobbyEmoteListReq>, I>>(_: I): sc2sShopLobbyEmoteListReq {
-    const message = createBasesc2sShopLobbyEmoteListReq();
-    return message;
-  },
-};
-
-function createBasess2cShopLobbyEmoteListRes(): ss2cShopLobbyEmoteListRes {
-  return { loopFlag: 0, lobbyEmoteInfoList: [] };
-}
-
-export const ss2cShopLobbyEmoteListRes = {
-  encode(message: ss2cShopLobbyEmoteListRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.loopFlag !== 0) {
-      writer.uint32(8).uint32(message.loopFlag);
-    }
-    for (const v of message.lobbyEmoteInfoList) {
-      sshopLobbyEmoteInfo.encode(v!, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cShopLobbyEmoteListRes {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasess2cShopLobbyEmoteListRes();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 8) {
-            break;
-          }
-
-          message.loopFlag = reader.uint32();
-          continue;
-        case 2:
-          if (tag != 18) {
-            break;
-          }
-
-          message.lobbyEmoteInfoList.push(sshopLobbyEmoteInfo.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ss2cShopLobbyEmoteListRes {
-    return {
-      loopFlag: isSet(object.loopFlag) ? Number(object.loopFlag) : 0,
-      lobbyEmoteInfoList: Array.isArray(object?.lobbyEmoteInfoList)
-        ? object.lobbyEmoteInfoList.map((e: any) => sshopLobbyEmoteInfo.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: ss2cShopLobbyEmoteListRes): unknown {
-    const obj: any = {};
-    message.loopFlag !== undefined && (obj.loopFlag = Math.round(message.loopFlag));
-    if (message.lobbyEmoteInfoList) {
-      obj.lobbyEmoteInfoList = message.lobbyEmoteInfoList.map((e) => e ? sshopLobbyEmoteInfo.toJSON(e) : undefined);
-    } else {
-      obj.lobbyEmoteInfoList = [];
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ss2cShopLobbyEmoteListRes>, I>>(base?: I): ss2cShopLobbyEmoteListRes {
-    return ss2cShopLobbyEmoteListRes.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<ss2cShopLobbyEmoteListRes>, I>>(object: I): ss2cShopLobbyEmoteListRes {
-    const message = createBasess2cShopLobbyEmoteListRes();
-    message.loopFlag = object.loopFlag ?? 0;
-    message.lobbyEmoteInfoList = object.lobbyEmoteInfoList?.map((e) => sshopLobbyEmoteInfo.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBasesc2sShopCharacterSkinBuyReq(): sc2sShopCharacterSkinBuyReq {
-  return { buyShopCharacterSkinId: "" };
-}
-
-export const sc2sShopCharacterSkinBuyReq = {
-  encode(message: sc2sShopCharacterSkinBuyReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.buyShopCharacterSkinId !== "") {
-      writer.uint32(10).string(message.buyShopCharacterSkinId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sShopCharacterSkinBuyReq {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasesc2sShopCharacterSkinBuyReq();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 10) {
-            break;
-          }
-
-          message.buyShopCharacterSkinId = reader.string();
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): sc2sShopCharacterSkinBuyReq {
-    return {
-      buyShopCharacterSkinId: isSet(object.buyShopCharacterSkinId) ? String(object.buyShopCharacterSkinId) : "",
-    };
-  },
-
-  toJSON(message: sc2sShopCharacterSkinBuyReq): unknown {
-    const obj: any = {};
-    message.buyShopCharacterSkinId !== undefined && (obj.buyShopCharacterSkinId = message.buyShopCharacterSkinId);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<sc2sShopCharacterSkinBuyReq>, I>>(base?: I): sc2sShopCharacterSkinBuyReq {
-    return sc2sShopCharacterSkinBuyReq.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<sc2sShopCharacterSkinBuyReq>, I>>(object: I): sc2sShopCharacterSkinBuyReq {
-    const message = createBasesc2sShopCharacterSkinBuyReq();
-    message.buyShopCharacterSkinId = object.buyShopCharacterSkinId ?? "";
-    return message;
-  },
-};
-
-function createBasess2cShopCharacterSkinBuyRes(): ss2cShopCharacterSkinBuyRes {
-  return { result: 0, buyShopCharacterSkinId: "" };
-}
-
-export const ss2cShopCharacterSkinBuyRes = {
-  encode(message: ss2cShopCharacterSkinBuyRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const ss2cShopItemBuyRes = {
+  encode(message: ss2cShopItemBuyRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.result !== 0) {
       writer.uint32(8).uint32(message.result);
     }
-    if (message.buyShopCharacterSkinId !== "") {
-      writer.uint32(18).string(message.buyShopCharacterSkinId);
+    if (message.shopType !== 0) {
+      writer.uint32(16).uint32(message.shopType);
+    }
+    if (message.buyShopItemId !== "") {
+      writer.uint32(26).string(message.buyShopItemId);
+    }
+    if (message.paymentMethod !== 0) {
+      writer.uint32(32).uint32(message.paymentMethod);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cShopCharacterSkinBuyRes {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cShopItemBuyRes {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasess2cShopCharacterSkinBuyRes();
+    const message = createBasess2cShopItemBuyRes();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.buyShopCharacterSkinId = reader.string();
+          message.shopType = reader.uint32();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.buyShopItemId = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.paymentMethod = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1179,60 +470,83 @@ export const ss2cShopCharacterSkinBuyRes = {
     return message;
   },
 
-  fromJSON(object: any): ss2cShopCharacterSkinBuyRes {
+  fromJSON(object: any): ss2cShopItemBuyRes {
     return {
       result: isSet(object.result) ? Number(object.result) : 0,
-      buyShopCharacterSkinId: isSet(object.buyShopCharacterSkinId) ? String(object.buyShopCharacterSkinId) : "",
+      shopType: isSet(object.shopType) ? Number(object.shopType) : 0,
+      buyShopItemId: isSet(object.buyShopItemId) ? String(object.buyShopItemId) : "",
+      paymentMethod: isSet(object.paymentMethod) ? Number(object.paymentMethod) : 0,
     };
   },
 
-  toJSON(message: ss2cShopCharacterSkinBuyRes): unknown {
+  toJSON(message: ss2cShopItemBuyRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.buyShopCharacterSkinId !== undefined && (obj.buyShopCharacterSkinId = message.buyShopCharacterSkinId);
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.shopType !== 0) {
+      obj.shopType = Math.round(message.shopType);
+    }
+    if (message.buyShopItemId !== "") {
+      obj.buyShopItemId = message.buyShopItemId;
+    }
+    if (message.paymentMethod !== 0) {
+      obj.paymentMethod = Math.round(message.paymentMethod);
+    }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ss2cShopCharacterSkinBuyRes>, I>>(base?: I): ss2cShopCharacterSkinBuyRes {
-    return ss2cShopCharacterSkinBuyRes.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<ss2cShopItemBuyRes>, I>>(base?: I): ss2cShopItemBuyRes {
+    return ss2cShopItemBuyRes.fromPartial(base ?? ({} as any));
   },
-
-  fromPartial<I extends Exact<DeepPartial<ss2cShopCharacterSkinBuyRes>, I>>(object: I): ss2cShopCharacterSkinBuyRes {
-    const message = createBasess2cShopCharacterSkinBuyRes();
+  fromPartial<I extends Exact<DeepPartial<ss2cShopItemBuyRes>, I>>(object: I): ss2cShopItemBuyRes {
+    const message = createBasess2cShopItemBuyRes();
     message.result = object.result ?? 0;
-    message.buyShopCharacterSkinId = object.buyShopCharacterSkinId ?? "";
+    message.shopType = object.shopType ?? 0;
+    message.buyShopItemId = object.buyShopItemId ?? "";
+    message.paymentMethod = object.paymentMethod ?? 0;
     return message;
   },
 };
 
-function createBasesc2sShopItemSkinBuyReq(): sc2sShopItemSkinBuyReq {
-  return { buyShopItemSkinId: "" };
+function createBasesgiftCodeRewardInfo(): sgiftCodeRewardInfo {
+  return { rewardType: "", stockId: "" };
 }
 
-export const sc2sShopItemSkinBuyReq = {
-  encode(message: sc2sShopItemSkinBuyReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.buyShopItemSkinId !== "") {
-      writer.uint32(10).string(message.buyShopItemSkinId);
+export const sgiftCodeRewardInfo = {
+  encode(message: sgiftCodeRewardInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.rewardType !== "") {
+      writer.uint32(10).string(message.rewardType);
+    }
+    if (message.stockId !== "") {
+      writer.uint32(18).string(message.stockId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sShopItemSkinBuyReq {
+  decode(input: _m0.Reader | Uint8Array, length?: number): sgiftCodeRewardInfo {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasesc2sShopItemSkinBuyReq();
+    const message = createBasesgiftCodeRewardInfo();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
-          message.buyShopItemSkinId = reader.string();
+          message.rewardType = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.stockId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1240,65 +554,130 @@ export const sc2sShopItemSkinBuyReq = {
     return message;
   },
 
-  fromJSON(object: any): sc2sShopItemSkinBuyReq {
-    return { buyShopItemSkinId: isSet(object.buyShopItemSkinId) ? String(object.buyShopItemSkinId) : "" };
+  fromJSON(object: any): sgiftCodeRewardInfo {
+    return {
+      rewardType: isSet(object.rewardType) ? String(object.rewardType) : "",
+      stockId: isSet(object.stockId) ? String(object.stockId) : "",
+    };
   },
 
-  toJSON(message: sc2sShopItemSkinBuyReq): unknown {
+  toJSON(message: sgiftCodeRewardInfo): unknown {
     const obj: any = {};
-    message.buyShopItemSkinId !== undefined && (obj.buyShopItemSkinId = message.buyShopItemSkinId);
+    if (message.rewardType !== "") {
+      obj.rewardType = message.rewardType;
+    }
+    if (message.stockId !== "") {
+      obj.stockId = message.stockId;
+    }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<sc2sShopItemSkinBuyReq>, I>>(base?: I): sc2sShopItemSkinBuyReq {
-    return sc2sShopItemSkinBuyReq.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<sgiftCodeRewardInfo>, I>>(base?: I): sgiftCodeRewardInfo {
+    return sgiftCodeRewardInfo.fromPartial(base ?? ({} as any));
   },
-
-  fromPartial<I extends Exact<DeepPartial<sc2sShopItemSkinBuyReq>, I>>(object: I): sc2sShopItemSkinBuyReq {
-    const message = createBasesc2sShopItemSkinBuyReq();
-    message.buyShopItemSkinId = object.buyShopItemSkinId ?? "";
+  fromPartial<I extends Exact<DeepPartial<sgiftCodeRewardInfo>, I>>(object: I): sgiftCodeRewardInfo {
+    const message = createBasesgiftCodeRewardInfo();
+    message.rewardType = object.rewardType ?? "";
+    message.stockId = object.stockId ?? "";
     return message;
   },
 };
 
-function createBasess2cShopItemSkinBuyRes(): ss2cShopItemSkinBuyRes {
-  return { result: 0, buyShopItemSkinId: "" };
+function createBasesc2sShopEnterGiftCodeReq(): sc2sShopEnterGiftCodeReq {
+  return { giftCode: "" };
 }
 
-export const ss2cShopItemSkinBuyRes = {
-  encode(message: ss2cShopItemSkinBuyRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.result !== 0) {
-      writer.uint32(8).uint32(message.result);
-    }
-    if (message.buyShopItemSkinId !== "") {
-      writer.uint32(18).string(message.buyShopItemSkinId);
+export const sc2sShopEnterGiftCodeReq = {
+  encode(message: sc2sShopEnterGiftCodeReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.giftCode !== "") {
+      writer.uint32(10).string(message.giftCode);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cShopItemSkinBuyRes {
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sShopEnterGiftCodeReq {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasess2cShopItemSkinBuyRes();
+    const message = createBasesc2sShopEnterGiftCodeReq();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.giftCode = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): sc2sShopEnterGiftCodeReq {
+    return { giftCode: isSet(object.giftCode) ? String(object.giftCode) : "" };
+  },
+
+  toJSON(message: sc2sShopEnterGiftCodeReq): unknown {
+    const obj: any = {};
+    if (message.giftCode !== "") {
+      obj.giftCode = message.giftCode;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sShopEnterGiftCodeReq>, I>>(base?: I): sc2sShopEnterGiftCodeReq {
+    return sc2sShopEnterGiftCodeReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sShopEnterGiftCodeReq>, I>>(object: I): sc2sShopEnterGiftCodeReq {
+    const message = createBasesc2sShopEnterGiftCodeReq();
+    message.giftCode = object.giftCode ?? "";
+    return message;
+  },
+};
+
+function createBasess2cShopEnterGiftCodeRes(): ss2cShopEnterGiftCodeRes {
+  return { result: 0, rewards: [] };
+}
+
+export const ss2cShopEnterGiftCodeRes = {
+  encode(message: ss2cShopEnterGiftCodeRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.result !== 0) {
+      writer.uint32(8).uint32(message.result);
+    }
+    for (const v of message.rewards) {
+      sgiftCodeRewardInfo.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cShopEnterGiftCodeRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cShopEnterGiftCodeRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
-          message.buyShopItemSkinId = reader.string();
+          message.rewards.push(sgiftCodeRewardInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1306,60 +685,53 @@ export const ss2cShopItemSkinBuyRes = {
     return message;
   },
 
-  fromJSON(object: any): ss2cShopItemSkinBuyRes {
+  fromJSON(object: any): ss2cShopEnterGiftCodeRes {
     return {
       result: isSet(object.result) ? Number(object.result) : 0,
-      buyShopItemSkinId: isSet(object.buyShopItemSkinId) ? String(object.buyShopItemSkinId) : "",
+      rewards: Array.isArray(object?.rewards) ? object.rewards.map((e: any) => sgiftCodeRewardInfo.fromJSON(e)) : [],
     };
   },
 
-  toJSON(message: ss2cShopItemSkinBuyRes): unknown {
+  toJSON(message: ss2cShopEnterGiftCodeRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.buyShopItemSkinId !== undefined && (obj.buyShopItemSkinId = message.buyShopItemSkinId);
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.rewards?.length) {
+      obj.rewards = message.rewards.map((e) => sgiftCodeRewardInfo.toJSON(e));
+    }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ss2cShopItemSkinBuyRes>, I>>(base?: I): ss2cShopItemSkinBuyRes {
-    return ss2cShopItemSkinBuyRes.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<ss2cShopEnterGiftCodeRes>, I>>(base?: I): ss2cShopEnterGiftCodeRes {
+    return ss2cShopEnterGiftCodeRes.fromPartial(base ?? ({} as any));
   },
-
-  fromPartial<I extends Exact<DeepPartial<ss2cShopItemSkinBuyRes>, I>>(object: I): ss2cShopItemSkinBuyRes {
-    const message = createBasess2cShopItemSkinBuyRes();
+  fromPartial<I extends Exact<DeepPartial<ss2cShopEnterGiftCodeRes>, I>>(object: I): ss2cShopEnterGiftCodeRes {
+    const message = createBasess2cShopEnterGiftCodeRes();
     message.result = object.result ?? 0;
-    message.buyShopItemSkinId = object.buyShopItemSkinId ?? "";
+    message.rewards = object.rewards?.map((e) => sgiftCodeRewardInfo.fromPartial(e)) || [];
     return message;
   },
 };
 
-function createBasesc2sShopEmoteBuyReq(): sc2sShopEmoteBuyReq {
-  return { buyShopEmoteId: "" };
+function createBasesc2sShopRedStoneShardInfoReq(): sc2sShopRedStoneShardInfoReq {
+  return {};
 }
 
-export const sc2sShopEmoteBuyReq = {
-  encode(message: sc2sShopEmoteBuyReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.buyShopEmoteId !== "") {
-      writer.uint32(10).string(message.buyShopEmoteId);
-    }
+export const sc2sShopRedStoneShardInfoReq = {
+  encode(_: sc2sShopRedStoneShardInfoReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sShopEmoteBuyReq {
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sShopRedStoneShardInfoReq {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasesc2sShopEmoteBuyReq();
+    const message = createBasesc2sShopRedStoneShardInfoReq();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
-          if (tag != 10) {
-            break;
-          }
-
-          message.buyShopEmoteId = reader.string();
-          continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1367,65 +739,120 @@ export const sc2sShopEmoteBuyReq = {
     return message;
   },
 
-  fromJSON(object: any): sc2sShopEmoteBuyReq {
-    return { buyShopEmoteId: isSet(object.buyShopEmoteId) ? String(object.buyShopEmoteId) : "" };
+  fromJSON(_: any): sc2sShopRedStoneShardInfoReq {
+    return {};
   },
 
-  toJSON(message: sc2sShopEmoteBuyReq): unknown {
+  toJSON(_: sc2sShopRedStoneShardInfoReq): unknown {
     const obj: any = {};
-    message.buyShopEmoteId !== undefined && (obj.buyShopEmoteId = message.buyShopEmoteId);
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<sc2sShopEmoteBuyReq>, I>>(base?: I): sc2sShopEmoteBuyReq {
-    return sc2sShopEmoteBuyReq.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<sc2sShopRedStoneShardInfoReq>, I>>(base?: I): sc2sShopRedStoneShardInfoReq {
+    return sc2sShopRedStoneShardInfoReq.fromPartial(base ?? ({} as any));
   },
-
-  fromPartial<I extends Exact<DeepPartial<sc2sShopEmoteBuyReq>, I>>(object: I): sc2sShopEmoteBuyReq {
-    const message = createBasesc2sShopEmoteBuyReq();
-    message.buyShopEmoteId = object.buyShopEmoteId ?? "";
+  fromPartial<I extends Exact<DeepPartial<sc2sShopRedStoneShardInfoReq>, I>>(_: I): sc2sShopRedStoneShardInfoReq {
+    const message = createBasesc2sShopRedStoneShardInfoReq();
     return message;
   },
 };
 
-function createBasess2cShopEmoteBuyRes(): ss2cShopEmoteBuyRes {
-  return { result: 0, buyShopEmoteId: "" };
+function createBasesshopRedStoneShardInfo(): sshopRedStoneShardInfo {
+  return {
+    productIndex: 0,
+    productPrice: 0,
+    productCount: 0,
+    designDataId: "",
+    redirectionUrl: "",
+    customData: "",
+    productName: "",
+  };
 }
 
-export const ss2cShopEmoteBuyRes = {
-  encode(message: ss2cShopEmoteBuyRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.result !== 0) {
-      writer.uint32(8).uint32(message.result);
+export const sshopRedStoneShardInfo = {
+  encode(message: sshopRedStoneShardInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.productIndex !== 0) {
+      writer.uint32(8).uint32(message.productIndex);
     }
-    if (message.buyShopEmoteId !== "") {
-      writer.uint32(18).string(message.buyShopEmoteId);
+    if (message.productPrice !== 0) {
+      writer.uint32(21).float(message.productPrice);
+    }
+    if (message.productCount !== 0) {
+      writer.uint32(24).uint32(message.productCount);
+    }
+    if (message.designDataId !== "") {
+      writer.uint32(34).string(message.designDataId);
+    }
+    if (message.redirectionUrl !== "") {
+      writer.uint32(42).string(message.redirectionUrl);
+    }
+    if (message.customData !== "") {
+      writer.uint32(50).string(message.customData);
+    }
+    if (message.productName !== "") {
+      writer.uint32(58).string(message.productName);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cShopEmoteBuyRes {
+  decode(input: _m0.Reader | Uint8Array, length?: number): sshopRedStoneShardInfo {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasess2cShopEmoteBuyRes();
+    const message = createBasesshopRedStoneShardInfo();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
-          message.result = reader.uint32();
+          message.productIndex = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 21) {
             break;
           }
 
-          message.buyShopEmoteId = reader.string();
+          message.productPrice = reader.float();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.productCount = reader.uint32();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.designDataId = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.redirectionUrl = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.customData = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.productName = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1433,126 +860,98 @@ export const ss2cShopEmoteBuyRes = {
     return message;
   },
 
-  fromJSON(object: any): ss2cShopEmoteBuyRes {
+  fromJSON(object: any): sshopRedStoneShardInfo {
     return {
-      result: isSet(object.result) ? Number(object.result) : 0,
-      buyShopEmoteId: isSet(object.buyShopEmoteId) ? String(object.buyShopEmoteId) : "",
+      productIndex: isSet(object.productIndex) ? Number(object.productIndex) : 0,
+      productPrice: isSet(object.productPrice) ? Number(object.productPrice) : 0,
+      productCount: isSet(object.productCount) ? Number(object.productCount) : 0,
+      designDataId: isSet(object.designDataId) ? String(object.designDataId) : "",
+      redirectionUrl: isSet(object.redirectionUrl) ? String(object.redirectionUrl) : "",
+      customData: isSet(object.customData) ? String(object.customData) : "",
+      productName: isSet(object.productName) ? String(object.productName) : "",
     };
   },
 
-  toJSON(message: ss2cShopEmoteBuyRes): unknown {
+  toJSON(message: sshopRedStoneShardInfo): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.buyShopEmoteId !== undefined && (obj.buyShopEmoteId = message.buyShopEmoteId);
+    if (message.productIndex !== 0) {
+      obj.productIndex = Math.round(message.productIndex);
+    }
+    if (message.productPrice !== 0) {
+      obj.productPrice = message.productPrice;
+    }
+    if (message.productCount !== 0) {
+      obj.productCount = Math.round(message.productCount);
+    }
+    if (message.designDataId !== "") {
+      obj.designDataId = message.designDataId;
+    }
+    if (message.redirectionUrl !== "") {
+      obj.redirectionUrl = message.redirectionUrl;
+    }
+    if (message.customData !== "") {
+      obj.customData = message.customData;
+    }
+    if (message.productName !== "") {
+      obj.productName = message.productName;
+    }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ss2cShopEmoteBuyRes>, I>>(base?: I): ss2cShopEmoteBuyRes {
-    return ss2cShopEmoteBuyRes.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<sshopRedStoneShardInfo>, I>>(base?: I): sshopRedStoneShardInfo {
+    return sshopRedStoneShardInfo.fromPartial(base ?? ({} as any));
   },
-
-  fromPartial<I extends Exact<DeepPartial<ss2cShopEmoteBuyRes>, I>>(object: I): ss2cShopEmoteBuyRes {
-    const message = createBasess2cShopEmoteBuyRes();
-    message.result = object.result ?? 0;
-    message.buyShopEmoteId = object.buyShopEmoteId ?? "";
+  fromPartial<I extends Exact<DeepPartial<sshopRedStoneShardInfo>, I>>(object: I): sshopRedStoneShardInfo {
+    const message = createBasesshopRedStoneShardInfo();
+    message.productIndex = object.productIndex ?? 0;
+    message.productPrice = object.productPrice ?? 0;
+    message.productCount = object.productCount ?? 0;
+    message.designDataId = object.designDataId ?? "";
+    message.redirectionUrl = object.redirectionUrl ?? "";
+    message.customData = object.customData ?? "";
+    message.productName = object.productName ?? "";
     return message;
   },
 };
 
-function createBasesc2sShopActionBuyReq(): sc2sShopActionBuyReq {
-  return { buyActionId: "" };
+function createBasess2cShopRedStoneShardInfoRes(): ss2cShopRedStoneShardInfoRes {
+  return { infos: [], loginType: 0 };
 }
 
-export const sc2sShopActionBuyReq = {
-  encode(message: sc2sShopActionBuyReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.buyActionId !== "") {
-      writer.uint32(10).string(message.buyActionId);
+export const ss2cShopRedStoneShardInfoRes = {
+  encode(message: ss2cShopRedStoneShardInfoRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.infos) {
+      sshopRedStoneShardInfo.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.loginType !== 0) {
+      writer.uint32(16).uint32(message.loginType);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sShopActionBuyReq {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cShopRedStoneShardInfoRes {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasesc2sShopActionBuyReq();
+    const message = createBasess2cShopRedStoneShardInfoRes();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
-          message.buyActionId = reader.string();
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): sc2sShopActionBuyReq {
-    return { buyActionId: isSet(object.buyActionId) ? String(object.buyActionId) : "" };
-  },
-
-  toJSON(message: sc2sShopActionBuyReq): unknown {
-    const obj: any = {};
-    message.buyActionId !== undefined && (obj.buyActionId = message.buyActionId);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<sc2sShopActionBuyReq>, I>>(base?: I): sc2sShopActionBuyReq {
-    return sc2sShopActionBuyReq.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<sc2sShopActionBuyReq>, I>>(object: I): sc2sShopActionBuyReq {
-    const message = createBasesc2sShopActionBuyReq();
-    message.buyActionId = object.buyActionId ?? "";
-    return message;
-  },
-};
-
-function createBasess2cShopActionBuyRes(): ss2cShopActionBuyRes {
-  return { result: 0, buyActionId: "" };
-}
-
-export const ss2cShopActionBuyRes = {
-  encode(message: ss2cShopActionBuyRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.result !== 0) {
-      writer.uint32(8).uint32(message.result);
-    }
-    if (message.buyActionId !== "") {
-      writer.uint32(18).string(message.buyActionId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cShopActionBuyRes {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasess2cShopActionBuyRes();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 8) {
-            break;
-          }
-
-          message.result = reader.uint32();
+          message.infos.push(sshopRedStoneShardInfo.decode(reader, reader.uint32()));
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.buyActionId = reader.string();
+          message.loginType = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1560,155 +959,31 @@ export const ss2cShopActionBuyRes = {
     return message;
   },
 
-  fromJSON(object: any): ss2cShopActionBuyRes {
+  fromJSON(object: any): ss2cShopRedStoneShardInfoRes {
     return {
-      result: isSet(object.result) ? Number(object.result) : 0,
-      buyActionId: isSet(object.buyActionId) ? String(object.buyActionId) : "",
+      infos: Array.isArray(object?.infos) ? object.infos.map((e: any) => sshopRedStoneShardInfo.fromJSON(e)) : [],
+      loginType: isSet(object.loginType) ? Number(object.loginType) : 0,
     };
   },
 
-  toJSON(message: ss2cShopActionBuyRes): unknown {
+  toJSON(message: ss2cShopRedStoneShardInfoRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.buyActionId !== undefined && (obj.buyActionId = message.buyActionId);
+    if (message.infos?.length) {
+      obj.infos = message.infos.map((e) => sshopRedStoneShardInfo.toJSON(e));
+    }
+    if (message.loginType !== 0) {
+      obj.loginType = Math.round(message.loginType);
+    }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ss2cShopActionBuyRes>, I>>(base?: I): ss2cShopActionBuyRes {
-    return ss2cShopActionBuyRes.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<ss2cShopRedStoneShardInfoRes>, I>>(base?: I): ss2cShopRedStoneShardInfoRes {
+    return ss2cShopRedStoneShardInfoRes.fromPartial(base ?? ({} as any));
   },
-
-  fromPartial<I extends Exact<DeepPartial<ss2cShopActionBuyRes>, I>>(object: I): ss2cShopActionBuyRes {
-    const message = createBasess2cShopActionBuyRes();
-    message.result = object.result ?? 0;
-    message.buyActionId = object.buyActionId ?? "";
-    return message;
-  },
-};
-
-function createBasesc2sShopLobbyEmoteBuyReq(): sc2sShopLobbyEmoteBuyReq {
-  return { buyLobbyEmoteId: "" };
-}
-
-export const sc2sShopLobbyEmoteBuyReq = {
-  encode(message: sc2sShopLobbyEmoteBuyReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.buyLobbyEmoteId !== "") {
-      writer.uint32(10).string(message.buyLobbyEmoteId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sShopLobbyEmoteBuyReq {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasesc2sShopLobbyEmoteBuyReq();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 10) {
-            break;
-          }
-
-          message.buyLobbyEmoteId = reader.string();
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): sc2sShopLobbyEmoteBuyReq {
-    return { buyLobbyEmoteId: isSet(object.buyLobbyEmoteId) ? String(object.buyLobbyEmoteId) : "" };
-  },
-
-  toJSON(message: sc2sShopLobbyEmoteBuyReq): unknown {
-    const obj: any = {};
-    message.buyLobbyEmoteId !== undefined && (obj.buyLobbyEmoteId = message.buyLobbyEmoteId);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<sc2sShopLobbyEmoteBuyReq>, I>>(base?: I): sc2sShopLobbyEmoteBuyReq {
-    return sc2sShopLobbyEmoteBuyReq.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<sc2sShopLobbyEmoteBuyReq>, I>>(object: I): sc2sShopLobbyEmoteBuyReq {
-    const message = createBasesc2sShopLobbyEmoteBuyReq();
-    message.buyLobbyEmoteId = object.buyLobbyEmoteId ?? "";
-    return message;
-  },
-};
-
-function createBasess2cShopLobbyEmoteBuyRes(): ss2cShopLobbyEmoteBuyRes {
-  return { result: 0, buyLobbyEmoteId: "" };
-}
-
-export const ss2cShopLobbyEmoteBuyRes = {
-  encode(message: ss2cShopLobbyEmoteBuyRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.result !== 0) {
-      writer.uint32(8).uint32(message.result);
-    }
-    if (message.buyLobbyEmoteId !== "") {
-      writer.uint32(18).string(message.buyLobbyEmoteId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cShopLobbyEmoteBuyRes {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasess2cShopLobbyEmoteBuyRes();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 8) {
-            break;
-          }
-
-          message.result = reader.uint32();
-          continue;
-        case 2:
-          if (tag != 18) {
-            break;
-          }
-
-          message.buyLobbyEmoteId = reader.string();
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ss2cShopLobbyEmoteBuyRes {
-    return {
-      result: isSet(object.result) ? Number(object.result) : 0,
-      buyLobbyEmoteId: isSet(object.buyLobbyEmoteId) ? String(object.buyLobbyEmoteId) : "",
-    };
-  },
-
-  toJSON(message: ss2cShopLobbyEmoteBuyRes): unknown {
-    const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.buyLobbyEmoteId !== undefined && (obj.buyLobbyEmoteId = message.buyLobbyEmoteId);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ss2cShopLobbyEmoteBuyRes>, I>>(base?: I): ss2cShopLobbyEmoteBuyRes {
-    return ss2cShopLobbyEmoteBuyRes.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<ss2cShopLobbyEmoteBuyRes>, I>>(object: I): ss2cShopLobbyEmoteBuyRes {
-    const message = createBasess2cShopLobbyEmoteBuyRes();
-    message.result = object.result ?? 0;
-    message.buyLobbyEmoteId = object.buyLobbyEmoteId ?? "";
+  fromPartial<I extends Exact<DeepPartial<ss2cShopRedStoneShardInfoRes>, I>>(object: I): ss2cShopRedStoneShardInfoRes {
+    const message = createBasess2cShopRedStoneShardInfoRes();
+    message.infos = object.infos?.map((e) => sshopRedStoneShardInfo.fromPartial(e)) || [];
+    message.loginType = object.loginType ?? 0;
     return message;
   },
 };

@@ -219,28 +219,28 @@ export const sc2sPartyInviteReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.findNickName = saccountNickname.decode(reader, reader.uint32());
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.findAccountId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.findCharacterId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -258,17 +258,21 @@ export const sc2sPartyInviteReq = {
 
   toJSON(message: sc2sPartyInviteReq): unknown {
     const obj: any = {};
-    message.findNickName !== undefined &&
-      (obj.findNickName = message.findNickName ? saccountNickname.toJSON(message.findNickName) : undefined);
-    message.findAccountId !== undefined && (obj.findAccountId = message.findAccountId);
-    message.findCharacterId !== undefined && (obj.findCharacterId = message.findCharacterId);
+    if (message.findNickName !== undefined) {
+      obj.findNickName = saccountNickname.toJSON(message.findNickName);
+    }
+    if (message.findAccountId !== "") {
+      obj.findAccountId = message.findAccountId;
+    }
+    if (message.findCharacterId !== "") {
+      obj.findCharacterId = message.findCharacterId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sPartyInviteReq>, I>>(base?: I): sc2sPartyInviteReq {
-    return sc2sPartyInviteReq.fromPartial(base ?? {});
+    return sc2sPartyInviteReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sPartyInviteReq>, I>>(object: I): sc2sPartyInviteReq {
     const message = createBasesc2sPartyInviteReq();
     message.findNickName = (object.findNickName !== undefined && object.findNickName !== null)
@@ -300,14 +304,14 @@ export const ss2cPartyInviteRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -321,14 +325,15 @@ export const ss2cPartyInviteRes = {
 
   toJSON(message: ss2cPartyInviteRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyInviteRes>, I>>(base?: I): ss2cPartyInviteRes {
-    return ss2cPartyInviteRes.fromPartial(base ?? {});
+    return ss2cPartyInviteRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyInviteRes>, I>>(object: I): ss2cPartyInviteRes {
     const message = createBasess2cPartyInviteRes();
     message.result = object.result ?? 0;
@@ -362,28 +367,28 @@ export const ss2cPartyInviteNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.InviteeNickName = saccountNickname.decode(reader, reader.uint32());
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.InviteeAccountId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.InviteeCharacterId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -401,17 +406,21 @@ export const ss2cPartyInviteNot = {
 
   toJSON(message: ss2cPartyInviteNot): unknown {
     const obj: any = {};
-    message.InviteeNickName !== undefined &&
-      (obj.InviteeNickName = message.InviteeNickName ? saccountNickname.toJSON(message.InviteeNickName) : undefined);
-    message.InviteeAccountId !== undefined && (obj.InviteeAccountId = message.InviteeAccountId);
-    message.InviteeCharacterId !== undefined && (obj.InviteeCharacterId = message.InviteeCharacterId);
+    if (message.InviteeNickName !== undefined) {
+      obj.InviteeNickName = saccountNickname.toJSON(message.InviteeNickName);
+    }
+    if (message.InviteeAccountId !== "") {
+      obj.InviteeAccountId = message.InviteeAccountId;
+    }
+    if (message.InviteeCharacterId !== "") {
+      obj.InviteeCharacterId = message.InviteeCharacterId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyInviteNot>, I>>(base?: I): ss2cPartyInviteNot {
-    return ss2cPartyInviteNot.fromPartial(base ?? {});
+    return ss2cPartyInviteNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyInviteNot>, I>>(object: I): ss2cPartyInviteNot {
     const message = createBasess2cPartyInviteNot();
     message.InviteeNickName = (object.InviteeNickName !== undefined && object.InviteeNickName !== null)
@@ -446,21 +455,21 @@ export const sc2sPartyInviteAnswerReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.inviteResult = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.returnAccountId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -477,15 +486,18 @@ export const sc2sPartyInviteAnswerReq = {
 
   toJSON(message: sc2sPartyInviteAnswerReq): unknown {
     const obj: any = {};
-    message.inviteResult !== undefined && (obj.inviteResult = Math.round(message.inviteResult));
-    message.returnAccountId !== undefined && (obj.returnAccountId = message.returnAccountId);
+    if (message.inviteResult !== 0) {
+      obj.inviteResult = Math.round(message.inviteResult);
+    }
+    if (message.returnAccountId !== "") {
+      obj.returnAccountId = message.returnAccountId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sPartyInviteAnswerReq>, I>>(base?: I): sc2sPartyInviteAnswerReq {
-    return sc2sPartyInviteAnswerReq.fromPartial(base ?? {});
+    return sc2sPartyInviteAnswerReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sPartyInviteAnswerReq>, I>>(object: I): sc2sPartyInviteAnswerReq {
     const message = createBasesc2sPartyInviteAnswerReq();
     message.inviteResult = object.inviteResult ?? 0;
@@ -514,14 +526,14 @@ export const ss2cPartyInviteAnswerRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -535,14 +547,15 @@ export const ss2cPartyInviteAnswerRes = {
 
   toJSON(message: ss2cPartyInviteAnswerRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyInviteAnswerRes>, I>>(base?: I): ss2cPartyInviteAnswerRes {
-    return ss2cPartyInviteAnswerRes.fromPartial(base ?? {});
+    return ss2cPartyInviteAnswerRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyInviteAnswerRes>, I>>(object: I): ss2cPartyInviteAnswerRes {
     const message = createBasess2cPartyInviteAnswerRes();
     message.result = object.result ?? 0;
@@ -573,21 +586,21 @@ export const ss2cPartyInviteAnswerResultNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.nickName = saccountNickname.decode(reader, reader.uint32());
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.inviteResult = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -604,16 +617,18 @@ export const ss2cPartyInviteAnswerResultNot = {
 
   toJSON(message: ss2cPartyInviteAnswerResultNot): unknown {
     const obj: any = {};
-    message.nickName !== undefined &&
-      (obj.nickName = message.nickName ? saccountNickname.toJSON(message.nickName) : undefined);
-    message.inviteResult !== undefined && (obj.inviteResult = Math.round(message.inviteResult));
+    if (message.nickName !== undefined) {
+      obj.nickName = saccountNickname.toJSON(message.nickName);
+    }
+    if (message.inviteResult !== 0) {
+      obj.inviteResult = Math.round(message.inviteResult);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyInviteAnswerResultNot>, I>>(base?: I): ss2cPartyInviteAnswerResultNot {
-    return ss2cPartyInviteAnswerResultNot.fromPartial(base ?? {});
+    return ss2cPartyInviteAnswerResultNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyInviteAnswerResultNot>, I>>(
     object: I,
   ): ss2cPartyInviteAnswerResultNot {
@@ -643,7 +658,7 @@ export const sc2sPartyExitReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -661,9 +676,8 @@ export const sc2sPartyExitReq = {
   },
 
   create<I extends Exact<DeepPartial<sc2sPartyExitReq>, I>>(base?: I): sc2sPartyExitReq {
-    return sc2sPartyExitReq.fromPartial(base ?? {});
+    return sc2sPartyExitReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sPartyExitReq>, I>>(_: I): sc2sPartyExitReq {
     const message = createBasesc2sPartyExitReq();
     return message;
@@ -690,14 +704,14 @@ export const ss2cPartyExitRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -711,14 +725,15 @@ export const ss2cPartyExitRes = {
 
   toJSON(message: ss2cPartyExitRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyExitRes>, I>>(base?: I): ss2cPartyExitRes {
-    return ss2cPartyExitRes.fromPartial(base ?? {});
+    return ss2cPartyExitRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyExitRes>, I>>(object: I): ss2cPartyExitRes {
     const message = createBasess2cPartyExitRes();
     message.result = object.result ?? 0;
@@ -746,14 +761,14 @@ export const ss2cPartyMemberInfoNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.playPartyUserInfoData.push(scharacterPartyInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -771,20 +786,15 @@ export const ss2cPartyMemberInfoNot = {
 
   toJSON(message: ss2cPartyMemberInfoNot): unknown {
     const obj: any = {};
-    if (message.playPartyUserInfoData) {
-      obj.playPartyUserInfoData = message.playPartyUserInfoData.map((e) =>
-        e ? scharacterPartyInfo.toJSON(e) : undefined
-      );
-    } else {
-      obj.playPartyUserInfoData = [];
+    if (message.playPartyUserInfoData?.length) {
+      obj.playPartyUserInfoData = message.playPartyUserInfoData.map((e) => scharacterPartyInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyMemberInfoNot>, I>>(base?: I): ss2cPartyMemberInfoNot {
-    return ss2cPartyMemberInfoNot.fromPartial(base ?? {});
+    return ss2cPartyMemberInfoNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyMemberInfoNot>, I>>(object: I): ss2cPartyMemberInfoNot {
     const message = createBasess2cPartyMemberInfoNot();
     message.playPartyUserInfoData = object.playPartyUserInfoData?.map((e) => scharacterPartyInfo.fromPartial(e)) || [];
@@ -812,14 +822,14 @@ export const sc2sPartyReadyReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.isReady = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -833,14 +843,15 @@ export const sc2sPartyReadyReq = {
 
   toJSON(message: sc2sPartyReadyReq): unknown {
     const obj: any = {};
-    message.isReady !== undefined && (obj.isReady = Math.round(message.isReady));
+    if (message.isReady !== 0) {
+      obj.isReady = Math.round(message.isReady);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sPartyReadyReq>, I>>(base?: I): sc2sPartyReadyReq {
-    return sc2sPartyReadyReq.fromPartial(base ?? {});
+    return sc2sPartyReadyReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sPartyReadyReq>, I>>(object: I): sc2sPartyReadyReq {
     const message = createBasesc2sPartyReadyReq();
     message.isReady = object.isReady ?? 0;
@@ -868,14 +879,14 @@ export const ss2cPartyReadyRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -889,14 +900,15 @@ export const ss2cPartyReadyRes = {
 
   toJSON(message: ss2cPartyReadyRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyReadyRes>, I>>(base?: I): ss2cPartyReadyRes {
-    return ss2cPartyReadyRes.fromPartial(base ?? {});
+    return ss2cPartyReadyRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyReadyRes>, I>>(object: I): ss2cPartyReadyRes {
     const message = createBasess2cPartyReadyRes();
     message.result = object.result ?? 0;
@@ -933,35 +945,35 @@ export const ss2cPartyEquipItemChangeNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.oldItems.push(SItem.decode(reader, reader.uint32()));
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.newItems.push(SItem.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -980,25 +992,24 @@ export const ss2cPartyEquipItemChangeNot = {
 
   toJSON(message: ss2cPartyEquipItemChangeNot): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    if (message.oldItems) {
-      obj.oldItems = message.oldItems.map((e) => e ? SItem.toJSON(e) : undefined);
-    } else {
-      obj.oldItems = [];
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
     }
-    if (message.newItems) {
-      obj.newItems = message.newItems.map((e) => e ? SItem.toJSON(e) : undefined);
-    } else {
-      obj.newItems = [];
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.oldItems?.length) {
+      obj.oldItems = message.oldItems.map((e) => SItem.toJSON(e));
+    }
+    if (message.newItems?.length) {
+      obj.newItems = message.newItems.map((e) => SItem.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyEquipItemChangeNot>, I>>(base?: I): ss2cPartyEquipItemChangeNot {
-    return ss2cPartyEquipItemChangeNot.fromPartial(base ?? {});
+    return ss2cPartyEquipItemChangeNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyEquipItemChangeNot>, I>>(object: I): ss2cPartyEquipItemChangeNot {
     const message = createBasess2cPartyEquipItemChangeNot();
     message.accountId = object.accountId ?? "";
@@ -1029,14 +1040,14 @@ export const ss2cPartyRegionChangeNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.region = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1050,14 +1061,15 @@ export const ss2cPartyRegionChangeNot = {
 
   toJSON(message: ss2cPartyRegionChangeNot): unknown {
     const obj: any = {};
-    message.region !== undefined && (obj.region = Math.round(message.region));
+    if (message.region !== 0) {
+      obj.region = Math.round(message.region);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyRegionChangeNot>, I>>(base?: I): ss2cPartyRegionChangeNot {
-    return ss2cPartyRegionChangeNot.fromPartial(base ?? {});
+    return ss2cPartyRegionChangeNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyRegionChangeNot>, I>>(object: I): ss2cPartyRegionChangeNot {
     const message = createBasess2cPartyRegionChangeNot();
     message.region = object.region ?? 0;
@@ -1091,28 +1103,28 @@ export const ss2cPartyLocationUpdateNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.updateLocation = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1130,16 +1142,21 @@ export const ss2cPartyLocationUpdateNot = {
 
   toJSON(message: ss2cPartyLocationUpdateNot): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.updateLocation !== undefined && (obj.updateLocation = Math.round(message.updateLocation));
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.updateLocation !== 0) {
+      obj.updateLocation = Math.round(message.updateLocation);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyLocationUpdateNot>, I>>(base?: I): ss2cPartyLocationUpdateNot {
-    return ss2cPartyLocationUpdateNot.fromPartial(base ?? {});
+    return ss2cPartyLocationUpdateNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyLocationUpdateNot>, I>>(object: I): ss2cPartyLocationUpdateNot {
     const message = createBasess2cPartyLocationUpdateNot();
     message.accountId = object.accountId ?? "";
@@ -1175,28 +1192,28 @@ export const ss2cPartyCharacterSkinListNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.characterSkinIdList.push(reader.string());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1216,20 +1233,21 @@ export const ss2cPartyCharacterSkinListNot = {
 
   toJSON(message: ss2cPartyCharacterSkinListNot): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    if (message.characterSkinIdList) {
-      obj.characterSkinIdList = message.characterSkinIdList.map((e) => e);
-    } else {
-      obj.characterSkinIdList = [];
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.characterSkinIdList?.length) {
+      obj.characterSkinIdList = message.characterSkinIdList;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyCharacterSkinListNot>, I>>(base?: I): ss2cPartyCharacterSkinListNot {
-    return ss2cPartyCharacterSkinListNot.fromPartial(base ?? {});
+    return ss2cPartyCharacterSkinListNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyCharacterSkinListNot>, I>>(
     object: I,
   ): ss2cPartyCharacterSkinListNot {
@@ -1270,35 +1288,35 @@ export const ss2cPartyCharacterSkinChangeNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.oldCharacterSkinId = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.newCharacterSkinId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1317,17 +1335,24 @@ export const ss2cPartyCharacterSkinChangeNot = {
 
   toJSON(message: ss2cPartyCharacterSkinChangeNot): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.oldCharacterSkinId !== undefined && (obj.oldCharacterSkinId = message.oldCharacterSkinId);
-    message.newCharacterSkinId !== undefined && (obj.newCharacterSkinId = message.newCharacterSkinId);
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.oldCharacterSkinId !== "") {
+      obj.oldCharacterSkinId = message.oldCharacterSkinId;
+    }
+    if (message.newCharacterSkinId !== "") {
+      obj.newCharacterSkinId = message.newCharacterSkinId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyCharacterSkinChangeNot>, I>>(base?: I): ss2cPartyCharacterSkinChangeNot {
-    return ss2cPartyCharacterSkinChangeNot.fromPartial(base ?? {});
+    return ss2cPartyCharacterSkinChangeNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyCharacterSkinChangeNot>, I>>(
     object: I,
   ): ss2cPartyCharacterSkinChangeNot {
@@ -1366,28 +1391,28 @@ export const ss2cPartyItemSkinListNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.itemSkinIdList.push(reader.string());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1405,20 +1430,21 @@ export const ss2cPartyItemSkinListNot = {
 
   toJSON(message: ss2cPartyItemSkinListNot): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    if (message.itemSkinIdList) {
-      obj.itemSkinIdList = message.itemSkinIdList.map((e) => e);
-    } else {
-      obj.itemSkinIdList = [];
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.itemSkinIdList?.length) {
+      obj.itemSkinIdList = message.itemSkinIdList;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyItemSkinListNot>, I>>(base?: I): ss2cPartyItemSkinListNot {
-    return ss2cPartyItemSkinListNot.fromPartial(base ?? {});
+    return ss2cPartyItemSkinListNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyItemSkinListNot>, I>>(object: I): ss2cPartyItemSkinListNot {
     const message = createBasess2cPartyItemSkinListNot();
     message.accountId = object.accountId ?? "";
@@ -1457,35 +1483,35 @@ export const ss2cPartyItemSkinChangeNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.oldItemSkinId = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.newItemSkinId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1504,17 +1530,24 @@ export const ss2cPartyItemSkinChangeNot = {
 
   toJSON(message: ss2cPartyItemSkinChangeNot): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.oldItemSkinId !== undefined && (obj.oldItemSkinId = message.oldItemSkinId);
-    message.newItemSkinId !== undefined && (obj.newItemSkinId = message.newItemSkinId);
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.oldItemSkinId !== "") {
+      obj.oldItemSkinId = message.oldItemSkinId;
+    }
+    if (message.newItemSkinId !== "") {
+      obj.newItemSkinId = message.newItemSkinId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyItemSkinChangeNot>, I>>(base?: I): ss2cPartyItemSkinChangeNot {
-    return ss2cPartyItemSkinChangeNot.fromPartial(base ?? {});
+    return ss2cPartyItemSkinChangeNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyItemSkinChangeNot>, I>>(object: I): ss2cPartyItemSkinChangeNot {
     const message = createBasess2cPartyItemSkinChangeNot();
     message.accountId = object.accountId ?? "";
@@ -1545,14 +1578,14 @@ export const ss2cPartyGameDifficultyChangeNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.gameDifficultyTypeIndex = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1568,17 +1601,17 @@ export const ss2cPartyGameDifficultyChangeNot = {
 
   toJSON(message: ss2cPartyGameDifficultyChangeNot): unknown {
     const obj: any = {};
-    message.gameDifficultyTypeIndex !== undefined &&
-      (obj.gameDifficultyTypeIndex = Math.round(message.gameDifficultyTypeIndex));
+    if (message.gameDifficultyTypeIndex !== 0) {
+      obj.gameDifficultyTypeIndex = Math.round(message.gameDifficultyTypeIndex);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyGameDifficultyChangeNot>, I>>(
     base?: I,
   ): ss2cPartyGameDifficultyChangeNot {
-    return ss2cPartyGameDifficultyChangeNot.fromPartial(base ?? {});
+    return ss2cPartyGameDifficultyChangeNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyGameDifficultyChangeNot>, I>>(
     object: I,
   ): ss2cPartyGameDifficultyChangeNot {
@@ -1611,21 +1644,21 @@ export const sc2sPartyMemberKickReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1642,15 +1675,18 @@ export const sc2sPartyMemberKickReq = {
 
   toJSON(message: sc2sPartyMemberKickReq): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sPartyMemberKickReq>, I>>(base?: I): sc2sPartyMemberKickReq {
-    return sc2sPartyMemberKickReq.fromPartial(base ?? {});
+    return sc2sPartyMemberKickReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sPartyMemberKickReq>, I>>(object: I): sc2sPartyMemberKickReq {
     const message = createBasesc2sPartyMemberKickReq();
     message.accountId = object.accountId ?? "";
@@ -1679,14 +1715,14 @@ export const ss2cPartyMemberKickRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1700,14 +1736,15 @@ export const ss2cPartyMemberKickRes = {
 
   toJSON(message: ss2cPartyMemberKickRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyMemberKickRes>, I>>(base?: I): ss2cPartyMemberKickRes {
-    return ss2cPartyMemberKickRes.fromPartial(base ?? {});
+    return ss2cPartyMemberKickRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyMemberKickRes>, I>>(object: I): ss2cPartyMemberKickRes {
     const message = createBasess2cPartyMemberKickRes();
     message.result = object.result ?? 0;
@@ -1735,14 +1772,14 @@ export const sc2sPartyChatReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.chatData = SCHATDATA.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1756,15 +1793,15 @@ export const sc2sPartyChatReq = {
 
   toJSON(message: sc2sPartyChatReq): unknown {
     const obj: any = {};
-    message.chatData !== undefined &&
-      (obj.chatData = message.chatData ? SCHATDATA.toJSON(message.chatData) : undefined);
+    if (message.chatData !== undefined) {
+      obj.chatData = SCHATDATA.toJSON(message.chatData);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sPartyChatReq>, I>>(base?: I): sc2sPartyChatReq {
-    return sc2sPartyChatReq.fromPartial(base ?? {});
+    return sc2sPartyChatReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sPartyChatReq>, I>>(object: I): sc2sPartyChatReq {
     const message = createBasesc2sPartyChatReq();
     message.chatData = (object.chatData !== undefined && object.chatData !== null)
@@ -1794,14 +1831,14 @@ export const ss2cPartyChatRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1815,14 +1852,15 @@ export const ss2cPartyChatRes = {
 
   toJSON(message: ss2cPartyChatRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyChatRes>, I>>(base?: I): ss2cPartyChatRes {
-    return ss2cPartyChatRes.fromPartial(base ?? {});
+    return ss2cPartyChatRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyChatRes>, I>>(object: I): ss2cPartyChatRes {
     const message = createBasess2cPartyChatRes();
     message.result = object.result ?? 0;
@@ -1853,21 +1891,21 @@ export const ss2cPartyChatNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.chatData = SCHATDATA.decode(reader, reader.uint32());
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.time = longToNumber(reader.uint64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1884,16 +1922,18 @@ export const ss2cPartyChatNot = {
 
   toJSON(message: ss2cPartyChatNot): unknown {
     const obj: any = {};
-    message.chatData !== undefined &&
-      (obj.chatData = message.chatData ? SCHATDATA.toJSON(message.chatData) : undefined);
-    message.time !== undefined && (obj.time = Math.round(message.time));
+    if (message.chatData !== undefined) {
+      obj.chatData = SCHATDATA.toJSON(message.chatData);
+    }
+    if (message.time !== 0) {
+      obj.time = Math.round(message.time);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyChatNot>, I>>(base?: I): ss2cPartyChatNot {
-    return ss2cPartyChatNot.fromPartial(base ?? {});
+    return ss2cPartyChatNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyChatNot>, I>>(object: I): ss2cPartyChatNot {
     const message = createBasess2cPartyChatNot();
     message.chatData = (object.chatData !== undefined && object.chatData !== null)
@@ -1930,28 +1970,28 @@ export const ss2cPartyReadyChangeNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.isReady = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1969,16 +2009,21 @@ export const ss2cPartyReadyChangeNot = {
 
   toJSON(message: ss2cPartyReadyChangeNot): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.isReady !== undefined && (obj.isReady = Math.round(message.isReady));
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.isReady !== 0) {
+      obj.isReady = Math.round(message.isReady);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyReadyChangeNot>, I>>(base?: I): ss2cPartyReadyChangeNot {
-    return ss2cPartyReadyChangeNot.fromPartial(base ?? {});
+    return ss2cPartyReadyChangeNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyReadyChangeNot>, I>>(object: I): ss2cPartyReadyChangeNot {
     const message = createBasess2cPartyReadyChangeNot();
     message.accountId = object.accountId ?? "";
@@ -2005,7 +2050,7 @@ export const ss2cPartyKickedOutNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2023,9 +2068,8 @@ export const ss2cPartyKickedOutNot = {
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyKickedOutNot>, I>>(base?: I): ss2cPartyKickedOutNot {
-    return ss2cPartyKickedOutNot.fromPartial(base ?? {});
+    return ss2cPartyKickedOutNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyKickedOutNot>, I>>(_: I): ss2cPartyKickedOutNot {
     const message = createBasess2cPartyKickedOutNot();
     return message;
@@ -2058,28 +2102,28 @@ export const ss2cPartyMemberLobbyEmoteNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.lobbyEmoteIdList.push(reader.string());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2099,20 +2143,21 @@ export const ss2cPartyMemberLobbyEmoteNot = {
 
   toJSON(message: ss2cPartyMemberLobbyEmoteNot): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    if (message.lobbyEmoteIdList) {
-      obj.lobbyEmoteIdList = message.lobbyEmoteIdList.map((e) => e);
-    } else {
-      obj.lobbyEmoteIdList = [];
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.lobbyEmoteIdList?.length) {
+      obj.lobbyEmoteIdList = message.lobbyEmoteIdList;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyMemberLobbyEmoteNot>, I>>(base?: I): ss2cPartyMemberLobbyEmoteNot {
-    return ss2cPartyMemberLobbyEmoteNot.fromPartial(base ?? {});
+    return ss2cPartyMemberLobbyEmoteNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyMemberLobbyEmoteNot>, I>>(object: I): ss2cPartyMemberLobbyEmoteNot {
     const message = createBasess2cPartyMemberLobbyEmoteNot();
     message.accountId = object.accountId ?? "";
@@ -2142,14 +2187,14 @@ export const sc2sPartyStartLobbyEmoteReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.lobbyEmoteId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2163,14 +2208,15 @@ export const sc2sPartyStartLobbyEmoteReq = {
 
   toJSON(message: sc2sPartyStartLobbyEmoteReq): unknown {
     const obj: any = {};
-    message.lobbyEmoteId !== undefined && (obj.lobbyEmoteId = message.lobbyEmoteId);
+    if (message.lobbyEmoteId !== "") {
+      obj.lobbyEmoteId = message.lobbyEmoteId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sPartyStartLobbyEmoteReq>, I>>(base?: I): sc2sPartyStartLobbyEmoteReq {
-    return sc2sPartyStartLobbyEmoteReq.fromPartial(base ?? {});
+    return sc2sPartyStartLobbyEmoteReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sPartyStartLobbyEmoteReq>, I>>(object: I): sc2sPartyStartLobbyEmoteReq {
     const message = createBasesc2sPartyStartLobbyEmoteReq();
     message.lobbyEmoteId = object.lobbyEmoteId ?? "";
@@ -2198,14 +2244,14 @@ export const ss2cPartyStartLobbyEmoteRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2219,14 +2265,15 @@ export const ss2cPartyStartLobbyEmoteRes = {
 
   toJSON(message: ss2cPartyStartLobbyEmoteRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyStartLobbyEmoteRes>, I>>(base?: I): ss2cPartyStartLobbyEmoteRes {
-    return ss2cPartyStartLobbyEmoteRes.fromPartial(base ?? {});
+    return ss2cPartyStartLobbyEmoteRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyStartLobbyEmoteRes>, I>>(object: I): ss2cPartyStartLobbyEmoteRes {
     const message = createBasess2cPartyStartLobbyEmoteRes();
     message.result = object.result ?? 0;
@@ -2260,28 +2307,28 @@ export const ss2cPartyStartLobbyEmoteNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.lobbyEmoteId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2299,16 +2346,21 @@ export const ss2cPartyStartLobbyEmoteNot = {
 
   toJSON(message: ss2cPartyStartLobbyEmoteNot): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.lobbyEmoteId !== undefined && (obj.lobbyEmoteId = message.lobbyEmoteId);
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.lobbyEmoteId !== "") {
+      obj.lobbyEmoteId = message.lobbyEmoteId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cPartyStartLobbyEmoteNot>, I>>(base?: I): ss2cPartyStartLobbyEmoteNot {
-    return ss2cPartyStartLobbyEmoteNot.fromPartial(base ?? {});
+    return ss2cPartyStartLobbyEmoteNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cPartyStartLobbyEmoteNot>, I>>(object: I): ss2cPartyStartLobbyEmoteNot {
     const message = createBasess2cPartyStartLobbyEmoteNot();
     message.accountId = object.accountId ?? "";
@@ -2318,10 +2370,10 @@ export const ss2cPartyStartLobbyEmoteNot = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

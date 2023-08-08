@@ -342,7 +342,7 @@ export const sc2sInventoryInfoReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -360,9 +360,8 @@ export const sc2sInventoryInfoReq = {
   },
 
   create<I extends Exact<DeepPartial<sc2sInventoryInfoReq>, I>>(base?: I): sc2sInventoryInfoReq {
-    return sc2sInventoryInfoReq.fromPartial(base ?? {});
+    return sc2sInventoryInfoReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sInventoryInfoReq>, I>>(_: I): sc2sInventoryInfoReq {
     const message = createBasesc2sInventoryInfoReq();
     return message;
@@ -392,21 +391,21 @@ export const ss2cInventoryInfoRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.inventoryItems.push(SItem.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -425,19 +424,18 @@ export const ss2cInventoryInfoRes = {
 
   toJSON(message: ss2cInventoryInfoRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    if (message.inventoryItems) {
-      obj.inventoryItems = message.inventoryItems.map((e) => e ? SItem.toJSON(e) : undefined);
-    } else {
-      obj.inventoryItems = [];
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.inventoryItems?.length) {
+      obj.inventoryItems = message.inventoryItems.map((e) => SItem.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cInventoryInfoRes>, I>>(base?: I): ss2cInventoryInfoRes {
-    return ss2cInventoryInfoRes.fromPartial(base ?? {});
+    return ss2cInventoryInfoRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cInventoryInfoRes>, I>>(object: I): ss2cInventoryInfoRes {
     const message = createBasess2cInventoryInfoRes();
     message.result = object.result ?? 0;
@@ -466,14 +464,14 @@ export const sc2sInventoryAllUpdateReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.inventoryItems.push(SItem.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -491,18 +489,15 @@ export const sc2sInventoryAllUpdateReq = {
 
   toJSON(message: sc2sInventoryAllUpdateReq): unknown {
     const obj: any = {};
-    if (message.inventoryItems) {
-      obj.inventoryItems = message.inventoryItems.map((e) => e ? SItem.toJSON(e) : undefined);
-    } else {
-      obj.inventoryItems = [];
+    if (message.inventoryItems?.length) {
+      obj.inventoryItems = message.inventoryItems.map((e) => SItem.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sInventoryAllUpdateReq>, I>>(base?: I): sc2sInventoryAllUpdateReq {
-    return sc2sInventoryAllUpdateReq.fromPartial(base ?? {});
+    return sc2sInventoryAllUpdateReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sInventoryAllUpdateReq>, I>>(object: I): sc2sInventoryAllUpdateReq {
     const message = createBasesc2sInventoryAllUpdateReq();
     message.inventoryItems = object.inventoryItems?.map((e) => SItem.fromPartial(e)) || [];
@@ -533,21 +528,21 @@ export const ss2cInventoryAllUpdateRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.inventoryItems.push(SItem.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -566,19 +561,18 @@ export const ss2cInventoryAllUpdateRes = {
 
   toJSON(message: ss2cInventoryAllUpdateRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    if (message.inventoryItems) {
-      obj.inventoryItems = message.inventoryItems.map((e) => e ? SItem.toJSON(e) : undefined);
-    } else {
-      obj.inventoryItems = [];
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.inventoryItems?.length) {
+      obj.inventoryItems = message.inventoryItems.map((e) => SItem.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cInventoryAllUpdateRes>, I>>(base?: I): ss2cInventoryAllUpdateRes {
-    return ss2cInventoryAllUpdateRes.fromPartial(base ?? {});
+    return ss2cInventoryAllUpdateRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cInventoryAllUpdateRes>, I>>(object: I): ss2cInventoryAllUpdateRes {
     const message = createBasess2cInventoryAllUpdateRes();
     message.result = object.result ?? 0;
@@ -613,28 +607,28 @@ export const sinventoryItemReqInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.uniqueId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.inventoryId = reader.uint32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.slotId = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -652,16 +646,21 @@ export const sinventoryItemReqInfo = {
 
   toJSON(message: sinventoryItemReqInfo): unknown {
     const obj: any = {};
-    message.uniqueId !== undefined && (obj.uniqueId = Math.round(message.uniqueId));
-    message.inventoryId !== undefined && (obj.inventoryId = Math.round(message.inventoryId));
-    message.slotId !== undefined && (obj.slotId = Math.round(message.slotId));
+    if (message.uniqueId !== 0) {
+      obj.uniqueId = Math.round(message.uniqueId);
+    }
+    if (message.inventoryId !== 0) {
+      obj.inventoryId = Math.round(message.inventoryId);
+    }
+    if (message.slotId !== 0) {
+      obj.slotId = Math.round(message.slotId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sinventoryItemReqInfo>, I>>(base?: I): sinventoryItemReqInfo {
-    return sinventoryItemReqInfo.fromPartial(base ?? {});
+    return sinventoryItemReqInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sinventoryItemReqInfo>, I>>(object: I): sinventoryItemReqInfo {
     const message = createBasesinventoryItemReqInfo();
     message.uniqueId = object.uniqueId ?? 0;
@@ -697,28 +696,28 @@ export const sc2sInventoryMoveReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.srcInfo = sinventoryItemReqInfo.decode(reader, reader.uint32());
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.dstInventoryId = reader.uint32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.dstSlotId = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -736,17 +735,21 @@ export const sc2sInventoryMoveReq = {
 
   toJSON(message: sc2sInventoryMoveReq): unknown {
     const obj: any = {};
-    message.srcInfo !== undefined &&
-      (obj.srcInfo = message.srcInfo ? sinventoryItemReqInfo.toJSON(message.srcInfo) : undefined);
-    message.dstInventoryId !== undefined && (obj.dstInventoryId = Math.round(message.dstInventoryId));
-    message.dstSlotId !== undefined && (obj.dstSlotId = Math.round(message.dstSlotId));
+    if (message.srcInfo !== undefined) {
+      obj.srcInfo = sinventoryItemReqInfo.toJSON(message.srcInfo);
+    }
+    if (message.dstInventoryId !== 0) {
+      obj.dstInventoryId = Math.round(message.dstInventoryId);
+    }
+    if (message.dstSlotId !== 0) {
+      obj.dstSlotId = Math.round(message.dstSlotId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sInventoryMoveReq>, I>>(base?: I): sc2sInventoryMoveReq {
-    return sc2sInventoryMoveReq.fromPartial(base ?? {});
+    return sc2sInventoryMoveReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sInventoryMoveReq>, I>>(object: I): sc2sInventoryMoveReq {
     const message = createBasesc2sInventoryMoveReq();
     message.srcInfo = (object.srcInfo !== undefined && object.srcInfo !== null)
@@ -775,7 +778,7 @@ export const ss2cInventoryMoveRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -793,9 +796,8 @@ export const ss2cInventoryMoveRes = {
   },
 
   create<I extends Exact<DeepPartial<ss2cInventoryMoveRes>, I>>(base?: I): ss2cInventoryMoveRes {
-    return ss2cInventoryMoveRes.fromPartial(base ?? {});
+    return ss2cInventoryMoveRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cInventoryMoveRes>, I>>(_: I): ss2cInventoryMoveRes {
     const message = createBasess2cInventoryMoveRes();
     return message;
@@ -825,21 +827,21 @@ export const sc2sInventoryMergeReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.srcInfo = sinventoryItemReqInfo.decode(reader, reader.uint32());
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.dstInfo = sinventoryItemReqInfo.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -856,17 +858,18 @@ export const sc2sInventoryMergeReq = {
 
   toJSON(message: sc2sInventoryMergeReq): unknown {
     const obj: any = {};
-    message.srcInfo !== undefined &&
-      (obj.srcInfo = message.srcInfo ? sinventoryItemReqInfo.toJSON(message.srcInfo) : undefined);
-    message.dstInfo !== undefined &&
-      (obj.dstInfo = message.dstInfo ? sinventoryItemReqInfo.toJSON(message.dstInfo) : undefined);
+    if (message.srcInfo !== undefined) {
+      obj.srcInfo = sinventoryItemReqInfo.toJSON(message.srcInfo);
+    }
+    if (message.dstInfo !== undefined) {
+      obj.dstInfo = sinventoryItemReqInfo.toJSON(message.dstInfo);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sInventoryMergeReq>, I>>(base?: I): sc2sInventoryMergeReq {
-    return sc2sInventoryMergeReq.fromPartial(base ?? {});
+    return sc2sInventoryMergeReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sInventoryMergeReq>, I>>(object: I): sc2sInventoryMergeReq {
     const message = createBasesc2sInventoryMergeReq();
     message.srcInfo = (object.srcInfo !== undefined && object.srcInfo !== null)
@@ -896,7 +899,7 @@ export const ss2cInventoryMergeRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -914,9 +917,8 @@ export const ss2cInventoryMergeRes = {
   },
 
   create<I extends Exact<DeepPartial<ss2cInventoryMergeRes>, I>>(base?: I): ss2cInventoryMergeRes {
-    return ss2cInventoryMergeRes.fromPartial(base ?? {});
+    return ss2cInventoryMergeRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cInventoryMergeRes>, I>>(_: I): ss2cInventoryMergeRes {
     const message = createBasess2cInventoryMergeRes();
     return message;
@@ -949,28 +951,28 @@ export const inventorySwapDstInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.dstInfo = sinventoryItemReqInfo.decode(reader, reader.uint32());
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.newSlotId = reader.uint32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.newInventoryId = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -988,17 +990,21 @@ export const inventorySwapDstInfo = {
 
   toJSON(message: inventorySwapDstInfo): unknown {
     const obj: any = {};
-    message.dstInfo !== undefined &&
-      (obj.dstInfo = message.dstInfo ? sinventoryItemReqInfo.toJSON(message.dstInfo) : undefined);
-    message.newSlotId !== undefined && (obj.newSlotId = Math.round(message.newSlotId));
-    message.newInventoryId !== undefined && (obj.newInventoryId = Math.round(message.newInventoryId));
+    if (message.dstInfo !== undefined) {
+      obj.dstInfo = sinventoryItemReqInfo.toJSON(message.dstInfo);
+    }
+    if (message.newSlotId !== 0) {
+      obj.newSlotId = Math.round(message.newSlotId);
+    }
+    if (message.newInventoryId !== 0) {
+      obj.newInventoryId = Math.round(message.newInventoryId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<inventorySwapDstInfo>, I>>(base?: I): inventorySwapDstInfo {
-    return inventorySwapDstInfo.fromPartial(base ?? {});
+    return inventorySwapDstInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<inventorySwapDstInfo>, I>>(object: I): inventorySwapDstInfo {
     const message = createBaseinventorySwapDstInfo();
     message.dstInfo = (object.dstInfo !== undefined && object.dstInfo !== null)
@@ -1036,28 +1042,28 @@ export const sc2sInventorySwapReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.srcInfo = sinventoryItemReqInfo.decode(reader, reader.uint32());
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.dstInfo = sinventoryItemReqInfo.decode(reader, reader.uint32());
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.swapInfos.push(inventorySwapDstInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1077,22 +1083,21 @@ export const sc2sInventorySwapReq = {
 
   toJSON(message: sc2sInventorySwapReq): unknown {
     const obj: any = {};
-    message.srcInfo !== undefined &&
-      (obj.srcInfo = message.srcInfo ? sinventoryItemReqInfo.toJSON(message.srcInfo) : undefined);
-    message.dstInfo !== undefined &&
-      (obj.dstInfo = message.dstInfo ? sinventoryItemReqInfo.toJSON(message.dstInfo) : undefined);
-    if (message.swapInfos) {
-      obj.swapInfos = message.swapInfos.map((e) => e ? inventorySwapDstInfo.toJSON(e) : undefined);
-    } else {
-      obj.swapInfos = [];
+    if (message.srcInfo !== undefined) {
+      obj.srcInfo = sinventoryItemReqInfo.toJSON(message.srcInfo);
+    }
+    if (message.dstInfo !== undefined) {
+      obj.dstInfo = sinventoryItemReqInfo.toJSON(message.dstInfo);
+    }
+    if (message.swapInfos?.length) {
+      obj.swapInfos = message.swapInfos.map((e) => inventorySwapDstInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sInventorySwapReq>, I>>(base?: I): sc2sInventorySwapReq {
-    return sc2sInventorySwapReq.fromPartial(base ?? {});
+    return sc2sInventorySwapReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sInventorySwapReq>, I>>(object: I): sc2sInventorySwapReq {
     const message = createBasesc2sInventorySwapReq();
     message.srcInfo = (object.srcInfo !== undefined && object.srcInfo !== null)
@@ -1123,7 +1128,7 @@ export const ss2cInventorySwapRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1141,9 +1146,8 @@ export const ss2cInventorySwapRes = {
   },
 
   create<I extends Exact<DeepPartial<ss2cInventorySwapRes>, I>>(base?: I): ss2cInventorySwapRes {
-    return ss2cInventorySwapRes.fromPartial(base ?? {});
+    return ss2cInventorySwapRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cInventorySwapRes>, I>>(_: I): ss2cInventorySwapRes {
     const message = createBasess2cInventorySwapRes();
     return message;
@@ -1179,35 +1183,35 @@ export const sc2sInventorySplitMoveReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.srcInfo = sinventoryItemReqInfo.decode(reader, reader.uint32());
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.count = reader.uint32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.dstInventoryId = reader.uint32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.dstSlotId = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1226,18 +1230,24 @@ export const sc2sInventorySplitMoveReq = {
 
   toJSON(message: sc2sInventorySplitMoveReq): unknown {
     const obj: any = {};
-    message.srcInfo !== undefined &&
-      (obj.srcInfo = message.srcInfo ? sinventoryItemReqInfo.toJSON(message.srcInfo) : undefined);
-    message.count !== undefined && (obj.count = Math.round(message.count));
-    message.dstInventoryId !== undefined && (obj.dstInventoryId = Math.round(message.dstInventoryId));
-    message.dstSlotId !== undefined && (obj.dstSlotId = Math.round(message.dstSlotId));
+    if (message.srcInfo !== undefined) {
+      obj.srcInfo = sinventoryItemReqInfo.toJSON(message.srcInfo);
+    }
+    if (message.count !== 0) {
+      obj.count = Math.round(message.count);
+    }
+    if (message.dstInventoryId !== 0) {
+      obj.dstInventoryId = Math.round(message.dstInventoryId);
+    }
+    if (message.dstSlotId !== 0) {
+      obj.dstSlotId = Math.round(message.dstSlotId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sInventorySplitMoveReq>, I>>(base?: I): sc2sInventorySplitMoveReq {
-    return sc2sInventorySplitMoveReq.fromPartial(base ?? {});
+    return sc2sInventorySplitMoveReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sInventorySplitMoveReq>, I>>(object: I): sc2sInventorySplitMoveReq {
     const message = createBasesc2sInventorySplitMoveReq();
     message.srcInfo = (object.srcInfo !== undefined && object.srcInfo !== null)
@@ -1276,28 +1286,28 @@ export const ss2cInventorySplitMoveRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.newUniqueId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.newInventoryId = reader.uint32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.newSlotId = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1315,16 +1325,21 @@ export const ss2cInventorySplitMoveRes = {
 
   toJSON(message: ss2cInventorySplitMoveRes): unknown {
     const obj: any = {};
-    message.newUniqueId !== undefined && (obj.newUniqueId = Math.round(message.newUniqueId));
-    message.newInventoryId !== undefined && (obj.newInventoryId = Math.round(message.newInventoryId));
-    message.newSlotId !== undefined && (obj.newSlotId = Math.round(message.newSlotId));
+    if (message.newUniqueId !== 0) {
+      obj.newUniqueId = Math.round(message.newUniqueId);
+    }
+    if (message.newInventoryId !== 0) {
+      obj.newInventoryId = Math.round(message.newInventoryId);
+    }
+    if (message.newSlotId !== 0) {
+      obj.newSlotId = Math.round(message.newSlotId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cInventorySplitMoveRes>, I>>(base?: I): ss2cInventorySplitMoveRes {
-    return ss2cInventorySplitMoveRes.fromPartial(base ?? {});
+    return ss2cInventorySplitMoveRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cInventorySplitMoveRes>, I>>(object: I): ss2cInventorySplitMoveRes {
     const message = createBasess2cInventorySplitMoveRes();
     message.newUniqueId = object.newUniqueId ?? 0;
@@ -1360,28 +1375,28 @@ export const sc2sInventorySplitMergeReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.srcInfo = sinventoryItemReqInfo.decode(reader, reader.uint32());
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.dstInfo = sinventoryItemReqInfo.decode(reader, reader.uint32());
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.count = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1399,18 +1414,21 @@ export const sc2sInventorySplitMergeReq = {
 
   toJSON(message: sc2sInventorySplitMergeReq): unknown {
     const obj: any = {};
-    message.srcInfo !== undefined &&
-      (obj.srcInfo = message.srcInfo ? sinventoryItemReqInfo.toJSON(message.srcInfo) : undefined);
-    message.dstInfo !== undefined &&
-      (obj.dstInfo = message.dstInfo ? sinventoryItemReqInfo.toJSON(message.dstInfo) : undefined);
-    message.count !== undefined && (obj.count = Math.round(message.count));
+    if (message.srcInfo !== undefined) {
+      obj.srcInfo = sinventoryItemReqInfo.toJSON(message.srcInfo);
+    }
+    if (message.dstInfo !== undefined) {
+      obj.dstInfo = sinventoryItemReqInfo.toJSON(message.dstInfo);
+    }
+    if (message.count !== 0) {
+      obj.count = Math.round(message.count);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sInventorySplitMergeReq>, I>>(base?: I): sc2sInventorySplitMergeReq {
-    return sc2sInventorySplitMergeReq.fromPartial(base ?? {});
+    return sc2sInventorySplitMergeReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sInventorySplitMergeReq>, I>>(object: I): sc2sInventorySplitMergeReq {
     const message = createBasesc2sInventorySplitMergeReq();
     message.srcInfo = (object.srcInfo !== undefined && object.srcInfo !== null)
@@ -1441,7 +1459,7 @@ export const ss2cInventorySplitMergeRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1459,9 +1477,8 @@ export const ss2cInventorySplitMergeRes = {
   },
 
   create<I extends Exact<DeepPartial<ss2cInventorySplitMergeRes>, I>>(base?: I): ss2cInventorySplitMergeRes {
-    return ss2cInventorySplitMergeRes.fromPartial(base ?? {});
+    return ss2cInventorySplitMergeRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cInventorySplitMergeRes>, I>>(_: I): ss2cInventorySplitMergeRes {
     const message = createBasess2cInventorySplitMergeRes();
     return message;
@@ -1500,42 +1517,42 @@ export const sc2sInventorySplitSwapReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.srcInfo = sinventoryItemReqInfo.decode(reader, reader.uint32());
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.dstInfo = sinventoryItemReqInfo.decode(reader, reader.uint32());
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.count = reader.uint32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.newSlotId = reader.uint32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.newInventoryId = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1555,20 +1572,27 @@ export const sc2sInventorySplitSwapReq = {
 
   toJSON(message: sc2sInventorySplitSwapReq): unknown {
     const obj: any = {};
-    message.srcInfo !== undefined &&
-      (obj.srcInfo = message.srcInfo ? sinventoryItemReqInfo.toJSON(message.srcInfo) : undefined);
-    message.dstInfo !== undefined &&
-      (obj.dstInfo = message.dstInfo ? sinventoryItemReqInfo.toJSON(message.dstInfo) : undefined);
-    message.count !== undefined && (obj.count = Math.round(message.count));
-    message.newSlotId !== undefined && (obj.newSlotId = Math.round(message.newSlotId));
-    message.newInventoryId !== undefined && (obj.newInventoryId = Math.round(message.newInventoryId));
+    if (message.srcInfo !== undefined) {
+      obj.srcInfo = sinventoryItemReqInfo.toJSON(message.srcInfo);
+    }
+    if (message.dstInfo !== undefined) {
+      obj.dstInfo = sinventoryItemReqInfo.toJSON(message.dstInfo);
+    }
+    if (message.count !== 0) {
+      obj.count = Math.round(message.count);
+    }
+    if (message.newSlotId !== 0) {
+      obj.newSlotId = Math.round(message.newSlotId);
+    }
+    if (message.newInventoryId !== 0) {
+      obj.newInventoryId = Math.round(message.newInventoryId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sInventorySplitSwapReq>, I>>(base?: I): sc2sInventorySplitSwapReq {
-    return sc2sInventorySplitSwapReq.fromPartial(base ?? {});
+    return sc2sInventorySplitSwapReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sInventorySplitSwapReq>, I>>(object: I): sc2sInventorySplitSwapReq {
     const message = createBasesc2sInventorySplitSwapReq();
     message.srcInfo = (object.srcInfo !== undefined && object.srcInfo !== null)
@@ -1610,28 +1634,28 @@ export const ss2cInventorySplitSwapRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.newUniqueId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.newInventoryId = reader.uint32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.newSlotId = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1649,16 +1673,21 @@ export const ss2cInventorySplitSwapRes = {
 
   toJSON(message: ss2cInventorySplitSwapRes): unknown {
     const obj: any = {};
-    message.newUniqueId !== undefined && (obj.newUniqueId = Math.round(message.newUniqueId));
-    message.newInventoryId !== undefined && (obj.newInventoryId = Math.round(message.newInventoryId));
-    message.newSlotId !== undefined && (obj.newSlotId = Math.round(message.newSlotId));
+    if (message.newUniqueId !== 0) {
+      obj.newUniqueId = Math.round(message.newUniqueId);
+    }
+    if (message.newInventoryId !== 0) {
+      obj.newInventoryId = Math.round(message.newInventoryId);
+    }
+    if (message.newSlotId !== 0) {
+      obj.newSlotId = Math.round(message.newSlotId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cInventorySplitSwapRes>, I>>(base?: I): ss2cInventorySplitSwapRes {
-    return ss2cInventorySplitSwapRes.fromPartial(base ?? {});
+    return ss2cInventorySplitSwapRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cInventorySplitSwapRes>, I>>(object: I): ss2cInventorySplitSwapRes {
     const message = createBasess2cInventorySplitSwapRes();
     message.newUniqueId = object.newUniqueId ?? 0;
@@ -1697,35 +1726,35 @@ export const sc2sInventoryTwoHandedWeaponSwapReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.srcInfo = sinventoryItemReqInfo.decode(reader, reader.uint32());
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.dstInfo = sinventoryItemReqInfo.decode(reader, reader.uint32());
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.newSlotId = reader.uint32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.newInventoryId = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1744,21 +1773,26 @@ export const sc2sInventoryTwoHandedWeaponSwapReq = {
 
   toJSON(message: sc2sInventoryTwoHandedWeaponSwapReq): unknown {
     const obj: any = {};
-    message.srcInfo !== undefined &&
-      (obj.srcInfo = message.srcInfo ? sinventoryItemReqInfo.toJSON(message.srcInfo) : undefined);
-    message.dstInfo !== undefined &&
-      (obj.dstInfo = message.dstInfo ? sinventoryItemReqInfo.toJSON(message.dstInfo) : undefined);
-    message.newSlotId !== undefined && (obj.newSlotId = Math.round(message.newSlotId));
-    message.newInventoryId !== undefined && (obj.newInventoryId = Math.round(message.newInventoryId));
+    if (message.srcInfo !== undefined) {
+      obj.srcInfo = sinventoryItemReqInfo.toJSON(message.srcInfo);
+    }
+    if (message.dstInfo !== undefined) {
+      obj.dstInfo = sinventoryItemReqInfo.toJSON(message.dstInfo);
+    }
+    if (message.newSlotId !== 0) {
+      obj.newSlotId = Math.round(message.newSlotId);
+    }
+    if (message.newInventoryId !== 0) {
+      obj.newInventoryId = Math.round(message.newInventoryId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sInventoryTwoHandedWeaponSwapReq>, I>>(
     base?: I,
   ): sc2sInventoryTwoHandedWeaponSwapReq {
-    return sc2sInventoryTwoHandedWeaponSwapReq.fromPartial(base ?? {});
+    return sc2sInventoryTwoHandedWeaponSwapReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sInventoryTwoHandedWeaponSwapReq>, I>>(
     object: I,
   ): sc2sInventoryTwoHandedWeaponSwapReq {
@@ -1792,7 +1826,7 @@ export const ss2cInventoryTwoHandedWeaponSwapRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1812,9 +1846,8 @@ export const ss2cInventoryTwoHandedWeaponSwapRes = {
   create<I extends Exact<DeepPartial<ss2cInventoryTwoHandedWeaponSwapRes>, I>>(
     base?: I,
   ): ss2cInventoryTwoHandedWeaponSwapRes {
-    return ss2cInventoryTwoHandedWeaponSwapRes.fromPartial(base ?? {});
+    return ss2cInventoryTwoHandedWeaponSwapRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cInventoryTwoHandedWeaponSwapRes>, I>>(
     _: I,
   ): ss2cInventoryTwoHandedWeaponSwapRes {
@@ -1849,28 +1882,28 @@ export const sc2sInventorySingleUpdateReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.singleUpdateFlag = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.oldItem.push(SItem.decode(reader, reader.uint32()));
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.newItem.push(SItem.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1888,24 +1921,21 @@ export const sc2sInventorySingleUpdateReq = {
 
   toJSON(message: sc2sInventorySingleUpdateReq): unknown {
     const obj: any = {};
-    message.singleUpdateFlag !== undefined && (obj.singleUpdateFlag = Math.round(message.singleUpdateFlag));
-    if (message.oldItem) {
-      obj.oldItem = message.oldItem.map((e) => e ? SItem.toJSON(e) : undefined);
-    } else {
-      obj.oldItem = [];
+    if (message.singleUpdateFlag !== 0) {
+      obj.singleUpdateFlag = Math.round(message.singleUpdateFlag);
     }
-    if (message.newItem) {
-      obj.newItem = message.newItem.map((e) => e ? SItem.toJSON(e) : undefined);
-    } else {
-      obj.newItem = [];
+    if (message.oldItem?.length) {
+      obj.oldItem = message.oldItem.map((e) => SItem.toJSON(e));
+    }
+    if (message.newItem?.length) {
+      obj.newItem = message.newItem.map((e) => SItem.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sInventorySingleUpdateReq>, I>>(base?: I): sc2sInventorySingleUpdateReq {
-    return sc2sInventorySingleUpdateReq.fromPartial(base ?? {});
+    return sc2sInventorySingleUpdateReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sInventorySingleUpdateReq>, I>>(object: I): sc2sInventorySingleUpdateReq {
     const message = createBasesc2sInventorySingleUpdateReq();
     message.singleUpdateFlag = object.singleUpdateFlag ?? 0;
@@ -1941,28 +1971,28 @@ export const ss2cInventorySingleUpdateRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.oldItem.push(SItem.decode(reader, reader.uint32()));
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.newItem.push(SItem.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1980,24 +2010,21 @@ export const ss2cInventorySingleUpdateRes = {
 
   toJSON(message: ss2cInventorySingleUpdateRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    if (message.oldItem) {
-      obj.oldItem = message.oldItem.map((e) => e ? SItem.toJSON(e) : undefined);
-    } else {
-      obj.oldItem = [];
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
     }
-    if (message.newItem) {
-      obj.newItem = message.newItem.map((e) => e ? SItem.toJSON(e) : undefined);
-    } else {
-      obj.newItem = [];
+    if (message.oldItem?.length) {
+      obj.oldItem = message.oldItem.map((e) => SItem.toJSON(e));
+    }
+    if (message.newItem?.length) {
+      obj.newItem = message.newItem.map((e) => SItem.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cInventorySingleUpdateRes>, I>>(base?: I): ss2cInventorySingleUpdateRes {
-    return ss2cInventorySingleUpdateRes.fromPartial(base ?? {});
+    return ss2cInventorySingleUpdateRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cInventorySingleUpdateRes>, I>>(object: I): ss2cInventorySingleUpdateRes {
     const message = createBasess2cInventorySingleUpdateRes();
     message.result = object.result ?? 0;
@@ -2027,14 +2054,14 @@ export const sc2sStorageInfoReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.isRefresh = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2048,14 +2075,15 @@ export const sc2sStorageInfoReq = {
 
   toJSON(message: sc2sStorageInfoReq): unknown {
     const obj: any = {};
-    message.isRefresh !== undefined && (obj.isRefresh = Math.round(message.isRefresh));
+    if (message.isRefresh !== 0) {
+      obj.isRefresh = Math.round(message.isRefresh);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sStorageInfoReq>, I>>(base?: I): sc2sStorageInfoReq {
-    return sc2sStorageInfoReq.fromPartial(base ?? {});
+    return sc2sStorageInfoReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sStorageInfoReq>, I>>(object: I): sc2sStorageInfoReq {
     const message = createBasesc2sStorageInfoReq();
     message.isRefresh = object.isRefresh ?? 0;
@@ -2086,21 +2114,21 @@ export const ss2cStorageInfoRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.storageItems.push(SItem.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2117,19 +2145,18 @@ export const ss2cStorageInfoRes = {
 
   toJSON(message: ss2cStorageInfoRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    if (message.storageItems) {
-      obj.storageItems = message.storageItems.map((e) => e ? SItem.toJSON(e) : undefined);
-    } else {
-      obj.storageItems = [];
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.storageItems?.length) {
+      obj.storageItems = message.storageItems.map((e) => SItem.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cStorageInfoRes>, I>>(base?: I): ss2cStorageInfoRes {
-    return ss2cStorageInfoRes.fromPartial(base ?? {});
+    return ss2cStorageInfoRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cStorageInfoRes>, I>>(object: I): ss2cStorageInfoRes {
     const message = createBasess2cStorageInfoRes();
     message.result = object.result ?? 0;
@@ -2138,10 +2165,10 @@ export const ss2cStorageInfoRes = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

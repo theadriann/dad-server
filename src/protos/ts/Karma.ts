@@ -104,63 +104,63 @@ export const skarmaCharacterInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.nickName = saccountNickname.decode(reader, reader.uint32());
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.characterClass = reader.string();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.gender = reader.uint32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.isVote = reader.uint32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.karmaAction = reader.uint32();
           continue;
         case 8:
-          if (tag != 64) {
+          if (tag !== 64) {
             break;
           }
 
           message.karmaStatus = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -183,22 +183,36 @@ export const skarmaCharacterInfo = {
 
   toJSON(message: skarmaCharacterInfo): unknown {
     const obj: any = {};
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.nickName !== undefined &&
-      (obj.nickName = message.nickName ? saccountNickname.toJSON(message.nickName) : undefined);
-    message.characterClass !== undefined && (obj.characterClass = message.characterClass);
-    message.gender !== undefined && (obj.gender = Math.round(message.gender));
-    message.isVote !== undefined && (obj.isVote = Math.round(message.isVote));
-    message.karmaAction !== undefined && (obj.karmaAction = Math.round(message.karmaAction));
-    message.karmaStatus !== undefined && (obj.karmaStatus = Math.round(message.karmaStatus));
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.nickName !== undefined) {
+      obj.nickName = saccountNickname.toJSON(message.nickName);
+    }
+    if (message.characterClass !== "") {
+      obj.characterClass = message.characterClass;
+    }
+    if (message.gender !== 0) {
+      obj.gender = Math.round(message.gender);
+    }
+    if (message.isVote !== 0) {
+      obj.isVote = Math.round(message.isVote);
+    }
+    if (message.karmaAction !== 0) {
+      obj.karmaAction = Math.round(message.karmaAction);
+    }
+    if (message.karmaStatus !== 0) {
+      obj.karmaStatus = Math.round(message.karmaStatus);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<skarmaCharacterInfo>, I>>(base?: I): skarmaCharacterInfo {
-    return skarmaCharacterInfo.fromPartial(base ?? {});
+    return skarmaCharacterInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<skarmaCharacterInfo>, I>>(object: I): skarmaCharacterInfo {
     const message = createBaseskarmaCharacterInfo();
     message.accountId = object.accountId ?? "";
@@ -238,21 +252,21 @@ export const skarmaMostRecentMatchInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.matchIdx = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.characterInfos.push(skarmaCharacterInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -271,19 +285,18 @@ export const skarmaMostRecentMatchInfo = {
 
   toJSON(message: skarmaMostRecentMatchInfo): unknown {
     const obj: any = {};
-    message.matchIdx !== undefined && (obj.matchIdx = Math.round(message.matchIdx));
-    if (message.characterInfos) {
-      obj.characterInfos = message.characterInfos.map((e) => e ? skarmaCharacterInfo.toJSON(e) : undefined);
-    } else {
-      obj.characterInfos = [];
+    if (message.matchIdx !== 0) {
+      obj.matchIdx = Math.round(message.matchIdx);
+    }
+    if (message.characterInfos?.length) {
+      obj.characterInfos = message.characterInfos.map((e) => skarmaCharacterInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<skarmaMostRecentMatchInfo>, I>>(base?: I): skarmaMostRecentMatchInfo {
-    return skarmaMostRecentMatchInfo.fromPartial(base ?? {});
+    return skarmaMostRecentMatchInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<skarmaMostRecentMatchInfo>, I>>(object: I): skarmaMostRecentMatchInfo {
     const message = createBaseskarmaMostRecentMatchInfo();
     message.matchIdx = object.matchIdx ?? 0;
@@ -309,7 +322,7 @@ export const sc2sKarmaReportListReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -327,9 +340,8 @@ export const sc2sKarmaReportListReq = {
   },
 
   create<I extends Exact<DeepPartial<sc2sKarmaReportListReq>, I>>(base?: I): sc2sKarmaReportListReq {
-    return sc2sKarmaReportListReq.fromPartial(base ?? {});
+    return sc2sKarmaReportListReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sKarmaReportListReq>, I>>(_: I): sc2sKarmaReportListReq {
     const message = createBasesc2sKarmaReportListReq();
     return message;
@@ -368,42 +380,42 @@ export const ss2cKarmaReportListRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.matchInfos.push(skarmaMostRecentMatchInfo.decode(reader, reader.uint32()));
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.currentTicketCount = reader.uint32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.collectionStepCount = reader.uint32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.maxCollectionCount = reader.uint32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.maxTicketCount = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -425,22 +437,27 @@ export const ss2cKarmaReportListRes = {
 
   toJSON(message: ss2cKarmaReportListRes): unknown {
     const obj: any = {};
-    if (message.matchInfos) {
-      obj.matchInfos = message.matchInfos.map((e) => e ? skarmaMostRecentMatchInfo.toJSON(e) : undefined);
-    } else {
-      obj.matchInfos = [];
+    if (message.matchInfos?.length) {
+      obj.matchInfos = message.matchInfos.map((e) => skarmaMostRecentMatchInfo.toJSON(e));
     }
-    message.currentTicketCount !== undefined && (obj.currentTicketCount = Math.round(message.currentTicketCount));
-    message.collectionStepCount !== undefined && (obj.collectionStepCount = Math.round(message.collectionStepCount));
-    message.maxCollectionCount !== undefined && (obj.maxCollectionCount = Math.round(message.maxCollectionCount));
-    message.maxTicketCount !== undefined && (obj.maxTicketCount = Math.round(message.maxTicketCount));
+    if (message.currentTicketCount !== 0) {
+      obj.currentTicketCount = Math.round(message.currentTicketCount);
+    }
+    if (message.collectionStepCount !== 0) {
+      obj.collectionStepCount = Math.round(message.collectionStepCount);
+    }
+    if (message.maxCollectionCount !== 0) {
+      obj.maxCollectionCount = Math.round(message.maxCollectionCount);
+    }
+    if (message.maxTicketCount !== 0) {
+      obj.maxTicketCount = Math.round(message.maxTicketCount);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cKarmaReportListRes>, I>>(base?: I): ss2cKarmaReportListRes {
-    return ss2cKarmaReportListRes.fromPartial(base ?? {});
+    return ss2cKarmaReportListRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cKarmaReportListRes>, I>>(object: I): ss2cKarmaReportListRes {
     const message = createBasess2cKarmaReportListRes();
     message.matchInfos = object.matchInfos?.map((e) => skarmaMostRecentMatchInfo.fromPartial(e)) || [];
@@ -481,35 +498,35 @@ export const sc2sKarmaReportActionReq = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.matchIdx = reader.uint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.action = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -528,17 +545,24 @@ export const sc2sKarmaReportActionReq = {
 
   toJSON(message: sc2sKarmaReportActionReq): unknown {
     const obj: any = {};
-    message.matchIdx !== undefined && (obj.matchIdx = Math.round(message.matchIdx));
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
-    message.action !== undefined && (obj.action = Math.round(message.action));
+    if (message.matchIdx !== 0) {
+      obj.matchIdx = Math.round(message.matchIdx);
+    }
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.action !== 0) {
+      obj.action = Math.round(message.action);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<sc2sKarmaReportActionReq>, I>>(base?: I): sc2sKarmaReportActionReq {
-    return sc2sKarmaReportActionReq.fromPartial(base ?? {});
+    return sc2sKarmaReportActionReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<sc2sKarmaReportActionReq>, I>>(object: I): sc2sKarmaReportActionReq {
     const message = createBasesc2sKarmaReportActionReq();
     message.matchIdx = object.matchIdx ?? 0;
@@ -595,56 +619,56 @@ export const ss2cKarmaReportActionRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.result = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.matchIdx = reader.uint32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.updateCharacterInfo = skarmaCharacterInfo.decode(reader, reader.uint32());
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.currentTicketCount = reader.uint32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.collectionStepCount = reader.uint32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.maxCollectionCount = reader.uint32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.maxTicketCount = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -668,22 +692,33 @@ export const ss2cKarmaReportActionRes = {
 
   toJSON(message: ss2cKarmaReportActionRes): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = Math.round(message.result));
-    message.matchIdx !== undefined && (obj.matchIdx = Math.round(message.matchIdx));
-    message.updateCharacterInfo !== undefined && (obj.updateCharacterInfo = message.updateCharacterInfo
-      ? skarmaCharacterInfo.toJSON(message.updateCharacterInfo)
-      : undefined);
-    message.currentTicketCount !== undefined && (obj.currentTicketCount = Math.round(message.currentTicketCount));
-    message.collectionStepCount !== undefined && (obj.collectionStepCount = Math.round(message.collectionStepCount));
-    message.maxCollectionCount !== undefined && (obj.maxCollectionCount = Math.round(message.maxCollectionCount));
-    message.maxTicketCount !== undefined && (obj.maxTicketCount = Math.round(message.maxTicketCount));
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.matchIdx !== 0) {
+      obj.matchIdx = Math.round(message.matchIdx);
+    }
+    if (message.updateCharacterInfo !== undefined) {
+      obj.updateCharacterInfo = skarmaCharacterInfo.toJSON(message.updateCharacterInfo);
+    }
+    if (message.currentTicketCount !== 0) {
+      obj.currentTicketCount = Math.round(message.currentTicketCount);
+    }
+    if (message.collectionStepCount !== 0) {
+      obj.collectionStepCount = Math.round(message.collectionStepCount);
+    }
+    if (message.maxCollectionCount !== 0) {
+      obj.maxCollectionCount = Math.round(message.maxCollectionCount);
+    }
+    if (message.maxTicketCount !== 0) {
+      obj.maxTicketCount = Math.round(message.maxTicketCount);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cKarmaReportActionRes>, I>>(base?: I): ss2cKarmaReportActionRes {
-    return ss2cKarmaReportActionRes.fromPartial(base ?? {});
+    return ss2cKarmaReportActionRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cKarmaReportActionRes>, I>>(object: I): ss2cKarmaReportActionRes {
     const message = createBasess2cKarmaReportActionRes();
     message.result = object.result ?? 0;
@@ -725,28 +760,28 @@ export const ss2cKarmaRatingUpdateNot = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.updateKarmaRating = reader.int32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.accountId = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.characterId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -764,16 +799,21 @@ export const ss2cKarmaRatingUpdateNot = {
 
   toJSON(message: ss2cKarmaRatingUpdateNot): unknown {
     const obj: any = {};
-    message.updateKarmaRating !== undefined && (obj.updateKarmaRating = Math.round(message.updateKarmaRating));
-    message.accountId !== undefined && (obj.accountId = message.accountId);
-    message.characterId !== undefined && (obj.characterId = message.characterId);
+    if (message.updateKarmaRating !== 0) {
+      obj.updateKarmaRating = Math.round(message.updateKarmaRating);
+    }
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ss2cKarmaRatingUpdateNot>, I>>(base?: I): ss2cKarmaRatingUpdateNot {
-    return ss2cKarmaRatingUpdateNot.fromPartial(base ?? {});
+    return ss2cKarmaRatingUpdateNot.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ss2cKarmaRatingUpdateNot>, I>>(object: I): ss2cKarmaRatingUpdateNot {
     const message = createBasess2cKarmaRatingUpdateNot();
     message.updateKarmaRating = object.updateKarmaRating ?? 0;
