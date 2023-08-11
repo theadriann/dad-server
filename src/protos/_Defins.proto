@@ -232,12 +232,6 @@ message Define_Trade {
 }
 
 message Operate {
-  enum Nation {
-    NONE_NATION = 0;
-    NATION_KR = 1;
-    NATION_EN = 2;
-  }
-
   enum Policy {
     NONE_POLICY = 0;
     POLICY_CHAT_LENGTH_MAX = 1;

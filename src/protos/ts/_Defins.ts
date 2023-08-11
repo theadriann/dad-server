@@ -1287,45 +1287,6 @@ export function defineTrade_RequirementTypeToJSON(object: DefineTrade_Requiremen
 export interface Operate {
 }
 
-export enum Operate_Nation {
-  NONE_NATION = 0,
-  NATION_KR = 1,
-  NATION_EN = 2,
-  UNRECOGNIZED = -1,
-}
-
-export function operate_NationFromJSON(object: any): Operate_Nation {
-  switch (object) {
-    case 0:
-    case "NONE_NATION":
-      return Operate_Nation.NONE_NATION;
-    case 1:
-    case "NATION_KR":
-      return Operate_Nation.NATION_KR;
-    case 2:
-    case "NATION_EN":
-      return Operate_Nation.NATION_EN;
-    case -1:
-    case "UNRECOGNIZED":
-    default:
-      return Operate_Nation.UNRECOGNIZED;
-  }
-}
-
-export function operate_NationToJSON(object: Operate_Nation): string {
-  switch (object) {
-    case Operate_Nation.NONE_NATION:
-      return "NONE_NATION";
-    case Operate_Nation.NATION_KR:
-      return "NATION_KR";
-    case Operate_Nation.NATION_EN:
-      return "NATION_EN";
-    case Operate_Nation.UNRECOGNIZED:
-    default:
-      return "UNRECOGNIZED";
-  }
-}
-
 export enum Operate_Policy {
   NONE_POLICY = 0,
   POLICY_CHAT_LENGTH_MAX = 1,

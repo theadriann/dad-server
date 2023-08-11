@@ -22,6 +22,7 @@ message SS2C_RECONNECT_RES {
 message SS2C_CONNECT_SERVICE_INFO_JSON {
   string ipAddress = 1;
   uint32 port = 2;
+  string remote = 3;
 }
 
 enum PacketCommand {

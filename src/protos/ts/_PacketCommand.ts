@@ -2233,6 +2233,7 @@ export interface ss2cReconnectRes {
 export interface ss2cConnectServiceInfoJson {
   ipAddress: string;
   port: number;
+  remote: string;
 }
 
 function createBasesc2sAliveReq(): sc2sAliveReq {
@@ -2422,7 +2423,7 @@ export const ss2cReconnectRes = {
 };
 
 function createBasess2cConnectServiceInfoJson(): ss2cConnectServiceInfoJson {
-  return { ipAddress: "", port: 0 };
+  return { ipAddress: "", port: 0, remote: "" };
 }
 
 export const ss2cConnectServiceInfoJson = {
@@ -2432,6 +2433,9 @@ export const ss2cConnectServiceInfoJson = {
     }
     if (message.port !== 0) {
       writer.uint32(16).uint32(message.port);
+    }
+    if (message.remote !== "") {
+      writer.uint32(26).string(message.remote);
     }
     return writer;
   },
@@ -2457,6 +2461,13 @@ export const ss2cConnectServiceInfoJson = {
 
           message.port = reader.uint32();
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.remote = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2470,6 +2481,7 @@ export const ss2cConnectServiceInfoJson = {
     return {
       ipAddress: isSet(object.ipAddress) ? String(object.ipAddress) : "",
       port: isSet(object.port) ? Number(object.port) : 0,
+      remote: isSet(object.remote) ? String(object.remote) : "",
     };
   },
 
@@ -2481,6 +2493,9 @@ export const ss2cConnectServiceInfoJson = {
     if (message.port !== 0) {
       obj.port = Math.round(message.port);
     }
+    if (message.remote !== "") {
+      obj.remote = message.remote;
+    }
     return obj;
   },
 
@@ -2491,6 +2506,7 @@ export const ss2cConnectServiceInfoJson = {
     const message = createBasess2cConnectServiceInfoJson();
     message.ipAddress = object.ipAddress ?? "";
     message.port = object.port ?? 0;
+    message.remote = object.remote ?? "";
     return message;
   },
 };

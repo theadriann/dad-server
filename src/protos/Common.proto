@@ -51,8 +51,9 @@ message SS2C_HACK_LOG_RES {
 }
 
 message SANNOUNCE_MESSAGE {
-  int32 nationType = 1;
-  string announceMessage = 2;
+  string designDataId = 1;
+  repeated string params = 2;
+  string announceMessage = 3;
 }
 
 message SS2C_OPERATE_ANNOUNCE_NOT {

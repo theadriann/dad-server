@@ -47,7 +47,8 @@ export interface ss2cHackLogRes {
 }
 
 export interface sannounceMessage {
-  nationType: number;
+  designDataId: string;
+  params: string[];
   announceMessage: string;
 }
 
@@ -723,16 +724,19 @@ export const ss2cHackLogRes = {
 };
 
 function createBasesannounceMessage(): sannounceMessage {
-  return { nationType: 0, announceMessage: "" };
+  return { designDataId: "", params: [], announceMessage: "" };
 }
 
 export const sannounceMessage = {
   encode(message: sannounceMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.nationType !== 0) {
-      writer.uint32(8).int32(message.nationType);
+    if (message.designDataId !== "") {
+      writer.uint32(10).string(message.designDataId);
+    }
+    for (const v of message.params) {
+      writer.uint32(18).string(v!);
     }
     if (message.announceMessage !== "") {
-      writer.uint32(18).string(message.announceMessage);
+      writer.uint32(26).string(message.announceMessage);
     }
     return writer;
   },
@@ -745,14 +749,21 @@ export const sannounceMessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.nationType = reader.int32();
+          message.designDataId = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
+            break;
+          }
+
+          message.params.push(reader.string());
+          continue;
+        case 3:
+          if (tag !== 26) {
             break;
           }
 
@@ -769,15 +780,19 @@ export const sannounceMessage = {
 
   fromJSON(object: any): sannounceMessage {
     return {
-      nationType: isSet(object.nationType) ? Number(object.nationType) : 0,
+      designDataId: isSet(object.designDataId) ? String(object.designDataId) : "",
+      params: Array.isArray(object?.params) ? object.params.map((e: any) => String(e)) : [],
       announceMessage: isSet(object.announceMessage) ? String(object.announceMessage) : "",
     };
   },
 
   toJSON(message: sannounceMessage): unknown {
     const obj: any = {};
-    if (message.nationType !== 0) {
-      obj.nationType = Math.round(message.nationType);
+    if (message.designDataId !== "") {
+      obj.designDataId = message.designDataId;
+    }
+    if (message.params?.length) {
+      obj.params = message.params;
     }
     if (message.announceMessage !== "") {
       obj.announceMessage = message.announceMessage;
@@ -790,7 +805,8 @@ export const sannounceMessage = {
   },
   fromPartial<I extends Exact<DeepPartial<sannounceMessage>, I>>(object: I): sannounceMessage {
     const message = createBasesannounceMessage();
-    message.nationType = object.nationType ?? 0;
+    message.designDataId = object.designDataId ?? "";
+    message.params = object.params?.map((e) => e) || [];
     message.announceMessage = object.announceMessage ?? "";
     return message;
   },
