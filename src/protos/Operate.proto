@@ -212,8 +212,10 @@ message Operate_OperateBanUserInfos {
   uint64 accountId = 1;
   int32 banType = 2;
   string comment = 3;
-  string registerTime = 4;
-  string isHardwareBan = 5;
+  string beginTime = 4;
+  string endTime = 5;
+  string registerTime = 6;
+  string isHardwareBan = 7;
 }
 
 message Operate_OperateLoginLogInfo {
@@ -260,6 +262,12 @@ message Operate_OperateBanHardwareInfo {
   string registerTime = 4;
 }
 
+message Operate_OperatePlatformInfo {
+  string ironmaceid = 1;
+  string email = 2;
+  string username = 3;
+}
+
 message Operate_AllHackInfo {
   repeated .DC.Packet.Operate_character_info characterInfos = 1;
   repeated .DC.Packet.Operate_OperateReportBodyInfo reportBodyInfos = 2;
@@ -274,6 +282,7 @@ message Operate_AllHackInfo {
   .DC.Packet.Operate_Hacklog hackInfos = 11;
   repeated uint64 findBanList = 12;
   repeated uint64 banList = 13;
+  .DC.Packet.Operate_OperatePlatformInfo platformInfo = 14;
 }
 
 message Operate_AllReportList {

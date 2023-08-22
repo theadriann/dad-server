@@ -209,6 +209,8 @@ export interface OperateOperateBanUserInfos {
   accountId: number;
   banType: number;
   comment: string;
+  beginTime: string;
+  endTime: string;
   registerTime: string;
   isHardwareBan: string;
 }
@@ -257,6 +259,12 @@ export interface OperateOperateBanHardwareInfo {
   registerTime: string;
 }
 
+export interface OperateOperatePlatformInfo {
+  ironmaceid: string;
+  email: string;
+  username: string;
+}
+
 export interface OperateAllHackInfo {
   characterInfos: OperateCharacterInfo[];
   reportBodyInfos: OperateOperateReportBodyInfo[];
@@ -271,6 +279,7 @@ export interface OperateAllHackInfo {
   hackInfos: OperateHacklog | undefined;
   findBanList: number[];
   banList: number[];
+  platformInfo: OperateOperatePlatformInfo | undefined;
 }
 
 export interface OperateAllReportList {
@@ -3263,7 +3272,7 @@ export const OperateOperateIronShieldInfo = {
 };
 
 function createBaseOperateOperateBanUserInfos(): OperateOperateBanUserInfos {
-  return { accountId: 0, banType: 0, comment: "", registerTime: "", isHardwareBan: "" };
+  return { accountId: 0, banType: 0, comment: "", beginTime: "", endTime: "", registerTime: "", isHardwareBan: "" };
 }
 
 export const OperateOperateBanUserInfos = {
@@ -3277,11 +3286,17 @@ export const OperateOperateBanUserInfos = {
     if (message.comment !== "") {
       writer.uint32(26).string(message.comment);
     }
+    if (message.beginTime !== "") {
+      writer.uint32(34).string(message.beginTime);
+    }
+    if (message.endTime !== "") {
+      writer.uint32(42).string(message.endTime);
+    }
     if (message.registerTime !== "") {
-      writer.uint32(34).string(message.registerTime);
+      writer.uint32(50).string(message.registerTime);
     }
     if (message.isHardwareBan !== "") {
-      writer.uint32(42).string(message.isHardwareBan);
+      writer.uint32(58).string(message.isHardwareBan);
     }
     return writer;
   },
@@ -3319,10 +3334,24 @@ export const OperateOperateBanUserInfos = {
             break;
           }
 
-          message.registerTime = reader.string();
+          message.beginTime = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
+            break;
+          }
+
+          message.endTime = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.registerTime = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
             break;
           }
 
@@ -3342,6 +3371,8 @@ export const OperateOperateBanUserInfos = {
       accountId: isSet(object.accountId) ? Number(object.accountId) : 0,
       banType: isSet(object.banType) ? Number(object.banType) : 0,
       comment: isSet(object.comment) ? String(object.comment) : "",
+      beginTime: isSet(object.beginTime) ? String(object.beginTime) : "",
+      endTime: isSet(object.endTime) ? String(object.endTime) : "",
       registerTime: isSet(object.registerTime) ? String(object.registerTime) : "",
       isHardwareBan: isSet(object.isHardwareBan) ? String(object.isHardwareBan) : "",
     };
@@ -3357,6 +3388,12 @@ export const OperateOperateBanUserInfos = {
     }
     if (message.comment !== "") {
       obj.comment = message.comment;
+    }
+    if (message.beginTime !== "") {
+      obj.beginTime = message.beginTime;
+    }
+    if (message.endTime !== "") {
+      obj.endTime = message.endTime;
     }
     if (message.registerTime !== "") {
       obj.registerTime = message.registerTime;
@@ -3375,6 +3412,8 @@ export const OperateOperateBanUserInfos = {
     message.accountId = object.accountId ?? 0;
     message.banType = object.banType ?? 0;
     message.comment = object.comment ?? "";
+    message.beginTime = object.beginTime ?? "";
+    message.endTime = object.endTime ?? "";
     message.registerTime = object.registerTime ?? "";
     message.isHardwareBan = object.isHardwareBan ?? "";
     return message;
@@ -4049,6 +4088,95 @@ export const OperateOperateBanHardwareInfo = {
   },
 };
 
+function createBaseOperateOperatePlatformInfo(): OperateOperatePlatformInfo {
+  return { ironmaceid: "", email: "", username: "" };
+}
+
+export const OperateOperatePlatformInfo = {
+  encode(message: OperateOperatePlatformInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.ironmaceid !== "") {
+      writer.uint32(10).string(message.ironmaceid);
+    }
+    if (message.email !== "") {
+      writer.uint32(18).string(message.email);
+    }
+    if (message.username !== "") {
+      writer.uint32(26).string(message.username);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OperateOperatePlatformInfo {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOperateOperatePlatformInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.ironmaceid = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.email = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.username = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): OperateOperatePlatformInfo {
+    return {
+      ironmaceid: isSet(object.ironmaceid) ? String(object.ironmaceid) : "",
+      email: isSet(object.email) ? String(object.email) : "",
+      username: isSet(object.username) ? String(object.username) : "",
+    };
+  },
+
+  toJSON(message: OperateOperatePlatformInfo): unknown {
+    const obj: any = {};
+    if (message.ironmaceid !== "") {
+      obj.ironmaceid = message.ironmaceid;
+    }
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<OperateOperatePlatformInfo>, I>>(base?: I): OperateOperatePlatformInfo {
+    return OperateOperatePlatformInfo.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<OperateOperatePlatformInfo>, I>>(object: I): OperateOperatePlatformInfo {
+    const message = createBaseOperateOperatePlatformInfo();
+    message.ironmaceid = object.ironmaceid ?? "";
+    message.email = object.email ?? "";
+    message.username = object.username ?? "";
+    return message;
+  },
+};
+
 function createBaseOperateAllHackInfo(): OperateAllHackInfo {
   return {
     characterInfos: [],
@@ -4064,6 +4192,7 @@ function createBaseOperateAllHackInfo(): OperateAllHackInfo {
     hackInfos: undefined,
     findBanList: [],
     banList: [],
+    platformInfo: undefined,
   };
 }
 
@@ -4112,6 +4241,9 @@ export const OperateAllHackInfo = {
       writer.uint64(v);
     }
     writer.ldelim();
+    if (message.platformInfo !== undefined) {
+      OperateOperatePlatformInfo.encode(message.platformInfo, writer.uint32(114).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -4233,6 +4365,13 @@ export const OperateAllHackInfo = {
           }
 
           break;
+        case 14:
+          if (tag !== 114) {
+            break;
+          }
+
+          message.platformInfo = OperateOperatePlatformInfo.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -4279,6 +4418,7 @@ export const OperateAllHackInfo = {
         ? object.findBanList.map((e: any) => Number(e))
         : [],
       banList: Array.isArray(object?.banList) ? object.banList.map((e: any) => Number(e)) : [],
+      platformInfo: isSet(object.platformInfo) ? OperateOperatePlatformInfo.fromJSON(object.platformInfo) : undefined,
     };
   },
 
@@ -4325,6 +4465,9 @@ export const OperateAllHackInfo = {
     if (message.banList?.length) {
       obj.banList = message.banList.map((e) => Math.round(e));
     }
+    if (message.platformInfo !== undefined) {
+      obj.platformInfo = OperateOperatePlatformInfo.toJSON(message.platformInfo);
+    }
     return obj;
   },
 
@@ -4350,6 +4493,9 @@ export const OperateAllHackInfo = {
       : undefined;
     message.findBanList = object.findBanList?.map((e) => e) || [];
     message.banList = object.banList?.map((e) => e) || [];
+    message.platformInfo = (object.platformInfo !== undefined && object.platformInfo !== null)
+      ? OperateOperatePlatformInfo.fromPartial(object.platformInfo)
+      : undefined;
     return message;
   },
 };
