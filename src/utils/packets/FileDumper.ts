@@ -276,6 +276,7 @@ import {
 import { bufferReader } from "@/utils/bufferReader";
 import { buffer2HexSpacedString } from "@/utils/hex";
 import { logger } from "@/utils/loggers";
+import { beautifyHexUnicodeFile } from "./filesutils";
 
 export function packTypeToObjType(object: PacketCommand): any {
   switch (object) {
@@ -891,12 +892,18 @@ const reportPackletLength = (packet: string) => {
   logger.debug(`${length} bytes / ${length * 2} characters`);
 };
 
-const reportPacket = (packet: string, dumpContext: DumpContext) => {
+const reportPacket = (
+  packet: string,
+  dumpContext: DumpContext,
+  length: number
+) => {
   //
   // logger.debug("[REPORTING PACKET]");
   // logger.debug(packet);
 
   reportPackletLength(packet);
+
+  logger.debug(`Actual length: ${length}`);
 
   const type = getPacketType(extractPacketType(packet));
 
@@ -960,7 +967,7 @@ export const reportPackets = (packets: string, clientId: string) => {
   );
 
   while (socket.hasCompleteData()) {
-    const { data, rest } = socket.getCompleteData();
+    const { data, rest, length } = socket.getCompleteData();
     console.log("step");
 
     // logger.debug("[HEX-DATA]");
@@ -970,7 +977,7 @@ export const reportPackets = (packets: string, clientId: string) => {
 
     socket.setData(rest);
 
-    reportPacket(data.toString("hex"), dumpContext);
+    reportPacket(data.toString("hex"), dumpContext, length);
 
     // logger.debug(
     //     "============================================================="
@@ -984,15 +991,43 @@ export const reportPackets = (packets: string, clientId: string) => {
   // }
 };
 
-//
-const fileName = `new_dump.txt`;
-const inputFile = fs.readFileSync(
-  `${__dirname}/../../../packet_dumps/_input/${fileName}`,
-  "hex"
-);
+const reportHexDumpFile = (fileName: string) => {
+  //
+  const inputFile = fs.readFileSync(
+    `${__dirname}/../../../packet_dumps/_input/${fileName}`,
+    "hex"
+  );
+
+  reportPackets(inputFile, fileName.split(".")[0]);
+};
+
+const reportUnicodeDumpFile = (fileName: string) => {
+  //
+  const inputFile = fs.readFileSync(
+    `${__dirname}/../../../packet_dumps/_input/${fileName}`,
+    "utf-8"
+  );
+
+  reportPackets(inputFile, fileName.split(".")[0]);
+};
+
+const convertHexDumpFileToUnicodeDumpFile = (fileName: string) => {
+  const inputFile = fs.readFileSync(
+    `${__dirname}/../../../packet_dumps/_input/${fileName}`,
+    "hex"
+  );
+
+  const outputFile = `${__dirname}/../../../packet_dumps/rewrote/${fileName}.txt`;
+
+  fs.writeFileSync(outputFile.split("\n").join("\n\n"), inputFile);
+};
 
 // dumpContext.dumpIndex = 0;
 // dumpContext.dumpPath = `resolved_dumps/${fileName}`;
 
 // console.log(inputFile);
-reportPackets(inputFile, "session_2");
+// convertHexDumpFileToUnicodeDumpFile("1711_new_packets");
+
+// beautifyHexUnicodeFile("1711_new_packets");
+
+// reportHexDumpFile("1711_new_packets_2_RES");

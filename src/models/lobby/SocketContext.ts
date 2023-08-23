@@ -5,106 +5,106 @@ import net from "net";
 import { LobbyUser } from "./LobbyUser";
 
 export class SocketContext {
-    //
-    user: LobbyUser;
-    active: boolean = false;
+  //
+  user: LobbyUser;
+  active: boolean = false;
 
-    //
-    processLock: boolean = false;
-    remainingData: Buffer | null = null;
-    dataCleaningTimeout: NodeJS.Timeout | null = null;
+  //
+  processLock: boolean = false;
+  remainingData: Buffer | null = null;
+  dataCleaningTimeout: NodeJS.Timeout | null = null;
 
-    constructor(user: LobbyUser) {
-        this.user = user;
+  constructor(user: LobbyUser) {
+    this.user = user;
+  }
+
+  // -----------------------
+  // State Methods
+  // -----------------------
+
+  setActive(active: boolean) {
+    this.active = active;
+  }
+
+  // -----------------------
+  // Data Processing
+  // -----------------------
+
+  setData(value: Buffer | null) {
+    this.remainingData = value;
+  }
+
+  appendData(value: Buffer) {
+    if (this.remainingData) {
+      this.remainingData = Buffer.concat([this.remainingData, value]);
+    } else {
+      this.remainingData = value;
+    }
+  }
+
+  getReportedDataLength() {
+    if (!this.remainingData) {
+      return 0;
     }
 
-    // -----------------------
-    // State Methods
-    // -----------------------
-
-    setActive(active: boolean) {
-        this.active = active;
+    if (this.remainingData.length < 4) {
+      return 0;
     }
 
-    // -----------------------
-    // Data Processing
-    // -----------------------
+    // the other two bytes should be padding
+    return this.remainingData.readUint32LE(0);
+    // return this.remainingData.readUint16LE(0);
+  }
 
-    setData(value: Buffer | null) {
-        this.remainingData = value;
+  getCompleteData() {
+    if (!this.remainingData) {
+      throw new Error("no remaining data");
     }
 
-    appendData(value: Buffer) {
-        if (this.remainingData) {
-            this.remainingData = Buffer.concat([this.remainingData, value]);
-        } else {
-            this.remainingData = value;
-        }
+    const length = this.getReportedDataLength();
+
+    if (length < 4) {
+      throw new Error("no complete data");
     }
 
-    getReportedDataLength() {
-        if (!this.remainingData) {
-            return 0;
-        }
+    const data = this.remainingData.subarray(0, length);
+    const rest = this.remainingData.subarray(length);
 
-        if (this.remainingData.length < 4) {
-            return 0;
-        }
+    return { data, rest, length };
+  }
 
-        // the other two bytes should be padding
-        // return this.remainingData.readUint32LE(0);
-        return this.remainingData.readUint16LE(0);
+  hasCompleteData() {
+    if (!this.remainingData) {
+      return false;
     }
 
-    getCompleteData() {
-        if (!this.remainingData) {
-            throw new Error("no remaining data");
-        }
+    const length = this.getReportedDataLength();
 
-        const length = this.getReportedDataLength();
-
-        if (length < 4) {
-            throw new Error("no complete data");
-        }
-
-        const data = this.remainingData.subarray(0, length);
-        const rest = this.remainingData.subarray(length);
-
-        return { data, rest };
+    if (length < 4) {
+      return false;
     }
 
-    hasCompleteData() {
-        if (!this.remainingData) {
-            return false;
-        }
+    return this.remainingData.length >= length;
+  }
 
-        const length = this.getReportedDataLength();
+  setProcessLock(value: boolean) {
+    this.processLock = value;
+  }
 
-        if (length < 4) {
-            return false;
-        }
-
-        return this.remainingData.length >= length;
+  deleteDataCleaningTimeout = () => {
+    if (this.dataCleaningTimeout) {
+      clearTimeout(this.dataCleaningTimeout);
+      this.dataCleaningTimeout = null;
     }
+  };
 
-    setProcessLock(value: boolean) {
-        this.processLock = value;
-    }
-
-    deleteDataCleaningTimeout = () => {
-        if (this.dataCleaningTimeout) {
-            clearTimeout(this.dataCleaningTimeout);
-            this.dataCleaningTimeout = null;
-        }
-    };
-
-    queueDataCleaningTimeout() {
-        this.dataCleaningTimeout = setTimeout(async () => {
-            logger.debug(`[${this.user.sessionId}] Remaining Data Timeout`);
-            if (!this.hasCompleteData()) {
-                logger.debug(`Removing Remaining Data`);
-                this.setData(null);
-            }
-        }, 1000 * 10);
-    }
+  queueDataCleaningTimeout() {
+    this.dataCleaningTimeout = setTimeout(async () => {
+      logger.debug(`[${this.user.sessionId}] Remaining Data Timeout`);
+      if (!this.hasCompleteData()) {
+        logger.debug(`Removing Remaining Data`);
+        this.setData(null);
+      }
+    }, 1000 * 10);
+  }
 }

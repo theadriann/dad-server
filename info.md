@@ -9,3 +9,10 @@ http://cdn.darkanddarker.com/Dark%20and%20Darker/ContentsLock.lck
 http://cdn.darkanddarker.com/Dark%20and%20Darker/MaintenanceLock.lck
 
 52.223.44.23
+
+_____
+
+take care of bytes:
+SocketContext
+makePacketHeader
+bufferReader -- x
