@@ -956,7 +956,7 @@ export const reportPackets = (packets: string, clientId: string) => {
     dumpContext = dumpContexts[clientId] = {
       socket: new SocketContext({} as any),
       dumpIndex: 0,
-      dumpPath: `dumps/${clientId}/`,
+      dumpPath: `packet_dumps/output/${clientId}/`,
     };
   }
 
@@ -994,7 +994,7 @@ export const reportPackets = (packets: string, clientId: string) => {
 const reportHexDumpFile = (fileName: string) => {
   //
   const inputFile = fs.readFileSync(
-    `${__dirname}/../../../packet_dumps/_input/${fileName}`,
+    `${__dirname}/../../../packet_dumps/input/${fileName}`,
     "hex"
   );
 
@@ -1030,4 +1030,4 @@ const convertHexDumpFileToUnicodeDumpFile = (fileName: string) => {
 
 // beautifyHexUnicodeFile("1711_new_packets");
 
-// reportHexDumpFile("1711_new_packets_2_RES");
+reportHexDumpFile("1736_trading_req");
