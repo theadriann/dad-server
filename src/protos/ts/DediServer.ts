@@ -246,6 +246,11 @@ export interface Circle {
   radius: number;
 }
 
+export interface NewItemLog {
+  pos: Location | undefined;
+  itemId: string;
+}
+
 export interface GameResultInfo {
   accountId: string;
   characterId: string;
@@ -264,6 +269,7 @@ export interface GameResultInfo {
   blockTimeMin: number;
   addTriumphExpValue: number;
   locations: Location[];
+  newItemLogs: NewItemLog[];
 }
 
 export interface C2SGameEscapeUserPOST {
@@ -2873,6 +2879,80 @@ export const Circle = {
   },
 };
 
+function createBaseNewItemLog(): NewItemLog {
+  return { pos: undefined, itemId: "" };
+}
+
+export const NewItemLog = {
+  encode(message: NewItemLog, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.pos !== undefined) {
+      Location.encode(message.pos, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.itemId !== "") {
+      writer.uint32(18).string(message.itemId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NewItemLog {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNewItemLog();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.pos = Location.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.itemId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): NewItemLog {
+    return {
+      pos: isSet(object.pos) ? Location.fromJSON(object.pos) : undefined,
+      itemId: isSet(object.itemId) ? String(object.itemId) : "",
+    };
+  },
+
+  toJSON(message: NewItemLog): unknown {
+    const obj: any = {};
+    if (message.pos !== undefined) {
+      obj.pos = Location.toJSON(message.pos);
+    }
+    if (message.itemId !== "") {
+      obj.itemId = message.itemId;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<NewItemLog>, I>>(base?: I): NewItemLog {
+    return NewItemLog.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<NewItemLog>, I>>(object: I): NewItemLog {
+    const message = createBaseNewItemLog();
+    message.pos = (object.pos !== undefined && object.pos !== null) ? Location.fromPartial(object.pos) : undefined;
+    message.itemId = object.itemId ?? "";
+    return message;
+  },
+};
+
 function createBaseGameResultInfo(): GameResultInfo {
   return {
     accountId: "",
@@ -2892,6 +2972,7 @@ function createBaseGameResultInfo(): GameResultInfo {
     blockTimeMin: 0,
     addTriumphExpValue: 0,
     locations: [],
+    newItemLogs: [],
   };
 }
 
@@ -2947,6 +3028,9 @@ export const GameResultInfo = {
     }
     for (const v of message.locations) {
       Location.encode(v!, writer.uint32(138).fork()).ldelim();
+    }
+    for (const v of message.newItemLogs) {
+      NewItemLog.encode(v!, writer.uint32(146).fork()).ldelim();
     }
     return writer;
   },
@@ -3077,6 +3161,13 @@ export const GameResultInfo = {
 
           message.locations.push(Location.decode(reader, reader.uint32()));
           continue;
+        case 18:
+          if (tag !== 146) {
+            break;
+          }
+
+          message.newItemLogs.push(NewItemLog.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3107,6 +3198,7 @@ export const GameResultInfo = {
       blockTimeMin: isSet(object.blockTimeMin) ? Number(object.blockTimeMin) : 0,
       addTriumphExpValue: isSet(object.addTriumphExpValue) ? Number(object.addTriumphExpValue) : 0,
       locations: Array.isArray(object?.locations) ? object.locations.map((e: any) => Location.fromJSON(e)) : [],
+      newItemLogs: Array.isArray(object?.newItemLogs) ? object.newItemLogs.map((e: any) => NewItemLog.fromJSON(e)) : [],
     };
   },
 
@@ -3163,6 +3255,9 @@ export const GameResultInfo = {
     if (message.locations?.length) {
       obj.locations = message.locations.map((e) => Location.toJSON(e));
     }
+    if (message.newItemLogs?.length) {
+      obj.newItemLogs = message.newItemLogs.map((e) => NewItemLog.toJSON(e));
+    }
     return obj;
   },
 
@@ -3188,6 +3283,7 @@ export const GameResultInfo = {
     message.blockTimeMin = object.blockTimeMin ?? 0;
     message.addTriumphExpValue = object.addTriumphExpValue ?? 0;
     message.locations = object.locations?.map((e) => Location.fromPartial(e)) || [];
+    message.newItemLogs = object.newItemLogs?.map((e) => NewItemLog.fromPartial(e)) || [];
     return message;
   },
 };

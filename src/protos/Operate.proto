@@ -169,6 +169,16 @@ message Operate_Ban_User {
   uint32 banTime_min = 5;
 }
 
+message Operate_Ban_User2 {
+  string securityCode = 1;
+  uint64 accountId = 2;
+  string nickName = 3;
+  string reason = 4;
+  uint32 banType = 5;
+  uint32 banTime_min = 6;
+  string jiraId = 7;
+}
+
 message Operate_Ban_Hardware {
   string hardwareId = 1;
   string reason = 2;
@@ -200,12 +210,13 @@ message Operate_OperateReportBodyInfo {
 
 message Operate_OperateIronShieldInfo {
   uint64 idx = 1;
-  uint64 characterId = 2;
-  string nickname = 3;
-  string callbackType = 4;
-  .DC.Packet.Operate_OperateFileInfo file = 5;
-  string RegisterTime = 6;
-  repeated string hardwareIds = 7;
+  uint64 accountId = 2;
+  uint64 characterId = 3;
+  string nickname = 4;
+  string callbackType = 5;
+  .DC.Packet.Operate_OperateFileInfo file = 6;
+  string RegisterTime = 7;
+  repeated string hardwareIds = 8;
 }
 
 message Operate_OperateBanUserInfos {

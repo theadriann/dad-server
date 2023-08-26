@@ -183,6 +183,11 @@ message Circle {
   float radius = 2;
 }
 
+message NewItemLog {
+  .DC.Packet.Location pos = 1;
+  string itemId = 2;
+}
+
 message GameResultInfo {
   string accountId = 1;
   string characterId = 2;
@@ -201,6 +206,7 @@ message GameResultInfo {
   uint32 blockTime_min = 15;
   int32 addTriumphExpValue = 16;
   repeated .DC.Packet.Location locations = 17;
+  repeated .DC.Packet.NewItemLog newItemLogs = 18;
 }
 
 message C2S_GameEscapeUser_POST {

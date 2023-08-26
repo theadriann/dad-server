@@ -166,6 +166,16 @@ export interface OperateBanUser {
   banTimeMin: number;
 }
 
+export interface OperateBanUser2 {
+  securityCode: string;
+  accountId: number;
+  nickName: string;
+  reason: string;
+  banType: number;
+  banTimeMin: number;
+  jiraId: string;
+}
+
 export interface OperateBanHardware {
   hardwareId: string;
   reason: string;
@@ -197,6 +207,7 @@ export interface OperateOperateReportBodyInfo {
 
 export interface OperateOperateIronShieldInfo {
   idx: number;
+  accountId: number;
   characterId: number;
   nickname: string;
   callbackType: string;
@@ -2666,6 +2677,155 @@ export const OperateBanUser = {
   },
 };
 
+function createBaseOperateBanUser2(): OperateBanUser2 {
+  return { securityCode: "", accountId: 0, nickName: "", reason: "", banType: 0, banTimeMin: 0, jiraId: "" };
+}
+
+export const OperateBanUser2 = {
+  encode(message: OperateBanUser2, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.securityCode !== "") {
+      writer.uint32(10).string(message.securityCode);
+    }
+    if (message.accountId !== 0) {
+      writer.uint32(16).uint64(message.accountId);
+    }
+    if (message.nickName !== "") {
+      writer.uint32(26).string(message.nickName);
+    }
+    if (message.reason !== "") {
+      writer.uint32(34).string(message.reason);
+    }
+    if (message.banType !== 0) {
+      writer.uint32(40).uint32(message.banType);
+    }
+    if (message.banTimeMin !== 0) {
+      writer.uint32(48).uint32(message.banTimeMin);
+    }
+    if (message.jiraId !== "") {
+      writer.uint32(58).string(message.jiraId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OperateBanUser2 {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOperateBanUser2();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.securityCode = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.accountId = longToNumber(reader.uint64() as Long);
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.nickName = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.reason = reader.string();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.banType = reader.uint32();
+          continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.banTimeMin = reader.uint32();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.jiraId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): OperateBanUser2 {
+    return {
+      securityCode: isSet(object.securityCode) ? String(object.securityCode) : "",
+      accountId: isSet(object.accountId) ? Number(object.accountId) : 0,
+      nickName: isSet(object.nickName) ? String(object.nickName) : "",
+      reason: isSet(object.reason) ? String(object.reason) : "",
+      banType: isSet(object.banType) ? Number(object.banType) : 0,
+      banTimeMin: isSet(object.banTimeMin) ? Number(object.banTimeMin) : 0,
+      jiraId: isSet(object.jiraId) ? String(object.jiraId) : "",
+    };
+  },
+
+  toJSON(message: OperateBanUser2): unknown {
+    const obj: any = {};
+    if (message.securityCode !== "") {
+      obj.securityCode = message.securityCode;
+    }
+    if (message.accountId !== 0) {
+      obj.accountId = Math.round(message.accountId);
+    }
+    if (message.nickName !== "") {
+      obj.nickName = message.nickName;
+    }
+    if (message.reason !== "") {
+      obj.reason = message.reason;
+    }
+    if (message.banType !== 0) {
+      obj.banType = Math.round(message.banType);
+    }
+    if (message.banTimeMin !== 0) {
+      obj.banTimeMin = Math.round(message.banTimeMin);
+    }
+    if (message.jiraId !== "") {
+      obj.jiraId = message.jiraId;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<OperateBanUser2>, I>>(base?: I): OperateBanUser2 {
+    return OperateBanUser2.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<OperateBanUser2>, I>>(object: I): OperateBanUser2 {
+    const message = createBaseOperateBanUser2();
+    message.securityCode = object.securityCode ?? "";
+    message.accountId = object.accountId ?? 0;
+    message.nickName = object.nickName ?? "";
+    message.reason = object.reason ?? "";
+    message.banType = object.banType ?? 0;
+    message.banTimeMin = object.banTimeMin ?? 0;
+    message.jiraId = object.jiraId ?? "";
+    return message;
+  },
+};
+
 function createBaseOperateBanHardware(): OperateBanHardware {
   return { hardwareId: "", reason: "", banType: 0, banTimeMin: 0 };
 }
@@ -3121,7 +3281,16 @@ export const OperateOperateReportBodyInfo = {
 };
 
 function createBaseOperateOperateIronShieldInfo(): OperateOperateIronShieldInfo {
-  return { idx: 0, characterId: 0, nickname: "", callbackType: "", file: undefined, RegisterTime: "", hardwareIds: [] };
+  return {
+    idx: 0,
+    accountId: 0,
+    characterId: 0,
+    nickname: "",
+    callbackType: "",
+    file: undefined,
+    RegisterTime: "",
+    hardwareIds: [],
+  };
 }
 
 export const OperateOperateIronShieldInfo = {
@@ -3129,23 +3298,26 @@ export const OperateOperateIronShieldInfo = {
     if (message.idx !== 0) {
       writer.uint32(8).uint64(message.idx);
     }
+    if (message.accountId !== 0) {
+      writer.uint32(16).uint64(message.accountId);
+    }
     if (message.characterId !== 0) {
-      writer.uint32(16).uint64(message.characterId);
+      writer.uint32(24).uint64(message.characterId);
     }
     if (message.nickname !== "") {
-      writer.uint32(26).string(message.nickname);
+      writer.uint32(34).string(message.nickname);
     }
     if (message.callbackType !== "") {
-      writer.uint32(34).string(message.callbackType);
+      writer.uint32(42).string(message.callbackType);
     }
     if (message.file !== undefined) {
-      OperateOperateFileInfo.encode(message.file, writer.uint32(42).fork()).ldelim();
+      OperateOperateFileInfo.encode(message.file, writer.uint32(50).fork()).ldelim();
     }
     if (message.RegisterTime !== "") {
-      writer.uint32(50).string(message.RegisterTime);
+      writer.uint32(58).string(message.RegisterTime);
     }
     for (const v of message.hardwareIds) {
-      writer.uint32(58).string(v!);
+      writer.uint32(66).string(v!);
     }
     return writer;
   },
@@ -3169,38 +3341,45 @@ export const OperateOperateIronShieldInfo = {
             break;
           }
 
-          message.characterId = longToNumber(reader.uint64() as Long);
+          message.accountId = longToNumber(reader.uint64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.nickname = reader.string();
+          message.characterId = longToNumber(reader.uint64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.callbackType = reader.string();
+          message.nickname = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.file = OperateOperateFileInfo.decode(reader, reader.uint32());
+          message.callbackType = reader.string();
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.RegisterTime = reader.string();
+          message.file = OperateOperateFileInfo.decode(reader, reader.uint32());
           continue;
         case 7:
           if (tag !== 58) {
+            break;
+          }
+
+          message.RegisterTime = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
             break;
           }
 
@@ -3218,6 +3397,7 @@ export const OperateOperateIronShieldInfo = {
   fromJSON(object: any): OperateOperateIronShieldInfo {
     return {
       idx: isSet(object.idx) ? Number(object.idx) : 0,
+      accountId: isSet(object.accountId) ? Number(object.accountId) : 0,
       characterId: isSet(object.characterId) ? Number(object.characterId) : 0,
       nickname: isSet(object.nickname) ? String(object.nickname) : "",
       callbackType: isSet(object.callbackType) ? String(object.callbackType) : "",
@@ -3231,6 +3411,9 @@ export const OperateOperateIronShieldInfo = {
     const obj: any = {};
     if (message.idx !== 0) {
       obj.idx = Math.round(message.idx);
+    }
+    if (message.accountId !== 0) {
+      obj.accountId = Math.round(message.accountId);
     }
     if (message.characterId !== 0) {
       obj.characterId = Math.round(message.characterId);
@@ -3259,6 +3442,7 @@ export const OperateOperateIronShieldInfo = {
   fromPartial<I extends Exact<DeepPartial<OperateOperateIronShieldInfo>, I>>(object: I): OperateOperateIronShieldInfo {
     const message = createBaseOperateOperateIronShieldInfo();
     message.idx = object.idx ?? 0;
+    message.accountId = object.accountId ?? 0;
     message.characterId = object.characterId ?? 0;
     message.nickname = object.nickname ?? "";
     message.callbackType = object.callbackType ?? "";
