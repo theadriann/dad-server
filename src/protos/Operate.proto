@@ -127,11 +127,12 @@ message Operate_report_info_list {
 }
 
 message Operate_iron_shield_info {
-  uint64 characterId = 1;
-  string nickname = 2;
-  repeated string hardwareIds = 3;
-  string callbackType = 4;
-  string registerDate = 5;
+  uint64 accountId = 1;
+  uint64 characterId = 2;
+  string nickname = 3;
+  repeated string hardwareIds = 4;
+  string callbackType = 5;
+  string registerDate = 6;
 }
 
 message Operate_iron_shield_info_list {

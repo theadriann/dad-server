@@ -124,6 +124,7 @@ export interface OperateReportInfoList {
 }
 
 export interface OperateIronShieldInfo {
+  accountId: number;
   characterId: number;
   nickname: string;
   hardwareIds: string[];
@@ -2044,25 +2045,28 @@ export const OperateReportInfoList = {
 };
 
 function createBaseOperateIronShieldInfo(): OperateIronShieldInfo {
-  return { characterId: 0, nickname: "", hardwareIds: [], callbackType: "", registerDate: "" };
+  return { accountId: 0, characterId: 0, nickname: "", hardwareIds: [], callbackType: "", registerDate: "" };
 }
 
 export const OperateIronShieldInfo = {
   encode(message: OperateIronShieldInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.accountId !== 0) {
+      writer.uint32(8).uint64(message.accountId);
+    }
     if (message.characterId !== 0) {
-      writer.uint32(8).uint64(message.characterId);
+      writer.uint32(16).uint64(message.characterId);
     }
     if (message.nickname !== "") {
-      writer.uint32(18).string(message.nickname);
+      writer.uint32(26).string(message.nickname);
     }
     for (const v of message.hardwareIds) {
-      writer.uint32(26).string(v!);
+      writer.uint32(34).string(v!);
     }
     if (message.callbackType !== "") {
-      writer.uint32(34).string(message.callbackType);
+      writer.uint32(42).string(message.callbackType);
     }
     if (message.registerDate !== "") {
-      writer.uint32(42).string(message.registerDate);
+      writer.uint32(50).string(message.registerDate);
     }
     return writer;
   },
@@ -2079,31 +2083,38 @@ export const OperateIronShieldInfo = {
             break;
           }
 
-          message.characterId = longToNumber(reader.uint64() as Long);
+          message.accountId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.nickname = reader.string();
+          message.characterId = longToNumber(reader.uint64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.hardwareIds.push(reader.string());
+          message.nickname = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.callbackType = reader.string();
+          message.hardwareIds.push(reader.string());
           continue;
         case 5:
           if (tag !== 42) {
+            break;
+          }
+
+          message.callbackType = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
             break;
           }
 
@@ -2120,6 +2131,7 @@ export const OperateIronShieldInfo = {
 
   fromJSON(object: any): OperateIronShieldInfo {
     return {
+      accountId: isSet(object.accountId) ? Number(object.accountId) : 0,
       characterId: isSet(object.characterId) ? Number(object.characterId) : 0,
       nickname: isSet(object.nickname) ? String(object.nickname) : "",
       hardwareIds: Array.isArray(object?.hardwareIds) ? object.hardwareIds.map((e: any) => String(e)) : [],
@@ -2130,6 +2142,9 @@ export const OperateIronShieldInfo = {
 
   toJSON(message: OperateIronShieldInfo): unknown {
     const obj: any = {};
+    if (message.accountId !== 0) {
+      obj.accountId = Math.round(message.accountId);
+    }
     if (message.characterId !== 0) {
       obj.characterId = Math.round(message.characterId);
     }
@@ -2153,6 +2168,7 @@ export const OperateIronShieldInfo = {
   },
   fromPartial<I extends Exact<DeepPartial<OperateIronShieldInfo>, I>>(object: I): OperateIronShieldInfo {
     const message = createBaseOperateIronShieldInfo();
+    message.accountId = object.accountId ?? 0;
     message.characterId = object.characterId ?? 0;
     message.nickname = object.nickname ?? "";
     message.hardwareIds = object.hardwareIds?.map((e) => e) || [];

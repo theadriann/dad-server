@@ -118,6 +118,8 @@ export interface S2CGameStartServerJson {
   shippingLogOnOffPolicy: number;
   shippingLogLevelPolicy: number;
   gmOnOffPolicy: number;
+  shippingLogIronShieldOnOffPolicy: number;
+  shippingLogIronShieldLevelPolicy: number;
   currentFloor: number;
   floorMatchmakingOnOff: number;
   matchmakingType: number;
@@ -384,6 +386,7 @@ export interface C2SIronShieldReportPOST {
   accountId: string;
   characterId: string;
   originNickname: string;
+  reason: string;
 }
 
 function createBaseS2CGameEnterUserJson(): S2CGameEnterUserJson {
@@ -1341,6 +1344,8 @@ function createBaseS2CGameStartServerJson(): S2CGameStartServerJson {
     shippingLogOnOffPolicy: 0,
     shippingLogLevelPolicy: 0,
     gmOnOffPolicy: 0,
+    shippingLogIronShieldOnOffPolicy: 0,
+    shippingLogIronShieldLevelPolicy: 0,
     currentFloor: 0,
     floorMatchmakingOnOff: 0,
     matchmakingType: 0,
@@ -1381,6 +1386,12 @@ export const S2CGameStartServerJson = {
     }
     if (message.gmOnOffPolicy !== 0) {
       writer.uint32(88).uint32(message.gmOnOffPolicy);
+    }
+    if (message.shippingLogIronShieldOnOffPolicy !== 0) {
+      writer.uint32(96).uint32(message.shippingLogIronShieldOnOffPolicy);
+    }
+    if (message.shippingLogIronShieldLevelPolicy !== 0) {
+      writer.uint32(104).uint32(message.shippingLogIronShieldLevelPolicy);
     }
     if (message.currentFloor !== 0) {
       writer.uint32(128).uint32(message.currentFloor);
@@ -1478,6 +1489,20 @@ export const S2CGameStartServerJson = {
 
           message.gmOnOffPolicy = reader.uint32();
           continue;
+        case 12:
+          if (tag !== 96) {
+            break;
+          }
+
+          message.shippingLogIronShieldOnOffPolicy = reader.uint32();
+          continue;
+        case 13:
+          if (tag !== 104) {
+            break;
+          }
+
+          message.shippingLogIronShieldLevelPolicy = reader.uint32();
+          continue;
         case 16:
           if (tag !== 128) {
             break;
@@ -1523,6 +1548,12 @@ export const S2CGameStartServerJson = {
       shippingLogOnOffPolicy: isSet(object.shippingLogOnOffPolicy) ? Number(object.shippingLogOnOffPolicy) : 0,
       shippingLogLevelPolicy: isSet(object.shippingLogLevelPolicy) ? Number(object.shippingLogLevelPolicy) : 0,
       gmOnOffPolicy: isSet(object.gmOnOffPolicy) ? Number(object.gmOnOffPolicy) : 0,
+      shippingLogIronShieldOnOffPolicy: isSet(object.shippingLogIronShieldOnOffPolicy)
+        ? Number(object.shippingLogIronShieldOnOffPolicy)
+        : 0,
+      shippingLogIronShieldLevelPolicy: isSet(object.shippingLogIronShieldLevelPolicy)
+        ? Number(object.shippingLogIronShieldLevelPolicy)
+        : 0,
       currentFloor: isSet(object.currentFloor) ? Number(object.currentFloor) : 0,
       floorMatchmakingOnOff: isSet(object.floorMatchmakingOnOff) ? Number(object.floorMatchmakingOnOff) : 0,
       matchmakingType: isSet(object.matchmakingType) ? Number(object.matchmakingType) : 0,
@@ -1564,6 +1595,12 @@ export const S2CGameStartServerJson = {
     if (message.gmOnOffPolicy !== 0) {
       obj.gmOnOffPolicy = Math.round(message.gmOnOffPolicy);
     }
+    if (message.shippingLogIronShieldOnOffPolicy !== 0) {
+      obj.shippingLogIronShieldOnOffPolicy = Math.round(message.shippingLogIronShieldOnOffPolicy);
+    }
+    if (message.shippingLogIronShieldLevelPolicy !== 0) {
+      obj.shippingLogIronShieldLevelPolicy = Math.round(message.shippingLogIronShieldLevelPolicy);
+    }
     if (message.currentFloor !== 0) {
       obj.currentFloor = Math.round(message.currentFloor);
     }
@@ -1592,6 +1629,8 @@ export const S2CGameStartServerJson = {
     message.shippingLogOnOffPolicy = object.shippingLogOnOffPolicy ?? 0;
     message.shippingLogLevelPolicy = object.shippingLogLevelPolicy ?? 0;
     message.gmOnOffPolicy = object.gmOnOffPolicy ?? 0;
+    message.shippingLogIronShieldOnOffPolicy = object.shippingLogIronShieldOnOffPolicy ?? 0;
+    message.shippingLogIronShieldLevelPolicy = object.shippingLogIronShieldLevelPolicy ?? 0;
     message.currentFloor = object.currentFloor ?? 0;
     message.floorMatchmakingOnOff = object.floorMatchmakingOnOff ?? 0;
     message.matchmakingType = object.matchmakingType ?? 0;
@@ -4867,7 +4906,16 @@ export const S2CFloorMatchMakingPOSTResponse = {
 };
 
 function createBaseC2SIronShieldReportPOST(): C2SIronShieldReportPOST {
-  return { callbackType: 0, reportId: "", hIds: [], blob: [], accountId: "", characterId: "", originNickname: "" };
+  return {
+    callbackType: 0,
+    reportId: "",
+    hIds: [],
+    blob: [],
+    accountId: "",
+    characterId: "",
+    originNickname: "",
+    reason: "",
+  };
 }
 
 export const C2SIronShieldReportPOST = {
@@ -4894,6 +4942,9 @@ export const C2SIronShieldReportPOST = {
     }
     if (message.originNickname !== "") {
       writer.uint32(58).string(message.originNickname);
+    }
+    if (message.reason !== "") {
+      writer.uint32(66).string(message.reason);
     }
     return writer;
   },
@@ -4964,6 +5015,13 @@ export const C2SIronShieldReportPOST = {
 
           message.originNickname = reader.string();
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.reason = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -4982,6 +5040,7 @@ export const C2SIronShieldReportPOST = {
       accountId: isSet(object.accountId) ? String(object.accountId) : "",
       characterId: isSet(object.characterId) ? String(object.characterId) : "",
       originNickname: isSet(object.originNickname) ? String(object.originNickname) : "",
+      reason: isSet(object.reason) ? String(object.reason) : "",
     };
   },
 
@@ -5008,6 +5067,9 @@ export const C2SIronShieldReportPOST = {
     if (message.originNickname !== "") {
       obj.originNickname = message.originNickname;
     }
+    if (message.reason !== "") {
+      obj.reason = message.reason;
+    }
     return obj;
   },
 
@@ -5023,6 +5085,7 @@ export const C2SIronShieldReportPOST = {
     message.accountId = object.accountId ?? "";
     message.characterId = object.characterId ?? "";
     message.originNickname = object.originNickname ?? "";
+    message.reason = object.reason ?? "";
     return message;
   },
 };

@@ -94,6 +94,8 @@ message S2C_GameStartServer_Json {
   uint32 shippingLogOnOffPolicy = 9;
   uint32 shippingLogLevelPolicy = 10;
   uint32 gmOnOffPolicy = 11;
+  uint32 shippingLogIronShieldOnOffPolicy = 12;
+  uint32 shippingLogIronShieldLevelPolicy = 13;
   uint32 currentFloor = 16;
   uint32 floorMatchmakingOnOff = 17;
   uint32 matchmakingType = 18;
@@ -321,5 +323,6 @@ message C2S_IronShield_Report_POST {
   string accountId = 5;
   string characterId = 6;
   string originNickname = 7;
+  string reason = 8;
 }
 
