@@ -73,6 +73,8 @@ export enum ss2cAutoMatchRegRes_RESULT {
   FAIL_SHORTAGE_ENTRANCE_FEE = 7,
   FAIL_SOLO_ONLY = 8,
   FAIL_SHORTAGE_LEVEL = 9,
+  FAIL_MEMBER_EXCEEDED = 10,
+  FAIL_PLAY_TIME_SHORTAGE = 11,
   UNRECOGNIZED = -1,
 }
 
@@ -108,6 +110,12 @@ export function ss2cAutoMatchRegRes_RESULTFromJSON(object: any): ss2cAutoMatchRe
     case 9:
     case "FAIL_SHORTAGE_LEVEL":
       return ss2cAutoMatchRegRes_RESULT.FAIL_SHORTAGE_LEVEL;
+    case 10:
+    case "FAIL_MEMBER_EXCEEDED":
+      return ss2cAutoMatchRegRes_RESULT.FAIL_MEMBER_EXCEEDED;
+    case 11:
+    case "FAIL_PLAY_TIME_SHORTAGE":
+      return ss2cAutoMatchRegRes_RESULT.FAIL_PLAY_TIME_SHORTAGE;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -137,6 +145,10 @@ export function ss2cAutoMatchRegRes_RESULTToJSON(object: ss2cAutoMatchRegRes_RES
       return "FAIL_SOLO_ONLY";
     case ss2cAutoMatchRegRes_RESULT.FAIL_SHORTAGE_LEVEL:
       return "FAIL_SHORTAGE_LEVEL";
+    case ss2cAutoMatchRegRes_RESULT.FAIL_MEMBER_EXCEEDED:
+      return "FAIL_MEMBER_EXCEEDED";
+    case ss2cAutoMatchRegRes_RESULT.FAIL_PLAY_TIME_SHORTAGE:
+      return "FAIL_PLAY_TIME_SHORTAGE";
     case ss2cAutoMatchRegRes_RESULT.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

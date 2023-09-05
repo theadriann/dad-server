@@ -45,6 +45,8 @@ export interface ss2cAccountLoginRes {
   secretToken: string;
   banTimeBeginMs: number;
   banTimeEndMs: number;
+  unlockEndDate: string;
+  unlockEndTime: string;
 }
 
 export enum ss2cAccountLoginRes_RESULT {
@@ -687,6 +689,8 @@ function createBasess2cAccountLoginRes(): ss2cAccountLoginRes {
     secretToken: "",
     banTimeBeginMs: 0,
     banTimeEndMs: 0,
+    unlockEndDate: "",
+    unlockEndTime: "",
   };
 }
 
@@ -721,6 +725,12 @@ export const ss2cAccountLoginRes = {
     }
     if (message.banTimeEndMs !== 0) {
       writer.uint32(80).uint64(message.banTimeEndMs);
+    }
+    if (message.unlockEndDate !== "") {
+      writer.uint32(90).string(message.unlockEndDate);
+    }
+    if (message.unlockEndTime !== "") {
+      writer.uint32(98).string(message.unlockEndTime);
     }
     return writer;
   },
@@ -802,6 +812,20 @@ export const ss2cAccountLoginRes = {
 
           message.banTimeEndMs = longToNumber(reader.uint64() as Long);
           continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.unlockEndDate = reader.string();
+          continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.unlockEndTime = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -823,6 +847,8 @@ export const ss2cAccountLoginRes = {
       secretToken: isSet(object.secretToken) ? String(object.secretToken) : "",
       banTimeBeginMs: isSet(object.banTimeBeginMs) ? Number(object.banTimeBeginMs) : 0,
       banTimeEndMs: isSet(object.banTimeEndMs) ? Number(object.banTimeEndMs) : 0,
+      unlockEndDate: isSet(object.unlockEndDate) ? String(object.unlockEndDate) : "",
+      unlockEndTime: isSet(object.unlockEndTime) ? String(object.unlockEndTime) : "",
     };
   },
 
@@ -858,6 +884,12 @@ export const ss2cAccountLoginRes = {
     if (message.banTimeEndMs !== 0) {
       obj.banTimeEndMs = Math.round(message.banTimeEndMs);
     }
+    if (message.unlockEndDate !== "") {
+      obj.unlockEndDate = message.unlockEndDate;
+    }
+    if (message.unlockEndTime !== "") {
+      obj.unlockEndTime = message.unlockEndTime;
+    }
     return obj;
   },
 
@@ -878,6 +910,8 @@ export const ss2cAccountLoginRes = {
     message.secretToken = object.secretToken ?? "";
     message.banTimeBeginMs = object.banTimeBeginMs ?? 0;
     message.banTimeEndMs = object.banTimeEndMs ?? 0;
+    message.unlockEndDate = object.unlockEndDate ?? "";
+    message.unlockEndTime = object.unlockEndTime ?? "";
     return message;
   },
 };

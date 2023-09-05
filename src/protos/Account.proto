@@ -69,6 +69,8 @@ message SS2C_ACCOUNT_LOGIN_RES {
   string secretToken = 8;
   uint64 banTime_begin_ms = 9;
   uint64 banTime_end_ms = 10;
+  string unlockEndDate = 11;
+  string unlockEndTime = 12;
 }
 
 message SC2S_ACCOUNT_CHARACTER_CREATE_REQ {
