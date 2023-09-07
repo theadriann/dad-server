@@ -265,6 +265,7 @@ message Define_Hack {
     CHEATER = 1;
     INAPPROPRIATE_NAME = 2;
     ETC = 3;
+    RMT = 4;
   }
 
 }

@@ -389,6 +389,15 @@ export interface C2SIronShieldReportPOST {
   reason: string;
 }
 
+export interface C2SBanCheckHardwarePOST {
+  accountId: string;
+  hIds: string[];
+}
+
+export interface S2CBanCheckHardwarePOSTResponse {
+  isBanTarget: number;
+}
+
 function createBaseS2CGameEnterUserJson(): S2CGameEnterUserJson {
   return {
     restUrl: "",
@@ -5086,6 +5095,139 @@ export const C2SIronShieldReportPOST = {
     message.characterId = object.characterId ?? "";
     message.originNickname = object.originNickname ?? "";
     message.reason = object.reason ?? "";
+    return message;
+  },
+};
+
+function createBaseC2SBanCheckHardwarePOST(): C2SBanCheckHardwarePOST {
+  return { accountId: "", hIds: [] };
+}
+
+export const C2SBanCheckHardwarePOST = {
+  encode(message: C2SBanCheckHardwarePOST, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.accountId !== "") {
+      writer.uint32(10).string(message.accountId);
+    }
+    for (const v of message.hIds) {
+      writer.uint32(18).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): C2SBanCheckHardwarePOST {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseC2SBanCheckHardwarePOST();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.accountId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.hIds.push(reader.string());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): C2SBanCheckHardwarePOST {
+    return {
+      accountId: isSet(object.accountId) ? String(object.accountId) : "",
+      hIds: Array.isArray(object?.hIds) ? object.hIds.map((e: any) => String(e)) : [],
+    };
+  },
+
+  toJSON(message: C2SBanCheckHardwarePOST): unknown {
+    const obj: any = {};
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.hIds?.length) {
+      obj.hIds = message.hIds;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<C2SBanCheckHardwarePOST>, I>>(base?: I): C2SBanCheckHardwarePOST {
+    return C2SBanCheckHardwarePOST.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<C2SBanCheckHardwarePOST>, I>>(object: I): C2SBanCheckHardwarePOST {
+    const message = createBaseC2SBanCheckHardwarePOST();
+    message.accountId = object.accountId ?? "";
+    message.hIds = object.hIds?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseS2CBanCheckHardwarePOSTResponse(): S2CBanCheckHardwarePOSTResponse {
+  return { isBanTarget: 0 };
+}
+
+export const S2CBanCheckHardwarePOSTResponse = {
+  encode(message: S2CBanCheckHardwarePOSTResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.isBanTarget !== 0) {
+      writer.uint32(8).uint32(message.isBanTarget);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): S2CBanCheckHardwarePOSTResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseS2CBanCheckHardwarePOSTResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.isBanTarget = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): S2CBanCheckHardwarePOSTResponse {
+    return { isBanTarget: isSet(object.isBanTarget) ? Number(object.isBanTarget) : 0 };
+  },
+
+  toJSON(message: S2CBanCheckHardwarePOSTResponse): unknown {
+    const obj: any = {};
+    if (message.isBanTarget !== 0) {
+      obj.isBanTarget = Math.round(message.isBanTarget);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<S2CBanCheckHardwarePOSTResponse>, I>>(base?: I): S2CBanCheckHardwarePOSTResponse {
+    return S2CBanCheckHardwarePOSTResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<S2CBanCheckHardwarePOSTResponse>, I>>(
+    object: I,
+  ): S2CBanCheckHardwarePOSTResponse {
+    const message = createBaseS2CBanCheckHardwarePOSTResponse();
+    message.isBanTarget = object.isBanTarget ?? 0;
     return message;
   },
 };

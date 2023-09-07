@@ -1451,6 +1451,7 @@ export enum DefineHack_banType {
   CHEATER = 1,
   INAPPROPRIATE_NAME = 2,
   ETC = 3,
+  RMT = 4,
   UNRECOGNIZED = -1,
 }
 
@@ -1468,6 +1469,9 @@ export function defineHack_banTypeFromJSON(object: any): DefineHack_banType {
     case 3:
     case "ETC":
       return DefineHack_banType.ETC;
+    case 4:
+    case "RMT":
+      return DefineHack_banType.RMT;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -1485,6 +1489,8 @@ export function defineHack_banTypeToJSON(object: DefineHack_banType): string {
       return "INAPPROPRIATE_NAME";
     case DefineHack_banType.ETC:
       return "ETC";
+    case DefineHack_banType.RMT:
+      return "RMT";
     case DefineHack_banType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

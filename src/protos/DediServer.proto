@@ -326,3 +326,12 @@ message C2S_IronShield_Report_POST {
   string reason = 8;
 }
 
+message C2S_BanCheck_Hardware_POST {
+  string accountId = 1;
+  repeated string hIds = 2;
+}
+
+message S2C_BanCheck_Hardware_POST_Response {
+  uint32 isBanTarget = 1;
+}
+

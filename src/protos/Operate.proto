@@ -305,3 +305,30 @@ message Operate_AllIronShieldList {
   repeated .DC.Packet.Operate_OperateIronShieldInfo ironShield = 1;
 }
 
+message ReasonSearchBanUserInfo {
+  uint64 accountId = 1;
+  string nickname = 2;
+  string reason = 3;
+  int32 banType = 4;
+  string comment = 5;
+  string beginTime = 6;
+  string endTime = 7;
+  string registerTime = 8;
+}
+
+message Operate_SearchHackReasonResult {
+  repeated .DC.Packet.ReasonSearchBanUserInfo infos = 1;
+}
+
+message Operate_HackUserBanBulk {
+  repeated string banAccountIds = 1;
+  string reason = 2;
+  uint32 banType = 3;
+  uint32 banTime_min = 4;
+}
+
+message Operate_HackUserUnbanBulk {
+  repeated string unbanAccountIds = 1;
+  string reason = 2;
+}
+

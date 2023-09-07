@@ -302,6 +302,33 @@ export interface OperateAllIronShieldList {
   ironShield: OperateOperateIronShieldInfo[];
 }
 
+export interface ReasonSearchBanUserInfo {
+  accountId: number;
+  nickname: string;
+  reason: string;
+  banType: number;
+  comment: string;
+  beginTime: string;
+  endTime: string;
+  registerTime: string;
+}
+
+export interface OperateSearchHackReasonResult {
+  infos: ReasonSearchBanUserInfo[];
+}
+
+export interface OperateHackUserBanBulk {
+  banAccountIds: string[];
+  reason: string;
+  banType: number;
+  banTimeMin: number;
+}
+
+export interface OperateHackUserUnbanBulk {
+  unbanAccountIds: string[];
+  reason: string;
+}
+
 function createBaseOperateBadWordList(): OperateBadWordList {
   return { badWord: [] };
 }
@@ -4818,6 +4845,418 @@ export const OperateAllIronShieldList = {
   fromPartial<I extends Exact<DeepPartial<OperateAllIronShieldList>, I>>(object: I): OperateAllIronShieldList {
     const message = createBaseOperateAllIronShieldList();
     message.ironShield = object.ironShield?.map((e) => OperateOperateIronShieldInfo.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseReasonSearchBanUserInfo(): ReasonSearchBanUserInfo {
+  return {
+    accountId: 0,
+    nickname: "",
+    reason: "",
+    banType: 0,
+    comment: "",
+    beginTime: "",
+    endTime: "",
+    registerTime: "",
+  };
+}
+
+export const ReasonSearchBanUserInfo = {
+  encode(message: ReasonSearchBanUserInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.accountId !== 0) {
+      writer.uint32(8).uint64(message.accountId);
+    }
+    if (message.nickname !== "") {
+      writer.uint32(18).string(message.nickname);
+    }
+    if (message.reason !== "") {
+      writer.uint32(26).string(message.reason);
+    }
+    if (message.banType !== 0) {
+      writer.uint32(32).int32(message.banType);
+    }
+    if (message.comment !== "") {
+      writer.uint32(42).string(message.comment);
+    }
+    if (message.beginTime !== "") {
+      writer.uint32(50).string(message.beginTime);
+    }
+    if (message.endTime !== "") {
+      writer.uint32(58).string(message.endTime);
+    }
+    if (message.registerTime !== "") {
+      writer.uint32(66).string(message.registerTime);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ReasonSearchBanUserInfo {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseReasonSearchBanUserInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.accountId = longToNumber(reader.uint64() as Long);
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.nickname = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.reason = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.banType = reader.int32();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.comment = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.beginTime = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.endTime = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.registerTime = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ReasonSearchBanUserInfo {
+    return {
+      accountId: isSet(object.accountId) ? Number(object.accountId) : 0,
+      nickname: isSet(object.nickname) ? String(object.nickname) : "",
+      reason: isSet(object.reason) ? String(object.reason) : "",
+      banType: isSet(object.banType) ? Number(object.banType) : 0,
+      comment: isSet(object.comment) ? String(object.comment) : "",
+      beginTime: isSet(object.beginTime) ? String(object.beginTime) : "",
+      endTime: isSet(object.endTime) ? String(object.endTime) : "",
+      registerTime: isSet(object.registerTime) ? String(object.registerTime) : "",
+    };
+  },
+
+  toJSON(message: ReasonSearchBanUserInfo): unknown {
+    const obj: any = {};
+    if (message.accountId !== 0) {
+      obj.accountId = Math.round(message.accountId);
+    }
+    if (message.nickname !== "") {
+      obj.nickname = message.nickname;
+    }
+    if (message.reason !== "") {
+      obj.reason = message.reason;
+    }
+    if (message.banType !== 0) {
+      obj.banType = Math.round(message.banType);
+    }
+    if (message.comment !== "") {
+      obj.comment = message.comment;
+    }
+    if (message.beginTime !== "") {
+      obj.beginTime = message.beginTime;
+    }
+    if (message.endTime !== "") {
+      obj.endTime = message.endTime;
+    }
+    if (message.registerTime !== "") {
+      obj.registerTime = message.registerTime;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ReasonSearchBanUserInfo>, I>>(base?: I): ReasonSearchBanUserInfo {
+    return ReasonSearchBanUserInfo.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ReasonSearchBanUserInfo>, I>>(object: I): ReasonSearchBanUserInfo {
+    const message = createBaseReasonSearchBanUserInfo();
+    message.accountId = object.accountId ?? 0;
+    message.nickname = object.nickname ?? "";
+    message.reason = object.reason ?? "";
+    message.banType = object.banType ?? 0;
+    message.comment = object.comment ?? "";
+    message.beginTime = object.beginTime ?? "";
+    message.endTime = object.endTime ?? "";
+    message.registerTime = object.registerTime ?? "";
+    return message;
+  },
+};
+
+function createBaseOperateSearchHackReasonResult(): OperateSearchHackReasonResult {
+  return { infos: [] };
+}
+
+export const OperateSearchHackReasonResult = {
+  encode(message: OperateSearchHackReasonResult, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.infos) {
+      ReasonSearchBanUserInfo.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OperateSearchHackReasonResult {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOperateSearchHackReasonResult();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.infos.push(ReasonSearchBanUserInfo.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): OperateSearchHackReasonResult {
+    return {
+      infos: Array.isArray(object?.infos) ? object.infos.map((e: any) => ReasonSearchBanUserInfo.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: OperateSearchHackReasonResult): unknown {
+    const obj: any = {};
+    if (message.infos?.length) {
+      obj.infos = message.infos.map((e) => ReasonSearchBanUserInfo.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<OperateSearchHackReasonResult>, I>>(base?: I): OperateSearchHackReasonResult {
+    return OperateSearchHackReasonResult.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<OperateSearchHackReasonResult>, I>>(
+    object: I,
+  ): OperateSearchHackReasonResult {
+    const message = createBaseOperateSearchHackReasonResult();
+    message.infos = object.infos?.map((e) => ReasonSearchBanUserInfo.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseOperateHackUserBanBulk(): OperateHackUserBanBulk {
+  return { banAccountIds: [], reason: "", banType: 0, banTimeMin: 0 };
+}
+
+export const OperateHackUserBanBulk = {
+  encode(message: OperateHackUserBanBulk, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.banAccountIds) {
+      writer.uint32(10).string(v!);
+    }
+    if (message.reason !== "") {
+      writer.uint32(18).string(message.reason);
+    }
+    if (message.banType !== 0) {
+      writer.uint32(24).uint32(message.banType);
+    }
+    if (message.banTimeMin !== 0) {
+      writer.uint32(32).uint32(message.banTimeMin);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OperateHackUserBanBulk {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOperateHackUserBanBulk();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.banAccountIds.push(reader.string());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.reason = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.banType = reader.uint32();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.banTimeMin = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): OperateHackUserBanBulk {
+    return {
+      banAccountIds: Array.isArray(object?.banAccountIds) ? object.banAccountIds.map((e: any) => String(e)) : [],
+      reason: isSet(object.reason) ? String(object.reason) : "",
+      banType: isSet(object.banType) ? Number(object.banType) : 0,
+      banTimeMin: isSet(object.banTimeMin) ? Number(object.banTimeMin) : 0,
+    };
+  },
+
+  toJSON(message: OperateHackUserBanBulk): unknown {
+    const obj: any = {};
+    if (message.banAccountIds?.length) {
+      obj.banAccountIds = message.banAccountIds;
+    }
+    if (message.reason !== "") {
+      obj.reason = message.reason;
+    }
+    if (message.banType !== 0) {
+      obj.banType = Math.round(message.banType);
+    }
+    if (message.banTimeMin !== 0) {
+      obj.banTimeMin = Math.round(message.banTimeMin);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<OperateHackUserBanBulk>, I>>(base?: I): OperateHackUserBanBulk {
+    return OperateHackUserBanBulk.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<OperateHackUserBanBulk>, I>>(object: I): OperateHackUserBanBulk {
+    const message = createBaseOperateHackUserBanBulk();
+    message.banAccountIds = object.banAccountIds?.map((e) => e) || [];
+    message.reason = object.reason ?? "";
+    message.banType = object.banType ?? 0;
+    message.banTimeMin = object.banTimeMin ?? 0;
+    return message;
+  },
+};
+
+function createBaseOperateHackUserUnbanBulk(): OperateHackUserUnbanBulk {
+  return { unbanAccountIds: [], reason: "" };
+}
+
+export const OperateHackUserUnbanBulk = {
+  encode(message: OperateHackUserUnbanBulk, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.unbanAccountIds) {
+      writer.uint32(10).string(v!);
+    }
+    if (message.reason !== "") {
+      writer.uint32(18).string(message.reason);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OperateHackUserUnbanBulk {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOperateHackUserUnbanBulk();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.unbanAccountIds.push(reader.string());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.reason = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): OperateHackUserUnbanBulk {
+    return {
+      unbanAccountIds: Array.isArray(object?.unbanAccountIds) ? object.unbanAccountIds.map((e: any) => String(e)) : [],
+      reason: isSet(object.reason) ? String(object.reason) : "",
+    };
+  },
+
+  toJSON(message: OperateHackUserUnbanBulk): unknown {
+    const obj: any = {};
+    if (message.unbanAccountIds?.length) {
+      obj.unbanAccountIds = message.unbanAccountIds;
+    }
+    if (message.reason !== "") {
+      obj.reason = message.reason;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<OperateHackUserUnbanBulk>, I>>(base?: I): OperateHackUserUnbanBulk {
+    return OperateHackUserUnbanBulk.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<OperateHackUserUnbanBulk>, I>>(object: I): OperateHackUserUnbanBulk {
+    const message = createBaseOperateHackUserUnbanBulk();
+    message.unbanAccountIds = object.unbanAccountIds?.map((e) => e) || [];
+    message.reason = object.reason ?? "";
     return message;
   },
 };
