@@ -36,7 +36,7 @@ message SS2C_SHOP_ITEM_BUY_RES {
   uint32 paymentMethod = 4;
 }
 
-message SGIFT_CODE_REWARD_INFO {
+message SREWARD_INFO {
   string rewardType = 1;
   string stockId = 2;
 }
@@ -47,7 +47,7 @@ message SC2S_SHOP_ENTER_GIFT_CODE_REQ {
 
 message SS2C_SHOP_ENTER_GIFT_CODE_RES {
   uint32 result = 1;
-  repeated .DC.Packet.SGIFT_CODE_REWARD_INFO rewards = 2;
+  repeated .DC.Packet.SREWARD_INFO rewards = 2;
 }
 
 message SC2S_SHOP_RED_STONE_SHARD_INFO_REQ {
@@ -66,5 +66,46 @@ message SSHOP_RED_STONE_SHARD_INFO {
 message SS2C_SHOP_RED_STONE_SHARD_INFO_RES {
   repeated .DC.Packet.SSHOP_RED_STONE_SHARD_INFO infos = 1;
   uint32 loginType = 2;
+}
+
+message SC2S_SHOP_RED_STONE_SHARD_BUY_REQ {
+  int32 productIndex = 1;
+  int32 localPort = 2;
+}
+
+message SS2C_SHOP_RED_STONE_SHARD_BUY_RES {
+  int32 result = 1;
+  int64 trxId = 2;
+  string trxIdStr = 3;
+  string platformId = 4;
+  string offerItemId = 5;
+  string sandboxId = 6;
+}
+
+message SC2S_SHOP_RED_STONE_SHARD_BUY_CHECK_REQ {
+  uint32 appId = 1;
+  uint64 orderId = 2;
+  int32 authorized = 3;
+  string transactionId = 4;
+}
+
+message SS2C_SHOP_RED_STONE_SHARD_BUY_CHECK_RES {
+  int32 result = 1;
+}
+
+message SC2S_SHOP_LEGEND_UPGRADE_REQ {
+}
+
+message SS2C_SHOP_LEGEND_UPGRADE_RES {
+  int32 result = 1;
+  string upgradeDate = 2;
+  string upgradeTime = 3;
+}
+
+message SC2S_REFRESH_RED_STONE_SHARD_REQ {
+  string accessId = 1;
+}
+
+message SS2C_REFRESH_RED_STONE_SHARD_RES {
 }
 

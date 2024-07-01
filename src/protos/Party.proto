@@ -57,6 +57,7 @@ message SC2S_PARTY_READY_REQ {
 
 message SS2C_PARTY_READY_RES {
   uint32 result = 1;
+  uint32 restrictionMS = 2;
 }
 
 message SS2C_PARTY_EQUIP_ITEM_CHANGE_NOT {
@@ -102,8 +103,21 @@ message SS2C_PARTY_ITEM_SKIN_CHANGE_NOT {
   string newItemSkinId = 4;
 }
 
-message SS2C_PARTY_GAME_DIFFICULTY_CHANGE_NOT {
-  uint32 gameDifficultyTypeIndex = 1;
+message SS2C_PARTY_ARMOR_SKIN_LIST_NOT {
+  string accountId = 1;
+  string characterId = 2;
+  repeated string armorSkinIdList = 3;
+}
+
+message SS2C_PARTY_ARMOR_SKIN_CHANGE_NOT {
+  string accountId = 1;
+  string characterId = 2;
+  string oldItemSkinId = 3;
+  string newItemSkinId = 4;
+}
+
+message SS2C_PARTY_GAME_TYPE_CHANGE_NOT {
+  uint32 gameTypeIndex = 1;
 }
 
 message SC2S_PARTY_MEMBER_KICK_REQ {

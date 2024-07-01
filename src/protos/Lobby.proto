@@ -46,13 +46,13 @@ message SS2C_LOBBY_ENTER_FROM_GAME_RES {
   uint32 result = 1;
 }
 
-message SC2S_LOBBY_GAME_DIFFICULTY_SELECT_REQ {
-  uint32 gameDifficultyTypeIndex = 1;
+message SC2S_LOBBY_GAME_TYPE_SELECT_REQ {
+  uint32 gameTypeIndex = 1;
 }
 
-message SS2C_LOBBY_GAME_DIFFICULTY_SELECT_RES {
+message SS2C_LOBBY_GAME_TYPE_SELECT_RES {
   uint32 result = 1;
-  uint32 gameDifficultyTypeIndex = 2;
+  uint32 gameTypeIndex = 2;
 }
 
 message SACCOUNT_CURRENCY_INFO {
@@ -71,9 +71,37 @@ message SS2C_LOBBY_CHARACTER_LOBBY_EMOTE_NOT {
 
 message SREPORT_PUNISH_INFO {
   .DC.Packet.SACCOUNT_NICKNAME nickname = 1;
+  int32 reportBanType = 2;
 }
 
 message SS2C_LOBBY_REPORT_PUNISH_LIST_NOT {
+  enum REPORT_BAN_TYPE {
+    NONE_BAN_TYPE = 0;
+    PERMANENT_BAN = 1;
+    TEMPORARY_BAN = 2;
+  }
+
   repeated .DC.Packet.SREPORT_PUNISH_INFO infos = 1;
+}
+
+message SC2S_USER_CHARACTER_GAME_STAT_INFO_REQ {
+  string seasonId = 1;
+  int32 gameType = 2;
+  string dungeonIdTag = 3;
+}
+
+message SS2C_USER_CHARACTER_GAME_STAT_INFO_RES {
+  string seasonId = 1;
+  int32 gameType = 2;
+  repeated .DC.Packet.SGameStat gameStats = 3;
+  string dungeonIdTag = 4;
+}
+
+message SC2S_KNIGHT_PROGRAM_LINK_SELECT_REQ {
+}
+
+message SS2C_KNIGHT_PROGRAM_LINK_SELECT_RES {
+  int32 result = 1;
+  string url = 2;
 }
 

@@ -1,4 +1,5 @@
 /* eslint-disable */
+import Long from "long";
 import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "DC.Packet";
@@ -33,7 +34,7 @@ export interface ss2cShopItemBuyRes {
   paymentMethod: number;
 }
 
-export interface sgiftCodeRewardInfo {
+export interface srewardInfo {
   rewardType: string;
   stockId: string;
 }
@@ -44,7 +45,7 @@ export interface sc2sShopEnterGiftCodeReq {
 
 export interface ss2cShopEnterGiftCodeRes {
   result: number;
-  rewards: sgiftCodeRewardInfo[];
+  rewards: srewardInfo[];
 }
 
 export interface sc2sShopRedStoneShardInfoReq {
@@ -63,6 +64,47 @@ export interface sshopRedStoneShardInfo {
 export interface ss2cShopRedStoneShardInfoRes {
   infos: sshopRedStoneShardInfo[];
   loginType: number;
+}
+
+export interface sc2sShopRedStoneShardBuyReq {
+  productIndex: number;
+  localPort: number;
+}
+
+export interface ss2cShopRedStoneShardBuyRes {
+  result: number;
+  trxId: number;
+  trxIdStr: string;
+  platformId: string;
+  offerItemId: string;
+  sandboxId: string;
+}
+
+export interface sc2sShopRedStoneShardBuyCheckReq {
+  appId: number;
+  orderId: number;
+  authorized: number;
+  transactionId: string;
+}
+
+export interface ss2cShopRedStoneShardBuyCheckRes {
+  result: number;
+}
+
+export interface sc2sShopLegendUpgradeReq {
+}
+
+export interface ss2cShopLegendUpgradeRes {
+  result: number;
+  upgradeDate: string;
+  upgradeTime: string;
+}
+
+export interface sc2sRefreshRedStoneShardReq {
+  accessId: string;
+}
+
+export interface ss2cRefreshRedStoneShardRes {
 }
 
 function createBasesshopItemBaseInfo(): sshopItemBaseInfo {
@@ -509,12 +551,12 @@ export const ss2cShopItemBuyRes = {
   },
 };
 
-function createBasesgiftCodeRewardInfo(): sgiftCodeRewardInfo {
+function createBasesrewardInfo(): srewardInfo {
   return { rewardType: "", stockId: "" };
 }
 
-export const sgiftCodeRewardInfo = {
-  encode(message: sgiftCodeRewardInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const srewardInfo = {
+  encode(message: srewardInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.rewardType !== "") {
       writer.uint32(10).string(message.rewardType);
     }
@@ -524,10 +566,10 @@ export const sgiftCodeRewardInfo = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): sgiftCodeRewardInfo {
+  decode(input: _m0.Reader | Uint8Array, length?: number): srewardInfo {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasesgiftCodeRewardInfo();
+    const message = createBasesrewardInfo();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -554,14 +596,14 @@ export const sgiftCodeRewardInfo = {
     return message;
   },
 
-  fromJSON(object: any): sgiftCodeRewardInfo {
+  fromJSON(object: any): srewardInfo {
     return {
       rewardType: isSet(object.rewardType) ? String(object.rewardType) : "",
       stockId: isSet(object.stockId) ? String(object.stockId) : "",
     };
   },
 
-  toJSON(message: sgiftCodeRewardInfo): unknown {
+  toJSON(message: srewardInfo): unknown {
     const obj: any = {};
     if (message.rewardType !== "") {
       obj.rewardType = message.rewardType;
@@ -572,11 +614,11 @@ export const sgiftCodeRewardInfo = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<sgiftCodeRewardInfo>, I>>(base?: I): sgiftCodeRewardInfo {
-    return sgiftCodeRewardInfo.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<srewardInfo>, I>>(base?: I): srewardInfo {
+    return srewardInfo.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<sgiftCodeRewardInfo>, I>>(object: I): sgiftCodeRewardInfo {
-    const message = createBasesgiftCodeRewardInfo();
+  fromPartial<I extends Exact<DeepPartial<srewardInfo>, I>>(object: I): srewardInfo {
+    const message = createBasesrewardInfo();
     message.rewardType = object.rewardType ?? "";
     message.stockId = object.stockId ?? "";
     return message;
@@ -650,7 +692,7 @@ export const ss2cShopEnterGiftCodeRes = {
       writer.uint32(8).uint32(message.result);
     }
     for (const v of message.rewards) {
-      sgiftCodeRewardInfo.encode(v!, writer.uint32(18).fork()).ldelim();
+      srewardInfo.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -674,7 +716,7 @@ export const ss2cShopEnterGiftCodeRes = {
             break;
           }
 
-          message.rewards.push(sgiftCodeRewardInfo.decode(reader, reader.uint32()));
+          message.rewards.push(srewardInfo.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -688,7 +730,7 @@ export const ss2cShopEnterGiftCodeRes = {
   fromJSON(object: any): ss2cShopEnterGiftCodeRes {
     return {
       result: isSet(object.result) ? Number(object.result) : 0,
-      rewards: Array.isArray(object?.rewards) ? object.rewards.map((e: any) => sgiftCodeRewardInfo.fromJSON(e)) : [],
+      rewards: Array.isArray(object?.rewards) ? object.rewards.map((e: any) => srewardInfo.fromJSON(e)) : [],
     };
   },
 
@@ -698,7 +740,7 @@ export const ss2cShopEnterGiftCodeRes = {
       obj.result = Math.round(message.result);
     }
     if (message.rewards?.length) {
-      obj.rewards = message.rewards.map((e) => sgiftCodeRewardInfo.toJSON(e));
+      obj.rewards = message.rewards.map((e) => srewardInfo.toJSON(e));
     }
     return obj;
   },
@@ -709,7 +751,7 @@ export const ss2cShopEnterGiftCodeRes = {
   fromPartial<I extends Exact<DeepPartial<ss2cShopEnterGiftCodeRes>, I>>(object: I): ss2cShopEnterGiftCodeRes {
     const message = createBasess2cShopEnterGiftCodeRes();
     message.result = object.result ?? 0;
-    message.rewards = object.rewards?.map((e) => sgiftCodeRewardInfo.fromPartial(e)) || [];
+    message.rewards = object.rewards?.map((e) => srewardInfo.fromPartial(e)) || [];
     return message;
   },
 };
@@ -988,6 +1030,634 @@ export const ss2cShopRedStoneShardInfoRes = {
   },
 };
 
+function createBasesc2sShopRedStoneShardBuyReq(): sc2sShopRedStoneShardBuyReq {
+  return { productIndex: 0, localPort: 0 };
+}
+
+export const sc2sShopRedStoneShardBuyReq = {
+  encode(message: sc2sShopRedStoneShardBuyReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.productIndex !== 0) {
+      writer.uint32(8).int32(message.productIndex);
+    }
+    if (message.localPort !== 0) {
+      writer.uint32(16).int32(message.localPort);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sShopRedStoneShardBuyReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sShopRedStoneShardBuyReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.productIndex = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.localPort = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): sc2sShopRedStoneShardBuyReq {
+    return {
+      productIndex: isSet(object.productIndex) ? Number(object.productIndex) : 0,
+      localPort: isSet(object.localPort) ? Number(object.localPort) : 0,
+    };
+  },
+
+  toJSON(message: sc2sShopRedStoneShardBuyReq): unknown {
+    const obj: any = {};
+    if (message.productIndex !== 0) {
+      obj.productIndex = Math.round(message.productIndex);
+    }
+    if (message.localPort !== 0) {
+      obj.localPort = Math.round(message.localPort);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sShopRedStoneShardBuyReq>, I>>(base?: I): sc2sShopRedStoneShardBuyReq {
+    return sc2sShopRedStoneShardBuyReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sShopRedStoneShardBuyReq>, I>>(object: I): sc2sShopRedStoneShardBuyReq {
+    const message = createBasesc2sShopRedStoneShardBuyReq();
+    message.productIndex = object.productIndex ?? 0;
+    message.localPort = object.localPort ?? 0;
+    return message;
+  },
+};
+
+function createBasess2cShopRedStoneShardBuyRes(): ss2cShopRedStoneShardBuyRes {
+  return { result: 0, trxId: 0, trxIdStr: "", platformId: "", offerItemId: "", sandboxId: "" };
+}
+
+export const ss2cShopRedStoneShardBuyRes = {
+  encode(message: ss2cShopRedStoneShardBuyRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.result !== 0) {
+      writer.uint32(8).int32(message.result);
+    }
+    if (message.trxId !== 0) {
+      writer.uint32(16).int64(message.trxId);
+    }
+    if (message.trxIdStr !== "") {
+      writer.uint32(26).string(message.trxIdStr);
+    }
+    if (message.platformId !== "") {
+      writer.uint32(34).string(message.platformId);
+    }
+    if (message.offerItemId !== "") {
+      writer.uint32(42).string(message.offerItemId);
+    }
+    if (message.sandboxId !== "") {
+      writer.uint32(50).string(message.sandboxId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cShopRedStoneShardBuyRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cShopRedStoneShardBuyRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.result = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.trxId = longToNumber(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.trxIdStr = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.platformId = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.offerItemId = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.sandboxId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cShopRedStoneShardBuyRes {
+    return {
+      result: isSet(object.result) ? Number(object.result) : 0,
+      trxId: isSet(object.trxId) ? Number(object.trxId) : 0,
+      trxIdStr: isSet(object.trxIdStr) ? String(object.trxIdStr) : "",
+      platformId: isSet(object.platformId) ? String(object.platformId) : "",
+      offerItemId: isSet(object.offerItemId) ? String(object.offerItemId) : "",
+      sandboxId: isSet(object.sandboxId) ? String(object.sandboxId) : "",
+    };
+  },
+
+  toJSON(message: ss2cShopRedStoneShardBuyRes): unknown {
+    const obj: any = {};
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.trxId !== 0) {
+      obj.trxId = Math.round(message.trxId);
+    }
+    if (message.trxIdStr !== "") {
+      obj.trxIdStr = message.trxIdStr;
+    }
+    if (message.platformId !== "") {
+      obj.platformId = message.platformId;
+    }
+    if (message.offerItemId !== "") {
+      obj.offerItemId = message.offerItemId;
+    }
+    if (message.sandboxId !== "") {
+      obj.sandboxId = message.sandboxId;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cShopRedStoneShardBuyRes>, I>>(base?: I): ss2cShopRedStoneShardBuyRes {
+    return ss2cShopRedStoneShardBuyRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cShopRedStoneShardBuyRes>, I>>(object: I): ss2cShopRedStoneShardBuyRes {
+    const message = createBasess2cShopRedStoneShardBuyRes();
+    message.result = object.result ?? 0;
+    message.trxId = object.trxId ?? 0;
+    message.trxIdStr = object.trxIdStr ?? "";
+    message.platformId = object.platformId ?? "";
+    message.offerItemId = object.offerItemId ?? "";
+    message.sandboxId = object.sandboxId ?? "";
+    return message;
+  },
+};
+
+function createBasesc2sShopRedStoneShardBuyCheckReq(): sc2sShopRedStoneShardBuyCheckReq {
+  return { appId: 0, orderId: 0, authorized: 0, transactionId: "" };
+}
+
+export const sc2sShopRedStoneShardBuyCheckReq = {
+  encode(message: sc2sShopRedStoneShardBuyCheckReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.appId !== 0) {
+      writer.uint32(8).uint32(message.appId);
+    }
+    if (message.orderId !== 0) {
+      writer.uint32(16).uint64(message.orderId);
+    }
+    if (message.authorized !== 0) {
+      writer.uint32(24).int32(message.authorized);
+    }
+    if (message.transactionId !== "") {
+      writer.uint32(34).string(message.transactionId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sShopRedStoneShardBuyCheckReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sShopRedStoneShardBuyCheckReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.appId = reader.uint32();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.orderId = longToNumber(reader.uint64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.authorized = reader.int32();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.transactionId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): sc2sShopRedStoneShardBuyCheckReq {
+    return {
+      appId: isSet(object.appId) ? Number(object.appId) : 0,
+      orderId: isSet(object.orderId) ? Number(object.orderId) : 0,
+      authorized: isSet(object.authorized) ? Number(object.authorized) : 0,
+      transactionId: isSet(object.transactionId) ? String(object.transactionId) : "",
+    };
+  },
+
+  toJSON(message: sc2sShopRedStoneShardBuyCheckReq): unknown {
+    const obj: any = {};
+    if (message.appId !== 0) {
+      obj.appId = Math.round(message.appId);
+    }
+    if (message.orderId !== 0) {
+      obj.orderId = Math.round(message.orderId);
+    }
+    if (message.authorized !== 0) {
+      obj.authorized = Math.round(message.authorized);
+    }
+    if (message.transactionId !== "") {
+      obj.transactionId = message.transactionId;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sShopRedStoneShardBuyCheckReq>, I>>(
+    base?: I,
+  ): sc2sShopRedStoneShardBuyCheckReq {
+    return sc2sShopRedStoneShardBuyCheckReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sShopRedStoneShardBuyCheckReq>, I>>(
+    object: I,
+  ): sc2sShopRedStoneShardBuyCheckReq {
+    const message = createBasesc2sShopRedStoneShardBuyCheckReq();
+    message.appId = object.appId ?? 0;
+    message.orderId = object.orderId ?? 0;
+    message.authorized = object.authorized ?? 0;
+    message.transactionId = object.transactionId ?? "";
+    return message;
+  },
+};
+
+function createBasess2cShopRedStoneShardBuyCheckRes(): ss2cShopRedStoneShardBuyCheckRes {
+  return { result: 0 };
+}
+
+export const ss2cShopRedStoneShardBuyCheckRes = {
+  encode(message: ss2cShopRedStoneShardBuyCheckRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.result !== 0) {
+      writer.uint32(8).int32(message.result);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cShopRedStoneShardBuyCheckRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cShopRedStoneShardBuyCheckRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.result = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cShopRedStoneShardBuyCheckRes {
+    return { result: isSet(object.result) ? Number(object.result) : 0 };
+  },
+
+  toJSON(message: ss2cShopRedStoneShardBuyCheckRes): unknown {
+    const obj: any = {};
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cShopRedStoneShardBuyCheckRes>, I>>(
+    base?: I,
+  ): ss2cShopRedStoneShardBuyCheckRes {
+    return ss2cShopRedStoneShardBuyCheckRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cShopRedStoneShardBuyCheckRes>, I>>(
+    object: I,
+  ): ss2cShopRedStoneShardBuyCheckRes {
+    const message = createBasess2cShopRedStoneShardBuyCheckRes();
+    message.result = object.result ?? 0;
+    return message;
+  },
+};
+
+function createBasesc2sShopLegendUpgradeReq(): sc2sShopLegendUpgradeReq {
+  return {};
+}
+
+export const sc2sShopLegendUpgradeReq = {
+  encode(_: sc2sShopLegendUpgradeReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sShopLegendUpgradeReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sShopLegendUpgradeReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): sc2sShopLegendUpgradeReq {
+    return {};
+  },
+
+  toJSON(_: sc2sShopLegendUpgradeReq): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sShopLegendUpgradeReq>, I>>(base?: I): sc2sShopLegendUpgradeReq {
+    return sc2sShopLegendUpgradeReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sShopLegendUpgradeReq>, I>>(_: I): sc2sShopLegendUpgradeReq {
+    const message = createBasesc2sShopLegendUpgradeReq();
+    return message;
+  },
+};
+
+function createBasess2cShopLegendUpgradeRes(): ss2cShopLegendUpgradeRes {
+  return { result: 0, upgradeDate: "", upgradeTime: "" };
+}
+
+export const ss2cShopLegendUpgradeRes = {
+  encode(message: ss2cShopLegendUpgradeRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.result !== 0) {
+      writer.uint32(8).int32(message.result);
+    }
+    if (message.upgradeDate !== "") {
+      writer.uint32(18).string(message.upgradeDate);
+    }
+    if (message.upgradeTime !== "") {
+      writer.uint32(26).string(message.upgradeTime);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cShopLegendUpgradeRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cShopLegendUpgradeRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.result = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.upgradeDate = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.upgradeTime = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cShopLegendUpgradeRes {
+    return {
+      result: isSet(object.result) ? Number(object.result) : 0,
+      upgradeDate: isSet(object.upgradeDate) ? String(object.upgradeDate) : "",
+      upgradeTime: isSet(object.upgradeTime) ? String(object.upgradeTime) : "",
+    };
+  },
+
+  toJSON(message: ss2cShopLegendUpgradeRes): unknown {
+    const obj: any = {};
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.upgradeDate !== "") {
+      obj.upgradeDate = message.upgradeDate;
+    }
+    if (message.upgradeTime !== "") {
+      obj.upgradeTime = message.upgradeTime;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cShopLegendUpgradeRes>, I>>(base?: I): ss2cShopLegendUpgradeRes {
+    return ss2cShopLegendUpgradeRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cShopLegendUpgradeRes>, I>>(object: I): ss2cShopLegendUpgradeRes {
+    const message = createBasess2cShopLegendUpgradeRes();
+    message.result = object.result ?? 0;
+    message.upgradeDate = object.upgradeDate ?? "";
+    message.upgradeTime = object.upgradeTime ?? "";
+    return message;
+  },
+};
+
+function createBasesc2sRefreshRedStoneShardReq(): sc2sRefreshRedStoneShardReq {
+  return { accessId: "" };
+}
+
+export const sc2sRefreshRedStoneShardReq = {
+  encode(message: sc2sRefreshRedStoneShardReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.accessId !== "") {
+      writer.uint32(10).string(message.accessId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sRefreshRedStoneShardReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sRefreshRedStoneShardReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.accessId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): sc2sRefreshRedStoneShardReq {
+    return { accessId: isSet(object.accessId) ? String(object.accessId) : "" };
+  },
+
+  toJSON(message: sc2sRefreshRedStoneShardReq): unknown {
+    const obj: any = {};
+    if (message.accessId !== "") {
+      obj.accessId = message.accessId;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sRefreshRedStoneShardReq>, I>>(base?: I): sc2sRefreshRedStoneShardReq {
+    return sc2sRefreshRedStoneShardReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sRefreshRedStoneShardReq>, I>>(object: I): sc2sRefreshRedStoneShardReq {
+    const message = createBasesc2sRefreshRedStoneShardReq();
+    message.accessId = object.accessId ?? "";
+    return message;
+  },
+};
+
+function createBasess2cRefreshRedStoneShardRes(): ss2cRefreshRedStoneShardRes {
+  return {};
+}
+
+export const ss2cRefreshRedStoneShardRes = {
+  encode(_: ss2cRefreshRedStoneShardRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cRefreshRedStoneShardRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cRefreshRedStoneShardRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): ss2cRefreshRedStoneShardRes {
+    return {};
+  },
+
+  toJSON(_: ss2cRefreshRedStoneShardRes): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cRefreshRedStoneShardRes>, I>>(base?: I): ss2cRefreshRedStoneShardRes {
+    return ss2cRefreshRedStoneShardRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cRefreshRedStoneShardRes>, I>>(_: I): ss2cRefreshRedStoneShardRes {
+    const message = createBasess2cRefreshRedStoneShardRes();
+    return message;
+  },
+};
+
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
+
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
@@ -998,6 +1668,18 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function longToNumber(long: Long): number {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
+}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

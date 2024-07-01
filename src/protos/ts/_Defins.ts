@@ -135,6 +135,7 @@ export enum DefineAccount_LoginType {
   EPIC = 2,
   IRONMACE = 3,
   CHAF = 4,
+  MICROSOFT = 5,
   UNRECOGNIZED = -1,
 }
 
@@ -155,6 +156,9 @@ export function defineAccount_LoginTypeFromJSON(object: any): DefineAccount_Logi
     case 4:
     case "CHAF":
       return DefineAccount_LoginType.CHAF;
+    case 5:
+    case "MICROSOFT":
+      return DefineAccount_LoginType.MICROSOFT;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -174,7 +178,48 @@ export function defineAccount_LoginTypeToJSON(object: DefineAccount_LoginType): 
       return "IRONMACE";
     case DefineAccount_LoginType.CHAF:
       return "CHAF";
+    case DefineAccount_LoginType.MICROSOFT:
+      return "MICROSOFT";
     case DefineAccount_LoginType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum DefineAccount_AccountStatus {
+  ACCOUNT_STATUS_NONE = 0,
+  ACCOUNT_STATUS_SQUIRE = 1,
+  ACCOUNT_STATUS_LEGEND = 2,
+  UNRECOGNIZED = -1,
+}
+
+export function defineAccount_AccountStatusFromJSON(object: any): DefineAccount_AccountStatus {
+  switch (object) {
+    case 0:
+    case "ACCOUNT_STATUS_NONE":
+      return DefineAccount_AccountStatus.ACCOUNT_STATUS_NONE;
+    case 1:
+    case "ACCOUNT_STATUS_SQUIRE":
+      return DefineAccount_AccountStatus.ACCOUNT_STATUS_SQUIRE;
+    case 2:
+    case "ACCOUNT_STATUS_LEGEND":
+      return DefineAccount_AccountStatus.ACCOUNT_STATUS_LEGEND;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return DefineAccount_AccountStatus.UNRECOGNIZED;
+  }
+}
+
+export function defineAccount_AccountStatusToJSON(object: DefineAccount_AccountStatus): string {
+  switch (object) {
+    case DefineAccount_AccountStatus.ACCOUNT_STATUS_NONE:
+      return "ACCOUNT_STATUS_NONE";
+    case DefineAccount_AccountStatus.ACCOUNT_STATUS_SQUIRE:
+      return "ACCOUNT_STATUS_SQUIRE";
+    case DefineAccount_AccountStatus.ACCOUNT_STATUS_LEGEND:
+      return "ACCOUNT_STATUS_LEGEND";
+    case DefineAccount_AccountStatus.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }
@@ -306,7 +351,13 @@ export enum DefineItem_InventoryId {
   BAG = 2,
   EQUIPMENT = 3,
   STORAGE = 4,
-  MAX = 5,
+  PURCHASED_STORAGE_0 = 5,
+  PURCHASED_STORAGE_1 = 6,
+  PURCHASED_STORAGE_2 = 7,
+  PURCHASED_STORAGE_3 = 8,
+  PURCHASED_STORAGE_4 = 9,
+  SHARED_STASH_0 = 20,
+  MAX = 30,
   UNRECOGNIZED = -1,
 }
 
@@ -328,6 +379,24 @@ export function defineItem_InventoryIdFromJSON(object: any): DefineItem_Inventor
     case "STORAGE":
       return DefineItem_InventoryId.STORAGE;
     case 5:
+    case "PURCHASED_STORAGE_0":
+      return DefineItem_InventoryId.PURCHASED_STORAGE_0;
+    case 6:
+    case "PURCHASED_STORAGE_1":
+      return DefineItem_InventoryId.PURCHASED_STORAGE_1;
+    case 7:
+    case "PURCHASED_STORAGE_2":
+      return DefineItem_InventoryId.PURCHASED_STORAGE_2;
+    case 8:
+    case "PURCHASED_STORAGE_3":
+      return DefineItem_InventoryId.PURCHASED_STORAGE_3;
+    case 9:
+    case "PURCHASED_STORAGE_4":
+      return DefineItem_InventoryId.PURCHASED_STORAGE_4;
+    case 20:
+    case "SHARED_STASH_0":
+      return DefineItem_InventoryId.SHARED_STASH_0;
+    case 30:
     case "MAX":
       return DefineItem_InventoryId.MAX;
     case -1:
@@ -349,9 +418,141 @@ export function defineItem_InventoryIdToJSON(object: DefineItem_InventoryId): st
       return "EQUIPMENT";
     case DefineItem_InventoryId.STORAGE:
       return "STORAGE";
+    case DefineItem_InventoryId.PURCHASED_STORAGE_0:
+      return "PURCHASED_STORAGE_0";
+    case DefineItem_InventoryId.PURCHASED_STORAGE_1:
+      return "PURCHASED_STORAGE_1";
+    case DefineItem_InventoryId.PURCHASED_STORAGE_2:
+      return "PURCHASED_STORAGE_2";
+    case DefineItem_InventoryId.PURCHASED_STORAGE_3:
+      return "PURCHASED_STORAGE_3";
+    case DefineItem_InventoryId.PURCHASED_STORAGE_4:
+      return "PURCHASED_STORAGE_4";
+    case DefineItem_InventoryId.SHARED_STASH_0:
+      return "SHARED_STASH_0";
     case DefineItem_InventoryId.MAX:
       return "MAX";
     case DefineItem_InventoryId.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum DefineItem_rarityType {
+  NONE_RARITY_TYPE = 0,
+  POOR = 1,
+  COMMON = 2,
+  UNCOMMON = 3,
+  RARE = 4,
+  EPIC = 5,
+  LEGEND = 6,
+  UNIQUE = 7,
+  UNRECOGNIZED = -1,
+}
+
+export function defineItem_rarityTypeFromJSON(object: any): DefineItem_rarityType {
+  switch (object) {
+    case 0:
+    case "NONE_RARITY_TYPE":
+      return DefineItem_rarityType.NONE_RARITY_TYPE;
+    case 1:
+    case "POOR":
+      return DefineItem_rarityType.POOR;
+    case 2:
+    case "COMMON":
+      return DefineItem_rarityType.COMMON;
+    case 3:
+    case "UNCOMMON":
+      return DefineItem_rarityType.UNCOMMON;
+    case 4:
+    case "RARE":
+      return DefineItem_rarityType.RARE;
+    case 5:
+    case "EPIC":
+      return DefineItem_rarityType.EPIC;
+    case 6:
+    case "LEGEND":
+      return DefineItem_rarityType.LEGEND;
+    case 7:
+    case "UNIQUE":
+      return DefineItem_rarityType.UNIQUE;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return DefineItem_rarityType.UNRECOGNIZED;
+  }
+}
+
+export function defineItem_rarityTypeToJSON(object: DefineItem_rarityType): string {
+  switch (object) {
+    case DefineItem_rarityType.NONE_RARITY_TYPE:
+      return "NONE_RARITY_TYPE";
+    case DefineItem_rarityType.POOR:
+      return "POOR";
+    case DefineItem_rarityType.COMMON:
+      return "COMMON";
+    case DefineItem_rarityType.UNCOMMON:
+      return "UNCOMMON";
+    case DefineItem_rarityType.RARE:
+      return "RARE";
+    case DefineItem_rarityType.EPIC:
+      return "EPIC";
+    case DefineItem_rarityType.LEGEND:
+      return "LEGEND";
+    case DefineItem_rarityType.UNIQUE:
+      return "UNIQUE";
+    case DefineItem_rarityType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum DefineItem_LootState {
+  NONE_SOURCE = 0,
+  SUPPLIED = 1,
+  LOOTED = 2,
+  HANDLED = 3,
+  CRAFT = 4,
+  UNRECOGNIZED = -1,
+}
+
+export function defineItem_LootStateFromJSON(object: any): DefineItem_LootState {
+  switch (object) {
+    case 0:
+    case "NONE_SOURCE":
+      return DefineItem_LootState.NONE_SOURCE;
+    case 1:
+    case "SUPPLIED":
+      return DefineItem_LootState.SUPPLIED;
+    case 2:
+    case "LOOTED":
+      return DefineItem_LootState.LOOTED;
+    case 3:
+    case "HANDLED":
+      return DefineItem_LootState.HANDLED;
+    case 4:
+    case "CRAFT":
+      return DefineItem_LootState.CRAFT;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return DefineItem_LootState.UNRECOGNIZED;
+  }
+}
+
+export function defineItem_LootStateToJSON(object: DefineItem_LootState): string {
+  switch (object) {
+    case DefineItem_LootState.NONE_SOURCE:
+      return "NONE_SOURCE";
+    case DefineItem_LootState.SUPPLIED:
+      return "SUPPLIED";
+    case DefineItem_LootState.LOOTED:
+      return "LOOTED";
+    case DefineItem_LootState.HANDLED:
+      return "HANDLED";
+    case DefineItem_LootState.CRAFT:
+      return "CRAFT";
+    case DefineItem_LootState.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }
@@ -729,16 +930,172 @@ export function defineMatch_MatchRegionToJSON(object: DefineMatch_MatchRegion): 
   }
 }
 
+export interface DefineStat {
+}
+
+export enum DefineStat_StatType {
+  NONE_STAT = 0,
+  GAMES_PLAYED = 1,
+  EXTRACTIONS = 2,
+  DOWN_PORTALS_TAKEN = 3,
+  KILLS = 4,
+  DEATHS = 5,
+  TREASURE_VALUE_EXTRACTED = 6,
+  MONSTERS_KILLED = 7,
+  SUBBOSSES_KILLED = 8,
+  BOSSES_KILLED = 9,
+  ORNATE_CHESTS_OPENED = 10,
+  ROYAL_COFFINS_OPENED = 11,
+  LIONS_HEAD_CHESTS_OPENED = 12,
+  GOLDEN_CHESTS_OPENED = 13,
+  MARVELOUS_CHESTS_OPENED = 14,
+  ALLIES_REVIVED = 15,
+  PLAYER_KILL_ASSIST = 16,
+  MONSTER_KILL_ASSIST = 17,
+  SUBBOSS_KILL_ASSIST = 18,
+  BOSS_KILL_ASSIST = 19,
+  UNRECOGNIZED = -1,
+}
+
+export function defineStat_StatTypeFromJSON(object: any): DefineStat_StatType {
+  switch (object) {
+    case 0:
+    case "NONE_STAT":
+      return DefineStat_StatType.NONE_STAT;
+    case 1:
+    case "GAMES_PLAYED":
+      return DefineStat_StatType.GAMES_PLAYED;
+    case 2:
+    case "EXTRACTIONS":
+      return DefineStat_StatType.EXTRACTIONS;
+    case 3:
+    case "DOWN_PORTALS_TAKEN":
+      return DefineStat_StatType.DOWN_PORTALS_TAKEN;
+    case 4:
+    case "KILLS":
+      return DefineStat_StatType.KILLS;
+    case 5:
+    case "DEATHS":
+      return DefineStat_StatType.DEATHS;
+    case 6:
+    case "TREASURE_VALUE_EXTRACTED":
+      return DefineStat_StatType.TREASURE_VALUE_EXTRACTED;
+    case 7:
+    case "MONSTERS_KILLED":
+      return DefineStat_StatType.MONSTERS_KILLED;
+    case 8:
+    case "SUBBOSSES_KILLED":
+      return DefineStat_StatType.SUBBOSSES_KILLED;
+    case 9:
+    case "BOSSES_KILLED":
+      return DefineStat_StatType.BOSSES_KILLED;
+    case 10:
+    case "ORNATE_CHESTS_OPENED":
+      return DefineStat_StatType.ORNATE_CHESTS_OPENED;
+    case 11:
+    case "ROYAL_COFFINS_OPENED":
+      return DefineStat_StatType.ROYAL_COFFINS_OPENED;
+    case 12:
+    case "LIONS_HEAD_CHESTS_OPENED":
+      return DefineStat_StatType.LIONS_HEAD_CHESTS_OPENED;
+    case 13:
+    case "GOLDEN_CHESTS_OPENED":
+      return DefineStat_StatType.GOLDEN_CHESTS_OPENED;
+    case 14:
+    case "MARVELOUS_CHESTS_OPENED":
+      return DefineStat_StatType.MARVELOUS_CHESTS_OPENED;
+    case 15:
+    case "ALLIES_REVIVED":
+      return DefineStat_StatType.ALLIES_REVIVED;
+    case 16:
+    case "PLAYER_KILL_ASSIST":
+      return DefineStat_StatType.PLAYER_KILL_ASSIST;
+    case 17:
+    case "MONSTER_KILL_ASSIST":
+      return DefineStat_StatType.MONSTER_KILL_ASSIST;
+    case 18:
+    case "SUBBOSS_KILL_ASSIST":
+      return DefineStat_StatType.SUBBOSS_KILL_ASSIST;
+    case 19:
+    case "BOSS_KILL_ASSIST":
+      return DefineStat_StatType.BOSS_KILL_ASSIST;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return DefineStat_StatType.UNRECOGNIZED;
+  }
+}
+
+export function defineStat_StatTypeToJSON(object: DefineStat_StatType): string {
+  switch (object) {
+    case DefineStat_StatType.NONE_STAT:
+      return "NONE_STAT";
+    case DefineStat_StatType.GAMES_PLAYED:
+      return "GAMES_PLAYED";
+    case DefineStat_StatType.EXTRACTIONS:
+      return "EXTRACTIONS";
+    case DefineStat_StatType.DOWN_PORTALS_TAKEN:
+      return "DOWN_PORTALS_TAKEN";
+    case DefineStat_StatType.KILLS:
+      return "KILLS";
+    case DefineStat_StatType.DEATHS:
+      return "DEATHS";
+    case DefineStat_StatType.TREASURE_VALUE_EXTRACTED:
+      return "TREASURE_VALUE_EXTRACTED";
+    case DefineStat_StatType.MONSTERS_KILLED:
+      return "MONSTERS_KILLED";
+    case DefineStat_StatType.SUBBOSSES_KILLED:
+      return "SUBBOSSES_KILLED";
+    case DefineStat_StatType.BOSSES_KILLED:
+      return "BOSSES_KILLED";
+    case DefineStat_StatType.ORNATE_CHESTS_OPENED:
+      return "ORNATE_CHESTS_OPENED";
+    case DefineStat_StatType.ROYAL_COFFINS_OPENED:
+      return "ROYAL_COFFINS_OPENED";
+    case DefineStat_StatType.LIONS_HEAD_CHESTS_OPENED:
+      return "LIONS_HEAD_CHESTS_OPENED";
+    case DefineStat_StatType.GOLDEN_CHESTS_OPENED:
+      return "GOLDEN_CHESTS_OPENED";
+    case DefineStat_StatType.MARVELOUS_CHESTS_OPENED:
+      return "MARVELOUS_CHESTS_OPENED";
+    case DefineStat_StatType.ALLIES_REVIVED:
+      return "ALLIES_REVIVED";
+    case DefineStat_StatType.PLAYER_KILL_ASSIST:
+      return "PLAYER_KILL_ASSIST";
+    case DefineStat_StatType.MONSTER_KILL_ASSIST:
+      return "MONSTER_KILL_ASSIST";
+    case DefineStat_StatType.SUBBOSS_KILL_ASSIST:
+      return "SUBBOSS_KILL_ASSIST";
+    case DefineStat_StatType.BOSS_KILL_ASSIST:
+      return "BOSS_KILL_ASSIST";
+    case DefineStat_StatType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
 export interface DefineGame {
 }
 
 export enum DefineGame_AdvPointType {
   NONE = 0,
-  PLAYER_KILL = 1,
-  DUNGEON_DOWN = 2,
-  MONSTER_KILL = 3,
-  PROPS_INTERACTION = 4,
-  ITEM_ACHEIVE = 5,
+  PlayerKill = 1,
+  DungeonDown = 2,
+  MonsterKill = 3,
+  PropsInteraction = 4,
+  ItemAchieve = 5,
+  PlayerDead = 6,
+  PlayerLocation = 7,
+  PlayerLootNewItem = 8,
+  SubBossKill = 9,
+  BossKill = 10,
+  HighEndPropsInteraction = 11,
+  Treasure = 12,
+  EntranceFee = 13,
+  PlayerKillAssist = 14,
+  MonsterKillAssist = 15,
+  SubBossKillAssist = 16,
+  BossKillAssist = 17,
   UNRECOGNIZED = -1,
 }
 
@@ -748,20 +1105,56 @@ export function defineGame_AdvPointTypeFromJSON(object: any): DefineGame_AdvPoin
     case "NONE":
       return DefineGame_AdvPointType.NONE;
     case 1:
-    case "PLAYER_KILL":
-      return DefineGame_AdvPointType.PLAYER_KILL;
+    case "PlayerKill":
+      return DefineGame_AdvPointType.PlayerKill;
     case 2:
-    case "DUNGEON_DOWN":
-      return DefineGame_AdvPointType.DUNGEON_DOWN;
+    case "DungeonDown":
+      return DefineGame_AdvPointType.DungeonDown;
     case 3:
-    case "MONSTER_KILL":
-      return DefineGame_AdvPointType.MONSTER_KILL;
+    case "MonsterKill":
+      return DefineGame_AdvPointType.MonsterKill;
     case 4:
-    case "PROPS_INTERACTION":
-      return DefineGame_AdvPointType.PROPS_INTERACTION;
+    case "PropsInteraction":
+      return DefineGame_AdvPointType.PropsInteraction;
     case 5:
-    case "ITEM_ACHEIVE":
-      return DefineGame_AdvPointType.ITEM_ACHEIVE;
+    case "ItemAchieve":
+      return DefineGame_AdvPointType.ItemAchieve;
+    case 6:
+    case "PlayerDead":
+      return DefineGame_AdvPointType.PlayerDead;
+    case 7:
+    case "PlayerLocation":
+      return DefineGame_AdvPointType.PlayerLocation;
+    case 8:
+    case "PlayerLootNewItem":
+      return DefineGame_AdvPointType.PlayerLootNewItem;
+    case 9:
+    case "SubBossKill":
+      return DefineGame_AdvPointType.SubBossKill;
+    case 10:
+    case "BossKill":
+      return DefineGame_AdvPointType.BossKill;
+    case 11:
+    case "HighEndPropsInteraction":
+      return DefineGame_AdvPointType.HighEndPropsInteraction;
+    case 12:
+    case "Treasure":
+      return DefineGame_AdvPointType.Treasure;
+    case 13:
+    case "EntranceFee":
+      return DefineGame_AdvPointType.EntranceFee;
+    case 14:
+    case "PlayerKillAssist":
+      return DefineGame_AdvPointType.PlayerKillAssist;
+    case 15:
+    case "MonsterKillAssist":
+      return DefineGame_AdvPointType.MonsterKillAssist;
+    case 16:
+    case "SubBossKillAssist":
+      return DefineGame_AdvPointType.SubBossKillAssist;
+    case 17:
+    case "BossKillAssist":
+      return DefineGame_AdvPointType.BossKillAssist;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -773,74 +1166,116 @@ export function defineGame_AdvPointTypeToJSON(object: DefineGame_AdvPointType): 
   switch (object) {
     case DefineGame_AdvPointType.NONE:
       return "NONE";
-    case DefineGame_AdvPointType.PLAYER_KILL:
-      return "PLAYER_KILL";
-    case DefineGame_AdvPointType.DUNGEON_DOWN:
-      return "DUNGEON_DOWN";
-    case DefineGame_AdvPointType.MONSTER_KILL:
-      return "MONSTER_KILL";
-    case DefineGame_AdvPointType.PROPS_INTERACTION:
-      return "PROPS_INTERACTION";
-    case DefineGame_AdvPointType.ITEM_ACHEIVE:
-      return "ITEM_ACHEIVE";
+    case DefineGame_AdvPointType.PlayerKill:
+      return "PlayerKill";
+    case DefineGame_AdvPointType.DungeonDown:
+      return "DungeonDown";
+    case DefineGame_AdvPointType.MonsterKill:
+      return "MonsterKill";
+    case DefineGame_AdvPointType.PropsInteraction:
+      return "PropsInteraction";
+    case DefineGame_AdvPointType.ItemAchieve:
+      return "ItemAchieve";
+    case DefineGame_AdvPointType.PlayerDead:
+      return "PlayerDead";
+    case DefineGame_AdvPointType.PlayerLocation:
+      return "PlayerLocation";
+    case DefineGame_AdvPointType.PlayerLootNewItem:
+      return "PlayerLootNewItem";
+    case DefineGame_AdvPointType.SubBossKill:
+      return "SubBossKill";
+    case DefineGame_AdvPointType.BossKill:
+      return "BossKill";
+    case DefineGame_AdvPointType.HighEndPropsInteraction:
+      return "HighEndPropsInteraction";
+    case DefineGame_AdvPointType.Treasure:
+      return "Treasure";
+    case DefineGame_AdvPointType.EntranceFee:
+      return "EntranceFee";
+    case DefineGame_AdvPointType.PlayerKillAssist:
+      return "PlayerKillAssist";
+    case DefineGame_AdvPointType.MonsterKillAssist:
+      return "MonsterKillAssist";
+    case DefineGame_AdvPointType.SubBossKillAssist:
+      return "SubBossKillAssist";
+    case DefineGame_AdvPointType.BossKillAssist:
+      return "BossKillAssist";
     case DefineGame_AdvPointType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }
 }
 
-export enum DefineGame_DifficultyType {
+export enum DefineGame_GameType {
   NONE_MODE = 0,
-  NORMAL = 1,
-  HIGH_ROLLER = 2,
-  GOBLIN = 3,
-  RUINS = 4,
-  GOBLIN_HIGH_ROLLER = 5,
+  DUNGEON_TRIO_NORMAL = 1,
+  DUNGEON_TRIO_HIGH_ROLLER = 2,
+  DUNGEON_SOLO_NORMAL = 3,
+  DUNGEON_DUO_NORMAL = 4,
+  DUNGEON_SOLO_HIGH_ROLLER = 5,
+  DUNGEON_DUO_HIGH_ROLLER = 6,
+  ARENA_DUO = 7,
+  ARENA_TRIO = 8,
   UNRECOGNIZED = -1,
 }
 
-export function defineGame_DifficultyTypeFromJSON(object: any): DefineGame_DifficultyType {
+export function defineGame_GameTypeFromJSON(object: any): DefineGame_GameType {
   switch (object) {
     case 0:
     case "NONE_MODE":
-      return DefineGame_DifficultyType.NONE_MODE;
+      return DefineGame_GameType.NONE_MODE;
     case 1:
-    case "NORMAL":
-      return DefineGame_DifficultyType.NORMAL;
+    case "DUNGEON_TRIO_NORMAL":
+      return DefineGame_GameType.DUNGEON_TRIO_NORMAL;
     case 2:
-    case "HIGH_ROLLER":
-      return DefineGame_DifficultyType.HIGH_ROLLER;
+    case "DUNGEON_TRIO_HIGH_ROLLER":
+      return DefineGame_GameType.DUNGEON_TRIO_HIGH_ROLLER;
     case 3:
-    case "GOBLIN":
-      return DefineGame_DifficultyType.GOBLIN;
+    case "DUNGEON_SOLO_NORMAL":
+      return DefineGame_GameType.DUNGEON_SOLO_NORMAL;
     case 4:
-    case "RUINS":
-      return DefineGame_DifficultyType.RUINS;
+    case "DUNGEON_DUO_NORMAL":
+      return DefineGame_GameType.DUNGEON_DUO_NORMAL;
     case 5:
-    case "GOBLIN_HIGH_ROLLER":
-      return DefineGame_DifficultyType.GOBLIN_HIGH_ROLLER;
+    case "DUNGEON_SOLO_HIGH_ROLLER":
+      return DefineGame_GameType.DUNGEON_SOLO_HIGH_ROLLER;
+    case 6:
+    case "DUNGEON_DUO_HIGH_ROLLER":
+      return DefineGame_GameType.DUNGEON_DUO_HIGH_ROLLER;
+    case 7:
+    case "ARENA_DUO":
+      return DefineGame_GameType.ARENA_DUO;
+    case 8:
+    case "ARENA_TRIO":
+      return DefineGame_GameType.ARENA_TRIO;
     case -1:
     case "UNRECOGNIZED":
     default:
-      return DefineGame_DifficultyType.UNRECOGNIZED;
+      return DefineGame_GameType.UNRECOGNIZED;
   }
 }
 
-export function defineGame_DifficultyTypeToJSON(object: DefineGame_DifficultyType): string {
+export function defineGame_GameTypeToJSON(object: DefineGame_GameType): string {
   switch (object) {
-    case DefineGame_DifficultyType.NONE_MODE:
+    case DefineGame_GameType.NONE_MODE:
       return "NONE_MODE";
-    case DefineGame_DifficultyType.NORMAL:
-      return "NORMAL";
-    case DefineGame_DifficultyType.HIGH_ROLLER:
-      return "HIGH_ROLLER";
-    case DefineGame_DifficultyType.GOBLIN:
-      return "GOBLIN";
-    case DefineGame_DifficultyType.RUINS:
-      return "RUINS";
-    case DefineGame_DifficultyType.GOBLIN_HIGH_ROLLER:
-      return "GOBLIN_HIGH_ROLLER";
-    case DefineGame_DifficultyType.UNRECOGNIZED:
+    case DefineGame_GameType.DUNGEON_TRIO_NORMAL:
+      return "DUNGEON_TRIO_NORMAL";
+    case DefineGame_GameType.DUNGEON_TRIO_HIGH_ROLLER:
+      return "DUNGEON_TRIO_HIGH_ROLLER";
+    case DefineGame_GameType.DUNGEON_SOLO_NORMAL:
+      return "DUNGEON_SOLO_NORMAL";
+    case DefineGame_GameType.DUNGEON_DUO_NORMAL:
+      return "DUNGEON_DUO_NORMAL";
+    case DefineGame_GameType.DUNGEON_SOLO_HIGH_ROLLER:
+      return "DUNGEON_SOLO_HIGH_ROLLER";
+    case DefineGame_GameType.DUNGEON_DUO_HIGH_ROLLER:
+      return "DUNGEON_DUO_HIGH_ROLLER";
+    case DefineGame_GameType.ARENA_DUO:
+      return "ARENA_DUO";
+    case DefineGame_GameType.ARENA_TRIO:
+      return "ARENA_TRIO";
+    case DefineGame_GameType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }
@@ -1053,6 +1488,7 @@ export enum DefineClass_Type {
   SKILL = 2,
   SPELL = 3,
   MUSIC = 4,
+  SHAPE_SHIFT = 5,
   UNRECOGNIZED = -1,
 }
 
@@ -1073,6 +1509,9 @@ export function defineClass_TypeFromJSON(object: any): DefineClass_Type {
     case 4:
     case "MUSIC":
       return DefineClass_Type.MUSIC;
+    case 5:
+    case "SHAPE_SHIFT":
+      return DefineClass_Type.SHAPE_SHIFT;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -1092,6 +1531,8 @@ export function defineClass_TypeToJSON(object: DefineClass_Type): string {
       return "SPELL";
     case DefineClass_Type.MUSIC:
       return "MUSIC";
+    case DefineClass_Type.SHAPE_SHIFT:
+      return "SHAPE_SHIFT";
     case DefineClass_Type.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -1303,6 +1744,38 @@ export enum Operate_Policy {
   POLICY_HIGH_ROLLER_ENTRANCE_MIN_LEVEL = 12,
   POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_FEE = 13,
   POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_MIN_LEVEL = 14,
+  POLICY_MAX_RANK_BATCH_GAME_COUNT = 15,
+  POLICY_ITEM_RARITY_TYPE_NORMAL_VALUE = 16,
+  POLICY_ITEM_RARITY_TYPE_HIGH_ROLLER_VALUE = 17,
+  POLICY_ITEM_RARITY_TYPE_RUINS_VALUE = 18,
+  POLICY_ITEM_RARITY_TYPE_GOBLIN_VALUE = 19,
+  POLICY_ITEM_RARITY_TYPE_GOBLIN_HIGH_ROLLER_VALUE = 20,
+  POLICY_LEADERBOARD_SCORE_FRACTIONAL_DIGITS = 21,
+  POLICY_RUINS_HIGH_ROLLER_ENTRANCE_FEE = 22,
+  POLICY_RUINS_HIGH_ROLLER_ENTRANCE_MIN_LEVEL = 23,
+  POLICY_ITEM_RARITY_TYPE_RUINS_HIGH_ROLLER_VALUE = 24,
+  POLICY_MARKETPLACE_FIXED_LISTING_FEE = 25,
+  POLICY_MARKETPLACE_VARIABLE_LISTING_FEE_RATE = 26,
+  POLICY_MARKETPLACE_LISTING_EXPIRED_TIME = 27,
+  POLICY_MARKETPLACE_TRANSFER_EXPIRED_TIME = 28,
+  POLICY_MARKETPLACE_LISTING_LIMIT_COUNT = 29,
+  POLICY_MARKETPLACE_MAXIMUM_SALE_AMOUNT = 30,
+  POLICY_MARKETPLACE_CLOSED = 31,
+  POLICY_DEATH_CAM_ON_OFF = 32,
+  POLICY_ENABLE_CLOTHPHYSICS = 33,
+  POLICY_ENABLE_CLOTHPHYSICS_USE_TASKTHREAD = 34,
+  POLICY_WAITFOR_PARALLEL_CLOTHTASK = 35,
+  POLICY_MINDWIPE_PRICE = 36,
+  POLICY_ENABLE_SHIPPING_CLIENT_LOG = 37,
+  POLICY_SET_SHIPPING_CLIENT_LOG_LEVEL = 38,
+  POLICY_OVERRIDE_ANTIALIASING = 39,
+  POLICY_ONLY_LOOTED_TRADE_ON = 40,
+  POLICY_ENABLE_UPDATE_ENGINE_VARIABLES = 41,
+  POLICY_KNIGHT_PROGRAM_LINK_PLAY_TIME_LIMIT = 42,
+  POLICY_ACCOUNT_STATUS_UPGRADE = 43,
+  POLICY_UPGRADE_CREATION_HIGH_ROLLER_CHECK_SEC = 45,
+  POLICY_UPGRADE_CREATION_TRADE_CHECK_SEC = 46,
+  POLICY_UPGRADE_CREATION_LISTING_MARKETPLACE_SEC = 47,
   UNRECOGNIZED = -1,
 }
 
@@ -1353,6 +1826,102 @@ export function operate_PolicyFromJSON(object: any): Operate_Policy {
     case 14:
     case "POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_MIN_LEVEL":
       return Operate_Policy.POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_MIN_LEVEL;
+    case 15:
+    case "POLICY_MAX_RANK_BATCH_GAME_COUNT":
+      return Operate_Policy.POLICY_MAX_RANK_BATCH_GAME_COUNT;
+    case 16:
+    case "POLICY_ITEM_RARITY_TYPE_NORMAL_VALUE":
+      return Operate_Policy.POLICY_ITEM_RARITY_TYPE_NORMAL_VALUE;
+    case 17:
+    case "POLICY_ITEM_RARITY_TYPE_HIGH_ROLLER_VALUE":
+      return Operate_Policy.POLICY_ITEM_RARITY_TYPE_HIGH_ROLLER_VALUE;
+    case 18:
+    case "POLICY_ITEM_RARITY_TYPE_RUINS_VALUE":
+      return Operate_Policy.POLICY_ITEM_RARITY_TYPE_RUINS_VALUE;
+    case 19:
+    case "POLICY_ITEM_RARITY_TYPE_GOBLIN_VALUE":
+      return Operate_Policy.POLICY_ITEM_RARITY_TYPE_GOBLIN_VALUE;
+    case 20:
+    case "POLICY_ITEM_RARITY_TYPE_GOBLIN_HIGH_ROLLER_VALUE":
+      return Operate_Policy.POLICY_ITEM_RARITY_TYPE_GOBLIN_HIGH_ROLLER_VALUE;
+    case 21:
+    case "POLICY_LEADERBOARD_SCORE_FRACTIONAL_DIGITS":
+      return Operate_Policy.POLICY_LEADERBOARD_SCORE_FRACTIONAL_DIGITS;
+    case 22:
+    case "POLICY_RUINS_HIGH_ROLLER_ENTRANCE_FEE":
+      return Operate_Policy.POLICY_RUINS_HIGH_ROLLER_ENTRANCE_FEE;
+    case 23:
+    case "POLICY_RUINS_HIGH_ROLLER_ENTRANCE_MIN_LEVEL":
+      return Operate_Policy.POLICY_RUINS_HIGH_ROLLER_ENTRANCE_MIN_LEVEL;
+    case 24:
+    case "POLICY_ITEM_RARITY_TYPE_RUINS_HIGH_ROLLER_VALUE":
+      return Operate_Policy.POLICY_ITEM_RARITY_TYPE_RUINS_HIGH_ROLLER_VALUE;
+    case 25:
+    case "POLICY_MARKETPLACE_FIXED_LISTING_FEE":
+      return Operate_Policy.POLICY_MARKETPLACE_FIXED_LISTING_FEE;
+    case 26:
+    case "POLICY_MARKETPLACE_VARIABLE_LISTING_FEE_RATE":
+      return Operate_Policy.POLICY_MARKETPLACE_VARIABLE_LISTING_FEE_RATE;
+    case 27:
+    case "POLICY_MARKETPLACE_LISTING_EXPIRED_TIME":
+      return Operate_Policy.POLICY_MARKETPLACE_LISTING_EXPIRED_TIME;
+    case 28:
+    case "POLICY_MARKETPLACE_TRANSFER_EXPIRED_TIME":
+      return Operate_Policy.POLICY_MARKETPLACE_TRANSFER_EXPIRED_TIME;
+    case 29:
+    case "POLICY_MARKETPLACE_LISTING_LIMIT_COUNT":
+      return Operate_Policy.POLICY_MARKETPLACE_LISTING_LIMIT_COUNT;
+    case 30:
+    case "POLICY_MARKETPLACE_MAXIMUM_SALE_AMOUNT":
+      return Operate_Policy.POLICY_MARKETPLACE_MAXIMUM_SALE_AMOUNT;
+    case 31:
+    case "POLICY_MARKETPLACE_CLOSED":
+      return Operate_Policy.POLICY_MARKETPLACE_CLOSED;
+    case 32:
+    case "POLICY_DEATH_CAM_ON_OFF":
+      return Operate_Policy.POLICY_DEATH_CAM_ON_OFF;
+    case 33:
+    case "POLICY_ENABLE_CLOTHPHYSICS":
+      return Operate_Policy.POLICY_ENABLE_CLOTHPHYSICS;
+    case 34:
+    case "POLICY_ENABLE_CLOTHPHYSICS_USE_TASKTHREAD":
+      return Operate_Policy.POLICY_ENABLE_CLOTHPHYSICS_USE_TASKTHREAD;
+    case 35:
+    case "POLICY_WAITFOR_PARALLEL_CLOTHTASK":
+      return Operate_Policy.POLICY_WAITFOR_PARALLEL_CLOTHTASK;
+    case 36:
+    case "POLICY_MINDWIPE_PRICE":
+      return Operate_Policy.POLICY_MINDWIPE_PRICE;
+    case 37:
+    case "POLICY_ENABLE_SHIPPING_CLIENT_LOG":
+      return Operate_Policy.POLICY_ENABLE_SHIPPING_CLIENT_LOG;
+    case 38:
+    case "POLICY_SET_SHIPPING_CLIENT_LOG_LEVEL":
+      return Operate_Policy.POLICY_SET_SHIPPING_CLIENT_LOG_LEVEL;
+    case 39:
+    case "POLICY_OVERRIDE_ANTIALIASING":
+      return Operate_Policy.POLICY_OVERRIDE_ANTIALIASING;
+    case 40:
+    case "POLICY_ONLY_LOOTED_TRADE_ON":
+      return Operate_Policy.POLICY_ONLY_LOOTED_TRADE_ON;
+    case 41:
+    case "POLICY_ENABLE_UPDATE_ENGINE_VARIABLES":
+      return Operate_Policy.POLICY_ENABLE_UPDATE_ENGINE_VARIABLES;
+    case 42:
+    case "POLICY_KNIGHT_PROGRAM_LINK_PLAY_TIME_LIMIT":
+      return Operate_Policy.POLICY_KNIGHT_PROGRAM_LINK_PLAY_TIME_LIMIT;
+    case 43:
+    case "POLICY_ACCOUNT_STATUS_UPGRADE":
+      return Operate_Policy.POLICY_ACCOUNT_STATUS_UPGRADE;
+    case 45:
+    case "POLICY_UPGRADE_CREATION_HIGH_ROLLER_CHECK_SEC":
+      return Operate_Policy.POLICY_UPGRADE_CREATION_HIGH_ROLLER_CHECK_SEC;
+    case 46:
+    case "POLICY_UPGRADE_CREATION_TRADE_CHECK_SEC":
+      return Operate_Policy.POLICY_UPGRADE_CREATION_TRADE_CHECK_SEC;
+    case 47:
+    case "POLICY_UPGRADE_CREATION_LISTING_MARKETPLACE_SEC":
+      return Operate_Policy.POLICY_UPGRADE_CREATION_LISTING_MARKETPLACE_SEC;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -1392,6 +1961,70 @@ export function operate_PolicyToJSON(object: Operate_Policy): string {
       return "POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_FEE";
     case Operate_Policy.POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_MIN_LEVEL:
       return "POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_MIN_LEVEL";
+    case Operate_Policy.POLICY_MAX_RANK_BATCH_GAME_COUNT:
+      return "POLICY_MAX_RANK_BATCH_GAME_COUNT";
+    case Operate_Policy.POLICY_ITEM_RARITY_TYPE_NORMAL_VALUE:
+      return "POLICY_ITEM_RARITY_TYPE_NORMAL_VALUE";
+    case Operate_Policy.POLICY_ITEM_RARITY_TYPE_HIGH_ROLLER_VALUE:
+      return "POLICY_ITEM_RARITY_TYPE_HIGH_ROLLER_VALUE";
+    case Operate_Policy.POLICY_ITEM_RARITY_TYPE_RUINS_VALUE:
+      return "POLICY_ITEM_RARITY_TYPE_RUINS_VALUE";
+    case Operate_Policy.POLICY_ITEM_RARITY_TYPE_GOBLIN_VALUE:
+      return "POLICY_ITEM_RARITY_TYPE_GOBLIN_VALUE";
+    case Operate_Policy.POLICY_ITEM_RARITY_TYPE_GOBLIN_HIGH_ROLLER_VALUE:
+      return "POLICY_ITEM_RARITY_TYPE_GOBLIN_HIGH_ROLLER_VALUE";
+    case Operate_Policy.POLICY_LEADERBOARD_SCORE_FRACTIONAL_DIGITS:
+      return "POLICY_LEADERBOARD_SCORE_FRACTIONAL_DIGITS";
+    case Operate_Policy.POLICY_RUINS_HIGH_ROLLER_ENTRANCE_FEE:
+      return "POLICY_RUINS_HIGH_ROLLER_ENTRANCE_FEE";
+    case Operate_Policy.POLICY_RUINS_HIGH_ROLLER_ENTRANCE_MIN_LEVEL:
+      return "POLICY_RUINS_HIGH_ROLLER_ENTRANCE_MIN_LEVEL";
+    case Operate_Policy.POLICY_ITEM_RARITY_TYPE_RUINS_HIGH_ROLLER_VALUE:
+      return "POLICY_ITEM_RARITY_TYPE_RUINS_HIGH_ROLLER_VALUE";
+    case Operate_Policy.POLICY_MARKETPLACE_FIXED_LISTING_FEE:
+      return "POLICY_MARKETPLACE_FIXED_LISTING_FEE";
+    case Operate_Policy.POLICY_MARKETPLACE_VARIABLE_LISTING_FEE_RATE:
+      return "POLICY_MARKETPLACE_VARIABLE_LISTING_FEE_RATE";
+    case Operate_Policy.POLICY_MARKETPLACE_LISTING_EXPIRED_TIME:
+      return "POLICY_MARKETPLACE_LISTING_EXPIRED_TIME";
+    case Operate_Policy.POLICY_MARKETPLACE_TRANSFER_EXPIRED_TIME:
+      return "POLICY_MARKETPLACE_TRANSFER_EXPIRED_TIME";
+    case Operate_Policy.POLICY_MARKETPLACE_LISTING_LIMIT_COUNT:
+      return "POLICY_MARKETPLACE_LISTING_LIMIT_COUNT";
+    case Operate_Policy.POLICY_MARKETPLACE_MAXIMUM_SALE_AMOUNT:
+      return "POLICY_MARKETPLACE_MAXIMUM_SALE_AMOUNT";
+    case Operate_Policy.POLICY_MARKETPLACE_CLOSED:
+      return "POLICY_MARKETPLACE_CLOSED";
+    case Operate_Policy.POLICY_DEATH_CAM_ON_OFF:
+      return "POLICY_DEATH_CAM_ON_OFF";
+    case Operate_Policy.POLICY_ENABLE_CLOTHPHYSICS:
+      return "POLICY_ENABLE_CLOTHPHYSICS";
+    case Operate_Policy.POLICY_ENABLE_CLOTHPHYSICS_USE_TASKTHREAD:
+      return "POLICY_ENABLE_CLOTHPHYSICS_USE_TASKTHREAD";
+    case Operate_Policy.POLICY_WAITFOR_PARALLEL_CLOTHTASK:
+      return "POLICY_WAITFOR_PARALLEL_CLOTHTASK";
+    case Operate_Policy.POLICY_MINDWIPE_PRICE:
+      return "POLICY_MINDWIPE_PRICE";
+    case Operate_Policy.POLICY_ENABLE_SHIPPING_CLIENT_LOG:
+      return "POLICY_ENABLE_SHIPPING_CLIENT_LOG";
+    case Operate_Policy.POLICY_SET_SHIPPING_CLIENT_LOG_LEVEL:
+      return "POLICY_SET_SHIPPING_CLIENT_LOG_LEVEL";
+    case Operate_Policy.POLICY_OVERRIDE_ANTIALIASING:
+      return "POLICY_OVERRIDE_ANTIALIASING";
+    case Operate_Policy.POLICY_ONLY_LOOTED_TRADE_ON:
+      return "POLICY_ONLY_LOOTED_TRADE_ON";
+    case Operate_Policy.POLICY_ENABLE_UPDATE_ENGINE_VARIABLES:
+      return "POLICY_ENABLE_UPDATE_ENGINE_VARIABLES";
+    case Operate_Policy.POLICY_KNIGHT_PROGRAM_LINK_PLAY_TIME_LIMIT:
+      return "POLICY_KNIGHT_PROGRAM_LINK_PLAY_TIME_LIMIT";
+    case Operate_Policy.POLICY_ACCOUNT_STATUS_UPGRADE:
+      return "POLICY_ACCOUNT_STATUS_UPGRADE";
+    case Operate_Policy.POLICY_UPGRADE_CREATION_HIGH_ROLLER_CHECK_SEC:
+      return "POLICY_UPGRADE_CREATION_HIGH_ROLLER_CHECK_SEC";
+    case Operate_Policy.POLICY_UPGRADE_CREATION_TRADE_CHECK_SEC:
+      return "POLICY_UPGRADE_CREATION_TRADE_CHECK_SEC";
+    case Operate_Policy.POLICY_UPGRADE_CREATION_LISTING_MARKETPLACE_SEC:
+      return "POLICY_UPGRADE_CREATION_LISTING_MARKETPLACE_SEC";
     case Operate_Policy.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -1448,10 +2081,23 @@ export function defineHack_PolicyToJSON(object: DefineHack_Policy): string {
 
 export enum DefineHack_banType {
   NONE_BAN_TYPE = 0,
-  CHEATER = 1,
-  INAPPROPRIATE_NAME = 2,
-  ETC = 3,
-  RMT = 4,
+  Cheater = 1,
+  InappropriateName = 2,
+  Etc = 3,
+  RmtUser = 4,
+  RmtSpam = 5,
+  AbnormalDetection = 6,
+  CheaterGroup = 7,
+  ExploitAbuser = 8,
+  AbnormalScreen = 9,
+  Teaming = 10,
+  StreamSniping = 11,
+  InappropriateChat = 12,
+  InappropriateVoip = 13,
+  RacistName = 14,
+  RacistChat = 15,
+  RacistVoip = 16,
+  Refund_Abuse = 17,
   UNRECOGNIZED = -1,
 }
 
@@ -1461,17 +2107,56 @@ export function defineHack_banTypeFromJSON(object: any): DefineHack_banType {
     case "NONE_BAN_TYPE":
       return DefineHack_banType.NONE_BAN_TYPE;
     case 1:
-    case "CHEATER":
-      return DefineHack_banType.CHEATER;
+    case "Cheater":
+      return DefineHack_banType.Cheater;
     case 2:
-    case "INAPPROPRIATE_NAME":
-      return DefineHack_banType.INAPPROPRIATE_NAME;
+    case "InappropriateName":
+      return DefineHack_banType.InappropriateName;
     case 3:
-    case "ETC":
-      return DefineHack_banType.ETC;
+    case "Etc":
+      return DefineHack_banType.Etc;
     case 4:
-    case "RMT":
-      return DefineHack_banType.RMT;
+    case "RmtUser":
+      return DefineHack_banType.RmtUser;
+    case 5:
+    case "RmtSpam":
+      return DefineHack_banType.RmtSpam;
+    case 6:
+    case "AbnormalDetection":
+      return DefineHack_banType.AbnormalDetection;
+    case 7:
+    case "CheaterGroup":
+      return DefineHack_banType.CheaterGroup;
+    case 8:
+    case "ExploitAbuser":
+      return DefineHack_banType.ExploitAbuser;
+    case 9:
+    case "AbnormalScreen":
+      return DefineHack_banType.AbnormalScreen;
+    case 10:
+    case "Teaming":
+      return DefineHack_banType.Teaming;
+    case 11:
+    case "StreamSniping":
+      return DefineHack_banType.StreamSniping;
+    case 12:
+    case "InappropriateChat":
+      return DefineHack_banType.InappropriateChat;
+    case 13:
+    case "InappropriateVoip":
+      return DefineHack_banType.InappropriateVoip;
+    case 14:
+    case "RacistName":
+      return DefineHack_banType.RacistName;
+    case 15:
+    case "RacistChat":
+      return DefineHack_banType.RacistChat;
+    case 16:
+    case "RacistVoip":
+      return DefineHack_banType.RacistVoip;
+    case 17:
+    case "Refund_Abuse":
+      return DefineHack_banType.Refund_Abuse;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -1483,14 +2168,40 @@ export function defineHack_banTypeToJSON(object: DefineHack_banType): string {
   switch (object) {
     case DefineHack_banType.NONE_BAN_TYPE:
       return "NONE_BAN_TYPE";
-    case DefineHack_banType.CHEATER:
-      return "CHEATER";
-    case DefineHack_banType.INAPPROPRIATE_NAME:
-      return "INAPPROPRIATE_NAME";
-    case DefineHack_banType.ETC:
-      return "ETC";
-    case DefineHack_banType.RMT:
-      return "RMT";
+    case DefineHack_banType.Cheater:
+      return "Cheater";
+    case DefineHack_banType.InappropriateName:
+      return "InappropriateName";
+    case DefineHack_banType.Etc:
+      return "Etc";
+    case DefineHack_banType.RmtUser:
+      return "RmtUser";
+    case DefineHack_banType.RmtSpam:
+      return "RmtSpam";
+    case DefineHack_banType.AbnormalDetection:
+      return "AbnormalDetection";
+    case DefineHack_banType.CheaterGroup:
+      return "CheaterGroup";
+    case DefineHack_banType.ExploitAbuser:
+      return "ExploitAbuser";
+    case DefineHack_banType.AbnormalScreen:
+      return "AbnormalScreen";
+    case DefineHack_banType.Teaming:
+      return "Teaming";
+    case DefineHack_banType.StreamSniping:
+      return "StreamSniping";
+    case DefineHack_banType.InappropriateChat:
+      return "InappropriateChat";
+    case DefineHack_banType.InappropriateVoip:
+      return "InappropriateVoip";
+    case DefineHack_banType.RacistName:
+      return "RacistName";
+    case DefineHack_banType.RacistChat:
+      return "RacistChat";
+    case DefineHack_banType.RacistVoip:
+      return "RacistVoip";
+    case DefineHack_banType.Refund_Abuse:
+      return "Refund_Abuse";
     case DefineHack_banType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -1763,6 +2474,7 @@ export enum DefineShop_Type {
   ACTION = 4,
   LOBBY_EMOTE = 5,
   CLASS_PACKAGE = 6,
+  ARMOR_SKIN = 7,
   UNRECOGNIZED = -1,
 }
 
@@ -1789,6 +2501,9 @@ export function defineShop_TypeFromJSON(object: any): DefineShop_Type {
     case 6:
     case "CLASS_PACKAGE":
       return DefineShop_Type.CLASS_PACKAGE;
+    case 7:
+    case "ARMOR_SKIN":
+      return DefineShop_Type.ARMOR_SKIN;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -1812,6 +2527,8 @@ export function defineShop_TypeToJSON(object: DefineShop_Type): string {
       return "LOBBY_EMOTE";
     case DefineShop_Type.CLASS_PACKAGE:
       return "CLASS_PACKAGE";
+    case DefineShop_Type.ARMOR_SKIN:
+      return "ARMOR_SKIN";
     case DefineShop_Type.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -1907,6 +2624,11 @@ export enum DefineReward_RewardType {
   Action = 4,
   LobbyEmote = 5,
   ClassPackage = 6,
+  Item = 7,
+  Exp = 8,
+  Affinity = 9,
+  Stash = 10,
+  ArmorSkin = 11,
   UNRECOGNIZED = -1,
 }
 
@@ -1933,6 +2655,21 @@ export function defineReward_RewardTypeFromJSON(object: any): DefineReward_Rewar
     case 6:
     case "ClassPackage":
       return DefineReward_RewardType.ClassPackage;
+    case 7:
+    case "Item":
+      return DefineReward_RewardType.Item;
+    case 8:
+    case "Exp":
+      return DefineReward_RewardType.Exp;
+    case 9:
+    case "Affinity":
+      return DefineReward_RewardType.Affinity;
+    case 10:
+    case "Stash":
+      return DefineReward_RewardType.Stash;
+    case 11:
+    case "ArmorSkin":
+      return DefineReward_RewardType.ArmorSkin;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -1956,6 +2693,16 @@ export function defineReward_RewardTypeToJSON(object: DefineReward_RewardType): 
       return "LobbyEmote";
     case DefineReward_RewardType.ClassPackage:
       return "ClassPackage";
+    case DefineReward_RewardType.Item:
+      return "Item";
+    case DefineReward_RewardType.Exp:
+      return "Exp";
+    case DefineReward_RewardType.Affinity:
+      return "Affinity";
+    case DefineReward_RewardType.Stash:
+      return "Stash";
+    case DefineReward_RewardType.ArmorSkin:
+      return "ArmorSkin";
     case DefineReward_RewardType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -2259,6 +3006,49 @@ export const DefineMatch = {
   },
   fromPartial<I extends Exact<DeepPartial<DefineMatch>, I>>(_: I): DefineMatch {
     const message = createBaseDefineMatch();
+    return message;
+  },
+};
+
+function createBaseDefineStat(): DefineStat {
+  return {};
+}
+
+export const DefineStat = {
+  encode(_: DefineStat, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DefineStat {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDefineStat();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): DefineStat {
+    return {};
+  },
+
+  toJSON(_: DefineStat): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DefineStat>, I>>(base?: I): DefineStat {
+    return DefineStat.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<DefineStat>, I>>(_: I): DefineStat {
+    const message = createBaseDefineStat();
     return message;
   },
 };

@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package DC.Packet;
+
+option java_package = "com.packets.reward";
+option java_outer_classname = "reward";
+option java_multiple_files = false;
+

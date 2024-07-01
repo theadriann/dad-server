@@ -1,6 +1,6 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
-import { saccountNickname } from "./_Character";
+import { saccountNickname, SRankUserInfo } from "./_Character";
 
 export const protobufPackage = "DC.Packet";
 
@@ -14,6 +14,7 @@ export enum rankingType {
   Slayer_GhostKing = 6,
   Slayer_SkeletonWarlord = 7,
   Slayer_CaveTroll = 8,
+  Slayer_BossAll = 9,
   UNRECOGNIZED = -1,
 }
 
@@ -46,6 +47,9 @@ export function rankingTypeFromJSON(object: any): rankingType {
     case 8:
     case "Slayer_CaveTroll":
       return rankingType.Slayer_CaveTroll;
+    case 9:
+    case "Slayer_BossAll":
+      return rankingType.Slayer_BossAll;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -73,6 +77,8 @@ export function rankingTypeToJSON(object: rankingType): string {
       return "Slayer_SkeletonWarlord";
     case rankingType.Slayer_CaveTroll:
       return "Slayer_CaveTroll";
+    case rankingType.Slayer_BossAll:
+      return "Slayer_BossAll";
     case rankingType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -139,52 +145,113 @@ export function contentTypeToJSON(object: contentType): string {
 export interface sc2sRankingInfoReq {
 }
 
-export interface ss2cRankingInfoRes {
-  seasonState: number;
+export interface srankingRewardInfo {
+  groupId: string;
+  rewardState: number;
+}
+
+export enum srankingRewardInfo_rewardState {
+  REWARD_STATE_NONE = 0,
+  ACTIVE = 1,
+  RECEIVED = 2,
+  FINISHED = 3,
+  UNRECOGNIZED = -1,
+}
+
+export function srankingRewardInfo_rewardStateFromJSON(object: any): srankingRewardInfo_rewardState {
+  switch (object) {
+    case 0:
+    case "REWARD_STATE_NONE":
+      return srankingRewardInfo_rewardState.REWARD_STATE_NONE;
+    case 1:
+    case "ACTIVE":
+      return srankingRewardInfo_rewardState.ACTIVE;
+    case 2:
+    case "RECEIVED":
+      return srankingRewardInfo_rewardState.RECEIVED;
+    case 3:
+    case "FINISHED":
+      return srankingRewardInfo_rewardState.FINISHED;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return srankingRewardInfo_rewardState.UNRECOGNIZED;
+  }
+}
+
+export function srankingRewardInfo_rewardStateToJSON(object: srankingRewardInfo_rewardState): string {
+  switch (object) {
+    case srankingRewardInfo_rewardState.REWARD_STATE_NONE:
+      return "REWARD_STATE_NONE";
+    case srankingRewardInfo_rewardState.ACTIVE:
+      return "ACTIVE";
+    case srankingRewardInfo_rewardState.RECEIVED:
+      return "RECEIVED";
+    case srankingRewardInfo_rewardState.FINISHED:
+      return "FINISHED";
+    case srankingRewardInfo_rewardState.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export interface srankingInfo {
   seasonId: string;
   beginDate: string;
   beginTime: string;
   endDate: string;
   endTime: string;
+  wipeDate: string;
+  wipeTime: string;
+  rewardDate: string;
+  rewardTime: string;
+  rankInfo: SRankUserInfo[];
+  rewardInfos: srankingRewardInfo[];
 }
 
-export enum ss2cRankingInfoRes_STATE {
+export enum srankingInfo_STATE {
   NONE = 0,
   PRESEASON = 1,
   SEASON = 2,
   UNRECOGNIZED = -1,
 }
 
-export function ss2cRankingInfoRes_STATEFromJSON(object: any): ss2cRankingInfoRes_STATE {
+export function srankingInfo_STATEFromJSON(object: any): srankingInfo_STATE {
   switch (object) {
     case 0:
     case "NONE":
-      return ss2cRankingInfoRes_STATE.NONE;
+      return srankingInfo_STATE.NONE;
     case 1:
     case "PRESEASON":
-      return ss2cRankingInfoRes_STATE.PRESEASON;
+      return srankingInfo_STATE.PRESEASON;
     case 2:
     case "SEASON":
-      return ss2cRankingInfoRes_STATE.SEASON;
+      return srankingInfo_STATE.SEASON;
     case -1:
     case "UNRECOGNIZED":
     default:
-      return ss2cRankingInfoRes_STATE.UNRECOGNIZED;
+      return srankingInfo_STATE.UNRECOGNIZED;
   }
 }
 
-export function ss2cRankingInfoRes_STATEToJSON(object: ss2cRankingInfoRes_STATE): string {
+export function srankingInfo_STATEToJSON(object: srankingInfo_STATE): string {
   switch (object) {
-    case ss2cRankingInfoRes_STATE.NONE:
+    case srankingInfo_STATE.NONE:
       return "NONE";
-    case ss2cRankingInfoRes_STATE.PRESEASON:
+    case srankingInfo_STATE.PRESEASON:
       return "PRESEASON";
-    case ss2cRankingInfoRes_STATE.SEASON:
+    case srankingInfo_STATE.SEASON:
       return "SEASON";
-    case ss2cRankingInfoRes_STATE.UNRECOGNIZED:
+    case srankingInfo_STATE.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }
+}
+
+export interface ss2cRankingInfoRes {
+  rankingInfos: srankingInfo[];
+  currentDate: string;
+  currentTime: string;
 }
 
 export interface SRankRecord {
@@ -198,6 +265,7 @@ export interface SRankRecord {
 }
 
 export interface sc2sRankingRangeReq {
+  seasonId: string;
   sheetId: string;
   contentId: string;
   startIndex: number;
@@ -207,6 +275,7 @@ export interface sc2sRankingRangeReq {
 
 export interface ss2cRankingRangeRes {
   result: number;
+  seasonId: string;
   records: SRankRecord[];
   sheetId: string;
   contentId: string;
@@ -217,19 +286,62 @@ export interface ss2cRankingRangeRes {
 }
 
 export interface sc2sRankingCharacterReq {
+  seasonId: string;
   sheetId: string;
   contentId: string;
   nickName: saccountNickname | undefined;
   characterClass: string;
 }
 
+export interface sc2sRankingRewardGetReq {
+  seasonId: string;
+  groupId: string;
+}
+
+export interface ss2cRankingRewardGetRes {
+  result: number;
+}
+
 export interface ss2cRankingCharacterRes {
   result: number;
+  seasonId: string;
   rankRecord: SRankRecord | undefined;
   sheetId: string;
   contentId: string;
   allRowCount: number;
   characterClass: string;
+  playGameCount: number;
+  batchGameCount: number;
+}
+
+export interface sc2sRankingApConfigReq {
+  gameType: number;
+  dungeonTagId: string;
+}
+
+export interface srankingApConfigRecord {
+  rankAPId: string;
+  requiredTotalAP: number;
+}
+
+export interface srankingEfConfigRecord {
+  rankEFId: string;
+  entranceFee: number;
+}
+
+export interface srankingConfigInfo {
+  gameType: number;
+  dungeonIdTag: string;
+  apRecords: srankingApConfigRecord[];
+  efRecords: srankingEfConfigRecord[];
+}
+
+export interface ss2cRankingApConfigRes {
+  configInfos: srankingConfigInfo[];
+}
+
+export interface ss2cRankingHasRewardNot {
+  isHasReward: number;
 }
 
 function createBasesc2sRankingInfoReq(): sc2sRankingInfoReq {
@@ -275,23 +387,106 @@ export const sc2sRankingInfoReq = {
   },
 };
 
-function createBasess2cRankingInfoRes(): ss2cRankingInfoRes {
-  return { seasonState: 0, seasonId: "", beginDate: "", beginTime: "", endDate: "", endTime: "" };
+function createBasesrankingRewardInfo(): srankingRewardInfo {
+  return { groupId: "", rewardState: 0 };
 }
 
-export const ss2cRankingInfoRes = {
-  encode(message: ss2cRankingInfoRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.seasonState !== 0) {
-      writer.uint32(8).uint32(message.seasonState);
+export const srankingRewardInfo = {
+  encode(message: srankingRewardInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.groupId !== "") {
+      writer.uint32(10).string(message.groupId);
     }
+    if (message.rewardState !== 0) {
+      writer.uint32(16).int32(message.rewardState);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): srankingRewardInfo {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesrankingRewardInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.groupId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.rewardState = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): srankingRewardInfo {
+    return {
+      groupId: isSet(object.groupId) ? String(object.groupId) : "",
+      rewardState: isSet(object.rewardState) ? Number(object.rewardState) : 0,
+    };
+  },
+
+  toJSON(message: srankingRewardInfo): unknown {
+    const obj: any = {};
+    if (message.groupId !== "") {
+      obj.groupId = message.groupId;
+    }
+    if (message.rewardState !== 0) {
+      obj.rewardState = Math.round(message.rewardState);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<srankingRewardInfo>, I>>(base?: I): srankingRewardInfo {
+    return srankingRewardInfo.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<srankingRewardInfo>, I>>(object: I): srankingRewardInfo {
+    const message = createBasesrankingRewardInfo();
+    message.groupId = object.groupId ?? "";
+    message.rewardState = object.rewardState ?? 0;
+    return message;
+  },
+};
+
+function createBasesrankingInfo(): srankingInfo {
+  return {
+    seasonId: "",
+    beginDate: "",
+    beginTime: "",
+    endDate: "",
+    endTime: "",
+    wipeDate: "",
+    wipeTime: "",
+    rewardDate: "",
+    rewardTime: "",
+    rankInfo: [],
+    rewardInfos: [],
+  };
+}
+
+export const srankingInfo = {
+  encode(message: srankingInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.seasonId !== "") {
-      writer.uint32(34).string(message.seasonId);
+      writer.uint32(18).string(message.seasonId);
     }
     if (message.beginDate !== "") {
-      writer.uint32(18).string(message.beginDate);
+      writer.uint32(26).string(message.beginDate);
     }
     if (message.beginTime !== "") {
-      writer.uint32(26).string(message.beginTime);
+      writer.uint32(34).string(message.beginTime);
     }
     if (message.endDate !== "") {
       writer.uint32(42).string(message.endDate);
@@ -299,39 +494,50 @@ export const ss2cRankingInfoRes = {
     if (message.endTime !== "") {
       writer.uint32(50).string(message.endTime);
     }
+    if (message.wipeDate !== "") {
+      writer.uint32(58).string(message.wipeDate);
+    }
+    if (message.wipeTime !== "") {
+      writer.uint32(66).string(message.wipeTime);
+    }
+    if (message.rewardDate !== "") {
+      writer.uint32(74).string(message.rewardDate);
+    }
+    if (message.rewardTime !== "") {
+      writer.uint32(82).string(message.rewardTime);
+    }
+    for (const v of message.rankInfo) {
+      SRankUserInfo.encode(v!, writer.uint32(90).fork()).ldelim();
+    }
+    for (const v of message.rewardInfos) {
+      srankingRewardInfo.encode(v!, writer.uint32(98).fork()).ldelim();
+    }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cRankingInfoRes {
+  decode(input: _m0.Reader | Uint8Array, length?: number): srankingInfo {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasess2cRankingInfoRes();
+    const message = createBasesrankingInfo();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.seasonState = reader.uint32();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.seasonId = reader.string();
-          continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.beginDate = reader.string();
+          message.seasonId = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
+            break;
+          }
+
+          message.beginDate = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
             break;
           }
 
@@ -351,6 +557,48 @@ export const ss2cRankingInfoRes = {
 
           message.endTime = reader.string();
           continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.wipeDate = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.wipeTime = reader.string();
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.rewardDate = reader.string();
+          continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.rewardTime = reader.string();
+          continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.rankInfo.push(SRankUserInfo.decode(reader, reader.uint32()));
+          continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.rewardInfos.push(srankingRewardInfo.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -360,22 +608,26 @@ export const ss2cRankingInfoRes = {
     return message;
   },
 
-  fromJSON(object: any): ss2cRankingInfoRes {
+  fromJSON(object: any): srankingInfo {
     return {
-      seasonState: isSet(object.seasonState) ? Number(object.seasonState) : 0,
       seasonId: isSet(object.seasonId) ? String(object.seasonId) : "",
       beginDate: isSet(object.beginDate) ? String(object.beginDate) : "",
       beginTime: isSet(object.beginTime) ? String(object.beginTime) : "",
       endDate: isSet(object.endDate) ? String(object.endDate) : "",
       endTime: isSet(object.endTime) ? String(object.endTime) : "",
+      wipeDate: isSet(object.wipeDate) ? String(object.wipeDate) : "",
+      wipeTime: isSet(object.wipeTime) ? String(object.wipeTime) : "",
+      rewardDate: isSet(object.rewardDate) ? String(object.rewardDate) : "",
+      rewardTime: isSet(object.rewardTime) ? String(object.rewardTime) : "",
+      rankInfo: Array.isArray(object?.rankInfo) ? object.rankInfo.map((e: any) => SRankUserInfo.fromJSON(e)) : [],
+      rewardInfos: Array.isArray(object?.rewardInfos)
+        ? object.rewardInfos.map((e: any) => srankingRewardInfo.fromJSON(e))
+        : [],
     };
   },
 
-  toJSON(message: ss2cRankingInfoRes): unknown {
+  toJSON(message: srankingInfo): unknown {
     const obj: any = {};
-    if (message.seasonState !== 0) {
-      obj.seasonState = Math.round(message.seasonState);
-    }
     if (message.seasonId !== "") {
       obj.seasonId = message.seasonId;
     }
@@ -391,6 +643,123 @@ export const ss2cRankingInfoRes = {
     if (message.endTime !== "") {
       obj.endTime = message.endTime;
     }
+    if (message.wipeDate !== "") {
+      obj.wipeDate = message.wipeDate;
+    }
+    if (message.wipeTime !== "") {
+      obj.wipeTime = message.wipeTime;
+    }
+    if (message.rewardDate !== "") {
+      obj.rewardDate = message.rewardDate;
+    }
+    if (message.rewardTime !== "") {
+      obj.rewardTime = message.rewardTime;
+    }
+    if (message.rankInfo?.length) {
+      obj.rankInfo = message.rankInfo.map((e) => SRankUserInfo.toJSON(e));
+    }
+    if (message.rewardInfos?.length) {
+      obj.rewardInfos = message.rewardInfos.map((e) => srankingRewardInfo.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<srankingInfo>, I>>(base?: I): srankingInfo {
+    return srankingInfo.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<srankingInfo>, I>>(object: I): srankingInfo {
+    const message = createBasesrankingInfo();
+    message.seasonId = object.seasonId ?? "";
+    message.beginDate = object.beginDate ?? "";
+    message.beginTime = object.beginTime ?? "";
+    message.endDate = object.endDate ?? "";
+    message.endTime = object.endTime ?? "";
+    message.wipeDate = object.wipeDate ?? "";
+    message.wipeTime = object.wipeTime ?? "";
+    message.rewardDate = object.rewardDate ?? "";
+    message.rewardTime = object.rewardTime ?? "";
+    message.rankInfo = object.rankInfo?.map((e) => SRankUserInfo.fromPartial(e)) || [];
+    message.rewardInfos = object.rewardInfos?.map((e) => srankingRewardInfo.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBasess2cRankingInfoRes(): ss2cRankingInfoRes {
+  return { rankingInfos: [], currentDate: "", currentTime: "" };
+}
+
+export const ss2cRankingInfoRes = {
+  encode(message: ss2cRankingInfoRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.rankingInfos) {
+      srankingInfo.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.currentDate !== "") {
+      writer.uint32(18).string(message.currentDate);
+    }
+    if (message.currentTime !== "") {
+      writer.uint32(26).string(message.currentTime);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cRankingInfoRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cRankingInfoRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.rankingInfos.push(srankingInfo.decode(reader, reader.uint32()));
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.currentDate = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.currentTime = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cRankingInfoRes {
+    return {
+      rankingInfos: Array.isArray(object?.rankingInfos)
+        ? object.rankingInfos.map((e: any) => srankingInfo.fromJSON(e))
+        : [],
+      currentDate: isSet(object.currentDate) ? String(object.currentDate) : "",
+      currentTime: isSet(object.currentTime) ? String(object.currentTime) : "",
+    };
+  },
+
+  toJSON(message: ss2cRankingInfoRes): unknown {
+    const obj: any = {};
+    if (message.rankingInfos?.length) {
+      obj.rankingInfos = message.rankingInfos.map((e) => srankingInfo.toJSON(e));
+    }
+    if (message.currentDate !== "") {
+      obj.currentDate = message.currentDate;
+    }
+    if (message.currentTime !== "") {
+      obj.currentTime = message.currentTime;
+    }
     return obj;
   },
 
@@ -399,12 +768,9 @@ export const ss2cRankingInfoRes = {
   },
   fromPartial<I extends Exact<DeepPartial<ss2cRankingInfoRes>, I>>(object: I): ss2cRankingInfoRes {
     const message = createBasess2cRankingInfoRes();
-    message.seasonState = object.seasonState ?? 0;
-    message.seasonId = object.seasonId ?? "";
-    message.beginDate = object.beginDate ?? "";
-    message.beginTime = object.beginTime ?? "";
-    message.endDate = object.endDate ?? "";
-    message.endTime = object.endTime ?? "";
+    message.rankingInfos = object.rankingInfos?.map((e) => srankingInfo.fromPartial(e)) || [];
+    message.currentDate = object.currentDate ?? "";
+    message.currentTime = object.currentTime ?? "";
     return message;
   },
 };
@@ -561,25 +927,28 @@ export const SRankRecord = {
 };
 
 function createBasesc2sRankingRangeReq(): sc2sRankingRangeReq {
-  return { sheetId: "", contentId: "", startIndex: 0, endIndex: 0, characterClass: "" };
+  return { seasonId: "", sheetId: "", contentId: "", startIndex: 0, endIndex: 0, characterClass: "" };
 }
 
 export const sc2sRankingRangeReq = {
   encode(message: sc2sRankingRangeReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.seasonId !== "") {
+      writer.uint32(10).string(message.seasonId);
+    }
     if (message.sheetId !== "") {
-      writer.uint32(10).string(message.sheetId);
+      writer.uint32(18).string(message.sheetId);
     }
     if (message.contentId !== "") {
-      writer.uint32(18).string(message.contentId);
+      writer.uint32(26).string(message.contentId);
     }
     if (message.startIndex !== 0) {
-      writer.uint32(24).uint32(message.startIndex);
+      writer.uint32(32).uint32(message.startIndex);
     }
     if (message.endIndex !== 0) {
-      writer.uint32(32).uint32(message.endIndex);
+      writer.uint32(40).uint32(message.endIndex);
     }
     if (message.characterClass !== "") {
-      writer.uint32(42).string(message.characterClass);
+      writer.uint32(50).string(message.characterClass);
     }
     return writer;
   },
@@ -596,31 +965,38 @@ export const sc2sRankingRangeReq = {
             break;
           }
 
-          message.sheetId = reader.string();
+          message.seasonId = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.contentId = reader.string();
+          message.sheetId = reader.string();
           continue;
         case 3:
-          if (tag !== 24) {
+          if (tag !== 26) {
             break;
           }
 
-          message.startIndex = reader.uint32();
+          message.contentId = reader.string();
           continue;
         case 4:
           if (tag !== 32) {
             break;
           }
 
-          message.endIndex = reader.uint32();
+          message.startIndex = reader.uint32();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.endIndex = reader.uint32();
+          continue;
+        case 6:
+          if (tag !== 50) {
             break;
           }
 
@@ -637,6 +1013,7 @@ export const sc2sRankingRangeReq = {
 
   fromJSON(object: any): sc2sRankingRangeReq {
     return {
+      seasonId: isSet(object.seasonId) ? String(object.seasonId) : "",
       sheetId: isSet(object.sheetId) ? String(object.sheetId) : "",
       contentId: isSet(object.contentId) ? String(object.contentId) : "",
       startIndex: isSet(object.startIndex) ? Number(object.startIndex) : 0,
@@ -647,6 +1024,9 @@ export const sc2sRankingRangeReq = {
 
   toJSON(message: sc2sRankingRangeReq): unknown {
     const obj: any = {};
+    if (message.seasonId !== "") {
+      obj.seasonId = message.seasonId;
+    }
     if (message.sheetId !== "") {
       obj.sheetId = message.sheetId;
     }
@@ -670,6 +1050,7 @@ export const sc2sRankingRangeReq = {
   },
   fromPartial<I extends Exact<DeepPartial<sc2sRankingRangeReq>, I>>(object: I): sc2sRankingRangeReq {
     const message = createBasesc2sRankingRangeReq();
+    message.seasonId = object.seasonId ?? "";
     message.sheetId = object.sheetId ?? "";
     message.contentId = object.contentId ?? "";
     message.startIndex = object.startIndex ?? 0;
@@ -682,6 +1063,7 @@ export const sc2sRankingRangeReq = {
 function createBasess2cRankingRangeRes(): ss2cRankingRangeRes {
   return {
     result: 0,
+    seasonId: "",
     records: [],
     sheetId: "",
     contentId: "",
@@ -697,26 +1079,29 @@ export const ss2cRankingRangeRes = {
     if (message.result !== 0) {
       writer.uint32(8).uint32(message.result);
     }
+    if (message.seasonId !== "") {
+      writer.uint32(18).string(message.seasonId);
+    }
     for (const v of message.records) {
-      SRankRecord.encode(v!, writer.uint32(18).fork()).ldelim();
+      SRankRecord.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     if (message.sheetId !== "") {
-      writer.uint32(26).string(message.sheetId);
+      writer.uint32(34).string(message.sheetId);
     }
     if (message.contentId !== "") {
-      writer.uint32(34).string(message.contentId);
+      writer.uint32(42).string(message.contentId);
     }
     if (message.allRowCount !== 0) {
-      writer.uint32(40).uint32(message.allRowCount);
+      writer.uint32(48).uint32(message.allRowCount);
     }
     if (message.startIndex !== 0) {
-      writer.uint32(48).uint32(message.startIndex);
+      writer.uint32(56).uint32(message.startIndex);
     }
     if (message.endIndex !== 0) {
-      writer.uint32(56).uint32(message.endIndex);
+      writer.uint32(64).uint32(message.endIndex);
     }
     if (message.characterClass !== "") {
-      writer.uint32(66).string(message.characterClass);
+      writer.uint32(74).string(message.characterClass);
     }
     return writer;
   },
@@ -740,45 +1125,52 @@ export const ss2cRankingRangeRes = {
             break;
           }
 
-          message.records.push(SRankRecord.decode(reader, reader.uint32()));
+          message.seasonId = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.sheetId = reader.string();
+          message.records.push(SRankRecord.decode(reader, reader.uint32()));
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.contentId = reader.string();
+          message.sheetId = reader.string();
           continue;
         case 5:
-          if (tag !== 40) {
+          if (tag !== 42) {
             break;
           }
 
-          message.allRowCount = reader.uint32();
+          message.contentId = reader.string();
           continue;
         case 6:
           if (tag !== 48) {
             break;
           }
 
-          message.startIndex = reader.uint32();
+          message.allRowCount = reader.uint32();
           continue;
         case 7:
           if (tag !== 56) {
             break;
           }
 
-          message.endIndex = reader.uint32();
+          message.startIndex = reader.uint32();
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.endIndex = reader.uint32();
+          continue;
+        case 9:
+          if (tag !== 74) {
             break;
           }
 
@@ -796,6 +1188,7 @@ export const ss2cRankingRangeRes = {
   fromJSON(object: any): ss2cRankingRangeRes {
     return {
       result: isSet(object.result) ? Number(object.result) : 0,
+      seasonId: isSet(object.seasonId) ? String(object.seasonId) : "",
       records: Array.isArray(object?.records) ? object.records.map((e: any) => SRankRecord.fromJSON(e)) : [],
       sheetId: isSet(object.sheetId) ? String(object.sheetId) : "",
       contentId: isSet(object.contentId) ? String(object.contentId) : "",
@@ -810,6 +1203,9 @@ export const ss2cRankingRangeRes = {
     const obj: any = {};
     if (message.result !== 0) {
       obj.result = Math.round(message.result);
+    }
+    if (message.seasonId !== "") {
+      obj.seasonId = message.seasonId;
     }
     if (message.records?.length) {
       obj.records = message.records.map((e) => SRankRecord.toJSON(e));
@@ -841,6 +1237,7 @@ export const ss2cRankingRangeRes = {
   fromPartial<I extends Exact<DeepPartial<ss2cRankingRangeRes>, I>>(object: I): ss2cRankingRangeRes {
     const message = createBasess2cRankingRangeRes();
     message.result = object.result ?? 0;
+    message.seasonId = object.seasonId ?? "";
     message.records = object.records?.map((e) => SRankRecord.fromPartial(e)) || [];
     message.sheetId = object.sheetId ?? "";
     message.contentId = object.contentId ?? "";
@@ -853,22 +1250,25 @@ export const ss2cRankingRangeRes = {
 };
 
 function createBasesc2sRankingCharacterReq(): sc2sRankingCharacterReq {
-  return { sheetId: "", contentId: "", nickName: undefined, characterClass: "" };
+  return { seasonId: "", sheetId: "", contentId: "", nickName: undefined, characterClass: "" };
 }
 
 export const sc2sRankingCharacterReq = {
   encode(message: sc2sRankingCharacterReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.seasonId !== "") {
+      writer.uint32(10).string(message.seasonId);
+    }
     if (message.sheetId !== "") {
-      writer.uint32(10).string(message.sheetId);
+      writer.uint32(18).string(message.sheetId);
     }
     if (message.contentId !== "") {
-      writer.uint32(18).string(message.contentId);
+      writer.uint32(26).string(message.contentId);
     }
     if (message.nickName !== undefined) {
-      saccountNickname.encode(message.nickName, writer.uint32(26).fork()).ldelim();
+      saccountNickname.encode(message.nickName, writer.uint32(34).fork()).ldelim();
     }
     if (message.characterClass !== "") {
-      writer.uint32(34).string(message.characterClass);
+      writer.uint32(42).string(message.characterClass);
     }
     return writer;
   },
@@ -885,24 +1285,31 @@ export const sc2sRankingCharacterReq = {
             break;
           }
 
-          message.sheetId = reader.string();
+          message.seasonId = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.contentId = reader.string();
+          message.sheetId = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.nickName = saccountNickname.decode(reader, reader.uint32());
+          message.contentId = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
+            break;
+          }
+
+          message.nickName = saccountNickname.decode(reader, reader.uint32());
+          continue;
+        case 5:
+          if (tag !== 42) {
             break;
           }
 
@@ -919,6 +1326,7 @@ export const sc2sRankingCharacterReq = {
 
   fromJSON(object: any): sc2sRankingCharacterReq {
     return {
+      seasonId: isSet(object.seasonId) ? String(object.seasonId) : "",
       sheetId: isSet(object.sheetId) ? String(object.sheetId) : "",
       contentId: isSet(object.contentId) ? String(object.contentId) : "",
       nickName: isSet(object.nickName) ? saccountNickname.fromJSON(object.nickName) : undefined,
@@ -928,6 +1336,9 @@ export const sc2sRankingCharacterReq = {
 
   toJSON(message: sc2sRankingCharacterReq): unknown {
     const obj: any = {};
+    if (message.seasonId !== "") {
+      obj.seasonId = message.seasonId;
+    }
     if (message.sheetId !== "") {
       obj.sheetId = message.sheetId;
     }
@@ -948,6 +1359,7 @@ export const sc2sRankingCharacterReq = {
   },
   fromPartial<I extends Exact<DeepPartial<sc2sRankingCharacterReq>, I>>(object: I): sc2sRankingCharacterReq {
     const message = createBasesc2sRankingCharacterReq();
+    message.seasonId = object.seasonId ?? "";
     message.sheetId = object.sheetId ?? "";
     message.contentId = object.contentId ?? "";
     message.nickName = (object.nickName !== undefined && object.nickName !== null)
@@ -958,8 +1370,149 @@ export const sc2sRankingCharacterReq = {
   },
 };
 
+function createBasesc2sRankingRewardGetReq(): sc2sRankingRewardGetReq {
+  return { seasonId: "", groupId: "" };
+}
+
+export const sc2sRankingRewardGetReq = {
+  encode(message: sc2sRankingRewardGetReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.seasonId !== "") {
+      writer.uint32(10).string(message.seasonId);
+    }
+    if (message.groupId !== "") {
+      writer.uint32(18).string(message.groupId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sRankingRewardGetReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sRankingRewardGetReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.seasonId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.groupId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): sc2sRankingRewardGetReq {
+    return {
+      seasonId: isSet(object.seasonId) ? String(object.seasonId) : "",
+      groupId: isSet(object.groupId) ? String(object.groupId) : "",
+    };
+  },
+
+  toJSON(message: sc2sRankingRewardGetReq): unknown {
+    const obj: any = {};
+    if (message.seasonId !== "") {
+      obj.seasonId = message.seasonId;
+    }
+    if (message.groupId !== "") {
+      obj.groupId = message.groupId;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sRankingRewardGetReq>, I>>(base?: I): sc2sRankingRewardGetReq {
+    return sc2sRankingRewardGetReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sRankingRewardGetReq>, I>>(object: I): sc2sRankingRewardGetReq {
+    const message = createBasesc2sRankingRewardGetReq();
+    message.seasonId = object.seasonId ?? "";
+    message.groupId = object.groupId ?? "";
+    return message;
+  },
+};
+
+function createBasess2cRankingRewardGetRes(): ss2cRankingRewardGetRes {
+  return { result: 0 };
+}
+
+export const ss2cRankingRewardGetRes = {
+  encode(message: ss2cRankingRewardGetRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.result !== 0) {
+      writer.uint32(8).int32(message.result);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cRankingRewardGetRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cRankingRewardGetRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.result = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cRankingRewardGetRes {
+    return { result: isSet(object.result) ? Number(object.result) : 0 };
+  },
+
+  toJSON(message: ss2cRankingRewardGetRes): unknown {
+    const obj: any = {};
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cRankingRewardGetRes>, I>>(base?: I): ss2cRankingRewardGetRes {
+    return ss2cRankingRewardGetRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cRankingRewardGetRes>, I>>(object: I): ss2cRankingRewardGetRes {
+    const message = createBasess2cRankingRewardGetRes();
+    message.result = object.result ?? 0;
+    return message;
+  },
+};
+
 function createBasess2cRankingCharacterRes(): ss2cRankingCharacterRes {
-  return { result: 0, rankRecord: undefined, sheetId: "", contentId: "", allRowCount: 0, characterClass: "" };
+  return {
+    result: 0,
+    seasonId: "",
+    rankRecord: undefined,
+    sheetId: "",
+    contentId: "",
+    allRowCount: 0,
+    characterClass: "",
+    playGameCount: 0,
+    batchGameCount: 0,
+  };
 }
 
 export const ss2cRankingCharacterRes = {
@@ -967,20 +1520,29 @@ export const ss2cRankingCharacterRes = {
     if (message.result !== 0) {
       writer.uint32(8).uint32(message.result);
     }
+    if (message.seasonId !== "") {
+      writer.uint32(18).string(message.seasonId);
+    }
     if (message.rankRecord !== undefined) {
-      SRankRecord.encode(message.rankRecord, writer.uint32(18).fork()).ldelim();
+      SRankRecord.encode(message.rankRecord, writer.uint32(26).fork()).ldelim();
     }
     if (message.sheetId !== "") {
-      writer.uint32(26).string(message.sheetId);
+      writer.uint32(34).string(message.sheetId);
     }
     if (message.contentId !== "") {
-      writer.uint32(34).string(message.contentId);
+      writer.uint32(42).string(message.contentId);
     }
     if (message.allRowCount !== 0) {
-      writer.uint32(40).uint32(message.allRowCount);
+      writer.uint32(48).uint32(message.allRowCount);
     }
     if (message.characterClass !== "") {
-      writer.uint32(50).string(message.characterClass);
+      writer.uint32(58).string(message.characterClass);
+    }
+    if (message.playGameCount !== 0) {
+      writer.uint32(64).uint32(message.playGameCount);
+    }
+    if (message.batchGameCount !== 0) {
+      writer.uint32(72).uint32(message.batchGameCount);
     }
     return writer;
   },
@@ -1004,35 +1566,56 @@ export const ss2cRankingCharacterRes = {
             break;
           }
 
-          message.rankRecord = SRankRecord.decode(reader, reader.uint32());
+          message.seasonId = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.sheetId = reader.string();
+          message.rankRecord = SRankRecord.decode(reader, reader.uint32());
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.contentId = reader.string();
+          message.sheetId = reader.string();
           continue;
         case 5:
-          if (tag !== 40) {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.contentId = reader.string();
+          continue;
+        case 6:
+          if (tag !== 48) {
             break;
           }
 
           message.allRowCount = reader.uint32();
           continue;
-        case 6:
-          if (tag !== 50) {
+        case 7:
+          if (tag !== 58) {
             break;
           }
 
           message.characterClass = reader.string();
+          continue;
+        case 8:
+          if (tag !== 64) {
+            break;
+          }
+
+          message.playGameCount = reader.uint32();
+          continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.batchGameCount = reader.uint32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1046,11 +1629,14 @@ export const ss2cRankingCharacterRes = {
   fromJSON(object: any): ss2cRankingCharacterRes {
     return {
       result: isSet(object.result) ? Number(object.result) : 0,
+      seasonId: isSet(object.seasonId) ? String(object.seasonId) : "",
       rankRecord: isSet(object.rankRecord) ? SRankRecord.fromJSON(object.rankRecord) : undefined,
       sheetId: isSet(object.sheetId) ? String(object.sheetId) : "",
       contentId: isSet(object.contentId) ? String(object.contentId) : "",
       allRowCount: isSet(object.allRowCount) ? Number(object.allRowCount) : 0,
       characterClass: isSet(object.characterClass) ? String(object.characterClass) : "",
+      playGameCount: isSet(object.playGameCount) ? Number(object.playGameCount) : 0,
+      batchGameCount: isSet(object.batchGameCount) ? Number(object.batchGameCount) : 0,
     };
   },
 
@@ -1058,6 +1644,9 @@ export const ss2cRankingCharacterRes = {
     const obj: any = {};
     if (message.result !== 0) {
       obj.result = Math.round(message.result);
+    }
+    if (message.seasonId !== "") {
+      obj.seasonId = message.seasonId;
     }
     if (message.rankRecord !== undefined) {
       obj.rankRecord = SRankRecord.toJSON(message.rankRecord);
@@ -1074,6 +1663,12 @@ export const ss2cRankingCharacterRes = {
     if (message.characterClass !== "") {
       obj.characterClass = message.characterClass;
     }
+    if (message.playGameCount !== 0) {
+      obj.playGameCount = Math.round(message.playGameCount);
+    }
+    if (message.batchGameCount !== 0) {
+      obj.batchGameCount = Math.round(message.batchGameCount);
+    }
     return obj;
   },
 
@@ -1083,6 +1678,7 @@ export const ss2cRankingCharacterRes = {
   fromPartial<I extends Exact<DeepPartial<ss2cRankingCharacterRes>, I>>(object: I): ss2cRankingCharacterRes {
     const message = createBasess2cRankingCharacterRes();
     message.result = object.result ?? 0;
+    message.seasonId = object.seasonId ?? "";
     message.rankRecord = (object.rankRecord !== undefined && object.rankRecord !== null)
       ? SRankRecord.fromPartial(object.rankRecord)
       : undefined;
@@ -1090,6 +1686,456 @@ export const ss2cRankingCharacterRes = {
     message.contentId = object.contentId ?? "";
     message.allRowCount = object.allRowCount ?? 0;
     message.characterClass = object.characterClass ?? "";
+    message.playGameCount = object.playGameCount ?? 0;
+    message.batchGameCount = object.batchGameCount ?? 0;
+    return message;
+  },
+};
+
+function createBasesc2sRankingApConfigReq(): sc2sRankingApConfigReq {
+  return { gameType: 0, dungeonTagId: "" };
+}
+
+export const sc2sRankingApConfigReq = {
+  encode(message: sc2sRankingApConfigReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.gameType !== 0) {
+      writer.uint32(8).int32(message.gameType);
+    }
+    if (message.dungeonTagId !== "") {
+      writer.uint32(18).string(message.dungeonTagId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sRankingApConfigReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sRankingApConfigReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.gameType = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.dungeonTagId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): sc2sRankingApConfigReq {
+    return {
+      gameType: isSet(object.gameType) ? Number(object.gameType) : 0,
+      dungeonTagId: isSet(object.dungeonTagId) ? String(object.dungeonTagId) : "",
+    };
+  },
+
+  toJSON(message: sc2sRankingApConfigReq): unknown {
+    const obj: any = {};
+    if (message.gameType !== 0) {
+      obj.gameType = Math.round(message.gameType);
+    }
+    if (message.dungeonTagId !== "") {
+      obj.dungeonTagId = message.dungeonTagId;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sRankingApConfigReq>, I>>(base?: I): sc2sRankingApConfigReq {
+    return sc2sRankingApConfigReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sRankingApConfigReq>, I>>(object: I): sc2sRankingApConfigReq {
+    const message = createBasesc2sRankingApConfigReq();
+    message.gameType = object.gameType ?? 0;
+    message.dungeonTagId = object.dungeonTagId ?? "";
+    return message;
+  },
+};
+
+function createBasesrankingApConfigRecord(): srankingApConfigRecord {
+  return { rankAPId: "", requiredTotalAP: 0 };
+}
+
+export const srankingApConfigRecord = {
+  encode(message: srankingApConfigRecord, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.rankAPId !== "") {
+      writer.uint32(10).string(message.rankAPId);
+    }
+    if (message.requiredTotalAP !== 0) {
+      writer.uint32(16).int32(message.requiredTotalAP);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): srankingApConfigRecord {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesrankingApConfigRecord();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.rankAPId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.requiredTotalAP = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): srankingApConfigRecord {
+    return {
+      rankAPId: isSet(object.rankAPId) ? String(object.rankAPId) : "",
+      requiredTotalAP: isSet(object.requiredTotalAP) ? Number(object.requiredTotalAP) : 0,
+    };
+  },
+
+  toJSON(message: srankingApConfigRecord): unknown {
+    const obj: any = {};
+    if (message.rankAPId !== "") {
+      obj.rankAPId = message.rankAPId;
+    }
+    if (message.requiredTotalAP !== 0) {
+      obj.requiredTotalAP = Math.round(message.requiredTotalAP);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<srankingApConfigRecord>, I>>(base?: I): srankingApConfigRecord {
+    return srankingApConfigRecord.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<srankingApConfigRecord>, I>>(object: I): srankingApConfigRecord {
+    const message = createBasesrankingApConfigRecord();
+    message.rankAPId = object.rankAPId ?? "";
+    message.requiredTotalAP = object.requiredTotalAP ?? 0;
+    return message;
+  },
+};
+
+function createBasesrankingEfConfigRecord(): srankingEfConfigRecord {
+  return { rankEFId: "", entranceFee: 0 };
+}
+
+export const srankingEfConfigRecord = {
+  encode(message: srankingEfConfigRecord, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.rankEFId !== "") {
+      writer.uint32(10).string(message.rankEFId);
+    }
+    if (message.entranceFee !== 0) {
+      writer.uint32(16).int32(message.entranceFee);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): srankingEfConfigRecord {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesrankingEfConfigRecord();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.rankEFId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.entranceFee = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): srankingEfConfigRecord {
+    return {
+      rankEFId: isSet(object.rankEFId) ? String(object.rankEFId) : "",
+      entranceFee: isSet(object.entranceFee) ? Number(object.entranceFee) : 0,
+    };
+  },
+
+  toJSON(message: srankingEfConfigRecord): unknown {
+    const obj: any = {};
+    if (message.rankEFId !== "") {
+      obj.rankEFId = message.rankEFId;
+    }
+    if (message.entranceFee !== 0) {
+      obj.entranceFee = Math.round(message.entranceFee);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<srankingEfConfigRecord>, I>>(base?: I): srankingEfConfigRecord {
+    return srankingEfConfigRecord.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<srankingEfConfigRecord>, I>>(object: I): srankingEfConfigRecord {
+    const message = createBasesrankingEfConfigRecord();
+    message.rankEFId = object.rankEFId ?? "";
+    message.entranceFee = object.entranceFee ?? 0;
+    return message;
+  },
+};
+
+function createBasesrankingConfigInfo(): srankingConfigInfo {
+  return { gameType: 0, dungeonIdTag: "", apRecords: [], efRecords: [] };
+}
+
+export const srankingConfigInfo = {
+  encode(message: srankingConfigInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.gameType !== 0) {
+      writer.uint32(8).int32(message.gameType);
+    }
+    if (message.dungeonIdTag !== "") {
+      writer.uint32(18).string(message.dungeonIdTag);
+    }
+    for (const v of message.apRecords) {
+      srankingApConfigRecord.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
+    for (const v of message.efRecords) {
+      srankingEfConfigRecord.encode(v!, writer.uint32(34).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): srankingConfigInfo {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesrankingConfigInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.gameType = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.dungeonIdTag = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.apRecords.push(srankingApConfigRecord.decode(reader, reader.uint32()));
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.efRecords.push(srankingEfConfigRecord.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): srankingConfigInfo {
+    return {
+      gameType: isSet(object.gameType) ? Number(object.gameType) : 0,
+      dungeonIdTag: isSet(object.dungeonIdTag) ? String(object.dungeonIdTag) : "",
+      apRecords: Array.isArray(object?.apRecords)
+        ? object.apRecords.map((e: any) => srankingApConfigRecord.fromJSON(e))
+        : [],
+      efRecords: Array.isArray(object?.efRecords)
+        ? object.efRecords.map((e: any) => srankingEfConfigRecord.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: srankingConfigInfo): unknown {
+    const obj: any = {};
+    if (message.gameType !== 0) {
+      obj.gameType = Math.round(message.gameType);
+    }
+    if (message.dungeonIdTag !== "") {
+      obj.dungeonIdTag = message.dungeonIdTag;
+    }
+    if (message.apRecords?.length) {
+      obj.apRecords = message.apRecords.map((e) => srankingApConfigRecord.toJSON(e));
+    }
+    if (message.efRecords?.length) {
+      obj.efRecords = message.efRecords.map((e) => srankingEfConfigRecord.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<srankingConfigInfo>, I>>(base?: I): srankingConfigInfo {
+    return srankingConfigInfo.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<srankingConfigInfo>, I>>(object: I): srankingConfigInfo {
+    const message = createBasesrankingConfigInfo();
+    message.gameType = object.gameType ?? 0;
+    message.dungeonIdTag = object.dungeonIdTag ?? "";
+    message.apRecords = object.apRecords?.map((e) => srankingApConfigRecord.fromPartial(e)) || [];
+    message.efRecords = object.efRecords?.map((e) => srankingEfConfigRecord.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBasess2cRankingApConfigRes(): ss2cRankingApConfigRes {
+  return { configInfos: [] };
+}
+
+export const ss2cRankingApConfigRes = {
+  encode(message: ss2cRankingApConfigRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.configInfos) {
+      srankingConfigInfo.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cRankingApConfigRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cRankingApConfigRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.configInfos.push(srankingConfigInfo.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cRankingApConfigRes {
+    return {
+      configInfos: Array.isArray(object?.configInfos)
+        ? object.configInfos.map((e: any) => srankingConfigInfo.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ss2cRankingApConfigRes): unknown {
+    const obj: any = {};
+    if (message.configInfos?.length) {
+      obj.configInfos = message.configInfos.map((e) => srankingConfigInfo.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cRankingApConfigRes>, I>>(base?: I): ss2cRankingApConfigRes {
+    return ss2cRankingApConfigRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cRankingApConfigRes>, I>>(object: I): ss2cRankingApConfigRes {
+    const message = createBasess2cRankingApConfigRes();
+    message.configInfos = object.configInfos?.map((e) => srankingConfigInfo.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBasess2cRankingHasRewardNot(): ss2cRankingHasRewardNot {
+  return { isHasReward: 0 };
+}
+
+export const ss2cRankingHasRewardNot = {
+  encode(message: ss2cRankingHasRewardNot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.isHasReward !== 0) {
+      writer.uint32(8).int32(message.isHasReward);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cRankingHasRewardNot {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cRankingHasRewardNot();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.isHasReward = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cRankingHasRewardNot {
+    return { isHasReward: isSet(object.isHasReward) ? Number(object.isHasReward) : 0 };
+  },
+
+  toJSON(message: ss2cRankingHasRewardNot): unknown {
+    const obj: any = {};
+    if (message.isHasReward !== 0) {
+      obj.isHasReward = Math.round(message.isHasReward);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cRankingHasRewardNot>, I>>(base?: I): ss2cRankingHasRewardNot {
+    return ss2cRankingHasRewardNot.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cRankingHasRewardNot>, I>>(object: I): ss2cRankingHasRewardNot {
+    const message = createBasess2cRankingHasRewardNot();
+    message.isHasReward = object.isHasReward ?? 0;
     return message;
   },
 };

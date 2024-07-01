@@ -21,6 +21,7 @@ export interface sloginCharacterInfo {
   equipItemList: SItem[];
   equipCharacterSkinList: string[];
   equipItemSkinList: string[];
+  equipArmorSkinList: string[];
 }
 
 export interface sc2sAccountLoginReq {
@@ -45,8 +46,13 @@ export interface ss2cAccountLoginRes {
   secretToken: string;
   banTimeBeginMs: number;
   banTimeEndMs: number;
-  unlockEndDate: string;
-  unlockEndTime: string;
+  upgradeDate: string;
+  upgradeTime: string;
+  banReason: string;
+  latencyToken: string;
+  totalPlaytime: number;
+  userLoginInfo: number;
+  usePlatformLink: number;
 }
 
 export enum ss2cAccountLoginRes_RESULT {
@@ -60,10 +66,7 @@ export enum ss2cAccountLoginRes_RESULT {
   FAIL_IP_PORT = 7,
   FAIL_OVERLAP_LOGIN = 8,
   FAIL_STEAM_BUILD_ID = 11,
-  FAIL_LOGIN_BAN_USER = 12,
-  FAIL_LOGIN_BAN_USER_CHEATER = 13,
-  FAIL_LOGIN_BAN_USER_INAPPROPRIATE_NAME = 14,
-  FAIL_LOGIN_BAN_USER_ETC = 15,
+  FAIL_BAN = 12,
   FAIL_LOGIN_BAN_HARDWARE = 16,
   FAIL_UNDER_MAINTENANCE = 17,
   FAIL_BUILD_VERSION_ID = 41,
@@ -104,17 +107,8 @@ export function ss2cAccountLoginRes_RESULTFromJSON(object: any): ss2cAccountLogi
     case "FAIL_STEAM_BUILD_ID":
       return ss2cAccountLoginRes_RESULT.FAIL_STEAM_BUILD_ID;
     case 12:
-    case "FAIL_LOGIN_BAN_USER":
-      return ss2cAccountLoginRes_RESULT.FAIL_LOGIN_BAN_USER;
-    case 13:
-    case "FAIL_LOGIN_BAN_USER_CHEATER":
-      return ss2cAccountLoginRes_RESULT.FAIL_LOGIN_BAN_USER_CHEATER;
-    case 14:
-    case "FAIL_LOGIN_BAN_USER_INAPPROPRIATE_NAME":
-      return ss2cAccountLoginRes_RESULT.FAIL_LOGIN_BAN_USER_INAPPROPRIATE_NAME;
-    case 15:
-    case "FAIL_LOGIN_BAN_USER_ETC":
-      return ss2cAccountLoginRes_RESULT.FAIL_LOGIN_BAN_USER_ETC;
+    case "FAIL_BAN":
+      return ss2cAccountLoginRes_RESULT.FAIL_BAN;
     case 16:
     case "FAIL_LOGIN_BAN_HARDWARE":
       return ss2cAccountLoginRes_RESULT.FAIL_LOGIN_BAN_HARDWARE;
@@ -156,14 +150,8 @@ export function ss2cAccountLoginRes_RESULTToJSON(object: ss2cAccountLoginRes_RES
       return "FAIL_OVERLAP_LOGIN";
     case ss2cAccountLoginRes_RESULT.FAIL_STEAM_BUILD_ID:
       return "FAIL_STEAM_BUILD_ID";
-    case ss2cAccountLoginRes_RESULT.FAIL_LOGIN_BAN_USER:
-      return "FAIL_LOGIN_BAN_USER";
-    case ss2cAccountLoginRes_RESULT.FAIL_LOGIN_BAN_USER_CHEATER:
-      return "FAIL_LOGIN_BAN_USER_CHEATER";
-    case ss2cAccountLoginRes_RESULT.FAIL_LOGIN_BAN_USER_INAPPROPRIATE_NAME:
-      return "FAIL_LOGIN_BAN_USER_INAPPROPRIATE_NAME";
-    case ss2cAccountLoginRes_RESULT.FAIL_LOGIN_BAN_USER_ETC:
-      return "FAIL_LOGIN_BAN_USER_ETC";
+    case ss2cAccountLoginRes_RESULT.FAIL_BAN:
+      return "FAIL_BAN";
     case ss2cAccountLoginRes_RESULT.FAIL_LOGIN_BAN_HARDWARE:
       return "FAIL_LOGIN_BAN_HARDWARE";
     case ss2cAccountLoginRes_RESULT.FAIL_UNDER_MAINTENANCE:
@@ -205,6 +193,7 @@ export interface sc2sAccountCharacterDeleteReq {
 
 export interface ss2cAccountCharacterDeleteRes {
   result: number;
+  usePlatformLink: number;
 }
 
 export interface sc2sLobbyEnterReq {
@@ -232,6 +221,20 @@ export interface saccountCharacterClassInfo {
 
 export interface ss2cAccountCharacterClassListNot {
   characterClassList: saccountCharacterClassInfo[];
+}
+
+export interface sc2sUserHwInfoReq {
+  os: string;
+  cpu: string;
+  gpu: string;
+  gpuVersion: string;
+  memory: string;
+  storage: string;
+  directX: string;
+  osVersion: string;
+}
+
+export interface ss2cUserHwInfoRes {
 }
 
 function createBasesloginAccountInfo(): sloginAccountInfo {
@@ -303,6 +306,7 @@ function createBasesloginCharacterInfo(): sloginCharacterInfo {
     equipItemList: [],
     equipCharacterSkinList: [],
     equipItemSkinList: [],
+    equipArmorSkinList: [],
   };
 }
 
@@ -337,6 +341,9 @@ export const sloginCharacterInfo = {
     }
     for (const v of message.equipItemSkinList) {
       writer.uint32(82).string(v!);
+    }
+    for (const v of message.equipArmorSkinList) {
+      writer.uint32(90).string(v!);
     }
     return writer;
   },
@@ -418,6 +425,13 @@ export const sloginCharacterInfo = {
 
           message.equipItemSkinList.push(reader.string());
           continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.equipArmorSkinList.push(reader.string());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -444,6 +458,9 @@ export const sloginCharacterInfo = {
         : [],
       equipItemSkinList: Array.isArray(object?.equipItemSkinList)
         ? object.equipItemSkinList.map((e: any) => String(e))
+        : [],
+      equipArmorSkinList: Array.isArray(object?.equipArmorSkinList)
+        ? object.equipArmorSkinList.map((e: any) => String(e))
         : [],
     };
   },
@@ -480,6 +497,9 @@ export const sloginCharacterInfo = {
     if (message.equipItemSkinList?.length) {
       obj.equipItemSkinList = message.equipItemSkinList;
     }
+    if (message.equipArmorSkinList?.length) {
+      obj.equipArmorSkinList = message.equipArmorSkinList;
+    }
     return obj;
   },
 
@@ -500,6 +520,7 @@ export const sloginCharacterInfo = {
     message.equipItemList = object.equipItemList?.map((e) => SItem.fromPartial(e)) || [];
     message.equipCharacterSkinList = object.equipCharacterSkinList?.map((e) => e) || [];
     message.equipItemSkinList = object.equipItemSkinList?.map((e) => e) || [];
+    message.equipArmorSkinList = object.equipArmorSkinList?.map((e) => e) || [];
     return message;
   },
 };
@@ -689,8 +710,13 @@ function createBasess2cAccountLoginRes(): ss2cAccountLoginRes {
     secretToken: "",
     banTimeBeginMs: 0,
     banTimeEndMs: 0,
-    unlockEndDate: "",
-    unlockEndTime: "",
+    upgradeDate: "",
+    upgradeTime: "",
+    banReason: "",
+    latencyToken: "",
+    totalPlaytime: 0,
+    userLoginInfo: 0,
+    usePlatformLink: 0,
   };
 }
 
@@ -726,11 +752,26 @@ export const ss2cAccountLoginRes = {
     if (message.banTimeEndMs !== 0) {
       writer.uint32(80).uint64(message.banTimeEndMs);
     }
-    if (message.unlockEndDate !== "") {
-      writer.uint32(90).string(message.unlockEndDate);
+    if (message.upgradeDate !== "") {
+      writer.uint32(90).string(message.upgradeDate);
     }
-    if (message.unlockEndTime !== "") {
-      writer.uint32(98).string(message.unlockEndTime);
+    if (message.upgradeTime !== "") {
+      writer.uint32(98).string(message.upgradeTime);
+    }
+    if (message.banReason !== "") {
+      writer.uint32(106).string(message.banReason);
+    }
+    if (message.latencyToken !== "") {
+      writer.uint32(114).string(message.latencyToken);
+    }
+    if (message.totalPlaytime !== 0) {
+      writer.uint32(120).uint64(message.totalPlaytime);
+    }
+    if (message.userLoginInfo !== 0) {
+      writer.uint32(128).int32(message.userLoginInfo);
+    }
+    if (message.usePlatformLink !== 0) {
+      writer.uint32(136).int32(message.usePlatformLink);
     }
     return writer;
   },
@@ -817,14 +858,49 @@ export const ss2cAccountLoginRes = {
             break;
           }
 
-          message.unlockEndDate = reader.string();
+          message.upgradeDate = reader.string();
           continue;
         case 12:
           if (tag !== 98) {
             break;
           }
 
-          message.unlockEndTime = reader.string();
+          message.upgradeTime = reader.string();
+          continue;
+        case 13:
+          if (tag !== 106) {
+            break;
+          }
+
+          message.banReason = reader.string();
+          continue;
+        case 14:
+          if (tag !== 114) {
+            break;
+          }
+
+          message.latencyToken = reader.string();
+          continue;
+        case 15:
+          if (tag !== 120) {
+            break;
+          }
+
+          message.totalPlaytime = longToNumber(reader.uint64() as Long);
+          continue;
+        case 16:
+          if (tag !== 128) {
+            break;
+          }
+
+          message.userLoginInfo = reader.int32();
+          continue;
+        case 17:
+          if (tag !== 136) {
+            break;
+          }
+
+          message.usePlatformLink = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -847,8 +923,13 @@ export const ss2cAccountLoginRes = {
       secretToken: isSet(object.secretToken) ? String(object.secretToken) : "",
       banTimeBeginMs: isSet(object.banTimeBeginMs) ? Number(object.banTimeBeginMs) : 0,
       banTimeEndMs: isSet(object.banTimeEndMs) ? Number(object.banTimeEndMs) : 0,
-      unlockEndDate: isSet(object.unlockEndDate) ? String(object.unlockEndDate) : "",
-      unlockEndTime: isSet(object.unlockEndTime) ? String(object.unlockEndTime) : "",
+      upgradeDate: isSet(object.upgradeDate) ? String(object.upgradeDate) : "",
+      upgradeTime: isSet(object.upgradeTime) ? String(object.upgradeTime) : "",
+      banReason: isSet(object.banReason) ? String(object.banReason) : "",
+      latencyToken: isSet(object.latencyToken) ? String(object.latencyToken) : "",
+      totalPlaytime: isSet(object.totalPlaytime) ? Number(object.totalPlaytime) : 0,
+      userLoginInfo: isSet(object.userLoginInfo) ? Number(object.userLoginInfo) : 0,
+      usePlatformLink: isSet(object.usePlatformLink) ? Number(object.usePlatformLink) : 0,
     };
   },
 
@@ -884,11 +965,26 @@ export const ss2cAccountLoginRes = {
     if (message.banTimeEndMs !== 0) {
       obj.banTimeEndMs = Math.round(message.banTimeEndMs);
     }
-    if (message.unlockEndDate !== "") {
-      obj.unlockEndDate = message.unlockEndDate;
+    if (message.upgradeDate !== "") {
+      obj.upgradeDate = message.upgradeDate;
     }
-    if (message.unlockEndTime !== "") {
-      obj.unlockEndTime = message.unlockEndTime;
+    if (message.upgradeTime !== "") {
+      obj.upgradeTime = message.upgradeTime;
+    }
+    if (message.banReason !== "") {
+      obj.banReason = message.banReason;
+    }
+    if (message.latencyToken !== "") {
+      obj.latencyToken = message.latencyToken;
+    }
+    if (message.totalPlaytime !== 0) {
+      obj.totalPlaytime = Math.round(message.totalPlaytime);
+    }
+    if (message.userLoginInfo !== 0) {
+      obj.userLoginInfo = Math.round(message.userLoginInfo);
+    }
+    if (message.usePlatformLink !== 0) {
+      obj.usePlatformLink = Math.round(message.usePlatformLink);
     }
     return obj;
   },
@@ -910,8 +1006,13 @@ export const ss2cAccountLoginRes = {
     message.secretToken = object.secretToken ?? "";
     message.banTimeBeginMs = object.banTimeBeginMs ?? 0;
     message.banTimeEndMs = object.banTimeEndMs ?? 0;
-    message.unlockEndDate = object.unlockEndDate ?? "";
-    message.unlockEndTime = object.unlockEndTime ?? "";
+    message.upgradeDate = object.upgradeDate ?? "";
+    message.upgradeTime = object.upgradeTime ?? "";
+    message.banReason = object.banReason ?? "";
+    message.latencyToken = object.latencyToken ?? "";
+    message.totalPlaytime = object.totalPlaytime ?? 0;
+    message.userLoginInfo = object.userLoginInfo ?? 0;
+    message.usePlatformLink = object.usePlatformLink ?? 0;
     return message;
   },
 };
@@ -1291,13 +1392,16 @@ export const sc2sAccountCharacterDeleteReq = {
 };
 
 function createBasess2cAccountCharacterDeleteRes(): ss2cAccountCharacterDeleteRes {
-  return { result: 0 };
+  return { result: 0, usePlatformLink: 0 };
 }
 
 export const ss2cAccountCharacterDeleteRes = {
   encode(message: ss2cAccountCharacterDeleteRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.result !== 0) {
       writer.uint32(8).uint32(message.result);
+    }
+    if (message.usePlatformLink !== 0) {
+      writer.uint32(16).uint32(message.usePlatformLink);
     }
     return writer;
   },
@@ -1316,6 +1420,13 @@ export const ss2cAccountCharacterDeleteRes = {
 
           message.result = reader.uint32();
           continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.usePlatformLink = reader.uint32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1326,13 +1437,19 @@ export const ss2cAccountCharacterDeleteRes = {
   },
 
   fromJSON(object: any): ss2cAccountCharacterDeleteRes {
-    return { result: isSet(object.result) ? Number(object.result) : 0 };
+    return {
+      result: isSet(object.result) ? Number(object.result) : 0,
+      usePlatformLink: isSet(object.usePlatformLink) ? Number(object.usePlatformLink) : 0,
+    };
   },
 
   toJSON(message: ss2cAccountCharacterDeleteRes): unknown {
     const obj: any = {};
     if (message.result !== 0) {
       obj.result = Math.round(message.result);
+    }
+    if (message.usePlatformLink !== 0) {
+      obj.usePlatformLink = Math.round(message.usePlatformLink);
     }
     return obj;
   },
@@ -1345,6 +1462,7 @@ export const ss2cAccountCharacterDeleteRes = {
   ): ss2cAccountCharacterDeleteRes {
     const message = createBasess2cAccountCharacterDeleteRes();
     message.result = object.result ?? 0;
+    message.usePlatformLink = object.usePlatformLink ?? 0;
     return message;
   },
 };
@@ -1744,6 +1862,213 @@ export const ss2cAccountCharacterClassListNot = {
   ): ss2cAccountCharacterClassListNot {
     const message = createBasess2cAccountCharacterClassListNot();
     message.characterClassList = object.characterClassList?.map((e) => saccountCharacterClassInfo.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBasesc2sUserHwInfoReq(): sc2sUserHwInfoReq {
+  return { os: "", cpu: "", gpu: "", gpuVersion: "", memory: "", storage: "", directX: "", osVersion: "" };
+}
+
+export const sc2sUserHwInfoReq = {
+  encode(message: sc2sUserHwInfoReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.os !== "") {
+      writer.uint32(10).string(message.os);
+    }
+    if (message.cpu !== "") {
+      writer.uint32(18).string(message.cpu);
+    }
+    if (message.gpu !== "") {
+      writer.uint32(26).string(message.gpu);
+    }
+    if (message.gpuVersion !== "") {
+      writer.uint32(34).string(message.gpuVersion);
+    }
+    if (message.memory !== "") {
+      writer.uint32(42).string(message.memory);
+    }
+    if (message.storage !== "") {
+      writer.uint32(50).string(message.storage);
+    }
+    if (message.directX !== "") {
+      writer.uint32(58).string(message.directX);
+    }
+    if (message.osVersion !== "") {
+      writer.uint32(66).string(message.osVersion);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sUserHwInfoReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sUserHwInfoReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.os = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.cpu = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.gpu = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.gpuVersion = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.memory = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.storage = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.directX = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.osVersion = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): sc2sUserHwInfoReq {
+    return {
+      os: isSet(object.os) ? String(object.os) : "",
+      cpu: isSet(object.cpu) ? String(object.cpu) : "",
+      gpu: isSet(object.gpu) ? String(object.gpu) : "",
+      gpuVersion: isSet(object.gpuVersion) ? String(object.gpuVersion) : "",
+      memory: isSet(object.memory) ? String(object.memory) : "",
+      storage: isSet(object.storage) ? String(object.storage) : "",
+      directX: isSet(object.directX) ? String(object.directX) : "",
+      osVersion: isSet(object.osVersion) ? String(object.osVersion) : "",
+    };
+  },
+
+  toJSON(message: sc2sUserHwInfoReq): unknown {
+    const obj: any = {};
+    if (message.os !== "") {
+      obj.os = message.os;
+    }
+    if (message.cpu !== "") {
+      obj.cpu = message.cpu;
+    }
+    if (message.gpu !== "") {
+      obj.gpu = message.gpu;
+    }
+    if (message.gpuVersion !== "") {
+      obj.gpuVersion = message.gpuVersion;
+    }
+    if (message.memory !== "") {
+      obj.memory = message.memory;
+    }
+    if (message.storage !== "") {
+      obj.storage = message.storage;
+    }
+    if (message.directX !== "") {
+      obj.directX = message.directX;
+    }
+    if (message.osVersion !== "") {
+      obj.osVersion = message.osVersion;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sUserHwInfoReq>, I>>(base?: I): sc2sUserHwInfoReq {
+    return sc2sUserHwInfoReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sUserHwInfoReq>, I>>(object: I): sc2sUserHwInfoReq {
+    const message = createBasesc2sUserHwInfoReq();
+    message.os = object.os ?? "";
+    message.cpu = object.cpu ?? "";
+    message.gpu = object.gpu ?? "";
+    message.gpuVersion = object.gpuVersion ?? "";
+    message.memory = object.memory ?? "";
+    message.storage = object.storage ?? "";
+    message.directX = object.directX ?? "";
+    message.osVersion = object.osVersion ?? "";
+    return message;
+  },
+};
+
+function createBasess2cUserHwInfoRes(): ss2cUserHwInfoRes {
+  return {};
+}
+
+export const ss2cUserHwInfoRes = {
+  encode(_: ss2cUserHwInfoRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cUserHwInfoRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cUserHwInfoRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): ss2cUserHwInfoRes {
+    return {};
+  },
+
+  toJSON(_: ss2cUserHwInfoRes): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cUserHwInfoRes>, I>>(base?: I): ss2cUserHwInfoRes {
+    return ss2cUserHwInfoRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cUserHwInfoRes>, I>>(_: I): ss2cUserHwInfoRes {
+    const message = createBasess2cUserHwInfoRes();
     return message;
   },
 };

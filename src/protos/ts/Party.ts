@@ -93,6 +93,7 @@ export interface sc2sPartyReadyReq {
 
 export interface ss2cPartyReadyRes {
   result: number;
+  restrictionMS: number;
 }
 
 export interface ss2cPartyEquipItemChangeNot {
@@ -138,8 +139,21 @@ export interface ss2cPartyItemSkinChangeNot {
   newItemSkinId: string;
 }
 
-export interface ss2cPartyGameDifficultyChangeNot {
-  gameDifficultyTypeIndex: number;
+export interface ss2cPartyArmorSkinListNot {
+  accountId: string;
+  characterId: string;
+  armorSkinIdList: string[];
+}
+
+export interface ss2cPartyArmorSkinChangeNot {
+  accountId: string;
+  characterId: string;
+  oldItemSkinId: string;
+  newItemSkinId: string;
+}
+
+export interface ss2cPartyGameTypeChangeNot {
+  gameTypeIndex: number;
 }
 
 export interface sc2sPartyMemberKickReq {
@@ -860,13 +874,16 @@ export const sc2sPartyReadyReq = {
 };
 
 function createBasess2cPartyReadyRes(): ss2cPartyReadyRes {
-  return { result: 0 };
+  return { result: 0, restrictionMS: 0 };
 }
 
 export const ss2cPartyReadyRes = {
   encode(message: ss2cPartyReadyRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.result !== 0) {
       writer.uint32(8).uint32(message.result);
+    }
+    if (message.restrictionMS !== 0) {
+      writer.uint32(16).uint32(message.restrictionMS);
     }
     return writer;
   },
@@ -885,6 +902,13 @@ export const ss2cPartyReadyRes = {
 
           message.result = reader.uint32();
           continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.restrictionMS = reader.uint32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -895,13 +919,19 @@ export const ss2cPartyReadyRes = {
   },
 
   fromJSON(object: any): ss2cPartyReadyRes {
-    return { result: isSet(object.result) ? Number(object.result) : 0 };
+    return {
+      result: isSet(object.result) ? Number(object.result) : 0,
+      restrictionMS: isSet(object.restrictionMS) ? Number(object.restrictionMS) : 0,
+    };
   },
 
   toJSON(message: ss2cPartyReadyRes): unknown {
     const obj: any = {};
     if (message.result !== 0) {
       obj.result = Math.round(message.result);
+    }
+    if (message.restrictionMS !== 0) {
+      obj.restrictionMS = Math.round(message.restrictionMS);
     }
     return obj;
   },
@@ -912,6 +942,7 @@ export const ss2cPartyReadyRes = {
   fromPartial<I extends Exact<DeepPartial<ss2cPartyReadyRes>, I>>(object: I): ss2cPartyReadyRes {
     const message = createBasess2cPartyReadyRes();
     message.result = object.result ?? 0;
+    message.restrictionMS = object.restrictionMS ?? 0;
     return message;
   },
 };
@@ -1558,31 +1589,51 @@ export const ss2cPartyItemSkinChangeNot = {
   },
 };
 
-function createBasess2cPartyGameDifficultyChangeNot(): ss2cPartyGameDifficultyChangeNot {
-  return { gameDifficultyTypeIndex: 0 };
+function createBasess2cPartyArmorSkinListNot(): ss2cPartyArmorSkinListNot {
+  return { accountId: "", characterId: "", armorSkinIdList: [] };
 }
 
-export const ss2cPartyGameDifficultyChangeNot = {
-  encode(message: ss2cPartyGameDifficultyChangeNot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.gameDifficultyTypeIndex !== 0) {
-      writer.uint32(8).uint32(message.gameDifficultyTypeIndex);
+export const ss2cPartyArmorSkinListNot = {
+  encode(message: ss2cPartyArmorSkinListNot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.accountId !== "") {
+      writer.uint32(10).string(message.accountId);
+    }
+    if (message.characterId !== "") {
+      writer.uint32(18).string(message.characterId);
+    }
+    for (const v of message.armorSkinIdList) {
+      writer.uint32(26).string(v!);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cPartyGameDifficultyChangeNot {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cPartyArmorSkinListNot {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasess2cPartyGameDifficultyChangeNot();
+    const message = createBasess2cPartyArmorSkinListNot();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.gameDifficultyTypeIndex = reader.uint32();
+          message.accountId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.characterId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.armorSkinIdList.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1593,30 +1644,197 @@ export const ss2cPartyGameDifficultyChangeNot = {
     return message;
   },
 
-  fromJSON(object: any): ss2cPartyGameDifficultyChangeNot {
+  fromJSON(object: any): ss2cPartyArmorSkinListNot {
     return {
-      gameDifficultyTypeIndex: isSet(object.gameDifficultyTypeIndex) ? Number(object.gameDifficultyTypeIndex) : 0,
+      accountId: isSet(object.accountId) ? String(object.accountId) : "",
+      characterId: isSet(object.characterId) ? String(object.characterId) : "",
+      armorSkinIdList: Array.isArray(object?.armorSkinIdList) ? object.armorSkinIdList.map((e: any) => String(e)) : [],
     };
   },
 
-  toJSON(message: ss2cPartyGameDifficultyChangeNot): unknown {
+  toJSON(message: ss2cPartyArmorSkinListNot): unknown {
     const obj: any = {};
-    if (message.gameDifficultyTypeIndex !== 0) {
-      obj.gameDifficultyTypeIndex = Math.round(message.gameDifficultyTypeIndex);
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.armorSkinIdList?.length) {
+      obj.armorSkinIdList = message.armorSkinIdList;
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ss2cPartyGameDifficultyChangeNot>, I>>(
-    base?: I,
-  ): ss2cPartyGameDifficultyChangeNot {
-    return ss2cPartyGameDifficultyChangeNot.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<ss2cPartyArmorSkinListNot>, I>>(base?: I): ss2cPartyArmorSkinListNot {
+    return ss2cPartyArmorSkinListNot.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ss2cPartyGameDifficultyChangeNot>, I>>(
-    object: I,
-  ): ss2cPartyGameDifficultyChangeNot {
-    const message = createBasess2cPartyGameDifficultyChangeNot();
-    message.gameDifficultyTypeIndex = object.gameDifficultyTypeIndex ?? 0;
+  fromPartial<I extends Exact<DeepPartial<ss2cPartyArmorSkinListNot>, I>>(object: I): ss2cPartyArmorSkinListNot {
+    const message = createBasess2cPartyArmorSkinListNot();
+    message.accountId = object.accountId ?? "";
+    message.characterId = object.characterId ?? "";
+    message.armorSkinIdList = object.armorSkinIdList?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBasess2cPartyArmorSkinChangeNot(): ss2cPartyArmorSkinChangeNot {
+  return { accountId: "", characterId: "", oldItemSkinId: "", newItemSkinId: "" };
+}
+
+export const ss2cPartyArmorSkinChangeNot = {
+  encode(message: ss2cPartyArmorSkinChangeNot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.accountId !== "") {
+      writer.uint32(10).string(message.accountId);
+    }
+    if (message.characterId !== "") {
+      writer.uint32(18).string(message.characterId);
+    }
+    if (message.oldItemSkinId !== "") {
+      writer.uint32(26).string(message.oldItemSkinId);
+    }
+    if (message.newItemSkinId !== "") {
+      writer.uint32(34).string(message.newItemSkinId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cPartyArmorSkinChangeNot {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cPartyArmorSkinChangeNot();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.accountId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.characterId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.oldItemSkinId = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.newItemSkinId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cPartyArmorSkinChangeNot {
+    return {
+      accountId: isSet(object.accountId) ? String(object.accountId) : "",
+      characterId: isSet(object.characterId) ? String(object.characterId) : "",
+      oldItemSkinId: isSet(object.oldItemSkinId) ? String(object.oldItemSkinId) : "",
+      newItemSkinId: isSet(object.newItemSkinId) ? String(object.newItemSkinId) : "",
+    };
+  },
+
+  toJSON(message: ss2cPartyArmorSkinChangeNot): unknown {
+    const obj: any = {};
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.oldItemSkinId !== "") {
+      obj.oldItemSkinId = message.oldItemSkinId;
+    }
+    if (message.newItemSkinId !== "") {
+      obj.newItemSkinId = message.newItemSkinId;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cPartyArmorSkinChangeNot>, I>>(base?: I): ss2cPartyArmorSkinChangeNot {
+    return ss2cPartyArmorSkinChangeNot.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cPartyArmorSkinChangeNot>, I>>(object: I): ss2cPartyArmorSkinChangeNot {
+    const message = createBasess2cPartyArmorSkinChangeNot();
+    message.accountId = object.accountId ?? "";
+    message.characterId = object.characterId ?? "";
+    message.oldItemSkinId = object.oldItemSkinId ?? "";
+    message.newItemSkinId = object.newItemSkinId ?? "";
+    return message;
+  },
+};
+
+function createBasess2cPartyGameTypeChangeNot(): ss2cPartyGameTypeChangeNot {
+  return { gameTypeIndex: 0 };
+}
+
+export const ss2cPartyGameTypeChangeNot = {
+  encode(message: ss2cPartyGameTypeChangeNot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.gameTypeIndex !== 0) {
+      writer.uint32(8).uint32(message.gameTypeIndex);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cPartyGameTypeChangeNot {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cPartyGameTypeChangeNot();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.gameTypeIndex = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cPartyGameTypeChangeNot {
+    return { gameTypeIndex: isSet(object.gameTypeIndex) ? Number(object.gameTypeIndex) : 0 };
+  },
+
+  toJSON(message: ss2cPartyGameTypeChangeNot): unknown {
+    const obj: any = {};
+    if (message.gameTypeIndex !== 0) {
+      obj.gameTypeIndex = Math.round(message.gameTypeIndex);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cPartyGameTypeChangeNot>, I>>(base?: I): ss2cPartyGameTypeChangeNot {
+    return ss2cPartyGameTypeChangeNot.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cPartyGameTypeChangeNot>, I>>(object: I): ss2cPartyGameTypeChangeNot {
+    const message = createBasess2cPartyGameTypeChangeNot();
+    message.gameTypeIndex = object.gameTypeIndex ?? 0;
     return message;
   },
 };

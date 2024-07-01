@@ -25,6 +25,13 @@ message Define_Account {
     EPIC = 2;
     IRONMACE = 3;
     CHAF = 4;
+    MICROSOFT = 5;
+  }
+
+  enum AccountStatus {
+    ACCOUNT_STATUS_NONE = 0;
+    ACCOUNT_STATUS_SQUIRE = 1;
+    ACCOUNT_STATUS_LEGEND = 2;
   }
 
 }
@@ -59,7 +66,32 @@ message Define_Item {
     BAG = 2;
     EQUIPMENT = 3;
     STORAGE = 4;
-    MAX = 5;
+    PURCHASED_STORAGE_0 = 5;
+    PURCHASED_STORAGE_1 = 6;
+    PURCHASED_STORAGE_2 = 7;
+    PURCHASED_STORAGE_3 = 8;
+    PURCHASED_STORAGE_4 = 9;
+    SHARED_STASH_0 = 20;
+    MAX = 30;
+  }
+
+  enum rarityType {
+    NONE_RARITY_TYPE = 0;
+    POOR = 1;
+    COMMON = 2;
+    UNCOMMON = 3;
+    RARE = 4;
+    EPIC = 5;
+    LEGEND = 6;
+    UNIQUE = 7;
+  }
+
+  enum LootState {
+    NONE_SOURCE = 0;
+    SUPPLIED = 1;
+    LOOTED = 2;
+    HANDLED = 3;
+    CRAFT = 4;
   }
 
 }
@@ -131,23 +163,64 @@ message Define_Match {
 
 }
 
+message Define_Stat {
+  enum StatType {
+    NONE_STAT = 0;
+    GAMES_PLAYED = 1;
+    EXTRACTIONS = 2;
+    DOWN_PORTALS_TAKEN = 3;
+    KILLS = 4;
+    DEATHS = 5;
+    TREASURE_VALUE_EXTRACTED = 6;
+    MONSTERS_KILLED = 7;
+    SUBBOSSES_KILLED = 8;
+    BOSSES_KILLED = 9;
+    ORNATE_CHESTS_OPENED = 10;
+    ROYAL_COFFINS_OPENED = 11;
+    LIONS_HEAD_CHESTS_OPENED = 12;
+    GOLDEN_CHESTS_OPENED = 13;
+    MARVELOUS_CHESTS_OPENED = 14;
+    ALLIES_REVIVED = 15;
+    PLAYER_KILL_ASSIST = 16;
+    MONSTER_KILL_ASSIST = 17;
+    SUBBOSS_KILL_ASSIST = 18;
+    BOSS_KILL_ASSIST = 19;
+  }
+
+}
+
 message Define_Game {
   enum AdvPointType {
     NONE = 0;
-    PLAYER_KILL = 1;
-    DUNGEON_DOWN = 2;
-    MONSTER_KILL = 3;
-    PROPS_INTERACTION = 4;
-    ITEM_ACHEIVE = 5;
+    PlayerKill = 1;
+    DungeonDown = 2;
+    MonsterKill = 3;
+    PropsInteraction = 4;
+    ItemAchieve = 5;
+    PlayerDead = 6;
+    PlayerLocation = 7;
+    PlayerLootNewItem = 8;
+    SubBossKill = 9;
+    BossKill = 10;
+    HighEndPropsInteraction = 11;
+    Treasure = 12;
+    EntranceFee = 13;
+    PlayerKillAssist = 14;
+    MonsterKillAssist = 15;
+    SubBossKillAssist = 16;
+    BossKillAssist = 17;
   }
 
-  enum DifficultyType {
+  enum GameType {
     NONE_MODE = 0;
-    NORMAL = 1;
-    HIGH_ROLLER = 2;
-    GOBLIN = 3;
-    RUINS = 4;
-    GOBLIN_HIGH_ROLLER = 5;
+    DUNGEON_TRIO_NORMAL = 1;
+    DUNGEON_TRIO_HIGH_ROLLER = 2;
+    DUNGEON_SOLO_NORMAL = 3;
+    DUNGEON_DUO_NORMAL = 4;
+    DUNGEON_SOLO_HIGH_ROLLER = 5;
+    DUNGEON_DUO_HIGH_ROLLER = 6;
+    ARENA_DUO = 7;
+    ARENA_TRIO = 8;
   }
 
   enum Floor {
@@ -193,6 +266,7 @@ message Define_Class {
     SKILL = 2;
     SPELL = 3;
     MUSIC = 4;
+    SHAPE_SHIFT = 5;
   }
 
   enum Move {
@@ -248,6 +322,38 @@ message Operate {
     POLICY_HIGH_ROLLER_ENTRANCE_MIN_LEVEL = 12;
     POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_FEE = 13;
     POLICY_GOBLIN_HIGH_ROLLER_ENTRANCE_MIN_LEVEL = 14;
+    POLICY_MAX_RANK_BATCH_GAME_COUNT = 15;
+    POLICY_ITEM_RARITY_TYPE_NORMAL_VALUE = 16;
+    POLICY_ITEM_RARITY_TYPE_HIGH_ROLLER_VALUE = 17;
+    POLICY_ITEM_RARITY_TYPE_RUINS_VALUE = 18;
+    POLICY_ITEM_RARITY_TYPE_GOBLIN_VALUE = 19;
+    POLICY_ITEM_RARITY_TYPE_GOBLIN_HIGH_ROLLER_VALUE = 20;
+    POLICY_LEADERBOARD_SCORE_FRACTIONAL_DIGITS = 21;
+    POLICY_RUINS_HIGH_ROLLER_ENTRANCE_FEE = 22;
+    POLICY_RUINS_HIGH_ROLLER_ENTRANCE_MIN_LEVEL = 23;
+    POLICY_ITEM_RARITY_TYPE_RUINS_HIGH_ROLLER_VALUE = 24;
+    POLICY_MARKETPLACE_FIXED_LISTING_FEE = 25;
+    POLICY_MARKETPLACE_VARIABLE_LISTING_FEE_RATE = 26;
+    POLICY_MARKETPLACE_LISTING_EXPIRED_TIME = 27;
+    POLICY_MARKETPLACE_TRANSFER_EXPIRED_TIME = 28;
+    POLICY_MARKETPLACE_LISTING_LIMIT_COUNT = 29;
+    POLICY_MARKETPLACE_MAXIMUM_SALE_AMOUNT = 30;
+    POLICY_MARKETPLACE_CLOSED = 31;
+    POLICY_DEATH_CAM_ON_OFF = 32;
+    POLICY_ENABLE_CLOTHPHYSICS = 33;
+    POLICY_ENABLE_CLOTHPHYSICS_USE_TASKTHREAD = 34;
+    POLICY_WAITFOR_PARALLEL_CLOTHTASK = 35;
+    POLICY_MINDWIPE_PRICE = 36;
+    POLICY_ENABLE_SHIPPING_CLIENT_LOG = 37;
+    POLICY_SET_SHIPPING_CLIENT_LOG_LEVEL = 38;
+    POLICY_OVERRIDE_ANTIALIASING = 39;
+    POLICY_ONLY_LOOTED_TRADE_ON = 40;
+    POLICY_ENABLE_UPDATE_ENGINE_VARIABLES = 41;
+    POLICY_KNIGHT_PROGRAM_LINK_PLAY_TIME_LIMIT = 42;
+    POLICY_ACCOUNT_STATUS_UPGRADE = 43;
+    POLICY_UPGRADE_CREATION_HIGH_ROLLER_CHECK_SEC = 45;
+    POLICY_UPGRADE_CREATION_TRADE_CHECK_SEC = 46;
+    POLICY_UPGRADE_CREATION_LISTING_MARKETPLACE_SEC = 47;
   }
 
 }
@@ -262,10 +368,23 @@ message Define_Hack {
 
   enum banType {
     NONE_BAN_TYPE = 0;
-    CHEATER = 1;
-    INAPPROPRIATE_NAME = 2;
-    ETC = 3;
-    RMT = 4;
+    Cheater = 1;
+    InappropriateName = 2;
+    Etc = 3;
+    RmtUser = 4;
+    RmtSpam = 5;
+    AbnormalDetection = 6;
+    CheaterGroup = 7;
+    ExploitAbuser = 8;
+    AbnormalScreen = 9;
+    Teaming = 10;
+    StreamSniping = 11;
+    InappropriateChat = 12;
+    InappropriateVoip = 13;
+    RacistName = 14;
+    RacistChat = 15;
+    RacistVoip = 16;
+    Refund_Abuse = 17;
   }
 
 }
@@ -329,6 +448,7 @@ message Define_Shop {
     ACTION = 4;
     LOBBY_EMOTE = 5;
     CLASS_PACKAGE = 6;
+    ARMOR_SKIN = 7;
   }
 
   enum PaymentMethod {
@@ -354,6 +474,11 @@ message Define_Reward {
     Action = 4;
     LobbyEmote = 5;
     ClassPackage = 6;
+    Item = 7;
+    Exp = 8;
+    Affinity = 9;
+    Stash = 10;
+    ArmorSkin = 11;
   }
 
 }

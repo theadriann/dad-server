@@ -7,6 +7,7 @@ option java_outer_classname = "common";
 option java_multiple_files = false;
 
 import "_Character.proto";
+import "_Chat.proto";
 
 message SC2S_META_LOCATION_REQ {
   uint32 location = 1;
@@ -107,5 +108,116 @@ message SS2C_GM_ENTER_GAME_SPECTATOR_RES {
   uint32 port = 3;
   string token = 4;
   string serviceUrl = 5;
+}
+
+message SALLMAP_ROTATION_INFO {
+  uint32 gameType = 1;
+  string mapTag = 2;
+}
+
+message SS2C_ALL_MAP_MATCHMAKING_NOT {
+  repeated .DC.Packet.SALLMAP_ROTATION_INFO infos = 1;
+  string nextRotationDate = 3;
+  string nextRotationTime = 4;
+}
+
+message SLATENCY_CHECK_INFO {
+  string path = 1;
+}
+
+message SS2C_LATENCY_CHECK_NOT {
+  int32 checkCount = 1;
+  int32 checkTermMS = 2;
+  repeated .DC.Packet.SLATENCY_CHECK_INFO latencyInfos = 3;
+}
+
+message SS2C_LOBBY_COMPLETE_NOT {
+  int32 type = 1;
+}
+
+message SC2S_CHAT_HACK_REPORT_REQ {
+  uint32 reportIndex = 1;
+  uint64 chatIndex = 2;
+  uint32 chatType = 3;
+  uint32 reportType = 4;
+}
+
+message SS2C_CHAT_HACK_REPORT_RES {
+  int32 result = 1;
+}
+
+message SC2S_JOIN_LAST_GAME_REQ {
+}
+
+message SS2C_JOIN_LAST_GAME_RES {
+  uint32 canJoin = 1;
+  string address = 2;
+  string sessionId = 3;
+  string accountId = 4;
+  string serviceUrl = 5;
+}
+
+message SC2S_WHISPER_CHAT_REQ {
+  .DC.Packet.SCHATDATA chatData = 1;
+  string targetNickname = 2;
+}
+
+message SS2C_WHISPER_CHAT_RES {
+  uint32 result = 1;
+}
+
+message SS2C_WHISPER_CHAT_NOT {
+  .DC.Packet.SCHATDATA chatData = 1;
+  uint64 time = 2;
+}
+
+message SS2C_ACCOUNT_STATUS_NOT {
+  uint32 accountStatus = 1;
+}
+
+message SC2S_PLATFORM_LINK_CODE_GEN_REQ {
+}
+
+message SS2C_PLATFORM_LINK_CODE_GEN_RES {
+  uint32 result = 1;
+  string genCode = 2;
+  int64 remainTimeMS = 3;
+}
+
+message SC2S_PLATFORM_LINK_CODE_ACTIVE_REQ {
+  string code = 1;
+}
+
+message SS2C_PLATFORM_LINK_CODE_ACTIVE_RES {
+  uint32 result = 1;
+}
+
+message SPLATFORM_LINK_INFO {
+  uint32 loginType = 1;
+  string platformId = 2;
+}
+
+message SC2S_PLATFORM_LINK_INFO_LIST_REQ {
+}
+
+message SS2C_PLATFORM_LINK_INFO_LIST_RES {
+  repeated .DC.Packet.SPLATFORM_LINK_INFO infos = 1;
+}
+
+message SC2S_PLATFORM_LINK_FAQ_URL_REQ {
+}
+
+message SS2C_PLATFORM_LINK_FAQ_URL_RES {
+  string faqUrl = 1;
+}
+
+message SS2C_CLIENT_POPUP_MESSAGE_NOT {
+  string message = 1;
+}
+
+message SS2C_SQUIRE_STATUS_RESTRICTED_CONTENT_NOT {
+  repeated int32 limitedDungeons = 1;
+  int32 IsAllowedEnterTradingPost = 2;
+  int32 IsAllowedListingMarketplace = 3;
 }
 

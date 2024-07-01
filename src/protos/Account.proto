@@ -24,6 +24,7 @@ message SLOGIN_CHARACTER_INFO {
   repeated .DC.Packet.SItem equipItemList = 8;
   repeated string equipCharacterSkinList = 9;
   repeated string equipItemSkinList = 10;
+  repeated string equipArmorSkinList = 11;
 }
 
 message SC2S_ACCOUNT_LOGIN_REQ {
@@ -49,10 +50,7 @@ message SS2C_ACCOUNT_LOGIN_RES {
     FAIL_IP_PORT = 7;
     FAIL_OVERLAP_LOGIN = 8;
     FAIL_STEAM_BUILD_ID = 11;
-    FAIL_LOGIN_BAN_USER = 12;
-    FAIL_LOGIN_BAN_USER_CHEATER = 13;
-    FAIL_LOGIN_BAN_USER_INAPPROPRIATE_NAME = 14;
-    FAIL_LOGIN_BAN_USER_ETC = 15;
+    FAIL_BAN = 12;
     FAIL_LOGIN_BAN_HARDWARE = 16;
     FAIL_UNDER_MAINTENANCE = 17;
     FAIL_BUILD_VERSION_ID = 41;
@@ -69,8 +67,13 @@ message SS2C_ACCOUNT_LOGIN_RES {
   string secretToken = 8;
   uint64 banTime_begin_ms = 9;
   uint64 banTime_end_ms = 10;
-  string unlockEndDate = 11;
-  string unlockEndTime = 12;
+  string upgradeDate = 11;
+  string upgradeTime = 12;
+  string banReason = 13;
+  string latencyToken = 14;
+  uint64 totalPlaytime = 15;
+  int32 userLoginInfo = 16;
+  int32 usePlatformLink = 17;
 }
 
 message SC2S_ACCOUNT_CHARACTER_CREATE_REQ {
@@ -100,6 +103,7 @@ message SC2S_ACCOUNT_CHARACTER_DELETE_REQ {
 
 message SS2C_ACCOUNT_CHARACTER_DELETE_RES {
   uint32 result = 1;
+  uint32 usePlatformLink = 2;
 }
 
 message SC2S_LOBBY_ENTER_REQ {
@@ -127,5 +131,19 @@ message SACCOUNT_CHARACTER_CLASS_INFO {
 
 message SS2C_ACCOUNT_CHARACTER_CLASS_LIST_NOT {
   repeated .DC.Packet.SACCOUNT_CHARACTER_CLASS_INFO characterClassList = 1;
+}
+
+message SC2S_USER_HW_INFO_REQ {
+  string os = 1;
+  string cpu = 2;
+  string gpu = 3;
+  string gpuVersion = 4;
+  string memory = 5;
+  string storage = 6;
+  string directX = 7;
+  string osVersion = 8;
+}
+
+message SS2C_USER_HW_INFO_RES {
 }
 

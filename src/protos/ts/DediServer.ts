@@ -1,10 +1,20 @@
 /* eslint-disable */
 import Long from "long";
 import _m0 from "protobufjs/minimal";
-import { saccountNickname } from "./_Character";
-import { SDownItem, SEMOTE, SItem, SMusic, SPerk, SSkill, SSpell } from "./_Item";
+import { saccountNickname, SGameStat } from "./_Character";
+import { SDownItem, SEMOTE, SItem, SMusic, SPerk, SShapeShift, SSkill, SSpell } from "./_Item";
 
 export const protobufPackage = "DC.Packet";
+
+export interface SGameQuestContentInfo {
+  contentId: string;
+  contentValue: number;
+}
+
+export interface SGameQuestInfo {
+  questId: string;
+  infos: SGameQuestContentInfo[];
+}
 
 export interface S2CGameEnterUserJson {
   restUrl: string;
@@ -33,6 +43,7 @@ export interface Killlog {
   instigatorName: string;
   effectCauserName: string;
   hitBoxType: number;
+  advPoint: number;
 }
 
 export interface MonsterKillLog {
@@ -55,7 +66,7 @@ export interface C2SGameExitUserPOST {
   expPoints: GameExitExpPoint[];
   killLogData: Killlog[];
   monsterKillLogs: MonsterKillLog[];
-  gameDifficultyType: number;
+  gameType: number;
   needBlock: number;
   needHWBlock: number;
 }
@@ -114,7 +125,7 @@ export interface S2CGameStartServerJson {
   dungeonMapIds: string[];
   gameHackPolicy: number;
   validPlayerMeleeAttackRange: number;
-  gameDifficultyType: number;
+  gameType: number;
   shippingLogOnOffPolicy: number;
   shippingLogLevelPolicy: number;
   gmOnOffPolicy: number;
@@ -123,6 +134,12 @@ export interface S2CGameStartServerJson {
   currentFloor: number;
   floorMatchmakingOnOff: number;
   matchmakingType: number;
+  region: string;
+  fleetId: string;
+  dungeonIdTag: string;
+  cloudScanUrl: string;
+  serverLocate: string;
+  matchingQueueType: string;
 }
 
 export enum S2CGameStartServerJson_matchMake {
@@ -185,6 +202,14 @@ export interface C2SGameCharacterInfoGet {
   gameId: number;
   accountId: string;
   characterId: string;
+  gameType: number;
+}
+
+export interface SRankGameUserInfo {
+  rankId: string;
+  currentPoint: number;
+  needPoint: number;
+  currentTotalPoint: number;
 }
 
 export interface S2CGameCharacterInfoJson {
@@ -200,6 +225,17 @@ export interface S2CGameCharacterInfoJson {
   emotes: SEMOTE[];
   actionIds: string[];
   musics: SMusic[];
+  shapeShifts: SShapeShift[];
+  quests: SGameQuestInfo[];
+  rankInfo: SRankGameUserInfo | undefined;
+  entranceFee: number;
+  seasonId: string;
+  isSeason: number;
+  armorSkinIds: string[];
+  totalPlayTimeSec: number;
+  level: number;
+  fame: number;
+  isBlackList: number;
 }
 
 export interface C2SGameAliveCheckGET {
@@ -265,18 +301,26 @@ export interface GameResultInfo {
   expPoints: GameExitExpPoint[];
   killLogData: Killlog[];
   monsterKillLogs: MonsterKillLog[];
-  gameDifficultyType: number;
+  gameType: number;
   needBlock: number;
   needHWBlock: number;
   blockTimeMin: number;
   addTriumphExpValue: number;
   locations: Location[];
   newItemLogs: NewItemLog[];
+  quests: SGameQuestInfo[];
+  gameStats: SGameStat[];
+  seasonId: string;
+  isSeason: number;
+  dungeonIdTag: string;
+  isBasecamp: number;
+  userPcLanguageCode: string;
 }
 
 export interface C2SGameEscapeUserPOST {
   resultInfo: GameResultInfo | undefined;
   items: SItem[];
+  secretId: string;
 }
 
 export interface C2SGameExitUserV2POST {
@@ -304,6 +348,11 @@ export interface SMusicFloor {
   count: number;
 }
 
+export interface SShapeShiftFloor {
+  shapeShift: SShapeShift | undefined;
+  count: number;
+}
+
 export interface FloorMatchMakingCharacterInfo {
   accountId: string;
   characterId: string;
@@ -312,6 +361,7 @@ export interface FloorMatchMakingCharacterInfo {
   skills: SSkillFloor[];
   spells: SSpellFloor[];
   musics: SMusicFloor[];
+  shapeShifts: SShapeShiftFloor[];
   characterSkinIds: string[];
   itemSkinIds: string[];
   emotes: SEMOTE[];
@@ -326,6 +376,10 @@ export interface C2SPrepareFloorMatchMaking {
 export interface S2CGamePolicyGET {
   appHash: string[];
   policyJson: string;
+}
+
+export interface S2CGameFileDBGET {
+  fileDBJson: string;
 }
 
 export interface C2SGameSpectatorCheckPOST {
@@ -387,6 +441,11 @@ export interface C2SIronShieldReportPOST {
   characterId: string;
   originNickname: string;
   reason: string;
+  needBlock: number;
+  needHWBlock: number;
+  blockTimeMin: number;
+  banType: number;
+  blobType: number;
 }
 
 export interface C2SBanCheckHardwarePOST {
@@ -395,8 +454,192 @@ export interface C2SBanCheckHardwarePOST {
 }
 
 export interface S2CBanCheckHardwarePOSTResponse {
-  isBanTarget: number;
+  accountId: string;
+  isBan: number;
+  banHIds: string[];
+  loginHIds: string[];
 }
+
+export interface C2SDirtyItemPOST {
+  accountId: string;
+  characterId: string;
+  gameId: number;
+  upsertItems: SItem[];
+  deleteItemUniqueIds: number[];
+}
+
+export interface C2SIronShieldIsolationPOST {
+  accountId: string;
+  isolationHours: number;
+}
+
+export interface C2SArenaResultPOST {
+  resultInfo: GameResultInfo | undefined;
+  items: SItem[];
+  secretId: string;
+}
+
+export interface C2SArenaExitPOST {
+  accountId: string;
+  characterId: string;
+  gameId: number;
+  secretId: string;
+}
+
+export interface C2SGameFinalizeSessionPOST {
+  gameId: number;
+  accountId: string;
+  characterId: string;
+  recoveryItems: SItem[];
+}
+
+function createBaseSGameQuestContentInfo(): SGameQuestContentInfo {
+  return { contentId: "", contentValue: 0 };
+}
+
+export const SGameQuestContentInfo = {
+  encode(message: SGameQuestContentInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.contentId !== "") {
+      writer.uint32(18).string(message.contentId);
+    }
+    if (message.contentValue !== 0) {
+      writer.uint32(24).int32(message.contentValue);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SGameQuestContentInfo {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSGameQuestContentInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.contentId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.contentValue = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SGameQuestContentInfo {
+    return {
+      contentId: isSet(object.contentId) ? String(object.contentId) : "",
+      contentValue: isSet(object.contentValue) ? Number(object.contentValue) : 0,
+    };
+  },
+
+  toJSON(message: SGameQuestContentInfo): unknown {
+    const obj: any = {};
+    if (message.contentId !== "") {
+      obj.contentId = message.contentId;
+    }
+    if (message.contentValue !== 0) {
+      obj.contentValue = Math.round(message.contentValue);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SGameQuestContentInfo>, I>>(base?: I): SGameQuestContentInfo {
+    return SGameQuestContentInfo.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SGameQuestContentInfo>, I>>(object: I): SGameQuestContentInfo {
+    const message = createBaseSGameQuestContentInfo();
+    message.contentId = object.contentId ?? "";
+    message.contentValue = object.contentValue ?? 0;
+    return message;
+  },
+};
+
+function createBaseSGameQuestInfo(): SGameQuestInfo {
+  return { questId: "", infos: [] };
+}
+
+export const SGameQuestInfo = {
+  encode(message: SGameQuestInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.questId !== "") {
+      writer.uint32(10).string(message.questId);
+    }
+    for (const v of message.infos) {
+      SGameQuestContentInfo.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SGameQuestInfo {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSGameQuestInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.questId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.infos.push(SGameQuestContentInfo.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SGameQuestInfo {
+    return {
+      questId: isSet(object.questId) ? String(object.questId) : "",
+      infos: Array.isArray(object?.infos) ? object.infos.map((e: any) => SGameQuestContentInfo.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: SGameQuestInfo): unknown {
+    const obj: any = {};
+    if (message.questId !== "") {
+      obj.questId = message.questId;
+    }
+    if (message.infos?.length) {
+      obj.infos = message.infos.map((e) => SGameQuestContentInfo.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SGameQuestInfo>, I>>(base?: I): SGameQuestInfo {
+    return SGameQuestInfo.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SGameQuestInfo>, I>>(object: I): SGameQuestInfo {
+    const message = createBaseSGameQuestInfo();
+    message.questId = object.questId ?? "";
+    message.infos = object.infos?.map((e) => SGameQuestContentInfo.fromPartial(e)) || [];
+    return message;
+  },
+};
 
 function createBaseS2CGameEnterUserJson(): S2CGameEnterUserJson {
   return {
@@ -596,10 +839,10 @@ function createBaseGameExitAdvPoint(): GameExitAdvPoint {
 export const GameExitAdvPoint = {
   encode(message: GameExitAdvPoint, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.advPointType !== 0) {
-      writer.uint32(8).uint32(message.advPointType);
+      writer.uint32(8).int32(message.advPointType);
     }
     if (message.advPoint !== 0) {
-      writer.uint32(16).uint32(message.advPoint);
+      writer.uint32(16).int32(message.advPoint);
     }
     return writer;
   },
@@ -616,14 +859,14 @@ export const GameExitAdvPoint = {
             break;
           }
 
-          message.advPointType = reader.uint32();
+          message.advPointType = reader.int32();
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.advPoint = reader.uint32();
+          message.advPoint = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -738,7 +981,7 @@ export const GameExitExpPoint = {
 };
 
 function createBaseKilllog(): Killlog {
-  return { instigatorAccountId: "", instigatorName: "", effectCauserName: "", hitBoxType: 0 };
+  return { instigatorAccountId: "", instigatorName: "", effectCauserName: "", hitBoxType: 0, advPoint: 0 };
 }
 
 export const Killlog = {
@@ -754,6 +997,9 @@ export const Killlog = {
     }
     if (message.hitBoxType !== 0) {
       writer.uint32(32).uint32(message.hitBoxType);
+    }
+    if (message.advPoint !== 0) {
+      writer.uint32(40).int32(message.advPoint);
     }
     return writer;
   },
@@ -793,6 +1039,13 @@ export const Killlog = {
 
           message.hitBoxType = reader.uint32();
           continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.advPoint = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -808,6 +1061,7 @@ export const Killlog = {
       instigatorName: isSet(object.instigatorName) ? String(object.instigatorName) : "",
       effectCauserName: isSet(object.effectCauserName) ? String(object.effectCauserName) : "",
       hitBoxType: isSet(object.hitBoxType) ? Number(object.hitBoxType) : 0,
+      advPoint: isSet(object.advPoint) ? Number(object.advPoint) : 0,
     };
   },
 
@@ -825,6 +1079,9 @@ export const Killlog = {
     if (message.hitBoxType !== 0) {
       obj.hitBoxType = Math.round(message.hitBoxType);
     }
+    if (message.advPoint !== 0) {
+      obj.advPoint = Math.round(message.advPoint);
+    }
     return obj;
   },
 
@@ -837,6 +1094,7 @@ export const Killlog = {
     message.instigatorName = object.instigatorName ?? "";
     message.effectCauserName = object.effectCauserName ?? "";
     message.hitBoxType = object.hitBoxType ?? 0;
+    message.advPoint = object.advPoint ?? 0;
     return message;
   },
 };
@@ -931,7 +1189,7 @@ function createBaseC2SGameExitUserPOST(): C2SGameExitUserPOST {
     expPoints: [],
     killLogData: [],
     monsterKillLogs: [],
-    gameDifficultyType: 0,
+    gameType: 0,
     needBlock: 0,
     needHWBlock: 0,
   };
@@ -981,8 +1239,8 @@ export const C2SGameExitUserPOST = {
     for (const v of message.monsterKillLogs) {
       MonsterKillLog.encode(v!, writer.uint32(114).fork()).ldelim();
     }
-    if (message.gameDifficultyType !== 0) {
-      writer.uint32(120).uint32(message.gameDifficultyType);
+    if (message.gameType !== 0) {
+      writer.uint32(120).uint32(message.gameType);
     }
     if (message.needBlock !== 0) {
       writer.uint32(128).uint32(message.needBlock);
@@ -1103,7 +1361,7 @@ export const C2SGameExitUserPOST = {
             break;
           }
 
-          message.gameDifficultyType = reader.uint32();
+          message.gameType = reader.uint32();
           continue;
         case 16:
           if (tag !== 128) {
@@ -1148,7 +1406,7 @@ export const C2SGameExitUserPOST = {
       monsterKillLogs: Array.isArray(object?.monsterKillLogs)
         ? object.monsterKillLogs.map((e: any) => MonsterKillLog.fromJSON(e))
         : [],
-      gameDifficultyType: isSet(object.gameDifficultyType) ? Number(object.gameDifficultyType) : 0,
+      gameType: isSet(object.gameType) ? Number(object.gameType) : 0,
       needBlock: isSet(object.needBlock) ? Number(object.needBlock) : 0,
       needHWBlock: isSet(object.needHWBlock) ? Number(object.needHWBlock) : 0,
     };
@@ -1198,8 +1456,8 @@ export const C2SGameExitUserPOST = {
     if (message.monsterKillLogs?.length) {
       obj.monsterKillLogs = message.monsterKillLogs.map((e) => MonsterKillLog.toJSON(e));
     }
-    if (message.gameDifficultyType !== 0) {
-      obj.gameDifficultyType = Math.round(message.gameDifficultyType);
+    if (message.gameType !== 0) {
+      obj.gameType = Math.round(message.gameType);
     }
     if (message.needBlock !== 0) {
       obj.needBlock = Math.round(message.needBlock);
@@ -1229,7 +1487,7 @@ export const C2SGameExitUserPOST = {
     message.expPoints = object.expPoints?.map((e) => GameExitExpPoint.fromPartial(e)) || [];
     message.killLogData = object.killLogData?.map((e) => Killlog.fromPartial(e)) || [];
     message.monsterKillLogs = object.monsterKillLogs?.map((e) => MonsterKillLog.fromPartial(e)) || [];
-    message.gameDifficultyType = object.gameDifficultyType ?? 0;
+    message.gameType = object.gameType ?? 0;
     message.needBlock = object.needBlock ?? 0;
     message.needHWBlock = object.needHWBlock ?? 0;
     return message;
@@ -1349,7 +1607,7 @@ function createBaseS2CGameStartServerJson(): S2CGameStartServerJson {
     dungeonMapIds: [],
     gameHackPolicy: 0,
     validPlayerMeleeAttackRange: 0,
-    gameDifficultyType: 0,
+    gameType: 0,
     shippingLogOnOffPolicy: 0,
     shippingLogLevelPolicy: 0,
     gmOnOffPolicy: 0,
@@ -1358,6 +1616,12 @@ function createBaseS2CGameStartServerJson(): S2CGameStartServerJson {
     currentFloor: 0,
     floorMatchmakingOnOff: 0,
     matchmakingType: 0,
+    region: "",
+    fleetId: "",
+    dungeonIdTag: "",
+    cloudScanUrl: "",
+    serverLocate: "",
+    matchingQueueType: "",
   };
 }
 
@@ -1384,8 +1648,8 @@ export const S2CGameStartServerJson = {
     if (message.validPlayerMeleeAttackRange !== 0) {
       writer.uint32(56).uint32(message.validPlayerMeleeAttackRange);
     }
-    if (message.gameDifficultyType !== 0) {
-      writer.uint32(64).uint32(message.gameDifficultyType);
+    if (message.gameType !== 0) {
+      writer.uint32(64).uint32(message.gameType);
     }
     if (message.shippingLogOnOffPolicy !== 0) {
       writer.uint32(72).uint32(message.shippingLogOnOffPolicy);
@@ -1410,6 +1674,24 @@ export const S2CGameStartServerJson = {
     }
     if (message.matchmakingType !== 0) {
       writer.uint32(144).uint32(message.matchmakingType);
+    }
+    if (message.region !== "") {
+      writer.uint32(154).string(message.region);
+    }
+    if (message.fleetId !== "") {
+      writer.uint32(162).string(message.fleetId);
+    }
+    if (message.dungeonIdTag !== "") {
+      writer.uint32(170).string(message.dungeonIdTag);
+    }
+    if (message.cloudScanUrl !== "") {
+      writer.uint32(178).string(message.cloudScanUrl);
+    }
+    if (message.serverLocate !== "") {
+      writer.uint32(186).string(message.serverLocate);
+    }
+    if (message.matchingQueueType !== "") {
+      writer.uint32(194).string(message.matchingQueueType);
     }
     return writer;
   },
@@ -1475,7 +1757,7 @@ export const S2CGameStartServerJson = {
             break;
           }
 
-          message.gameDifficultyType = reader.uint32();
+          message.gameType = reader.uint32();
           continue;
         case 9:
           if (tag !== 72) {
@@ -1533,6 +1815,48 @@ export const S2CGameStartServerJson = {
 
           message.matchmakingType = reader.uint32();
           continue;
+        case 19:
+          if (tag !== 154) {
+            break;
+          }
+
+          message.region = reader.string();
+          continue;
+        case 20:
+          if (tag !== 162) {
+            break;
+          }
+
+          message.fleetId = reader.string();
+          continue;
+        case 21:
+          if (tag !== 170) {
+            break;
+          }
+
+          message.dungeonIdTag = reader.string();
+          continue;
+        case 22:
+          if (tag !== 178) {
+            break;
+          }
+
+          message.cloudScanUrl = reader.string();
+          continue;
+        case 23:
+          if (tag !== 186) {
+            break;
+          }
+
+          message.serverLocate = reader.string();
+          continue;
+        case 24:
+          if (tag !== 194) {
+            break;
+          }
+
+          message.matchingQueueType = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1553,7 +1877,7 @@ export const S2CGameStartServerJson = {
       validPlayerMeleeAttackRange: isSet(object.validPlayerMeleeAttackRange)
         ? Number(object.validPlayerMeleeAttackRange)
         : 0,
-      gameDifficultyType: isSet(object.gameDifficultyType) ? Number(object.gameDifficultyType) : 0,
+      gameType: isSet(object.gameType) ? Number(object.gameType) : 0,
       shippingLogOnOffPolicy: isSet(object.shippingLogOnOffPolicy) ? Number(object.shippingLogOnOffPolicy) : 0,
       shippingLogLevelPolicy: isSet(object.shippingLogLevelPolicy) ? Number(object.shippingLogLevelPolicy) : 0,
       gmOnOffPolicy: isSet(object.gmOnOffPolicy) ? Number(object.gmOnOffPolicy) : 0,
@@ -1566,6 +1890,12 @@ export const S2CGameStartServerJson = {
       currentFloor: isSet(object.currentFloor) ? Number(object.currentFloor) : 0,
       floorMatchmakingOnOff: isSet(object.floorMatchmakingOnOff) ? Number(object.floorMatchmakingOnOff) : 0,
       matchmakingType: isSet(object.matchmakingType) ? Number(object.matchmakingType) : 0,
+      region: isSet(object.region) ? String(object.region) : "",
+      fleetId: isSet(object.fleetId) ? String(object.fleetId) : "",
+      dungeonIdTag: isSet(object.dungeonIdTag) ? String(object.dungeonIdTag) : "",
+      cloudScanUrl: isSet(object.cloudScanUrl) ? String(object.cloudScanUrl) : "",
+      serverLocate: isSet(object.serverLocate) ? String(object.serverLocate) : "",
+      matchingQueueType: isSet(object.matchingQueueType) ? String(object.matchingQueueType) : "",
     };
   },
 
@@ -1592,8 +1922,8 @@ export const S2CGameStartServerJson = {
     if (message.validPlayerMeleeAttackRange !== 0) {
       obj.validPlayerMeleeAttackRange = Math.round(message.validPlayerMeleeAttackRange);
     }
-    if (message.gameDifficultyType !== 0) {
-      obj.gameDifficultyType = Math.round(message.gameDifficultyType);
+    if (message.gameType !== 0) {
+      obj.gameType = Math.round(message.gameType);
     }
     if (message.shippingLogOnOffPolicy !== 0) {
       obj.shippingLogOnOffPolicy = Math.round(message.shippingLogOnOffPolicy);
@@ -1619,6 +1949,24 @@ export const S2CGameStartServerJson = {
     if (message.matchmakingType !== 0) {
       obj.matchmakingType = Math.round(message.matchmakingType);
     }
+    if (message.region !== "") {
+      obj.region = message.region;
+    }
+    if (message.fleetId !== "") {
+      obj.fleetId = message.fleetId;
+    }
+    if (message.dungeonIdTag !== "") {
+      obj.dungeonIdTag = message.dungeonIdTag;
+    }
+    if (message.cloudScanUrl !== "") {
+      obj.cloudScanUrl = message.cloudScanUrl;
+    }
+    if (message.serverLocate !== "") {
+      obj.serverLocate = message.serverLocate;
+    }
+    if (message.matchingQueueType !== "") {
+      obj.matchingQueueType = message.matchingQueueType;
+    }
     return obj;
   },
 
@@ -1634,7 +1982,7 @@ export const S2CGameStartServerJson = {
     message.dungeonMapIds = object.dungeonMapIds?.map((e) => e) || [];
     message.gameHackPolicy = object.gameHackPolicy ?? 0;
     message.validPlayerMeleeAttackRange = object.validPlayerMeleeAttackRange ?? 0;
-    message.gameDifficultyType = object.gameDifficultyType ?? 0;
+    message.gameType = object.gameType ?? 0;
     message.shippingLogOnOffPolicy = object.shippingLogOnOffPolicy ?? 0;
     message.shippingLogLevelPolicy = object.shippingLogLevelPolicy ?? 0;
     message.gmOnOffPolicy = object.gmOnOffPolicy ?? 0;
@@ -1643,6 +1991,12 @@ export const S2CGameStartServerJson = {
     message.currentFloor = object.currentFloor ?? 0;
     message.floorMatchmakingOnOff = object.floorMatchmakingOnOff ?? 0;
     message.matchmakingType = object.matchmakingType ?? 0;
+    message.region = object.region ?? "";
+    message.fleetId = object.fleetId ?? "";
+    message.dungeonIdTag = object.dungeonIdTag ?? "";
+    message.cloudScanUrl = object.cloudScanUrl ?? "";
+    message.serverLocate = object.serverLocate ?? "";
+    message.matchingQueueType = object.matchingQueueType ?? "";
     return message;
   },
 };
@@ -1900,7 +2254,7 @@ export const C2SGameStartPOST = {
 };
 
 function createBaseC2SGameCharacterInfoGet(): C2SGameCharacterInfoGet {
-  return { gameId: 0, accountId: "", characterId: "" };
+  return { gameId: 0, accountId: "", characterId: "", gameType: 0 };
 }
 
 export const C2SGameCharacterInfoGet = {
@@ -1913,6 +2267,9 @@ export const C2SGameCharacterInfoGet = {
     }
     if (message.characterId !== "") {
       writer.uint32(26).string(message.characterId);
+    }
+    if (message.gameType !== 0) {
+      writer.uint32(32).uint32(message.gameType);
     }
     return writer;
   },
@@ -1945,6 +2302,13 @@ export const C2SGameCharacterInfoGet = {
 
           message.characterId = reader.string();
           continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.gameType = reader.uint32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1959,6 +2323,7 @@ export const C2SGameCharacterInfoGet = {
       gameId: isSet(object.gameId) ? Number(object.gameId) : 0,
       accountId: isSet(object.accountId) ? String(object.accountId) : "",
       characterId: isSet(object.characterId) ? String(object.characterId) : "",
+      gameType: isSet(object.gameType) ? Number(object.gameType) : 0,
     };
   },
 
@@ -1973,6 +2338,9 @@ export const C2SGameCharacterInfoGet = {
     if (message.characterId !== "") {
       obj.characterId = message.characterId;
     }
+    if (message.gameType !== 0) {
+      obj.gameType = Math.round(message.gameType);
+    }
     return obj;
   },
 
@@ -1984,6 +2352,111 @@ export const C2SGameCharacterInfoGet = {
     message.gameId = object.gameId ?? 0;
     message.accountId = object.accountId ?? "";
     message.characterId = object.characterId ?? "";
+    message.gameType = object.gameType ?? 0;
+    return message;
+  },
+};
+
+function createBaseSRankGameUserInfo(): SRankGameUserInfo {
+  return { rankId: "", currentPoint: 0, needPoint: 0, currentTotalPoint: 0 };
+}
+
+export const SRankGameUserInfo = {
+  encode(message: SRankGameUserInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.rankId !== "") {
+      writer.uint32(10).string(message.rankId);
+    }
+    if (message.currentPoint !== 0) {
+      writer.uint32(16).uint32(message.currentPoint);
+    }
+    if (message.needPoint !== 0) {
+      writer.uint32(24).uint32(message.needPoint);
+    }
+    if (message.currentTotalPoint !== 0) {
+      writer.uint32(32).uint32(message.currentTotalPoint);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SRankGameUserInfo {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSRankGameUserInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.rankId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.currentPoint = reader.uint32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.needPoint = reader.uint32();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.currentTotalPoint = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SRankGameUserInfo {
+    return {
+      rankId: isSet(object.rankId) ? String(object.rankId) : "",
+      currentPoint: isSet(object.currentPoint) ? Number(object.currentPoint) : 0,
+      needPoint: isSet(object.needPoint) ? Number(object.needPoint) : 0,
+      currentTotalPoint: isSet(object.currentTotalPoint) ? Number(object.currentTotalPoint) : 0,
+    };
+  },
+
+  toJSON(message: SRankGameUserInfo): unknown {
+    const obj: any = {};
+    if (message.rankId !== "") {
+      obj.rankId = message.rankId;
+    }
+    if (message.currentPoint !== 0) {
+      obj.currentPoint = Math.round(message.currentPoint);
+    }
+    if (message.needPoint !== 0) {
+      obj.needPoint = Math.round(message.needPoint);
+    }
+    if (message.currentTotalPoint !== 0) {
+      obj.currentTotalPoint = Math.round(message.currentTotalPoint);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SRankGameUserInfo>, I>>(base?: I): SRankGameUserInfo {
+    return SRankGameUserInfo.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SRankGameUserInfo>, I>>(object: I): SRankGameUserInfo {
+    const message = createBaseSRankGameUserInfo();
+    message.rankId = object.rankId ?? "";
+    message.currentPoint = object.currentPoint ?? 0;
+    message.needPoint = object.needPoint ?? 0;
+    message.currentTotalPoint = object.currentTotalPoint ?? 0;
     return message;
   },
 };
@@ -2002,6 +2475,17 @@ function createBaseS2CGameCharacterInfoJson(): S2CGameCharacterInfoJson {
     emotes: [],
     actionIds: [],
     musics: [],
+    shapeShifts: [],
+    quests: [],
+    rankInfo: undefined,
+    entranceFee: 0,
+    seasonId: "",
+    isSeason: 0,
+    armorSkinIds: [],
+    totalPlayTimeSec: 0,
+    level: 0,
+    fame: 0,
+    isBlackList: 0,
   };
 }
 
@@ -2042,6 +2526,39 @@ export const S2CGameCharacterInfoJson = {
     }
     for (const v of message.musics) {
       SMusic.encode(v!, writer.uint32(98).fork()).ldelim();
+    }
+    for (const v of message.shapeShifts) {
+      SShapeShift.encode(v!, writer.uint32(106).fork()).ldelim();
+    }
+    for (const v of message.quests) {
+      SGameQuestInfo.encode(v!, writer.uint32(114).fork()).ldelim();
+    }
+    if (message.rankInfo !== undefined) {
+      SRankGameUserInfo.encode(message.rankInfo, writer.uint32(130).fork()).ldelim();
+    }
+    if (message.entranceFee !== 0) {
+      writer.uint32(136).uint32(message.entranceFee);
+    }
+    if (message.seasonId !== "") {
+      writer.uint32(146).string(message.seasonId);
+    }
+    if (message.isSeason !== 0) {
+      writer.uint32(152).uint32(message.isSeason);
+    }
+    for (const v of message.armorSkinIds) {
+      writer.uint32(162).string(v!);
+    }
+    if (message.totalPlayTimeSec !== 0) {
+      writer.uint32(168).int32(message.totalPlayTimeSec);
+    }
+    if (message.level !== 0) {
+      writer.uint32(176).int32(message.level);
+    }
+    if (message.fame !== 0) {
+      writer.uint32(184).int32(message.fame);
+    }
+    if (message.isBlackList !== 0) {
+      writer.uint32(192).int32(message.isBlackList);
     }
     return writer;
   },
@@ -2137,6 +2654,83 @@ export const S2CGameCharacterInfoJson = {
 
           message.musics.push(SMusic.decode(reader, reader.uint32()));
           continue;
+        case 13:
+          if (tag !== 106) {
+            break;
+          }
+
+          message.shapeShifts.push(SShapeShift.decode(reader, reader.uint32()));
+          continue;
+        case 14:
+          if (tag !== 114) {
+            break;
+          }
+
+          message.quests.push(SGameQuestInfo.decode(reader, reader.uint32()));
+          continue;
+        case 16:
+          if (tag !== 130) {
+            break;
+          }
+
+          message.rankInfo = SRankGameUserInfo.decode(reader, reader.uint32());
+          continue;
+        case 17:
+          if (tag !== 136) {
+            break;
+          }
+
+          message.entranceFee = reader.uint32();
+          continue;
+        case 18:
+          if (tag !== 146) {
+            break;
+          }
+
+          message.seasonId = reader.string();
+          continue;
+        case 19:
+          if (tag !== 152) {
+            break;
+          }
+
+          message.isSeason = reader.uint32();
+          continue;
+        case 20:
+          if (tag !== 162) {
+            break;
+          }
+
+          message.armorSkinIds.push(reader.string());
+          continue;
+        case 21:
+          if (tag !== 168) {
+            break;
+          }
+
+          message.totalPlayTimeSec = reader.int32();
+          continue;
+        case 22:
+          if (tag !== 176) {
+            break;
+          }
+
+          message.level = reader.int32();
+          continue;
+        case 23:
+          if (tag !== 184) {
+            break;
+          }
+
+          message.fame = reader.int32();
+          continue;
+        case 24:
+          if (tag !== 192) {
+            break;
+          }
+
+          message.isBlackList = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2162,6 +2756,19 @@ export const S2CGameCharacterInfoJson = {
       emotes: Array.isArray(object?.emotes) ? object.emotes.map((e: any) => SEMOTE.fromJSON(e)) : [],
       actionIds: Array.isArray(object?.actionIds) ? object.actionIds.map((e: any) => String(e)) : [],
       musics: Array.isArray(object?.musics) ? object.musics.map((e: any) => SMusic.fromJSON(e)) : [],
+      shapeShifts: Array.isArray(object?.shapeShifts)
+        ? object.shapeShifts.map((e: any) => SShapeShift.fromJSON(e))
+        : [],
+      quests: Array.isArray(object?.quests) ? object.quests.map((e: any) => SGameQuestInfo.fromJSON(e)) : [],
+      rankInfo: isSet(object.rankInfo) ? SRankGameUserInfo.fromJSON(object.rankInfo) : undefined,
+      entranceFee: isSet(object.entranceFee) ? Number(object.entranceFee) : 0,
+      seasonId: isSet(object.seasonId) ? String(object.seasonId) : "",
+      isSeason: isSet(object.isSeason) ? Number(object.isSeason) : 0,
+      armorSkinIds: Array.isArray(object?.armorSkinIds) ? object.armorSkinIds.map((e: any) => String(e)) : [],
+      totalPlayTimeSec: isSet(object.totalPlayTimeSec) ? Number(object.totalPlayTimeSec) : 0,
+      level: isSet(object.level) ? Number(object.level) : 0,
+      fame: isSet(object.fame) ? Number(object.fame) : 0,
+      isBlackList: isSet(object.isBlackList) ? Number(object.isBlackList) : 0,
     };
   },
 
@@ -2203,6 +2810,39 @@ export const S2CGameCharacterInfoJson = {
     if (message.musics?.length) {
       obj.musics = message.musics.map((e) => SMusic.toJSON(e));
     }
+    if (message.shapeShifts?.length) {
+      obj.shapeShifts = message.shapeShifts.map((e) => SShapeShift.toJSON(e));
+    }
+    if (message.quests?.length) {
+      obj.quests = message.quests.map((e) => SGameQuestInfo.toJSON(e));
+    }
+    if (message.rankInfo !== undefined) {
+      obj.rankInfo = SRankGameUserInfo.toJSON(message.rankInfo);
+    }
+    if (message.entranceFee !== 0) {
+      obj.entranceFee = Math.round(message.entranceFee);
+    }
+    if (message.seasonId !== "") {
+      obj.seasonId = message.seasonId;
+    }
+    if (message.isSeason !== 0) {
+      obj.isSeason = Math.round(message.isSeason);
+    }
+    if (message.armorSkinIds?.length) {
+      obj.armorSkinIds = message.armorSkinIds;
+    }
+    if (message.totalPlayTimeSec !== 0) {
+      obj.totalPlayTimeSec = Math.round(message.totalPlayTimeSec);
+    }
+    if (message.level !== 0) {
+      obj.level = Math.round(message.level);
+    }
+    if (message.fame !== 0) {
+      obj.fame = Math.round(message.fame);
+    }
+    if (message.isBlackList !== 0) {
+      obj.isBlackList = Math.round(message.isBlackList);
+    }
     return obj;
   },
 
@@ -2223,6 +2863,19 @@ export const S2CGameCharacterInfoJson = {
     message.emotes = object.emotes?.map((e) => SEMOTE.fromPartial(e)) || [];
     message.actionIds = object.actionIds?.map((e) => e) || [];
     message.musics = object.musics?.map((e) => SMusic.fromPartial(e)) || [];
+    message.shapeShifts = object.shapeShifts?.map((e) => SShapeShift.fromPartial(e)) || [];
+    message.quests = object.quests?.map((e) => SGameQuestInfo.fromPartial(e)) || [];
+    message.rankInfo = (object.rankInfo !== undefined && object.rankInfo !== null)
+      ? SRankGameUserInfo.fromPartial(object.rankInfo)
+      : undefined;
+    message.entranceFee = object.entranceFee ?? 0;
+    message.seasonId = object.seasonId ?? "";
+    message.isSeason = object.isSeason ?? 0;
+    message.armorSkinIds = object.armorSkinIds?.map((e) => e) || [];
+    message.totalPlayTimeSec = object.totalPlayTimeSec ?? 0;
+    message.level = object.level ?? 0;
+    message.fame = object.fame ?? 0;
+    message.isBlackList = object.isBlackList ?? 0;
     return message;
   },
 };
@@ -3014,13 +3667,20 @@ function createBaseGameResultInfo(): GameResultInfo {
     expPoints: [],
     killLogData: [],
     monsterKillLogs: [],
-    gameDifficultyType: 0,
+    gameType: 0,
     needBlock: 0,
     needHWBlock: 0,
     blockTimeMin: 0,
     addTriumphExpValue: 0,
     locations: [],
     newItemLogs: [],
+    quests: [],
+    gameStats: [],
+    seasonId: "",
+    isSeason: 0,
+    dungeonIdTag: "",
+    isBasecamp: 0,
+    userPcLanguageCode: "",
   };
 }
 
@@ -3059,8 +3719,8 @@ export const GameResultInfo = {
     for (const v of message.monsterKillLogs) {
       MonsterKillLog.encode(v!, writer.uint32(90).fork()).ldelim();
     }
-    if (message.gameDifficultyType !== 0) {
-      writer.uint32(96).uint32(message.gameDifficultyType);
+    if (message.gameType !== 0) {
+      writer.uint32(96).uint32(message.gameType);
     }
     if (message.needBlock !== 0) {
       writer.uint32(104).uint32(message.needBlock);
@@ -3079,6 +3739,27 @@ export const GameResultInfo = {
     }
     for (const v of message.newItemLogs) {
       NewItemLog.encode(v!, writer.uint32(146).fork()).ldelim();
+    }
+    for (const v of message.quests) {
+      SGameQuestInfo.encode(v!, writer.uint32(154).fork()).ldelim();
+    }
+    for (const v of message.gameStats) {
+      SGameStat.encode(v!, writer.uint32(162).fork()).ldelim();
+    }
+    if (message.seasonId !== "") {
+      writer.uint32(170).string(message.seasonId);
+    }
+    if (message.isSeason !== 0) {
+      writer.uint32(176).uint32(message.isSeason);
+    }
+    if (message.dungeonIdTag !== "") {
+      writer.uint32(186).string(message.dungeonIdTag);
+    }
+    if (message.isBasecamp !== 0) {
+      writer.uint32(192).uint32(message.isBasecamp);
+    }
+    if (message.userPcLanguageCode !== "") {
+      writer.uint32(202).string(message.userPcLanguageCode);
     }
     return writer;
   },
@@ -3172,7 +3853,7 @@ export const GameResultInfo = {
             break;
           }
 
-          message.gameDifficultyType = reader.uint32();
+          message.gameType = reader.uint32();
           continue;
         case 13:
           if (tag !== 104) {
@@ -3216,6 +3897,55 @@ export const GameResultInfo = {
 
           message.newItemLogs.push(NewItemLog.decode(reader, reader.uint32()));
           continue;
+        case 19:
+          if (tag !== 154) {
+            break;
+          }
+
+          message.quests.push(SGameQuestInfo.decode(reader, reader.uint32()));
+          continue;
+        case 20:
+          if (tag !== 162) {
+            break;
+          }
+
+          message.gameStats.push(SGameStat.decode(reader, reader.uint32()));
+          continue;
+        case 21:
+          if (tag !== 170) {
+            break;
+          }
+
+          message.seasonId = reader.string();
+          continue;
+        case 22:
+          if (tag !== 176) {
+            break;
+          }
+
+          message.isSeason = reader.uint32();
+          continue;
+        case 23:
+          if (tag !== 186) {
+            break;
+          }
+
+          message.dungeonIdTag = reader.string();
+          continue;
+        case 24:
+          if (tag !== 192) {
+            break;
+          }
+
+          message.isBasecamp = reader.uint32();
+          continue;
+        case 25:
+          if (tag !== 202) {
+            break;
+          }
+
+          message.userPcLanguageCode = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3240,13 +3970,20 @@ export const GameResultInfo = {
       monsterKillLogs: Array.isArray(object?.monsterKillLogs)
         ? object.monsterKillLogs.map((e: any) => MonsterKillLog.fromJSON(e))
         : [],
-      gameDifficultyType: isSet(object.gameDifficultyType) ? Number(object.gameDifficultyType) : 0,
+      gameType: isSet(object.gameType) ? Number(object.gameType) : 0,
       needBlock: isSet(object.needBlock) ? Number(object.needBlock) : 0,
       needHWBlock: isSet(object.needHWBlock) ? Number(object.needHWBlock) : 0,
       blockTimeMin: isSet(object.blockTimeMin) ? Number(object.blockTimeMin) : 0,
       addTriumphExpValue: isSet(object.addTriumphExpValue) ? Number(object.addTriumphExpValue) : 0,
       locations: Array.isArray(object?.locations) ? object.locations.map((e: any) => Location.fromJSON(e)) : [],
       newItemLogs: Array.isArray(object?.newItemLogs) ? object.newItemLogs.map((e: any) => NewItemLog.fromJSON(e)) : [],
+      quests: Array.isArray(object?.quests) ? object.quests.map((e: any) => SGameQuestInfo.fromJSON(e)) : [],
+      gameStats: Array.isArray(object?.gameStats) ? object.gameStats.map((e: any) => SGameStat.fromJSON(e)) : [],
+      seasonId: isSet(object.seasonId) ? String(object.seasonId) : "",
+      isSeason: isSet(object.isSeason) ? Number(object.isSeason) : 0,
+      dungeonIdTag: isSet(object.dungeonIdTag) ? String(object.dungeonIdTag) : "",
+      isBasecamp: isSet(object.isBasecamp) ? Number(object.isBasecamp) : 0,
+      userPcLanguageCode: isSet(object.userPcLanguageCode) ? String(object.userPcLanguageCode) : "",
     };
   },
 
@@ -3285,8 +4022,8 @@ export const GameResultInfo = {
     if (message.monsterKillLogs?.length) {
       obj.monsterKillLogs = message.monsterKillLogs.map((e) => MonsterKillLog.toJSON(e));
     }
-    if (message.gameDifficultyType !== 0) {
-      obj.gameDifficultyType = Math.round(message.gameDifficultyType);
+    if (message.gameType !== 0) {
+      obj.gameType = Math.round(message.gameType);
     }
     if (message.needBlock !== 0) {
       obj.needBlock = Math.round(message.needBlock);
@@ -3305,6 +4042,27 @@ export const GameResultInfo = {
     }
     if (message.newItemLogs?.length) {
       obj.newItemLogs = message.newItemLogs.map((e) => NewItemLog.toJSON(e));
+    }
+    if (message.quests?.length) {
+      obj.quests = message.quests.map((e) => SGameQuestInfo.toJSON(e));
+    }
+    if (message.gameStats?.length) {
+      obj.gameStats = message.gameStats.map((e) => SGameStat.toJSON(e));
+    }
+    if (message.seasonId !== "") {
+      obj.seasonId = message.seasonId;
+    }
+    if (message.isSeason !== 0) {
+      obj.isSeason = Math.round(message.isSeason);
+    }
+    if (message.dungeonIdTag !== "") {
+      obj.dungeonIdTag = message.dungeonIdTag;
+    }
+    if (message.isBasecamp !== 0) {
+      obj.isBasecamp = Math.round(message.isBasecamp);
+    }
+    if (message.userPcLanguageCode !== "") {
+      obj.userPcLanguageCode = message.userPcLanguageCode;
     }
     return obj;
   },
@@ -3325,19 +4083,26 @@ export const GameResultInfo = {
     message.expPoints = object.expPoints?.map((e) => GameExitExpPoint.fromPartial(e)) || [];
     message.killLogData = object.killLogData?.map((e) => Killlog.fromPartial(e)) || [];
     message.monsterKillLogs = object.monsterKillLogs?.map((e) => MonsterKillLog.fromPartial(e)) || [];
-    message.gameDifficultyType = object.gameDifficultyType ?? 0;
+    message.gameType = object.gameType ?? 0;
     message.needBlock = object.needBlock ?? 0;
     message.needHWBlock = object.needHWBlock ?? 0;
     message.blockTimeMin = object.blockTimeMin ?? 0;
     message.addTriumphExpValue = object.addTriumphExpValue ?? 0;
     message.locations = object.locations?.map((e) => Location.fromPartial(e)) || [];
     message.newItemLogs = object.newItemLogs?.map((e) => NewItemLog.fromPartial(e)) || [];
+    message.quests = object.quests?.map((e) => SGameQuestInfo.fromPartial(e)) || [];
+    message.gameStats = object.gameStats?.map((e) => SGameStat.fromPartial(e)) || [];
+    message.seasonId = object.seasonId ?? "";
+    message.isSeason = object.isSeason ?? 0;
+    message.dungeonIdTag = object.dungeonIdTag ?? "";
+    message.isBasecamp = object.isBasecamp ?? 0;
+    message.userPcLanguageCode = object.userPcLanguageCode ?? "";
     return message;
   },
 };
 
 function createBaseC2SGameEscapeUserPOST(): C2SGameEscapeUserPOST {
-  return { resultInfo: undefined, items: [] };
+  return { resultInfo: undefined, items: [], secretId: "" };
 }
 
 export const C2SGameEscapeUserPOST = {
@@ -3347,6 +4112,9 @@ export const C2SGameEscapeUserPOST = {
     }
     for (const v of message.items) {
       SItem.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.secretId !== "") {
+      writer.uint32(26).string(message.secretId);
     }
     return writer;
   },
@@ -3372,6 +4140,13 @@ export const C2SGameEscapeUserPOST = {
 
           message.items.push(SItem.decode(reader, reader.uint32()));
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.secretId = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3385,6 +4160,7 @@ export const C2SGameEscapeUserPOST = {
     return {
       resultInfo: isSet(object.resultInfo) ? GameResultInfo.fromJSON(object.resultInfo) : undefined,
       items: Array.isArray(object?.items) ? object.items.map((e: any) => SItem.fromJSON(e)) : [],
+      secretId: isSet(object.secretId) ? String(object.secretId) : "",
     };
   },
 
@@ -3395,6 +4171,9 @@ export const C2SGameEscapeUserPOST = {
     }
     if (message.items?.length) {
       obj.items = message.items.map((e) => SItem.toJSON(e));
+    }
+    if (message.secretId !== "") {
+      obj.secretId = message.secretId;
     }
     return obj;
   },
@@ -3408,6 +4187,7 @@ export const C2SGameEscapeUserPOST = {
       ? GameResultInfo.fromPartial(object.resultInfo)
       : undefined;
     message.items = object.items?.map((e) => SItem.fromPartial(e)) || [];
+    message.secretId = object.secretId ?? "";
     return message;
   },
 };
@@ -3788,6 +4568,82 @@ export const SMusicFloor = {
   },
 };
 
+function createBaseSShapeShiftFloor(): SShapeShiftFloor {
+  return { shapeShift: undefined, count: 0 };
+}
+
+export const SShapeShiftFloor = {
+  encode(message: SShapeShiftFloor, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.shapeShift !== undefined) {
+      SShapeShift.encode(message.shapeShift, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.count !== 0) {
+      writer.uint32(16).int32(message.count);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SShapeShiftFloor {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSShapeShiftFloor();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.shapeShift = SShapeShift.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.count = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SShapeShiftFloor {
+    return {
+      shapeShift: isSet(object.shapeShift) ? SShapeShift.fromJSON(object.shapeShift) : undefined,
+      count: isSet(object.count) ? Number(object.count) : 0,
+    };
+  },
+
+  toJSON(message: SShapeShiftFloor): unknown {
+    const obj: any = {};
+    if (message.shapeShift !== undefined) {
+      obj.shapeShift = SShapeShift.toJSON(message.shapeShift);
+    }
+    if (message.count !== 0) {
+      obj.count = Math.round(message.count);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SShapeShiftFloor>, I>>(base?: I): SShapeShiftFloor {
+    return SShapeShiftFloor.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SShapeShiftFloor>, I>>(object: I): SShapeShiftFloor {
+    const message = createBaseSShapeShiftFloor();
+    message.shapeShift = (object.shapeShift !== undefined && object.shapeShift !== null)
+      ? SShapeShift.fromPartial(object.shapeShift)
+      : undefined;
+    message.count = object.count ?? 0;
+    return message;
+  },
+};
+
 function createBaseFloorMatchMakingCharacterInfo(): FloorMatchMakingCharacterInfo {
   return {
     accountId: "",
@@ -3797,6 +4653,7 @@ function createBaseFloorMatchMakingCharacterInfo(): FloorMatchMakingCharacterInf
     skills: [],
     spells: [],
     musics: [],
+    shapeShifts: [],
     characterSkinIds: [],
     itemSkinIds: [],
     emotes: [],
@@ -3827,17 +4684,20 @@ export const FloorMatchMakingCharacterInfo = {
     for (const v of message.musics) {
       SMusicFloor.encode(v!, writer.uint32(58).fork()).ldelim();
     }
-    for (const v of message.characterSkinIds) {
-      writer.uint32(66).string(v!);
+    for (const v of message.shapeShifts) {
+      SShapeShiftFloor.encode(v!, writer.uint32(66).fork()).ldelim();
     }
-    for (const v of message.itemSkinIds) {
+    for (const v of message.characterSkinIds) {
       writer.uint32(74).string(v!);
     }
+    for (const v of message.itemSkinIds) {
+      writer.uint32(82).string(v!);
+    }
     for (const v of message.emotes) {
-      SEMOTE.encode(v!, writer.uint32(82).fork()).ldelim();
+      SEMOTE.encode(v!, writer.uint32(90).fork()).ldelim();
     }
     if (message.hp !== 0) {
-      writer.uint32(88).int32(message.hp);
+      writer.uint32(96).int32(message.hp);
     }
     return writer;
   },
@@ -3903,24 +4763,31 @@ export const FloorMatchMakingCharacterInfo = {
             break;
           }
 
-          message.characterSkinIds.push(reader.string());
+          message.shapeShifts.push(SShapeShiftFloor.decode(reader, reader.uint32()));
           continue;
         case 9:
           if (tag !== 74) {
             break;
           }
 
-          message.itemSkinIds.push(reader.string());
+          message.characterSkinIds.push(reader.string());
           continue;
         case 10:
           if (tag !== 82) {
             break;
           }
 
-          message.emotes.push(SEMOTE.decode(reader, reader.uint32()));
+          message.itemSkinIds.push(reader.string());
           continue;
         case 11:
-          if (tag !== 88) {
+          if (tag !== 90) {
+            break;
+          }
+
+          message.emotes.push(SEMOTE.decode(reader, reader.uint32()));
+          continue;
+        case 12:
+          if (tag !== 96) {
             break;
           }
 
@@ -3944,6 +4811,9 @@ export const FloorMatchMakingCharacterInfo = {
       skills: Array.isArray(object?.skills) ? object.skills.map((e: any) => SSkillFloor.fromJSON(e)) : [],
       spells: Array.isArray(object?.spells) ? object.spells.map((e: any) => SSpellFloor.fromJSON(e)) : [],
       musics: Array.isArray(object?.musics) ? object.musics.map((e: any) => SMusicFloor.fromJSON(e)) : [],
+      shapeShifts: Array.isArray(object?.shapeShifts)
+        ? object.shapeShifts.map((e: any) => SShapeShiftFloor.fromJSON(e))
+        : [],
       characterSkinIds: Array.isArray(object?.characterSkinIds)
         ? object.characterSkinIds.map((e: any) => String(e))
         : [],
@@ -3976,6 +4846,9 @@ export const FloorMatchMakingCharacterInfo = {
     if (message.musics?.length) {
       obj.musics = message.musics.map((e) => SMusicFloor.toJSON(e));
     }
+    if (message.shapeShifts?.length) {
+      obj.shapeShifts = message.shapeShifts.map((e) => SShapeShiftFloor.toJSON(e));
+    }
     if (message.characterSkinIds?.length) {
       obj.characterSkinIds = message.characterSkinIds;
     }
@@ -4005,6 +4878,7 @@ export const FloorMatchMakingCharacterInfo = {
     message.skills = object.skills?.map((e) => SSkillFloor.fromPartial(e)) || [];
     message.spells = object.spells?.map((e) => SSpellFloor.fromPartial(e)) || [];
     message.musics = object.musics?.map((e) => SMusicFloor.fromPartial(e)) || [];
+    message.shapeShifts = object.shapeShifts?.map((e) => SShapeShiftFloor.fromPartial(e)) || [];
     message.characterSkinIds = object.characterSkinIds?.map((e) => e) || [];
     message.itemSkinIds = object.itemSkinIds?.map((e) => e) || [];
     message.emotes = object.emotes?.map((e) => SEMOTE.fromPartial(e)) || [];
@@ -4161,6 +5035,63 @@ export const S2CGamePolicyGET = {
     const message = createBaseS2CGamePolicyGET();
     message.appHash = object.appHash?.map((e) => e) || [];
     message.policyJson = object.policyJson ?? "";
+    return message;
+  },
+};
+
+function createBaseS2CGameFileDBGET(): S2CGameFileDBGET {
+  return { fileDBJson: "" };
+}
+
+export const S2CGameFileDBGET = {
+  encode(message: S2CGameFileDBGET, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.fileDBJson !== "") {
+      writer.uint32(10).string(message.fileDBJson);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): S2CGameFileDBGET {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseS2CGameFileDBGET();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.fileDBJson = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): S2CGameFileDBGET {
+    return { fileDBJson: isSet(object.fileDBJson) ? String(object.fileDBJson) : "" };
+  },
+
+  toJSON(message: S2CGameFileDBGET): unknown {
+    const obj: any = {};
+    if (message.fileDBJson !== "") {
+      obj.fileDBJson = message.fileDBJson;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<S2CGameFileDBGET>, I>>(base?: I): S2CGameFileDBGET {
+    return S2CGameFileDBGET.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<S2CGameFileDBGET>, I>>(object: I): S2CGameFileDBGET {
+    const message = createBaseS2CGameFileDBGET();
+    message.fileDBJson = object.fileDBJson ?? "";
     return message;
   },
 };
@@ -4924,6 +5855,11 @@ function createBaseC2SIronShieldReportPOST(): C2SIronShieldReportPOST {
     characterId: "",
     originNickname: "",
     reason: "",
+    needBlock: 0,
+    needHWBlock: 0,
+    blockTimeMin: 0,
+    banType: 0,
+    blobType: 0,
   };
 }
 
@@ -4954,6 +5890,21 @@ export const C2SIronShieldReportPOST = {
     }
     if (message.reason !== "") {
       writer.uint32(66).string(message.reason);
+    }
+    if (message.needBlock !== 0) {
+      writer.uint32(72).uint32(message.needBlock);
+    }
+    if (message.needHWBlock !== 0) {
+      writer.uint32(80).uint32(message.needHWBlock);
+    }
+    if (message.blockTimeMin !== 0) {
+      writer.uint32(88).uint32(message.blockTimeMin);
+    }
+    if (message.banType !== 0) {
+      writer.uint32(96).uint32(message.banType);
+    }
+    if (message.blobType !== 0) {
+      writer.uint32(104).int32(message.blobType);
     }
     return writer;
   },
@@ -5031,6 +5982,41 @@ export const C2SIronShieldReportPOST = {
 
           message.reason = reader.string();
           continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.needBlock = reader.uint32();
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.needHWBlock = reader.uint32();
+          continue;
+        case 11:
+          if (tag !== 88) {
+            break;
+          }
+
+          message.blockTimeMin = reader.uint32();
+          continue;
+        case 12:
+          if (tag !== 96) {
+            break;
+          }
+
+          message.banType = reader.uint32();
+          continue;
+        case 13:
+          if (tag !== 104) {
+            break;
+          }
+
+          message.blobType = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -5050,6 +6036,11 @@ export const C2SIronShieldReportPOST = {
       characterId: isSet(object.characterId) ? String(object.characterId) : "",
       originNickname: isSet(object.originNickname) ? String(object.originNickname) : "",
       reason: isSet(object.reason) ? String(object.reason) : "",
+      needBlock: isSet(object.needBlock) ? Number(object.needBlock) : 0,
+      needHWBlock: isSet(object.needHWBlock) ? Number(object.needHWBlock) : 0,
+      blockTimeMin: isSet(object.blockTimeMin) ? Number(object.blockTimeMin) : 0,
+      banType: isSet(object.banType) ? Number(object.banType) : 0,
+      blobType: isSet(object.blobType) ? Number(object.blobType) : 0,
     };
   },
 
@@ -5079,6 +6070,21 @@ export const C2SIronShieldReportPOST = {
     if (message.reason !== "") {
       obj.reason = message.reason;
     }
+    if (message.needBlock !== 0) {
+      obj.needBlock = Math.round(message.needBlock);
+    }
+    if (message.needHWBlock !== 0) {
+      obj.needHWBlock = Math.round(message.needHWBlock);
+    }
+    if (message.blockTimeMin !== 0) {
+      obj.blockTimeMin = Math.round(message.blockTimeMin);
+    }
+    if (message.banType !== 0) {
+      obj.banType = Math.round(message.banType);
+    }
+    if (message.blobType !== 0) {
+      obj.blobType = Math.round(message.blobType);
+    }
     return obj;
   },
 
@@ -5095,6 +6101,11 @@ export const C2SIronShieldReportPOST = {
     message.characterId = object.characterId ?? "";
     message.originNickname = object.originNickname ?? "";
     message.reason = object.reason ?? "";
+    message.needBlock = object.needBlock ?? 0;
+    message.needHWBlock = object.needHWBlock ?? 0;
+    message.blockTimeMin = object.blockTimeMin ?? 0;
+    message.banType = object.banType ?? 0;
+    message.blobType = object.blobType ?? 0;
     return message;
   },
 };
@@ -5174,13 +6185,22 @@ export const C2SBanCheckHardwarePOST = {
 };
 
 function createBaseS2CBanCheckHardwarePOSTResponse(): S2CBanCheckHardwarePOSTResponse {
-  return { isBanTarget: 0 };
+  return { accountId: "", isBan: 0, banHIds: [], loginHIds: [] };
 }
 
 export const S2CBanCheckHardwarePOSTResponse = {
   encode(message: S2CBanCheckHardwarePOSTResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.isBanTarget !== 0) {
-      writer.uint32(8).uint32(message.isBanTarget);
+    if (message.accountId !== "") {
+      writer.uint32(10).string(message.accountId);
+    }
+    if (message.isBan !== 0) {
+      writer.uint32(16).uint32(message.isBan);
+    }
+    for (const v of message.banHIds) {
+      writer.uint32(26).string(v!);
+    }
+    for (const v of message.loginHIds) {
+      writer.uint32(34).string(v!);
     }
     return writer;
   },
@@ -5193,11 +6213,32 @@ export const S2CBanCheckHardwarePOSTResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.isBanTarget = reader.uint32();
+          message.accountId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.isBan = reader.uint32();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.banHIds.push(reader.string());
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.loginHIds.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -5209,13 +6250,27 @@ export const S2CBanCheckHardwarePOSTResponse = {
   },
 
   fromJSON(object: any): S2CBanCheckHardwarePOSTResponse {
-    return { isBanTarget: isSet(object.isBanTarget) ? Number(object.isBanTarget) : 0 };
+    return {
+      accountId: isSet(object.accountId) ? String(object.accountId) : "",
+      isBan: isSet(object.isBan) ? Number(object.isBan) : 0,
+      banHIds: Array.isArray(object?.banHIds) ? object.banHIds.map((e: any) => String(e)) : [],
+      loginHIds: Array.isArray(object?.loginHIds) ? object.loginHIds.map((e: any) => String(e)) : [],
+    };
   },
 
   toJSON(message: S2CBanCheckHardwarePOSTResponse): unknown {
     const obj: any = {};
-    if (message.isBanTarget !== 0) {
-      obj.isBanTarget = Math.round(message.isBanTarget);
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.isBan !== 0) {
+      obj.isBan = Math.round(message.isBan);
+    }
+    if (message.banHIds?.length) {
+      obj.banHIds = message.banHIds;
+    }
+    if (message.loginHIds?.length) {
+      obj.loginHIds = message.loginHIds;
     }
     return obj;
   },
@@ -5227,7 +6282,518 @@ export const S2CBanCheckHardwarePOSTResponse = {
     object: I,
   ): S2CBanCheckHardwarePOSTResponse {
     const message = createBaseS2CBanCheckHardwarePOSTResponse();
-    message.isBanTarget = object.isBanTarget ?? 0;
+    message.accountId = object.accountId ?? "";
+    message.isBan = object.isBan ?? 0;
+    message.banHIds = object.banHIds?.map((e) => e) || [];
+    message.loginHIds = object.loginHIds?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseC2SDirtyItemPOST(): C2SDirtyItemPOST {
+  return { accountId: "", characterId: "", gameId: 0, upsertItems: [], deleteItemUniqueIds: [] };
+}
+
+export const C2SDirtyItemPOST = {
+  encode(message: C2SDirtyItemPOST, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.accountId !== "") {
+      writer.uint32(10).string(message.accountId);
+    }
+    if (message.characterId !== "") {
+      writer.uint32(18).string(message.characterId);
+    }
+    if (message.gameId !== 0) {
+      writer.uint32(24).uint64(message.gameId);
+    }
+    for (const v of message.upsertItems) {
+      SItem.encode(v!, writer.uint32(34).fork()).ldelim();
+    }
+    writer.uint32(42).fork();
+    for (const v of message.deleteItemUniqueIds) {
+      writer.uint64(v);
+    }
+    writer.ldelim();
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): C2SDirtyItemPOST {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseC2SDirtyItemPOST();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.accountId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.characterId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.gameId = longToNumber(reader.uint64() as Long);
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.upsertItems.push(SItem.decode(reader, reader.uint32()));
+          continue;
+        case 5:
+          if (tag === 40) {
+            message.deleteItemUniqueIds.push(longToNumber(reader.uint64() as Long));
+
+            continue;
+          }
+
+          if (tag === 42) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.deleteItemUniqueIds.push(longToNumber(reader.uint64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): C2SDirtyItemPOST {
+    return {
+      accountId: isSet(object.accountId) ? String(object.accountId) : "",
+      characterId: isSet(object.characterId) ? String(object.characterId) : "",
+      gameId: isSet(object.gameId) ? Number(object.gameId) : 0,
+      upsertItems: Array.isArray(object?.upsertItems) ? object.upsertItems.map((e: any) => SItem.fromJSON(e)) : [],
+      deleteItemUniqueIds: Array.isArray(object?.deleteItemUniqueIds)
+        ? object.deleteItemUniqueIds.map((e: any) => Number(e))
+        : [],
+    };
+  },
+
+  toJSON(message: C2SDirtyItemPOST): unknown {
+    const obj: any = {};
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.gameId !== 0) {
+      obj.gameId = Math.round(message.gameId);
+    }
+    if (message.upsertItems?.length) {
+      obj.upsertItems = message.upsertItems.map((e) => SItem.toJSON(e));
+    }
+    if (message.deleteItemUniqueIds?.length) {
+      obj.deleteItemUniqueIds = message.deleteItemUniqueIds.map((e) => Math.round(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<C2SDirtyItemPOST>, I>>(base?: I): C2SDirtyItemPOST {
+    return C2SDirtyItemPOST.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<C2SDirtyItemPOST>, I>>(object: I): C2SDirtyItemPOST {
+    const message = createBaseC2SDirtyItemPOST();
+    message.accountId = object.accountId ?? "";
+    message.characterId = object.characterId ?? "";
+    message.gameId = object.gameId ?? 0;
+    message.upsertItems = object.upsertItems?.map((e) => SItem.fromPartial(e)) || [];
+    message.deleteItemUniqueIds = object.deleteItemUniqueIds?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseC2SIronShieldIsolationPOST(): C2SIronShieldIsolationPOST {
+  return { accountId: "", isolationHours: 0 };
+}
+
+export const C2SIronShieldIsolationPOST = {
+  encode(message: C2SIronShieldIsolationPOST, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.accountId !== "") {
+      writer.uint32(10).string(message.accountId);
+    }
+    if (message.isolationHours !== 0) {
+      writer.uint32(16).int32(message.isolationHours);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): C2SIronShieldIsolationPOST {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseC2SIronShieldIsolationPOST();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.accountId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.isolationHours = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): C2SIronShieldIsolationPOST {
+    return {
+      accountId: isSet(object.accountId) ? String(object.accountId) : "",
+      isolationHours: isSet(object.isolationHours) ? Number(object.isolationHours) : 0,
+    };
+  },
+
+  toJSON(message: C2SIronShieldIsolationPOST): unknown {
+    const obj: any = {};
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.isolationHours !== 0) {
+      obj.isolationHours = Math.round(message.isolationHours);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<C2SIronShieldIsolationPOST>, I>>(base?: I): C2SIronShieldIsolationPOST {
+    return C2SIronShieldIsolationPOST.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<C2SIronShieldIsolationPOST>, I>>(object: I): C2SIronShieldIsolationPOST {
+    const message = createBaseC2SIronShieldIsolationPOST();
+    message.accountId = object.accountId ?? "";
+    message.isolationHours = object.isolationHours ?? 0;
+    return message;
+  },
+};
+
+function createBaseC2SArenaResultPOST(): C2SArenaResultPOST {
+  return { resultInfo: undefined, items: [], secretId: "" };
+}
+
+export const C2SArenaResultPOST = {
+  encode(message: C2SArenaResultPOST, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.resultInfo !== undefined) {
+      GameResultInfo.encode(message.resultInfo, writer.uint32(10).fork()).ldelim();
+    }
+    for (const v of message.items) {
+      SItem.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.secretId !== "") {
+      writer.uint32(26).string(message.secretId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): C2SArenaResultPOST {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseC2SArenaResultPOST();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.resultInfo = GameResultInfo.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.items.push(SItem.decode(reader, reader.uint32()));
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.secretId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): C2SArenaResultPOST {
+    return {
+      resultInfo: isSet(object.resultInfo) ? GameResultInfo.fromJSON(object.resultInfo) : undefined,
+      items: Array.isArray(object?.items) ? object.items.map((e: any) => SItem.fromJSON(e)) : [],
+      secretId: isSet(object.secretId) ? String(object.secretId) : "",
+    };
+  },
+
+  toJSON(message: C2SArenaResultPOST): unknown {
+    const obj: any = {};
+    if (message.resultInfo !== undefined) {
+      obj.resultInfo = GameResultInfo.toJSON(message.resultInfo);
+    }
+    if (message.items?.length) {
+      obj.items = message.items.map((e) => SItem.toJSON(e));
+    }
+    if (message.secretId !== "") {
+      obj.secretId = message.secretId;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<C2SArenaResultPOST>, I>>(base?: I): C2SArenaResultPOST {
+    return C2SArenaResultPOST.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<C2SArenaResultPOST>, I>>(object: I): C2SArenaResultPOST {
+    const message = createBaseC2SArenaResultPOST();
+    message.resultInfo = (object.resultInfo !== undefined && object.resultInfo !== null)
+      ? GameResultInfo.fromPartial(object.resultInfo)
+      : undefined;
+    message.items = object.items?.map((e) => SItem.fromPartial(e)) || [];
+    message.secretId = object.secretId ?? "";
+    return message;
+  },
+};
+
+function createBaseC2SArenaExitPOST(): C2SArenaExitPOST {
+  return { accountId: "", characterId: "", gameId: 0, secretId: "" };
+}
+
+export const C2SArenaExitPOST = {
+  encode(message: C2SArenaExitPOST, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.accountId !== "") {
+      writer.uint32(10).string(message.accountId);
+    }
+    if (message.characterId !== "") {
+      writer.uint32(18).string(message.characterId);
+    }
+    if (message.gameId !== 0) {
+      writer.uint32(24).uint64(message.gameId);
+    }
+    if (message.secretId !== "") {
+      writer.uint32(34).string(message.secretId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): C2SArenaExitPOST {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseC2SArenaExitPOST();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.accountId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.characterId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.gameId = longToNumber(reader.uint64() as Long);
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.secretId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): C2SArenaExitPOST {
+    return {
+      accountId: isSet(object.accountId) ? String(object.accountId) : "",
+      characterId: isSet(object.characterId) ? String(object.characterId) : "",
+      gameId: isSet(object.gameId) ? Number(object.gameId) : 0,
+      secretId: isSet(object.secretId) ? String(object.secretId) : "",
+    };
+  },
+
+  toJSON(message: C2SArenaExitPOST): unknown {
+    const obj: any = {};
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.gameId !== 0) {
+      obj.gameId = Math.round(message.gameId);
+    }
+    if (message.secretId !== "") {
+      obj.secretId = message.secretId;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<C2SArenaExitPOST>, I>>(base?: I): C2SArenaExitPOST {
+    return C2SArenaExitPOST.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<C2SArenaExitPOST>, I>>(object: I): C2SArenaExitPOST {
+    const message = createBaseC2SArenaExitPOST();
+    message.accountId = object.accountId ?? "";
+    message.characterId = object.characterId ?? "";
+    message.gameId = object.gameId ?? 0;
+    message.secretId = object.secretId ?? "";
+    return message;
+  },
+};
+
+function createBaseC2SGameFinalizeSessionPOST(): C2SGameFinalizeSessionPOST {
+  return { gameId: 0, accountId: "", characterId: "", recoveryItems: [] };
+}
+
+export const C2SGameFinalizeSessionPOST = {
+  encode(message: C2SGameFinalizeSessionPOST, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.gameId !== 0) {
+      writer.uint32(8).uint64(message.gameId);
+    }
+    if (message.accountId !== "") {
+      writer.uint32(18).string(message.accountId);
+    }
+    if (message.characterId !== "") {
+      writer.uint32(26).string(message.characterId);
+    }
+    for (const v of message.recoveryItems) {
+      SItem.encode(v!, writer.uint32(34).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): C2SGameFinalizeSessionPOST {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseC2SGameFinalizeSessionPOST();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.gameId = longToNumber(reader.uint64() as Long);
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.accountId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.characterId = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.recoveryItems.push(SItem.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): C2SGameFinalizeSessionPOST {
+    return {
+      gameId: isSet(object.gameId) ? Number(object.gameId) : 0,
+      accountId: isSet(object.accountId) ? String(object.accountId) : "",
+      characterId: isSet(object.characterId) ? String(object.characterId) : "",
+      recoveryItems: Array.isArray(object?.recoveryItems)
+        ? object.recoveryItems.map((e: any) => SItem.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: C2SGameFinalizeSessionPOST): unknown {
+    const obj: any = {};
+    if (message.gameId !== 0) {
+      obj.gameId = Math.round(message.gameId);
+    }
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.recoveryItems?.length) {
+      obj.recoveryItems = message.recoveryItems.map((e) => SItem.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<C2SGameFinalizeSessionPOST>, I>>(base?: I): C2SGameFinalizeSessionPOST {
+    return C2SGameFinalizeSessionPOST.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<C2SGameFinalizeSessionPOST>, I>>(object: I): C2SGameFinalizeSessionPOST {
+    const message = createBaseC2SGameFinalizeSessionPOST();
+    message.gameId = object.gameId ?? 0;
+    message.accountId = object.accountId ?? "";
+    message.characterId = object.characterId ?? "";
+    message.recoveryItems = object.recoveryItems?.map((e) => SItem.fromPartial(e)) || [];
     return message;
   },
 };

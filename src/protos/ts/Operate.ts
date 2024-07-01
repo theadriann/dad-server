@@ -39,6 +39,7 @@ export interface OperateUserInfo {
 }
 
 export interface HackLogInfo {
+  logIdx: string;
   accountId: string;
   characterId: string;
   nickname: string;
@@ -175,6 +176,9 @@ export interface OperateBanUser2 {
   banType: number;
   banTimeMin: number;
   jiraId: string;
+  isRankReset: number;
+  isRankRecovery: number;
+  logIdx: number;
 }
 
 export interface OperateBanHardware {
@@ -220,6 +224,7 @@ export interface OperateOperateIronShieldInfo {
 export interface OperateOperateBanUserInfos {
   accountId: number;
   banType: number;
+  logIdx: number;
   comment: string;
   beginTime: string;
   endTime: string;
@@ -262,6 +267,8 @@ export interface OperateOperateBanInfo {
   banType: string;
   comment: string;
   registerTime: string;
+  beginTime: string;
+  endTime: string;
 }
 
 export interface OperateOperateBanHardwareInfo {
@@ -275,6 +282,7 @@ export interface OperateOperatePlatformInfo {
   ironmaceid: string;
   email: string;
   username: string;
+  accountNickName: string;
 }
 
 export interface OperateAllHackInfo {
@@ -311,21 +319,41 @@ export interface ReasonSearchBanUserInfo {
   beginTime: string;
   endTime: string;
   registerTime: string;
+  sortTime: number;
 }
 
 export interface OperateSearchHackReasonResult {
   infos: ReasonSearchBanUserInfo[];
+  maxPageSize: number;
+  currentPage: number;
+  searchType: number;
+}
+
+export interface OperateBulkBanInfo {
+  accountId: number;
+  nickname: string;
 }
 
 export interface OperateHackUserBanBulk {
-  banAccountIds: string[];
+  infos: OperateBulkBanInfo[];
   reason: string;
   banType: number;
   banTimeMin: number;
+  jiraId: string;
+  withLoginHardwareBan: number;
+  logIdx: number;
 }
 
 export interface OperateHackUserUnbanBulk {
-  unbanAccountIds: string[];
+  infos: OperateBulkBanInfo[];
+  reason: string;
+  jiraId: string;
+  withLoginHardwareBan: number;
+}
+
+export interface OperateBlacklist {
+  writeType: number;
+  accountId: number;
   reason: string;
 }
 
@@ -816,25 +844,28 @@ export const OperateUserInfo = {
 };
 
 function createBaseHackLogInfo(): HackLogInfo {
-  return { accountId: "", characterId: "", nickname: "", reason: "", registerTime: "" };
+  return { logIdx: "", accountId: "", characterId: "", nickname: "", reason: "", registerTime: "" };
 }
 
 export const HackLogInfo = {
   encode(message: HackLogInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.logIdx !== "") {
+      writer.uint32(10).string(message.logIdx);
+    }
     if (message.accountId !== "") {
-      writer.uint32(10).string(message.accountId);
+      writer.uint32(18).string(message.accountId);
     }
     if (message.characterId !== "") {
-      writer.uint32(18).string(message.characterId);
+      writer.uint32(26).string(message.characterId);
     }
     if (message.nickname !== "") {
-      writer.uint32(26).string(message.nickname);
+      writer.uint32(34).string(message.nickname);
     }
     if (message.reason !== "") {
-      writer.uint32(34).string(message.reason);
+      writer.uint32(42).string(message.reason);
     }
     if (message.registerTime !== "") {
-      writer.uint32(42).string(message.registerTime);
+      writer.uint32(50).string(message.registerTime);
     }
     return writer;
   },
@@ -851,31 +882,38 @@ export const HackLogInfo = {
             break;
           }
 
-          message.accountId = reader.string();
+          message.logIdx = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.characterId = reader.string();
+          message.accountId = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.nickname = reader.string();
+          message.characterId = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.reason = reader.string();
+          message.nickname = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
+            break;
+          }
+
+          message.reason = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
             break;
           }
 
@@ -892,6 +930,7 @@ export const HackLogInfo = {
 
   fromJSON(object: any): HackLogInfo {
     return {
+      logIdx: isSet(object.logIdx) ? String(object.logIdx) : "",
       accountId: isSet(object.accountId) ? String(object.accountId) : "",
       characterId: isSet(object.characterId) ? String(object.characterId) : "",
       nickname: isSet(object.nickname) ? String(object.nickname) : "",
@@ -902,6 +941,9 @@ export const HackLogInfo = {
 
   toJSON(message: HackLogInfo): unknown {
     const obj: any = {};
+    if (message.logIdx !== "") {
+      obj.logIdx = message.logIdx;
+    }
     if (message.accountId !== "") {
       obj.accountId = message.accountId;
     }
@@ -925,6 +967,7 @@ export const HackLogInfo = {
   },
   fromPartial<I extends Exact<DeepPartial<HackLogInfo>, I>>(object: I): HackLogInfo {
     const message = createBaseHackLogInfo();
+    message.logIdx = object.logIdx ?? "";
     message.accountId = object.accountId ?? "";
     message.characterId = object.characterId ?? "";
     message.nickname = object.nickname ?? "";
@@ -2721,7 +2764,18 @@ export const OperateBanUser = {
 };
 
 function createBaseOperateBanUser2(): OperateBanUser2 {
-  return { securityCode: "", accountId: 0, nickName: "", reason: "", banType: 0, banTimeMin: 0, jiraId: "" };
+  return {
+    securityCode: "",
+    accountId: 0,
+    nickName: "",
+    reason: "",
+    banType: 0,
+    banTimeMin: 0,
+    jiraId: "",
+    isRankReset: 0,
+    isRankRecovery: 0,
+    logIdx: 0,
+  };
 }
 
 export const OperateBanUser2 = {
@@ -2746,6 +2800,15 @@ export const OperateBanUser2 = {
     }
     if (message.jiraId !== "") {
       writer.uint32(58).string(message.jiraId);
+    }
+    if (message.isRankReset !== 0) {
+      writer.uint32(64).uint32(message.isRankReset);
+    }
+    if (message.isRankRecovery !== 0) {
+      writer.uint32(72).uint32(message.isRankRecovery);
+    }
+    if (message.logIdx !== 0) {
+      writer.uint32(80).uint64(message.logIdx);
     }
     return writer;
   },
@@ -2806,6 +2869,27 @@ export const OperateBanUser2 = {
 
           message.jiraId = reader.string();
           continue;
+        case 8:
+          if (tag !== 64) {
+            break;
+          }
+
+          message.isRankReset = reader.uint32();
+          continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.isRankRecovery = reader.uint32();
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.logIdx = longToNumber(reader.uint64() as Long);
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2824,6 +2908,9 @@ export const OperateBanUser2 = {
       banType: isSet(object.banType) ? Number(object.banType) : 0,
       banTimeMin: isSet(object.banTimeMin) ? Number(object.banTimeMin) : 0,
       jiraId: isSet(object.jiraId) ? String(object.jiraId) : "",
+      isRankReset: isSet(object.isRankReset) ? Number(object.isRankReset) : 0,
+      isRankRecovery: isSet(object.isRankRecovery) ? Number(object.isRankRecovery) : 0,
+      logIdx: isSet(object.logIdx) ? Number(object.logIdx) : 0,
     };
   },
 
@@ -2850,6 +2937,15 @@ export const OperateBanUser2 = {
     if (message.jiraId !== "") {
       obj.jiraId = message.jiraId;
     }
+    if (message.isRankReset !== 0) {
+      obj.isRankReset = Math.round(message.isRankReset);
+    }
+    if (message.isRankRecovery !== 0) {
+      obj.isRankRecovery = Math.round(message.isRankRecovery);
+    }
+    if (message.logIdx !== 0) {
+      obj.logIdx = Math.round(message.logIdx);
+    }
     return obj;
   },
 
@@ -2865,6 +2961,9 @@ export const OperateBanUser2 = {
     message.banType = object.banType ?? 0;
     message.banTimeMin = object.banTimeMin ?? 0;
     message.jiraId = object.jiraId ?? "";
+    message.isRankReset = object.isRankReset ?? 0;
+    message.isRankRecovery = object.isRankRecovery ?? 0;
+    message.logIdx = object.logIdx ?? 0;
     return message;
   },
 };
@@ -3499,7 +3598,16 @@ export const OperateOperateIronShieldInfo = {
 };
 
 function createBaseOperateOperateBanUserInfos(): OperateOperateBanUserInfos {
-  return { accountId: 0, banType: 0, comment: "", beginTime: "", endTime: "", registerTime: "", isHardwareBan: "" };
+  return {
+    accountId: 0,
+    banType: 0,
+    logIdx: 0,
+    comment: "",
+    beginTime: "",
+    endTime: "",
+    registerTime: "",
+    isHardwareBan: "",
+  };
 }
 
 export const OperateOperateBanUserInfos = {
@@ -3510,20 +3618,23 @@ export const OperateOperateBanUserInfos = {
     if (message.banType !== 0) {
       writer.uint32(16).int32(message.banType);
     }
+    if (message.logIdx !== 0) {
+      writer.uint32(24).uint64(message.logIdx);
+    }
     if (message.comment !== "") {
-      writer.uint32(26).string(message.comment);
+      writer.uint32(34).string(message.comment);
     }
     if (message.beginTime !== "") {
-      writer.uint32(34).string(message.beginTime);
+      writer.uint32(42).string(message.beginTime);
     }
     if (message.endTime !== "") {
-      writer.uint32(42).string(message.endTime);
+      writer.uint32(50).string(message.endTime);
     }
     if (message.registerTime !== "") {
-      writer.uint32(50).string(message.registerTime);
+      writer.uint32(58).string(message.registerTime);
     }
     if (message.isHardwareBan !== "") {
-      writer.uint32(58).string(message.isHardwareBan);
+      writer.uint32(66).string(message.isHardwareBan);
     }
     return writer;
   },
@@ -3550,35 +3661,42 @@ export const OperateOperateBanUserInfos = {
           message.banType = reader.int32();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.comment = reader.string();
+          message.logIdx = longToNumber(reader.uint64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.beginTime = reader.string();
+          message.comment = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.endTime = reader.string();
+          message.beginTime = reader.string();
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.registerTime = reader.string();
+          message.endTime = reader.string();
           continue;
         case 7:
           if (tag !== 58) {
+            break;
+          }
+
+          message.registerTime = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
             break;
           }
 
@@ -3597,6 +3715,7 @@ export const OperateOperateBanUserInfos = {
     return {
       accountId: isSet(object.accountId) ? Number(object.accountId) : 0,
       banType: isSet(object.banType) ? Number(object.banType) : 0,
+      logIdx: isSet(object.logIdx) ? Number(object.logIdx) : 0,
       comment: isSet(object.comment) ? String(object.comment) : "",
       beginTime: isSet(object.beginTime) ? String(object.beginTime) : "",
       endTime: isSet(object.endTime) ? String(object.endTime) : "",
@@ -3612,6 +3731,9 @@ export const OperateOperateBanUserInfos = {
     }
     if (message.banType !== 0) {
       obj.banType = Math.round(message.banType);
+    }
+    if (message.logIdx !== 0) {
+      obj.logIdx = Math.round(message.logIdx);
     }
     if (message.comment !== "") {
       obj.comment = message.comment;
@@ -3638,6 +3760,7 @@ export const OperateOperateBanUserInfos = {
     const message = createBaseOperateOperateBanUserInfos();
     message.accountId = object.accountId ?? 0;
     message.banType = object.banType ?? 0;
+    message.logIdx = object.logIdx ?? 0;
     message.comment = object.comment ?? "";
     message.beginTime = object.beginTime ?? "";
     message.endTime = object.endTime ?? "";
@@ -4106,7 +4229,7 @@ export const OperateOperateFileInfo = {
 };
 
 function createBaseOperateOperateBanInfo(): OperateOperateBanInfo {
-  return { accountId: "", banType: "", comment: "", registerTime: "" };
+  return { accountId: "", banType: "", comment: "", registerTime: "", beginTime: "", endTime: "" };
 }
 
 export const OperateOperateBanInfo = {
@@ -4122,6 +4245,12 @@ export const OperateOperateBanInfo = {
     }
     if (message.registerTime !== "") {
       writer.uint32(34).string(message.registerTime);
+    }
+    if (message.beginTime !== "") {
+      writer.uint32(42).string(message.beginTime);
+    }
+    if (message.endTime !== "") {
+      writer.uint32(50).string(message.endTime);
     }
     return writer;
   },
@@ -4161,6 +4290,20 @@ export const OperateOperateBanInfo = {
 
           message.registerTime = reader.string();
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.beginTime = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.endTime = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -4176,6 +4319,8 @@ export const OperateOperateBanInfo = {
       banType: isSet(object.banType) ? String(object.banType) : "",
       comment: isSet(object.comment) ? String(object.comment) : "",
       registerTime: isSet(object.registerTime) ? String(object.registerTime) : "",
+      beginTime: isSet(object.beginTime) ? String(object.beginTime) : "",
+      endTime: isSet(object.endTime) ? String(object.endTime) : "",
     };
   },
 
@@ -4193,6 +4338,12 @@ export const OperateOperateBanInfo = {
     if (message.registerTime !== "") {
       obj.registerTime = message.registerTime;
     }
+    if (message.beginTime !== "") {
+      obj.beginTime = message.beginTime;
+    }
+    if (message.endTime !== "") {
+      obj.endTime = message.endTime;
+    }
     return obj;
   },
 
@@ -4205,6 +4356,8 @@ export const OperateOperateBanInfo = {
     message.banType = object.banType ?? "";
     message.comment = object.comment ?? "";
     message.registerTime = object.registerTime ?? "";
+    message.beginTime = object.beginTime ?? "";
+    message.endTime = object.endTime ?? "";
     return message;
   },
 };
@@ -4316,7 +4469,7 @@ export const OperateOperateBanHardwareInfo = {
 };
 
 function createBaseOperateOperatePlatformInfo(): OperateOperatePlatformInfo {
-  return { ironmaceid: "", email: "", username: "" };
+  return { ironmaceid: "", email: "", username: "", accountNickName: "" };
 }
 
 export const OperateOperatePlatformInfo = {
@@ -4329,6 +4482,9 @@ export const OperateOperatePlatformInfo = {
     }
     if (message.username !== "") {
       writer.uint32(26).string(message.username);
+    }
+    if (message.accountNickName !== "") {
+      writer.uint32(34).string(message.accountNickName);
     }
     return writer;
   },
@@ -4361,6 +4517,13 @@ export const OperateOperatePlatformInfo = {
 
           message.username = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.accountNickName = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -4375,6 +4538,7 @@ export const OperateOperatePlatformInfo = {
       ironmaceid: isSet(object.ironmaceid) ? String(object.ironmaceid) : "",
       email: isSet(object.email) ? String(object.email) : "",
       username: isSet(object.username) ? String(object.username) : "",
+      accountNickName: isSet(object.accountNickName) ? String(object.accountNickName) : "",
     };
   },
 
@@ -4389,6 +4553,9 @@ export const OperateOperatePlatformInfo = {
     if (message.username !== "") {
       obj.username = message.username;
     }
+    if (message.accountNickName !== "") {
+      obj.accountNickName = message.accountNickName;
+    }
     return obj;
   },
 
@@ -4400,6 +4567,7 @@ export const OperateOperatePlatformInfo = {
     message.ironmaceid = object.ironmaceid ?? "";
     message.email = object.email ?? "";
     message.username = object.username ?? "";
+    message.accountNickName = object.accountNickName ?? "";
     return message;
   },
 };
@@ -4859,6 +5027,7 @@ function createBaseReasonSearchBanUserInfo(): ReasonSearchBanUserInfo {
     beginTime: "",
     endTime: "",
     registerTime: "",
+    sortTime: 0,
   };
 }
 
@@ -4887,6 +5056,9 @@ export const ReasonSearchBanUserInfo = {
     }
     if (message.registerTime !== "") {
       writer.uint32(66).string(message.registerTime);
+    }
+    if (message.sortTime !== 0) {
+      writer.uint32(72).uint64(message.sortTime);
     }
     return writer;
   },
@@ -4954,6 +5126,13 @@ export const ReasonSearchBanUserInfo = {
 
           message.registerTime = reader.string();
           continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.sortTime = longToNumber(reader.uint64() as Long);
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -4973,6 +5152,7 @@ export const ReasonSearchBanUserInfo = {
       beginTime: isSet(object.beginTime) ? String(object.beginTime) : "",
       endTime: isSet(object.endTime) ? String(object.endTime) : "",
       registerTime: isSet(object.registerTime) ? String(object.registerTime) : "",
+      sortTime: isSet(object.sortTime) ? Number(object.sortTime) : 0,
     };
   },
 
@@ -5002,6 +5182,9 @@ export const ReasonSearchBanUserInfo = {
     if (message.registerTime !== "") {
       obj.registerTime = message.registerTime;
     }
+    if (message.sortTime !== 0) {
+      obj.sortTime = Math.round(message.sortTime);
+    }
     return obj;
   },
 
@@ -5018,18 +5201,28 @@ export const ReasonSearchBanUserInfo = {
     message.beginTime = object.beginTime ?? "";
     message.endTime = object.endTime ?? "";
     message.registerTime = object.registerTime ?? "";
+    message.sortTime = object.sortTime ?? 0;
     return message;
   },
 };
 
 function createBaseOperateSearchHackReasonResult(): OperateSearchHackReasonResult {
-  return { infos: [] };
+  return { infos: [], maxPageSize: 0, currentPage: 0, searchType: 0 };
 }
 
 export const OperateSearchHackReasonResult = {
   encode(message: OperateSearchHackReasonResult, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.infos) {
       ReasonSearchBanUserInfo.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.maxPageSize !== 0) {
+      writer.uint32(16).int32(message.maxPageSize);
+    }
+    if (message.currentPage !== 0) {
+      writer.uint32(24).int32(message.currentPage);
+    }
+    if (message.searchType !== 0) {
+      writer.uint32(32).int32(message.searchType);
     }
     return writer;
   },
@@ -5048,6 +5241,27 @@ export const OperateSearchHackReasonResult = {
 
           message.infos.push(ReasonSearchBanUserInfo.decode(reader, reader.uint32()));
           continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.maxPageSize = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.currentPage = reader.int32();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.searchType = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -5060,6 +5274,9 @@ export const OperateSearchHackReasonResult = {
   fromJSON(object: any): OperateSearchHackReasonResult {
     return {
       infos: Array.isArray(object?.infos) ? object.infos.map((e: any) => ReasonSearchBanUserInfo.fromJSON(e)) : [],
+      maxPageSize: isSet(object.maxPageSize) ? Number(object.maxPageSize) : 0,
+      currentPage: isSet(object.currentPage) ? Number(object.currentPage) : 0,
+      searchType: isSet(object.searchType) ? Number(object.searchType) : 0,
     };
   },
 
@@ -5067,6 +5284,15 @@ export const OperateSearchHackReasonResult = {
     const obj: any = {};
     if (message.infos?.length) {
       obj.infos = message.infos.map((e) => ReasonSearchBanUserInfo.toJSON(e));
+    }
+    if (message.maxPageSize !== 0) {
+      obj.maxPageSize = Math.round(message.maxPageSize);
+    }
+    if (message.currentPage !== 0) {
+      obj.currentPage = Math.round(message.currentPage);
+    }
+    if (message.searchType !== 0) {
+      obj.searchType = Math.round(message.searchType);
     }
     return obj;
   },
@@ -5079,18 +5305,95 @@ export const OperateSearchHackReasonResult = {
   ): OperateSearchHackReasonResult {
     const message = createBaseOperateSearchHackReasonResult();
     message.infos = object.infos?.map((e) => ReasonSearchBanUserInfo.fromPartial(e)) || [];
+    message.maxPageSize = object.maxPageSize ?? 0;
+    message.currentPage = object.currentPage ?? 0;
+    message.searchType = object.searchType ?? 0;
+    return message;
+  },
+};
+
+function createBaseOperateBulkBanInfo(): OperateBulkBanInfo {
+  return { accountId: 0, nickname: "" };
+}
+
+export const OperateBulkBanInfo = {
+  encode(message: OperateBulkBanInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.accountId !== 0) {
+      writer.uint32(8).uint64(message.accountId);
+    }
+    if (message.nickname !== "") {
+      writer.uint32(18).string(message.nickname);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OperateBulkBanInfo {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOperateBulkBanInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.accountId = longToNumber(reader.uint64() as Long);
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.nickname = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): OperateBulkBanInfo {
+    return {
+      accountId: isSet(object.accountId) ? Number(object.accountId) : 0,
+      nickname: isSet(object.nickname) ? String(object.nickname) : "",
+    };
+  },
+
+  toJSON(message: OperateBulkBanInfo): unknown {
+    const obj: any = {};
+    if (message.accountId !== 0) {
+      obj.accountId = Math.round(message.accountId);
+    }
+    if (message.nickname !== "") {
+      obj.nickname = message.nickname;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<OperateBulkBanInfo>, I>>(base?: I): OperateBulkBanInfo {
+    return OperateBulkBanInfo.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<OperateBulkBanInfo>, I>>(object: I): OperateBulkBanInfo {
+    const message = createBaseOperateBulkBanInfo();
+    message.accountId = object.accountId ?? 0;
+    message.nickname = object.nickname ?? "";
     return message;
   },
 };
 
 function createBaseOperateHackUserBanBulk(): OperateHackUserBanBulk {
-  return { banAccountIds: [], reason: "", banType: 0, banTimeMin: 0 };
+  return { infos: [], reason: "", banType: 0, banTimeMin: 0, jiraId: "", withLoginHardwareBan: 0, logIdx: 0 };
 }
 
 export const OperateHackUserBanBulk = {
   encode(message: OperateHackUserBanBulk, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.banAccountIds) {
-      writer.uint32(10).string(v!);
+    for (const v of message.infos) {
+      OperateBulkBanInfo.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     if (message.reason !== "") {
       writer.uint32(18).string(message.reason);
@@ -5100,6 +5403,15 @@ export const OperateHackUserBanBulk = {
     }
     if (message.banTimeMin !== 0) {
       writer.uint32(32).uint32(message.banTimeMin);
+    }
+    if (message.jiraId !== "") {
+      writer.uint32(42).string(message.jiraId);
+    }
+    if (message.withLoginHardwareBan !== 0) {
+      writer.uint32(48).uint32(message.withLoginHardwareBan);
+    }
+    if (message.logIdx !== 0) {
+      writer.uint32(56).uint64(message.logIdx);
     }
     return writer;
   },
@@ -5116,7 +5428,7 @@ export const OperateHackUserBanBulk = {
             break;
           }
 
-          message.banAccountIds.push(reader.string());
+          message.infos.push(OperateBulkBanInfo.decode(reader, reader.uint32()));
           continue;
         case 2:
           if (tag !== 18) {
@@ -5139,6 +5451,27 @@ export const OperateHackUserBanBulk = {
 
           message.banTimeMin = reader.uint32();
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.jiraId = reader.string();
+          continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.withLoginHardwareBan = reader.uint32();
+          continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.logIdx = longToNumber(reader.uint64() as Long);
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -5150,17 +5483,20 @@ export const OperateHackUserBanBulk = {
 
   fromJSON(object: any): OperateHackUserBanBulk {
     return {
-      banAccountIds: Array.isArray(object?.banAccountIds) ? object.banAccountIds.map((e: any) => String(e)) : [],
+      infos: Array.isArray(object?.infos) ? object.infos.map((e: any) => OperateBulkBanInfo.fromJSON(e)) : [],
       reason: isSet(object.reason) ? String(object.reason) : "",
       banType: isSet(object.banType) ? Number(object.banType) : 0,
       banTimeMin: isSet(object.banTimeMin) ? Number(object.banTimeMin) : 0,
+      jiraId: isSet(object.jiraId) ? String(object.jiraId) : "",
+      withLoginHardwareBan: isSet(object.withLoginHardwareBan) ? Number(object.withLoginHardwareBan) : 0,
+      logIdx: isSet(object.logIdx) ? Number(object.logIdx) : 0,
     };
   },
 
   toJSON(message: OperateHackUserBanBulk): unknown {
     const obj: any = {};
-    if (message.banAccountIds?.length) {
-      obj.banAccountIds = message.banAccountIds;
+    if (message.infos?.length) {
+      obj.infos = message.infos.map((e) => OperateBulkBanInfo.toJSON(e));
     }
     if (message.reason !== "") {
       obj.reason = message.reason;
@@ -5171,6 +5507,15 @@ export const OperateHackUserBanBulk = {
     if (message.banTimeMin !== 0) {
       obj.banTimeMin = Math.round(message.banTimeMin);
     }
+    if (message.jiraId !== "") {
+      obj.jiraId = message.jiraId;
+    }
+    if (message.withLoginHardwareBan !== 0) {
+      obj.withLoginHardwareBan = Math.round(message.withLoginHardwareBan);
+    }
+    if (message.logIdx !== 0) {
+      obj.logIdx = Math.round(message.logIdx);
+    }
     return obj;
   },
 
@@ -5179,25 +5524,34 @@ export const OperateHackUserBanBulk = {
   },
   fromPartial<I extends Exact<DeepPartial<OperateHackUserBanBulk>, I>>(object: I): OperateHackUserBanBulk {
     const message = createBaseOperateHackUserBanBulk();
-    message.banAccountIds = object.banAccountIds?.map((e) => e) || [];
+    message.infos = object.infos?.map((e) => OperateBulkBanInfo.fromPartial(e)) || [];
     message.reason = object.reason ?? "";
     message.banType = object.banType ?? 0;
     message.banTimeMin = object.banTimeMin ?? 0;
+    message.jiraId = object.jiraId ?? "";
+    message.withLoginHardwareBan = object.withLoginHardwareBan ?? 0;
+    message.logIdx = object.logIdx ?? 0;
     return message;
   },
 };
 
 function createBaseOperateHackUserUnbanBulk(): OperateHackUserUnbanBulk {
-  return { unbanAccountIds: [], reason: "" };
+  return { infos: [], reason: "", jiraId: "", withLoginHardwareBan: 0 };
 }
 
 export const OperateHackUserUnbanBulk = {
   encode(message: OperateHackUserUnbanBulk, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.unbanAccountIds) {
-      writer.uint32(10).string(v!);
+    for (const v of message.infos) {
+      OperateBulkBanInfo.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     if (message.reason !== "") {
       writer.uint32(18).string(message.reason);
+    }
+    if (message.jiraId !== "") {
+      writer.uint32(26).string(message.jiraId);
+    }
+    if (message.withLoginHardwareBan !== 0) {
+      writer.uint32(32).uint32(message.withLoginHardwareBan);
     }
     return writer;
   },
@@ -5214,10 +5568,118 @@ export const OperateHackUserUnbanBulk = {
             break;
           }
 
-          message.unbanAccountIds.push(reader.string());
+          message.infos.push(OperateBulkBanInfo.decode(reader, reader.uint32()));
           continue;
         case 2:
           if (tag !== 18) {
+            break;
+          }
+
+          message.reason = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.jiraId = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.withLoginHardwareBan = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): OperateHackUserUnbanBulk {
+    return {
+      infos: Array.isArray(object?.infos) ? object.infos.map((e: any) => OperateBulkBanInfo.fromJSON(e)) : [],
+      reason: isSet(object.reason) ? String(object.reason) : "",
+      jiraId: isSet(object.jiraId) ? String(object.jiraId) : "",
+      withLoginHardwareBan: isSet(object.withLoginHardwareBan) ? Number(object.withLoginHardwareBan) : 0,
+    };
+  },
+
+  toJSON(message: OperateHackUserUnbanBulk): unknown {
+    const obj: any = {};
+    if (message.infos?.length) {
+      obj.infos = message.infos.map((e) => OperateBulkBanInfo.toJSON(e));
+    }
+    if (message.reason !== "") {
+      obj.reason = message.reason;
+    }
+    if (message.jiraId !== "") {
+      obj.jiraId = message.jiraId;
+    }
+    if (message.withLoginHardwareBan !== 0) {
+      obj.withLoginHardwareBan = Math.round(message.withLoginHardwareBan);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<OperateHackUserUnbanBulk>, I>>(base?: I): OperateHackUserUnbanBulk {
+    return OperateHackUserUnbanBulk.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<OperateHackUserUnbanBulk>, I>>(object: I): OperateHackUserUnbanBulk {
+    const message = createBaseOperateHackUserUnbanBulk();
+    message.infos = object.infos?.map((e) => OperateBulkBanInfo.fromPartial(e)) || [];
+    message.reason = object.reason ?? "";
+    message.jiraId = object.jiraId ?? "";
+    message.withLoginHardwareBan = object.withLoginHardwareBan ?? 0;
+    return message;
+  },
+};
+
+function createBaseOperateBlacklist(): OperateBlacklist {
+  return { writeType: 0, accountId: 0, reason: "" };
+}
+
+export const OperateBlacklist = {
+  encode(message: OperateBlacklist, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.writeType !== 0) {
+      writer.uint32(8).uint32(message.writeType);
+    }
+    if (message.accountId !== 0) {
+      writer.uint32(16).uint64(message.accountId);
+    }
+    if (message.reason !== "") {
+      writer.uint32(26).string(message.reason);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OperateBlacklist {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOperateBlacklist();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.writeType = reader.uint32();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.accountId = longToNumber(reader.uint64() as Long);
+          continue;
+        case 3:
+          if (tag !== 26) {
             break;
           }
 
@@ -5232,17 +5694,21 @@ export const OperateHackUserUnbanBulk = {
     return message;
   },
 
-  fromJSON(object: any): OperateHackUserUnbanBulk {
+  fromJSON(object: any): OperateBlacklist {
     return {
-      unbanAccountIds: Array.isArray(object?.unbanAccountIds) ? object.unbanAccountIds.map((e: any) => String(e)) : [],
+      writeType: isSet(object.writeType) ? Number(object.writeType) : 0,
+      accountId: isSet(object.accountId) ? Number(object.accountId) : 0,
       reason: isSet(object.reason) ? String(object.reason) : "",
     };
   },
 
-  toJSON(message: OperateHackUserUnbanBulk): unknown {
+  toJSON(message: OperateBlacklist): unknown {
     const obj: any = {};
-    if (message.unbanAccountIds?.length) {
-      obj.unbanAccountIds = message.unbanAccountIds;
+    if (message.writeType !== 0) {
+      obj.writeType = Math.round(message.writeType);
+    }
+    if (message.accountId !== 0) {
+      obj.accountId = Math.round(message.accountId);
     }
     if (message.reason !== "") {
       obj.reason = message.reason;
@@ -5250,12 +5716,13 @@ export const OperateHackUserUnbanBulk = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<OperateHackUserUnbanBulk>, I>>(base?: I): OperateHackUserUnbanBulk {
-    return OperateHackUserUnbanBulk.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<OperateBlacklist>, I>>(base?: I): OperateBlacklist {
+    return OperateBlacklist.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<OperateHackUserUnbanBulk>, I>>(object: I): OperateHackUserUnbanBulk {
-    const message = createBaseOperateHackUserUnbanBulk();
-    message.unbanAccountIds = object.unbanAccountIds?.map((e) => e) || [];
+  fromPartial<I extends Exact<DeepPartial<OperateBlacklist>, I>>(object: I): OperateBlacklist {
+    const message = createBaseOperateBlacklist();
+    message.writeType = object.writeType ?? 0;
+    message.accountId = object.accountId ?? 0;
     message.reason = object.reason ?? "";
     return message;
   },

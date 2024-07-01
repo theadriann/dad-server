@@ -26,7 +26,7 @@ message SC2S_AUTO_MATCH_REG_REQ {
 
   uint32 mode = 1;
   uint32 region = 2;
-  uint32 difficultyType = 3;
+  uint32 gameType = 3;
 }
 
 message SS2C_AUTO_MATCH_REG_RES {
@@ -43,9 +43,14 @@ message SS2C_AUTO_MATCH_REG_RES {
     FAIL_SHORTAGE_LEVEL = 9;
     FAIL_MEMBER_EXCEEDED = 10;
     FAIL_PLAY_TIME_SHORTAGE = 11;
+    FAIL_RARITY_ITEM_TOO_HIGH = 12;
+    FAIL_REGION_LATENCY_LIMIT = 13;
+    FAIL_MATCH_RESTRICTION = 14;
+    FAIL_CAN_NOT_SQUIRE = 15;
   }
 
   uint32 result = 1;
+  uint32 restrictionMS = 2;
 }
 
 message SC2S_GAME_ENTER_COMPLETE_NOT {
@@ -65,5 +70,16 @@ message SC2S_RECONNECT_INGAME_REQ {
 message SS2C_RECONNECT_INGAME_RES {
   uint32 result = 1;
   string serviceUrl = 2;
+}
+
+message SGEAR_BASE_SCORE_INFO {
+  int32 gameType = 1;
+  int32 gearBaseIndex = 2;
+  int32 beginScore = 3;
+  int32 endScore = 4;
+}
+
+message SS2C_GEAR_BASE_SCORE_LIST_NOT {
+  repeated .DC.Packet.SGEAR_BASE_SCORE_INFO infos = 1;
 }
 

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
-import { saccountNickname, scharacterInfo } from "./_Character";
+import { saccountNickname, scharacterInfo, SGameStat } from "./_Character";
 import { scustomizeLobbyEmote } from "./_Item";
 
 export const protobufPackage = "DC.Packet";
@@ -42,13 +42,13 @@ export interface ss2cLobbyEnterFromGameRes {
   result: number;
 }
 
-export interface sc2sLobbyGameDifficultySelectReq {
-  gameDifficultyTypeIndex: number;
+export interface sc2sLobbyGameTypeSelectReq {
+  gameTypeIndex: number;
 }
 
-export interface ss2cLobbyGameDifficultySelectRes {
+export interface ss2cLobbyGameTypeSelectRes {
   result: number;
-  gameDifficultyTypeIndex: number;
+  gameTypeIndex: number;
 }
 
 export interface saccountCurrencyInfo {
@@ -67,10 +67,75 @@ export interface ss2cLobbyCharacterLobbyEmoteNot {
 
 export interface sreportPunishInfo {
   nickname: saccountNickname | undefined;
+  reportBanType: number;
 }
 
 export interface ss2cLobbyReportPunishListNot {
   infos: sreportPunishInfo[];
+}
+
+export enum ss2cLobbyReportPunishListNot_reportBanType {
+  NONE_BAN_TYPE = 0,
+  PERMANENT_BAN = 1,
+  TEMPORARY_BAN = 2,
+  UNRECOGNIZED = -1,
+}
+
+export function ss2cLobbyReportPunishListNot_reportBanTypeFromJSON(
+  object: any,
+): ss2cLobbyReportPunishListNot_reportBanType {
+  switch (object) {
+    case 0:
+    case "NONE_BAN_TYPE":
+      return ss2cLobbyReportPunishListNot_reportBanType.NONE_BAN_TYPE;
+    case 1:
+    case "PERMANENT_BAN":
+      return ss2cLobbyReportPunishListNot_reportBanType.PERMANENT_BAN;
+    case 2:
+    case "TEMPORARY_BAN":
+      return ss2cLobbyReportPunishListNot_reportBanType.TEMPORARY_BAN;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return ss2cLobbyReportPunishListNot_reportBanType.UNRECOGNIZED;
+  }
+}
+
+export function ss2cLobbyReportPunishListNot_reportBanTypeToJSON(
+  object: ss2cLobbyReportPunishListNot_reportBanType,
+): string {
+  switch (object) {
+    case ss2cLobbyReportPunishListNot_reportBanType.NONE_BAN_TYPE:
+      return "NONE_BAN_TYPE";
+    case ss2cLobbyReportPunishListNot_reportBanType.PERMANENT_BAN:
+      return "PERMANENT_BAN";
+    case ss2cLobbyReportPunishListNot_reportBanType.TEMPORARY_BAN:
+      return "TEMPORARY_BAN";
+    case ss2cLobbyReportPunishListNot_reportBanType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export interface sc2sUserCharacterGameStatInfoReq {
+  seasonId: string;
+  gameType: number;
+  dungeonIdTag: string;
+}
+
+export interface ss2cUserCharacterGameStatInfoRes {
+  seasonId: string;
+  gameType: number;
+  gameStats: SGameStat[];
+  dungeonIdTag: string;
+}
+
+export interface sc2sKnightProgramLinkSelectReq {
+}
+
+export interface ss2cKnightProgramLinkSelectRes {
+  result: number;
+  url: string;
 }
 
 function createBasesc2sCharacterSelectEnterReq(): sc2sCharacterSelectEnterReq {
@@ -611,22 +676,22 @@ export const ss2cLobbyEnterFromGameRes = {
   },
 };
 
-function createBasesc2sLobbyGameDifficultySelectReq(): sc2sLobbyGameDifficultySelectReq {
-  return { gameDifficultyTypeIndex: 0 };
+function createBasesc2sLobbyGameTypeSelectReq(): sc2sLobbyGameTypeSelectReq {
+  return { gameTypeIndex: 0 };
 }
 
-export const sc2sLobbyGameDifficultySelectReq = {
-  encode(message: sc2sLobbyGameDifficultySelectReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.gameDifficultyTypeIndex !== 0) {
-      writer.uint32(8).uint32(message.gameDifficultyTypeIndex);
+export const sc2sLobbyGameTypeSelectReq = {
+  encode(message: sc2sLobbyGameTypeSelectReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.gameTypeIndex !== 0) {
+      writer.uint32(8).uint32(message.gameTypeIndex);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sLobbyGameDifficultySelectReq {
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sLobbyGameTypeSelectReq {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasesc2sLobbyGameDifficultySelectReq();
+    const message = createBasesc2sLobbyGameTypeSelectReq();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -635,7 +700,7 @@ export const sc2sLobbyGameDifficultySelectReq = {
             break;
           }
 
-          message.gameDifficultyTypeIndex = reader.uint32();
+          message.gameTypeIndex = reader.uint32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -646,53 +711,47 @@ export const sc2sLobbyGameDifficultySelectReq = {
     return message;
   },
 
-  fromJSON(object: any): sc2sLobbyGameDifficultySelectReq {
-    return {
-      gameDifficultyTypeIndex: isSet(object.gameDifficultyTypeIndex) ? Number(object.gameDifficultyTypeIndex) : 0,
-    };
+  fromJSON(object: any): sc2sLobbyGameTypeSelectReq {
+    return { gameTypeIndex: isSet(object.gameTypeIndex) ? Number(object.gameTypeIndex) : 0 };
   },
 
-  toJSON(message: sc2sLobbyGameDifficultySelectReq): unknown {
+  toJSON(message: sc2sLobbyGameTypeSelectReq): unknown {
     const obj: any = {};
-    if (message.gameDifficultyTypeIndex !== 0) {
-      obj.gameDifficultyTypeIndex = Math.round(message.gameDifficultyTypeIndex);
+    if (message.gameTypeIndex !== 0) {
+      obj.gameTypeIndex = Math.round(message.gameTypeIndex);
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<sc2sLobbyGameDifficultySelectReq>, I>>(
-    base?: I,
-  ): sc2sLobbyGameDifficultySelectReq {
-    return sc2sLobbyGameDifficultySelectReq.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<sc2sLobbyGameTypeSelectReq>, I>>(base?: I): sc2sLobbyGameTypeSelectReq {
+    return sc2sLobbyGameTypeSelectReq.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<sc2sLobbyGameDifficultySelectReq>, I>>(
-    object: I,
-  ): sc2sLobbyGameDifficultySelectReq {
-    const message = createBasesc2sLobbyGameDifficultySelectReq();
-    message.gameDifficultyTypeIndex = object.gameDifficultyTypeIndex ?? 0;
+  fromPartial<I extends Exact<DeepPartial<sc2sLobbyGameTypeSelectReq>, I>>(object: I): sc2sLobbyGameTypeSelectReq {
+    const message = createBasesc2sLobbyGameTypeSelectReq();
+    message.gameTypeIndex = object.gameTypeIndex ?? 0;
     return message;
   },
 };
 
-function createBasess2cLobbyGameDifficultySelectRes(): ss2cLobbyGameDifficultySelectRes {
-  return { result: 0, gameDifficultyTypeIndex: 0 };
+function createBasess2cLobbyGameTypeSelectRes(): ss2cLobbyGameTypeSelectRes {
+  return { result: 0, gameTypeIndex: 0 };
 }
 
-export const ss2cLobbyGameDifficultySelectRes = {
-  encode(message: ss2cLobbyGameDifficultySelectRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const ss2cLobbyGameTypeSelectRes = {
+  encode(message: ss2cLobbyGameTypeSelectRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.result !== 0) {
       writer.uint32(8).uint32(message.result);
     }
-    if (message.gameDifficultyTypeIndex !== 0) {
-      writer.uint32(16).uint32(message.gameDifficultyTypeIndex);
+    if (message.gameTypeIndex !== 0) {
+      writer.uint32(16).uint32(message.gameTypeIndex);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cLobbyGameDifficultySelectRes {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cLobbyGameTypeSelectRes {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasess2cLobbyGameDifficultySelectRes();
+    const message = createBasess2cLobbyGameTypeSelectRes();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -708,7 +767,7 @@ export const ss2cLobbyGameDifficultySelectRes = {
             break;
           }
 
-          message.gameDifficultyTypeIndex = reader.uint32();
+          message.gameTypeIndex = reader.uint32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -719,35 +778,31 @@ export const ss2cLobbyGameDifficultySelectRes = {
     return message;
   },
 
-  fromJSON(object: any): ss2cLobbyGameDifficultySelectRes {
+  fromJSON(object: any): ss2cLobbyGameTypeSelectRes {
     return {
       result: isSet(object.result) ? Number(object.result) : 0,
-      gameDifficultyTypeIndex: isSet(object.gameDifficultyTypeIndex) ? Number(object.gameDifficultyTypeIndex) : 0,
+      gameTypeIndex: isSet(object.gameTypeIndex) ? Number(object.gameTypeIndex) : 0,
     };
   },
 
-  toJSON(message: ss2cLobbyGameDifficultySelectRes): unknown {
+  toJSON(message: ss2cLobbyGameTypeSelectRes): unknown {
     const obj: any = {};
     if (message.result !== 0) {
       obj.result = Math.round(message.result);
     }
-    if (message.gameDifficultyTypeIndex !== 0) {
-      obj.gameDifficultyTypeIndex = Math.round(message.gameDifficultyTypeIndex);
+    if (message.gameTypeIndex !== 0) {
+      obj.gameTypeIndex = Math.round(message.gameTypeIndex);
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ss2cLobbyGameDifficultySelectRes>, I>>(
-    base?: I,
-  ): ss2cLobbyGameDifficultySelectRes {
-    return ss2cLobbyGameDifficultySelectRes.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<ss2cLobbyGameTypeSelectRes>, I>>(base?: I): ss2cLobbyGameTypeSelectRes {
+    return ss2cLobbyGameTypeSelectRes.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ss2cLobbyGameDifficultySelectRes>, I>>(
-    object: I,
-  ): ss2cLobbyGameDifficultySelectRes {
-    const message = createBasess2cLobbyGameDifficultySelectRes();
+  fromPartial<I extends Exact<DeepPartial<ss2cLobbyGameTypeSelectRes>, I>>(object: I): ss2cLobbyGameTypeSelectRes {
+    const message = createBasess2cLobbyGameTypeSelectRes();
     message.result = object.result ?? 0;
-    message.gameDifficultyTypeIndex = object.gameDifficultyTypeIndex ?? 0;
+    message.gameTypeIndex = object.gameTypeIndex ?? 0;
     return message;
   },
 };
@@ -968,13 +1023,16 @@ export const ss2cLobbyCharacterLobbyEmoteNot = {
 };
 
 function createBasesreportPunishInfo(): sreportPunishInfo {
-  return { nickname: undefined };
+  return { nickname: undefined, reportBanType: 0 };
 }
 
 export const sreportPunishInfo = {
   encode(message: sreportPunishInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.nickname !== undefined) {
       saccountNickname.encode(message.nickname, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.reportBanType !== 0) {
+      writer.uint32(16).int32(message.reportBanType);
     }
     return writer;
   },
@@ -993,6 +1051,13 @@ export const sreportPunishInfo = {
 
           message.nickname = saccountNickname.decode(reader, reader.uint32());
           continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.reportBanType = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1003,13 +1068,19 @@ export const sreportPunishInfo = {
   },
 
   fromJSON(object: any): sreportPunishInfo {
-    return { nickname: isSet(object.nickname) ? saccountNickname.fromJSON(object.nickname) : undefined };
+    return {
+      nickname: isSet(object.nickname) ? saccountNickname.fromJSON(object.nickname) : undefined,
+      reportBanType: isSet(object.reportBanType) ? Number(object.reportBanType) : 0,
+    };
   },
 
   toJSON(message: sreportPunishInfo): unknown {
     const obj: any = {};
     if (message.nickname !== undefined) {
       obj.nickname = saccountNickname.toJSON(message.nickname);
+    }
+    if (message.reportBanType !== 0) {
+      obj.reportBanType = Math.round(message.reportBanType);
     }
     return obj;
   },
@@ -1022,6 +1093,7 @@ export const sreportPunishInfo = {
     message.nickname = (object.nickname !== undefined && object.nickname !== null)
       ? saccountNickname.fromPartial(object.nickname)
       : undefined;
+    message.reportBanType = object.reportBanType ?? 0;
     return message;
   },
 };
@@ -1079,6 +1151,326 @@ export const ss2cLobbyReportPunishListNot = {
   fromPartial<I extends Exact<DeepPartial<ss2cLobbyReportPunishListNot>, I>>(object: I): ss2cLobbyReportPunishListNot {
     const message = createBasess2cLobbyReportPunishListNot();
     message.infos = object.infos?.map((e) => sreportPunishInfo.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBasesc2sUserCharacterGameStatInfoReq(): sc2sUserCharacterGameStatInfoReq {
+  return { seasonId: "", gameType: 0, dungeonIdTag: "" };
+}
+
+export const sc2sUserCharacterGameStatInfoReq = {
+  encode(message: sc2sUserCharacterGameStatInfoReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.seasonId !== "") {
+      writer.uint32(10).string(message.seasonId);
+    }
+    if (message.gameType !== 0) {
+      writer.uint32(16).int32(message.gameType);
+    }
+    if (message.dungeonIdTag !== "") {
+      writer.uint32(26).string(message.dungeonIdTag);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sUserCharacterGameStatInfoReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sUserCharacterGameStatInfoReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.seasonId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.gameType = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.dungeonIdTag = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): sc2sUserCharacterGameStatInfoReq {
+    return {
+      seasonId: isSet(object.seasonId) ? String(object.seasonId) : "",
+      gameType: isSet(object.gameType) ? Number(object.gameType) : 0,
+      dungeonIdTag: isSet(object.dungeonIdTag) ? String(object.dungeonIdTag) : "",
+    };
+  },
+
+  toJSON(message: sc2sUserCharacterGameStatInfoReq): unknown {
+    const obj: any = {};
+    if (message.seasonId !== "") {
+      obj.seasonId = message.seasonId;
+    }
+    if (message.gameType !== 0) {
+      obj.gameType = Math.round(message.gameType);
+    }
+    if (message.dungeonIdTag !== "") {
+      obj.dungeonIdTag = message.dungeonIdTag;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sUserCharacterGameStatInfoReq>, I>>(
+    base?: I,
+  ): sc2sUserCharacterGameStatInfoReq {
+    return sc2sUserCharacterGameStatInfoReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sUserCharacterGameStatInfoReq>, I>>(
+    object: I,
+  ): sc2sUserCharacterGameStatInfoReq {
+    const message = createBasesc2sUserCharacterGameStatInfoReq();
+    message.seasonId = object.seasonId ?? "";
+    message.gameType = object.gameType ?? 0;
+    message.dungeonIdTag = object.dungeonIdTag ?? "";
+    return message;
+  },
+};
+
+function createBasess2cUserCharacterGameStatInfoRes(): ss2cUserCharacterGameStatInfoRes {
+  return { seasonId: "", gameType: 0, gameStats: [], dungeonIdTag: "" };
+}
+
+export const ss2cUserCharacterGameStatInfoRes = {
+  encode(message: ss2cUserCharacterGameStatInfoRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.seasonId !== "") {
+      writer.uint32(10).string(message.seasonId);
+    }
+    if (message.gameType !== 0) {
+      writer.uint32(16).int32(message.gameType);
+    }
+    for (const v of message.gameStats) {
+      SGameStat.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.dungeonIdTag !== "") {
+      writer.uint32(34).string(message.dungeonIdTag);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cUserCharacterGameStatInfoRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cUserCharacterGameStatInfoRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.seasonId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.gameType = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.gameStats.push(SGameStat.decode(reader, reader.uint32()));
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.dungeonIdTag = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cUserCharacterGameStatInfoRes {
+    return {
+      seasonId: isSet(object.seasonId) ? String(object.seasonId) : "",
+      gameType: isSet(object.gameType) ? Number(object.gameType) : 0,
+      gameStats: Array.isArray(object?.gameStats) ? object.gameStats.map((e: any) => SGameStat.fromJSON(e)) : [],
+      dungeonIdTag: isSet(object.dungeonIdTag) ? String(object.dungeonIdTag) : "",
+    };
+  },
+
+  toJSON(message: ss2cUserCharacterGameStatInfoRes): unknown {
+    const obj: any = {};
+    if (message.seasonId !== "") {
+      obj.seasonId = message.seasonId;
+    }
+    if (message.gameType !== 0) {
+      obj.gameType = Math.round(message.gameType);
+    }
+    if (message.gameStats?.length) {
+      obj.gameStats = message.gameStats.map((e) => SGameStat.toJSON(e));
+    }
+    if (message.dungeonIdTag !== "") {
+      obj.dungeonIdTag = message.dungeonIdTag;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cUserCharacterGameStatInfoRes>, I>>(
+    base?: I,
+  ): ss2cUserCharacterGameStatInfoRes {
+    return ss2cUserCharacterGameStatInfoRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cUserCharacterGameStatInfoRes>, I>>(
+    object: I,
+  ): ss2cUserCharacterGameStatInfoRes {
+    const message = createBasess2cUserCharacterGameStatInfoRes();
+    message.seasonId = object.seasonId ?? "";
+    message.gameType = object.gameType ?? 0;
+    message.gameStats = object.gameStats?.map((e) => SGameStat.fromPartial(e)) || [];
+    message.dungeonIdTag = object.dungeonIdTag ?? "";
+    return message;
+  },
+};
+
+function createBasesc2sKnightProgramLinkSelectReq(): sc2sKnightProgramLinkSelectReq {
+  return {};
+}
+
+export const sc2sKnightProgramLinkSelectReq = {
+  encode(_: sc2sKnightProgramLinkSelectReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sKnightProgramLinkSelectReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sKnightProgramLinkSelectReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): sc2sKnightProgramLinkSelectReq {
+    return {};
+  },
+
+  toJSON(_: sc2sKnightProgramLinkSelectReq): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sKnightProgramLinkSelectReq>, I>>(base?: I): sc2sKnightProgramLinkSelectReq {
+    return sc2sKnightProgramLinkSelectReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sKnightProgramLinkSelectReq>, I>>(_: I): sc2sKnightProgramLinkSelectReq {
+    const message = createBasesc2sKnightProgramLinkSelectReq();
+    return message;
+  },
+};
+
+function createBasess2cKnightProgramLinkSelectRes(): ss2cKnightProgramLinkSelectRes {
+  return { result: 0, url: "" };
+}
+
+export const ss2cKnightProgramLinkSelectRes = {
+  encode(message: ss2cKnightProgramLinkSelectRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.result !== 0) {
+      writer.uint32(8).int32(message.result);
+    }
+    if (message.url !== "") {
+      writer.uint32(18).string(message.url);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cKnightProgramLinkSelectRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cKnightProgramLinkSelectRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.result = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.url = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cKnightProgramLinkSelectRes {
+    return {
+      result: isSet(object.result) ? Number(object.result) : 0,
+      url: isSet(object.url) ? String(object.url) : "",
+    };
+  },
+
+  toJSON(message: ss2cKnightProgramLinkSelectRes): unknown {
+    const obj: any = {};
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.url !== "") {
+      obj.url = message.url;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cKnightProgramLinkSelectRes>, I>>(base?: I): ss2cKnightProgramLinkSelectRes {
+    return ss2cKnightProgramLinkSelectRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cKnightProgramLinkSelectRes>, I>>(
+    object: I,
+  ): ss2cKnightProgramLinkSelectRes {
+    const message = createBasess2cKnightProgramLinkSelectRes();
+    message.result = object.result ?? 0;
+    message.url = object.url ?? "";
     return message;
   },
 };

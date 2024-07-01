@@ -24,6 +24,7 @@ export interface SDownItem {
   metaItem: SItemMeta | undefined;
   primaryPropertyArray: SItemProperty[];
   secondaryPropertyArray: SItemProperty[];
+  lootState: number;
 }
 
 export interface SItem {
@@ -36,6 +37,11 @@ export interface SItem {
   itemContentsCount: number;
   primaryPropertyArray: SItemProperty[];
   secondaryPropertyArray: SItemProperty[];
+  lootState: number;
+}
+
+export interface SItemProperties {
+  properties: SItemProperty[];
 }
 
 export interface SItemProperty {
@@ -66,6 +72,13 @@ export interface SSpell {
 export interface SMusic {
   musicId: string;
   slotIndex: number;
+  sequenceIndex: number;
+}
+
+export interface SShapeShift {
+  shapeShiftId: string;
+  slotIndex: number;
+  sequenceIndex: number;
 }
 
 export interface scustomizeCharacter {
@@ -76,6 +89,12 @@ export interface scustomizeCharacter {
 
 export interface scustomizeItem {
   customizeItemId: string;
+  isEquip: number;
+  isNew: number;
+}
+
+export interface scustomizeArmorSkin {
+  customizeArmorSkinId: string;
   isEquip: number;
   isNew: number;
 }
@@ -238,6 +257,7 @@ function createBaseSDownItem(): SDownItem {
     metaItem: undefined,
     primaryPropertyArray: [],
     secondaryPropertyArray: [],
+    lootState: 0,
   };
 }
 
@@ -275,6 +295,9 @@ export const SDownItem = {
     }
     for (const v of message.secondaryPropertyArray) {
       SItemProperty.encode(v!, writer.uint32(90).fork()).ldelim();
+    }
+    if (message.lootState !== 0) {
+      writer.uint32(96).int32(message.lootState);
     }
     return writer;
   },
@@ -363,6 +386,13 @@ export const SDownItem = {
 
           message.secondaryPropertyArray.push(SItemProperty.decode(reader, reader.uint32()));
           continue;
+        case 12:
+          if (tag !== 96) {
+            break;
+          }
+
+          message.lootState = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -389,6 +419,7 @@ export const SDownItem = {
       secondaryPropertyArray: Array.isArray(object?.secondaryPropertyArray)
         ? object.secondaryPropertyArray.map((e: any) => SItemProperty.fromJSON(e))
         : [],
+      lootState: isSet(object.lootState) ? Number(object.lootState) : 0,
     };
   },
 
@@ -427,6 +458,9 @@ export const SDownItem = {
     if (message.secondaryPropertyArray?.length) {
       obj.secondaryPropertyArray = message.secondaryPropertyArray.map((e) => SItemProperty.toJSON(e));
     }
+    if (message.lootState !== 0) {
+      obj.lootState = Math.round(message.lootState);
+    }
     return obj;
   },
 
@@ -448,6 +482,7 @@ export const SDownItem = {
       : undefined;
     message.primaryPropertyArray = object.primaryPropertyArray?.map((e) => SItemProperty.fromPartial(e)) || [];
     message.secondaryPropertyArray = object.secondaryPropertyArray?.map((e) => SItemProperty.fromPartial(e)) || [];
+    message.lootState = object.lootState ?? 0;
     return message;
   },
 };
@@ -463,6 +498,7 @@ function createBaseSItem(): SItem {
     itemContentsCount: 0,
     primaryPropertyArray: [],
     secondaryPropertyArray: [],
+    lootState: 0,
   };
 }
 
@@ -494,6 +530,9 @@ export const SItem = {
     }
     for (const v of message.secondaryPropertyArray) {
       SItemProperty.encode(v!, writer.uint32(82).fork()).ldelim();
+    }
+    if (message.lootState !== 0) {
+      writer.uint32(88).int32(message.lootState);
     }
     return writer;
   },
@@ -568,6 +607,13 @@ export const SItem = {
 
           message.secondaryPropertyArray.push(SItemProperty.decode(reader, reader.uint32()));
           continue;
+        case 11:
+          if (tag !== 88) {
+            break;
+          }
+
+          message.lootState = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -592,6 +638,7 @@ export const SItem = {
       secondaryPropertyArray: Array.isArray(object?.secondaryPropertyArray)
         ? object.secondaryPropertyArray.map((e: any) => SItemProperty.fromJSON(e))
         : [],
+      lootState: isSet(object.lootState) ? Number(object.lootState) : 0,
     };
   },
 
@@ -624,6 +671,9 @@ export const SItem = {
     if (message.secondaryPropertyArray?.length) {
       obj.secondaryPropertyArray = message.secondaryPropertyArray.map((e) => SItemProperty.toJSON(e));
     }
+    if (message.lootState !== 0) {
+      obj.lootState = Math.round(message.lootState);
+    }
     return obj;
   },
 
@@ -641,6 +691,66 @@ export const SItem = {
     message.itemContentsCount = object.itemContentsCount ?? 0;
     message.primaryPropertyArray = object.primaryPropertyArray?.map((e) => SItemProperty.fromPartial(e)) || [];
     message.secondaryPropertyArray = object.secondaryPropertyArray?.map((e) => SItemProperty.fromPartial(e)) || [];
+    message.lootState = object.lootState ?? 0;
+    return message;
+  },
+};
+
+function createBaseSItemProperties(): SItemProperties {
+  return { properties: [] };
+}
+
+export const SItemProperties = {
+  encode(message: SItemProperties, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.properties) {
+      SItemProperty.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SItemProperties {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSItemProperties();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.properties.push(SItemProperty.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SItemProperties {
+    return {
+      properties: Array.isArray(object?.properties) ? object.properties.map((e: any) => SItemProperty.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: SItemProperties): unknown {
+    const obj: any = {};
+    if (message.properties?.length) {
+      obj.properties = message.properties.map((e) => SItemProperty.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SItemProperties>, I>>(base?: I): SItemProperties {
+    return SItemProperties.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SItemProperties>, I>>(object: I): SItemProperties {
+    const message = createBaseSItemProperties();
+    message.properties = object.properties?.map((e) => SItemProperty.fromPartial(e)) || [];
     return message;
   },
 };
@@ -1014,7 +1124,7 @@ export const SSpell = {
 };
 
 function createBaseSMusic(): SMusic {
-  return { musicId: "", slotIndex: 0 };
+  return { musicId: "", slotIndex: 0, sequenceIndex: 0 };
 }
 
 export const SMusic = {
@@ -1024,6 +1134,9 @@ export const SMusic = {
     }
     if (message.slotIndex !== 0) {
       writer.uint32(16).uint32(message.slotIndex);
+    }
+    if (message.sequenceIndex !== 0) {
+      writer.uint32(24).uint32(message.sequenceIndex);
     }
     return writer;
   },
@@ -1049,6 +1162,13 @@ export const SMusic = {
 
           message.slotIndex = reader.uint32();
           continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.sequenceIndex = reader.uint32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1062,6 +1182,7 @@ export const SMusic = {
     return {
       musicId: isSet(object.musicId) ? String(object.musicId) : "",
       slotIndex: isSet(object.slotIndex) ? Number(object.slotIndex) : 0,
+      sequenceIndex: isSet(object.sequenceIndex) ? Number(object.sequenceIndex) : 0,
     };
   },
 
@@ -1073,6 +1194,9 @@ export const SMusic = {
     if (message.slotIndex !== 0) {
       obj.slotIndex = Math.round(message.slotIndex);
     }
+    if (message.sequenceIndex !== 0) {
+      obj.sequenceIndex = Math.round(message.sequenceIndex);
+    }
     return obj;
   },
 
@@ -1083,6 +1207,96 @@ export const SMusic = {
     const message = createBaseSMusic();
     message.musicId = object.musicId ?? "";
     message.slotIndex = object.slotIndex ?? 0;
+    message.sequenceIndex = object.sequenceIndex ?? 0;
+    return message;
+  },
+};
+
+function createBaseSShapeShift(): SShapeShift {
+  return { shapeShiftId: "", slotIndex: 0, sequenceIndex: 0 };
+}
+
+export const SShapeShift = {
+  encode(message: SShapeShift, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.shapeShiftId !== "") {
+      writer.uint32(10).string(message.shapeShiftId);
+    }
+    if (message.slotIndex !== 0) {
+      writer.uint32(16).uint32(message.slotIndex);
+    }
+    if (message.sequenceIndex !== 0) {
+      writer.uint32(24).uint32(message.sequenceIndex);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SShapeShift {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSShapeShift();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.shapeShiftId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.slotIndex = reader.uint32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.sequenceIndex = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SShapeShift {
+    return {
+      shapeShiftId: isSet(object.shapeShiftId) ? String(object.shapeShiftId) : "",
+      slotIndex: isSet(object.slotIndex) ? Number(object.slotIndex) : 0,
+      sequenceIndex: isSet(object.sequenceIndex) ? Number(object.sequenceIndex) : 0,
+    };
+  },
+
+  toJSON(message: SShapeShift): unknown {
+    const obj: any = {};
+    if (message.shapeShiftId !== "") {
+      obj.shapeShiftId = message.shapeShiftId;
+    }
+    if (message.slotIndex !== 0) {
+      obj.slotIndex = Math.round(message.slotIndex);
+    }
+    if (message.sequenceIndex !== 0) {
+      obj.sequenceIndex = Math.round(message.sequenceIndex);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SShapeShift>, I>>(base?: I): SShapeShift {
+    return SShapeShift.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SShapeShift>, I>>(object: I): SShapeShift {
+    const message = createBaseSShapeShift();
+    message.shapeShiftId = object.shapeShiftId ?? "";
+    message.slotIndex = object.slotIndex ?? 0;
+    message.sequenceIndex = object.sequenceIndex ?? 0;
     return message;
   },
 };
@@ -1259,6 +1473,95 @@ export const scustomizeItem = {
   fromPartial<I extends Exact<DeepPartial<scustomizeItem>, I>>(object: I): scustomizeItem {
     const message = createBasescustomizeItem();
     message.customizeItemId = object.customizeItemId ?? "";
+    message.isEquip = object.isEquip ?? 0;
+    message.isNew = object.isNew ?? 0;
+    return message;
+  },
+};
+
+function createBasescustomizeArmorSkin(): scustomizeArmorSkin {
+  return { customizeArmorSkinId: "", isEquip: 0, isNew: 0 };
+}
+
+export const scustomizeArmorSkin = {
+  encode(message: scustomizeArmorSkin, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.customizeArmorSkinId !== "") {
+      writer.uint32(10).string(message.customizeArmorSkinId);
+    }
+    if (message.isEquip !== 0) {
+      writer.uint32(16).int32(message.isEquip);
+    }
+    if (message.isNew !== 0) {
+      writer.uint32(24).int32(message.isNew);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): scustomizeArmorSkin {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasescustomizeArmorSkin();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.customizeArmorSkinId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.isEquip = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.isNew = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): scustomizeArmorSkin {
+    return {
+      customizeArmorSkinId: isSet(object.customizeArmorSkinId) ? String(object.customizeArmorSkinId) : "",
+      isEquip: isSet(object.isEquip) ? Number(object.isEquip) : 0,
+      isNew: isSet(object.isNew) ? Number(object.isNew) : 0,
+    };
+  },
+
+  toJSON(message: scustomizeArmorSkin): unknown {
+    const obj: any = {};
+    if (message.customizeArmorSkinId !== "") {
+      obj.customizeArmorSkinId = message.customizeArmorSkinId;
+    }
+    if (message.isEquip !== 0) {
+      obj.isEquip = Math.round(message.isEquip);
+    }
+    if (message.isNew !== 0) {
+      obj.isNew = Math.round(message.isNew);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<scustomizeArmorSkin>, I>>(base?: I): scustomizeArmorSkin {
+    return scustomizeArmorSkin.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<scustomizeArmorSkin>, I>>(object: I): scustomizeArmorSkin {
+    const message = createBasescustomizeArmorSkin();
+    message.customizeArmorSkinId = object.customizeArmorSkinId ?? "";
     message.isEquip = object.isEquip ?? 0;
     message.isNew = object.isNew ?? 0;
     return message;

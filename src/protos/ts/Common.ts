@@ -1,6 +1,8 @@
 /* eslint-disable */
+import Long from "long";
 import _m0 from "protobufjs/minimal";
 import { sblockCharacter } from "./_Character";
+import { SCHATDATA } from "./_Chat";
 
 export const protobufPackage = "DC.Packet";
 
@@ -103,6 +105,117 @@ export interface ss2cGmEnterGameSpectatorRes {
   port: number;
   token: string;
   serviceUrl: string;
+}
+
+export interface sallmapRotationInfo {
+  gameType: number;
+  mapTag: string;
+}
+
+export interface ss2cAllMapMatchmakingNot {
+  infos: sallmapRotationInfo[];
+  nextRotationDate: string;
+  nextRotationTime: string;
+}
+
+export interface slatencyCheckInfo {
+  path: string;
+}
+
+export interface ss2cLatencyCheckNot {
+  checkCount: number;
+  checkTermMS: number;
+  latencyInfos: slatencyCheckInfo[];
+}
+
+export interface ss2cLobbyCompleteNot {
+  type: number;
+}
+
+export interface sc2sChatHackReportReq {
+  reportIndex: number;
+  chatIndex: number;
+  chatType: number;
+  reportType: number;
+}
+
+export interface ss2cChatHackReportRes {
+  result: number;
+}
+
+export interface sc2sJoinLastGameReq {
+}
+
+export interface ss2cJoinLastGameRes {
+  canJoin: number;
+  address: string;
+  sessionId: string;
+  accountId: string;
+  serviceUrl: string;
+}
+
+export interface sc2sWhisperChatReq {
+  chatData: SCHATDATA | undefined;
+  targetNickname: string;
+}
+
+export interface ss2cWhisperChatRes {
+  result: number;
+}
+
+export interface ss2cWhisperChatNot {
+  chatData: SCHATDATA | undefined;
+  time: number;
+}
+
+export interface ss2cAccountStatusNot {
+  accountStatus: number;
+}
+
+export interface sc2sPlatformLinkCodeGenReq {
+}
+
+export interface ss2cPlatformLinkCodeGenRes {
+  result: number;
+  genCode: string;
+  remainTimeMS: number;
+}
+
+export interface sc2sPlatformLinkCodeActiveReq {
+  code: string;
+}
+
+export interface ss2cPlatformLinkCodeActiveRes {
+  result: number;
+}
+
+export interface splatformLinkInfo {
+  loginType: number;
+  platformId: string;
+}
+
+export interface sc2sPlatformLinkInfoListReq {
+}
+
+export interface ss2cPlatformLinkInfoListRes {
+  infos: splatformLinkInfo[];
+}
+
+export interface sc2sPlatformLinkFaqUrlReq {
+}
+
+export interface ss2cPlatformLinkFaqUrlRes {
+  faqUrl: string;
+}
+
+export interface ss2cClientPopupMessageNot {
+  message: string;
+}
+
+export interface ss2cSquireStatusRestrictedContentNot {
+  limitedDungeons: number[];
+  IsAllowedEnterTradingPost: number;
+  IsAllowedListingMarketplace: number;
 }
 
 function createBasesc2sMetaLocationReq(): sc2sMetaLocationReq {
@@ -1609,6 +1722,1670 @@ export const ss2cGmEnterGameSpectatorRes = {
   },
 };
 
+function createBasesallmapRotationInfo(): sallmapRotationInfo {
+  return { gameType: 0, mapTag: "" };
+}
+
+export const sallmapRotationInfo = {
+  encode(message: sallmapRotationInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.gameType !== 0) {
+      writer.uint32(8).uint32(message.gameType);
+    }
+    if (message.mapTag !== "") {
+      writer.uint32(18).string(message.mapTag);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sallmapRotationInfo {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesallmapRotationInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.gameType = reader.uint32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.mapTag = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): sallmapRotationInfo {
+    return {
+      gameType: isSet(object.gameType) ? Number(object.gameType) : 0,
+      mapTag: isSet(object.mapTag) ? String(object.mapTag) : "",
+    };
+  },
+
+  toJSON(message: sallmapRotationInfo): unknown {
+    const obj: any = {};
+    if (message.gameType !== 0) {
+      obj.gameType = Math.round(message.gameType);
+    }
+    if (message.mapTag !== "") {
+      obj.mapTag = message.mapTag;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sallmapRotationInfo>, I>>(base?: I): sallmapRotationInfo {
+    return sallmapRotationInfo.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sallmapRotationInfo>, I>>(object: I): sallmapRotationInfo {
+    const message = createBasesallmapRotationInfo();
+    message.gameType = object.gameType ?? 0;
+    message.mapTag = object.mapTag ?? "";
+    return message;
+  },
+};
+
+function createBasess2cAllMapMatchmakingNot(): ss2cAllMapMatchmakingNot {
+  return { infos: [], nextRotationDate: "", nextRotationTime: "" };
+}
+
+export const ss2cAllMapMatchmakingNot = {
+  encode(message: ss2cAllMapMatchmakingNot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.infos) {
+      sallmapRotationInfo.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.nextRotationDate !== "") {
+      writer.uint32(26).string(message.nextRotationDate);
+    }
+    if (message.nextRotationTime !== "") {
+      writer.uint32(34).string(message.nextRotationTime);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cAllMapMatchmakingNot {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cAllMapMatchmakingNot();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.infos.push(sallmapRotationInfo.decode(reader, reader.uint32()));
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.nextRotationDate = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.nextRotationTime = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cAllMapMatchmakingNot {
+    return {
+      infos: Array.isArray(object?.infos) ? object.infos.map((e: any) => sallmapRotationInfo.fromJSON(e)) : [],
+      nextRotationDate: isSet(object.nextRotationDate) ? String(object.nextRotationDate) : "",
+      nextRotationTime: isSet(object.nextRotationTime) ? String(object.nextRotationTime) : "",
+    };
+  },
+
+  toJSON(message: ss2cAllMapMatchmakingNot): unknown {
+    const obj: any = {};
+    if (message.infos?.length) {
+      obj.infos = message.infos.map((e) => sallmapRotationInfo.toJSON(e));
+    }
+    if (message.nextRotationDate !== "") {
+      obj.nextRotationDate = message.nextRotationDate;
+    }
+    if (message.nextRotationTime !== "") {
+      obj.nextRotationTime = message.nextRotationTime;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cAllMapMatchmakingNot>, I>>(base?: I): ss2cAllMapMatchmakingNot {
+    return ss2cAllMapMatchmakingNot.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cAllMapMatchmakingNot>, I>>(object: I): ss2cAllMapMatchmakingNot {
+    const message = createBasess2cAllMapMatchmakingNot();
+    message.infos = object.infos?.map((e) => sallmapRotationInfo.fromPartial(e)) || [];
+    message.nextRotationDate = object.nextRotationDate ?? "";
+    message.nextRotationTime = object.nextRotationTime ?? "";
+    return message;
+  },
+};
+
+function createBaseslatencyCheckInfo(): slatencyCheckInfo {
+  return { path: "" };
+}
+
+export const slatencyCheckInfo = {
+  encode(message: slatencyCheckInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.path !== "") {
+      writer.uint32(10).string(message.path);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): slatencyCheckInfo {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseslatencyCheckInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.path = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): slatencyCheckInfo {
+    return { path: isSet(object.path) ? String(object.path) : "" };
+  },
+
+  toJSON(message: slatencyCheckInfo): unknown {
+    const obj: any = {};
+    if (message.path !== "") {
+      obj.path = message.path;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<slatencyCheckInfo>, I>>(base?: I): slatencyCheckInfo {
+    return slatencyCheckInfo.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<slatencyCheckInfo>, I>>(object: I): slatencyCheckInfo {
+    const message = createBaseslatencyCheckInfo();
+    message.path = object.path ?? "";
+    return message;
+  },
+};
+
+function createBasess2cLatencyCheckNot(): ss2cLatencyCheckNot {
+  return { checkCount: 0, checkTermMS: 0, latencyInfos: [] };
+}
+
+export const ss2cLatencyCheckNot = {
+  encode(message: ss2cLatencyCheckNot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.checkCount !== 0) {
+      writer.uint32(8).int32(message.checkCount);
+    }
+    if (message.checkTermMS !== 0) {
+      writer.uint32(16).int32(message.checkTermMS);
+    }
+    for (const v of message.latencyInfos) {
+      slatencyCheckInfo.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cLatencyCheckNot {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cLatencyCheckNot();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.checkCount = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.checkTermMS = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.latencyInfos.push(slatencyCheckInfo.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cLatencyCheckNot {
+    return {
+      checkCount: isSet(object.checkCount) ? Number(object.checkCount) : 0,
+      checkTermMS: isSet(object.checkTermMS) ? Number(object.checkTermMS) : 0,
+      latencyInfos: Array.isArray(object?.latencyInfos)
+        ? object.latencyInfos.map((e: any) => slatencyCheckInfo.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ss2cLatencyCheckNot): unknown {
+    const obj: any = {};
+    if (message.checkCount !== 0) {
+      obj.checkCount = Math.round(message.checkCount);
+    }
+    if (message.checkTermMS !== 0) {
+      obj.checkTermMS = Math.round(message.checkTermMS);
+    }
+    if (message.latencyInfos?.length) {
+      obj.latencyInfos = message.latencyInfos.map((e) => slatencyCheckInfo.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cLatencyCheckNot>, I>>(base?: I): ss2cLatencyCheckNot {
+    return ss2cLatencyCheckNot.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cLatencyCheckNot>, I>>(object: I): ss2cLatencyCheckNot {
+    const message = createBasess2cLatencyCheckNot();
+    message.checkCount = object.checkCount ?? 0;
+    message.checkTermMS = object.checkTermMS ?? 0;
+    message.latencyInfos = object.latencyInfos?.map((e) => slatencyCheckInfo.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBasess2cLobbyCompleteNot(): ss2cLobbyCompleteNot {
+  return { type: 0 };
+}
+
+export const ss2cLobbyCompleteNot = {
+  encode(message: ss2cLobbyCompleteNot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.type !== 0) {
+      writer.uint32(8).int32(message.type);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cLobbyCompleteNot {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cLobbyCompleteNot();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.type = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cLobbyCompleteNot {
+    return { type: isSet(object.type) ? Number(object.type) : 0 };
+  },
+
+  toJSON(message: ss2cLobbyCompleteNot): unknown {
+    const obj: any = {};
+    if (message.type !== 0) {
+      obj.type = Math.round(message.type);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cLobbyCompleteNot>, I>>(base?: I): ss2cLobbyCompleteNot {
+    return ss2cLobbyCompleteNot.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cLobbyCompleteNot>, I>>(object: I): ss2cLobbyCompleteNot {
+    const message = createBasess2cLobbyCompleteNot();
+    message.type = object.type ?? 0;
+    return message;
+  },
+};
+
+function createBasesc2sChatHackReportReq(): sc2sChatHackReportReq {
+  return { reportIndex: 0, chatIndex: 0, chatType: 0, reportType: 0 };
+}
+
+export const sc2sChatHackReportReq = {
+  encode(message: sc2sChatHackReportReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.reportIndex !== 0) {
+      writer.uint32(8).uint32(message.reportIndex);
+    }
+    if (message.chatIndex !== 0) {
+      writer.uint32(16).uint64(message.chatIndex);
+    }
+    if (message.chatType !== 0) {
+      writer.uint32(24).uint32(message.chatType);
+    }
+    if (message.reportType !== 0) {
+      writer.uint32(32).uint32(message.reportType);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sChatHackReportReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sChatHackReportReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.reportIndex = reader.uint32();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.chatIndex = longToNumber(reader.uint64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.chatType = reader.uint32();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.reportType = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): sc2sChatHackReportReq {
+    return {
+      reportIndex: isSet(object.reportIndex) ? Number(object.reportIndex) : 0,
+      chatIndex: isSet(object.chatIndex) ? Number(object.chatIndex) : 0,
+      chatType: isSet(object.chatType) ? Number(object.chatType) : 0,
+      reportType: isSet(object.reportType) ? Number(object.reportType) : 0,
+    };
+  },
+
+  toJSON(message: sc2sChatHackReportReq): unknown {
+    const obj: any = {};
+    if (message.reportIndex !== 0) {
+      obj.reportIndex = Math.round(message.reportIndex);
+    }
+    if (message.chatIndex !== 0) {
+      obj.chatIndex = Math.round(message.chatIndex);
+    }
+    if (message.chatType !== 0) {
+      obj.chatType = Math.round(message.chatType);
+    }
+    if (message.reportType !== 0) {
+      obj.reportType = Math.round(message.reportType);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sChatHackReportReq>, I>>(base?: I): sc2sChatHackReportReq {
+    return sc2sChatHackReportReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sChatHackReportReq>, I>>(object: I): sc2sChatHackReportReq {
+    const message = createBasesc2sChatHackReportReq();
+    message.reportIndex = object.reportIndex ?? 0;
+    message.chatIndex = object.chatIndex ?? 0;
+    message.chatType = object.chatType ?? 0;
+    message.reportType = object.reportType ?? 0;
+    return message;
+  },
+};
+
+function createBasess2cChatHackReportRes(): ss2cChatHackReportRes {
+  return { result: 0 };
+}
+
+export const ss2cChatHackReportRes = {
+  encode(message: ss2cChatHackReportRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.result !== 0) {
+      writer.uint32(8).int32(message.result);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cChatHackReportRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cChatHackReportRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.result = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cChatHackReportRes {
+    return { result: isSet(object.result) ? Number(object.result) : 0 };
+  },
+
+  toJSON(message: ss2cChatHackReportRes): unknown {
+    const obj: any = {};
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cChatHackReportRes>, I>>(base?: I): ss2cChatHackReportRes {
+    return ss2cChatHackReportRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cChatHackReportRes>, I>>(object: I): ss2cChatHackReportRes {
+    const message = createBasess2cChatHackReportRes();
+    message.result = object.result ?? 0;
+    return message;
+  },
+};
+
+function createBasesc2sJoinLastGameReq(): sc2sJoinLastGameReq {
+  return {};
+}
+
+export const sc2sJoinLastGameReq = {
+  encode(_: sc2sJoinLastGameReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sJoinLastGameReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sJoinLastGameReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): sc2sJoinLastGameReq {
+    return {};
+  },
+
+  toJSON(_: sc2sJoinLastGameReq): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sJoinLastGameReq>, I>>(base?: I): sc2sJoinLastGameReq {
+    return sc2sJoinLastGameReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sJoinLastGameReq>, I>>(_: I): sc2sJoinLastGameReq {
+    const message = createBasesc2sJoinLastGameReq();
+    return message;
+  },
+};
+
+function createBasess2cJoinLastGameRes(): ss2cJoinLastGameRes {
+  return { canJoin: 0, address: "", sessionId: "", accountId: "", serviceUrl: "" };
+}
+
+export const ss2cJoinLastGameRes = {
+  encode(message: ss2cJoinLastGameRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.canJoin !== 0) {
+      writer.uint32(8).uint32(message.canJoin);
+    }
+    if (message.address !== "") {
+      writer.uint32(18).string(message.address);
+    }
+    if (message.sessionId !== "") {
+      writer.uint32(26).string(message.sessionId);
+    }
+    if (message.accountId !== "") {
+      writer.uint32(34).string(message.accountId);
+    }
+    if (message.serviceUrl !== "") {
+      writer.uint32(42).string(message.serviceUrl);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cJoinLastGameRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cJoinLastGameRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.canJoin = reader.uint32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.address = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.sessionId = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.accountId = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.serviceUrl = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cJoinLastGameRes {
+    return {
+      canJoin: isSet(object.canJoin) ? Number(object.canJoin) : 0,
+      address: isSet(object.address) ? String(object.address) : "",
+      sessionId: isSet(object.sessionId) ? String(object.sessionId) : "",
+      accountId: isSet(object.accountId) ? String(object.accountId) : "",
+      serviceUrl: isSet(object.serviceUrl) ? String(object.serviceUrl) : "",
+    };
+  },
+
+  toJSON(message: ss2cJoinLastGameRes): unknown {
+    const obj: any = {};
+    if (message.canJoin !== 0) {
+      obj.canJoin = Math.round(message.canJoin);
+    }
+    if (message.address !== "") {
+      obj.address = message.address;
+    }
+    if (message.sessionId !== "") {
+      obj.sessionId = message.sessionId;
+    }
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.serviceUrl !== "") {
+      obj.serviceUrl = message.serviceUrl;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cJoinLastGameRes>, I>>(base?: I): ss2cJoinLastGameRes {
+    return ss2cJoinLastGameRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cJoinLastGameRes>, I>>(object: I): ss2cJoinLastGameRes {
+    const message = createBasess2cJoinLastGameRes();
+    message.canJoin = object.canJoin ?? 0;
+    message.address = object.address ?? "";
+    message.sessionId = object.sessionId ?? "";
+    message.accountId = object.accountId ?? "";
+    message.serviceUrl = object.serviceUrl ?? "";
+    return message;
+  },
+};
+
+function createBasesc2sWhisperChatReq(): sc2sWhisperChatReq {
+  return { chatData: undefined, targetNickname: "" };
+}
+
+export const sc2sWhisperChatReq = {
+  encode(message: sc2sWhisperChatReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.chatData !== undefined) {
+      SCHATDATA.encode(message.chatData, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.targetNickname !== "") {
+      writer.uint32(18).string(message.targetNickname);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sWhisperChatReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sWhisperChatReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.chatData = SCHATDATA.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.targetNickname = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): sc2sWhisperChatReq {
+    return {
+      chatData: isSet(object.chatData) ? SCHATDATA.fromJSON(object.chatData) : undefined,
+      targetNickname: isSet(object.targetNickname) ? String(object.targetNickname) : "",
+    };
+  },
+
+  toJSON(message: sc2sWhisperChatReq): unknown {
+    const obj: any = {};
+    if (message.chatData !== undefined) {
+      obj.chatData = SCHATDATA.toJSON(message.chatData);
+    }
+    if (message.targetNickname !== "") {
+      obj.targetNickname = message.targetNickname;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sWhisperChatReq>, I>>(base?: I): sc2sWhisperChatReq {
+    return sc2sWhisperChatReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sWhisperChatReq>, I>>(object: I): sc2sWhisperChatReq {
+    const message = createBasesc2sWhisperChatReq();
+    message.chatData = (object.chatData !== undefined && object.chatData !== null)
+      ? SCHATDATA.fromPartial(object.chatData)
+      : undefined;
+    message.targetNickname = object.targetNickname ?? "";
+    return message;
+  },
+};
+
+function createBasess2cWhisperChatRes(): ss2cWhisperChatRes {
+  return { result: 0 };
+}
+
+export const ss2cWhisperChatRes = {
+  encode(message: ss2cWhisperChatRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.result !== 0) {
+      writer.uint32(8).uint32(message.result);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cWhisperChatRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cWhisperChatRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.result = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cWhisperChatRes {
+    return { result: isSet(object.result) ? Number(object.result) : 0 };
+  },
+
+  toJSON(message: ss2cWhisperChatRes): unknown {
+    const obj: any = {};
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cWhisperChatRes>, I>>(base?: I): ss2cWhisperChatRes {
+    return ss2cWhisperChatRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cWhisperChatRes>, I>>(object: I): ss2cWhisperChatRes {
+    const message = createBasess2cWhisperChatRes();
+    message.result = object.result ?? 0;
+    return message;
+  },
+};
+
+function createBasess2cWhisperChatNot(): ss2cWhisperChatNot {
+  return { chatData: undefined, time: 0 };
+}
+
+export const ss2cWhisperChatNot = {
+  encode(message: ss2cWhisperChatNot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.chatData !== undefined) {
+      SCHATDATA.encode(message.chatData, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.time !== 0) {
+      writer.uint32(16).uint64(message.time);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cWhisperChatNot {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cWhisperChatNot();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.chatData = SCHATDATA.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.time = longToNumber(reader.uint64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cWhisperChatNot {
+    return {
+      chatData: isSet(object.chatData) ? SCHATDATA.fromJSON(object.chatData) : undefined,
+      time: isSet(object.time) ? Number(object.time) : 0,
+    };
+  },
+
+  toJSON(message: ss2cWhisperChatNot): unknown {
+    const obj: any = {};
+    if (message.chatData !== undefined) {
+      obj.chatData = SCHATDATA.toJSON(message.chatData);
+    }
+    if (message.time !== 0) {
+      obj.time = Math.round(message.time);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cWhisperChatNot>, I>>(base?: I): ss2cWhisperChatNot {
+    return ss2cWhisperChatNot.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cWhisperChatNot>, I>>(object: I): ss2cWhisperChatNot {
+    const message = createBasess2cWhisperChatNot();
+    message.chatData = (object.chatData !== undefined && object.chatData !== null)
+      ? SCHATDATA.fromPartial(object.chatData)
+      : undefined;
+    message.time = object.time ?? 0;
+    return message;
+  },
+};
+
+function createBasess2cAccountStatusNot(): ss2cAccountStatusNot {
+  return { accountStatus: 0 };
+}
+
+export const ss2cAccountStatusNot = {
+  encode(message: ss2cAccountStatusNot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.accountStatus !== 0) {
+      writer.uint32(8).uint32(message.accountStatus);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cAccountStatusNot {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cAccountStatusNot();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.accountStatus = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cAccountStatusNot {
+    return { accountStatus: isSet(object.accountStatus) ? Number(object.accountStatus) : 0 };
+  },
+
+  toJSON(message: ss2cAccountStatusNot): unknown {
+    const obj: any = {};
+    if (message.accountStatus !== 0) {
+      obj.accountStatus = Math.round(message.accountStatus);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cAccountStatusNot>, I>>(base?: I): ss2cAccountStatusNot {
+    return ss2cAccountStatusNot.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cAccountStatusNot>, I>>(object: I): ss2cAccountStatusNot {
+    const message = createBasess2cAccountStatusNot();
+    message.accountStatus = object.accountStatus ?? 0;
+    return message;
+  },
+};
+
+function createBasesc2sPlatformLinkCodeGenReq(): sc2sPlatformLinkCodeGenReq {
+  return {};
+}
+
+export const sc2sPlatformLinkCodeGenReq = {
+  encode(_: sc2sPlatformLinkCodeGenReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sPlatformLinkCodeGenReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sPlatformLinkCodeGenReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): sc2sPlatformLinkCodeGenReq {
+    return {};
+  },
+
+  toJSON(_: sc2sPlatformLinkCodeGenReq): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sPlatformLinkCodeGenReq>, I>>(base?: I): sc2sPlatformLinkCodeGenReq {
+    return sc2sPlatformLinkCodeGenReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sPlatformLinkCodeGenReq>, I>>(_: I): sc2sPlatformLinkCodeGenReq {
+    const message = createBasesc2sPlatformLinkCodeGenReq();
+    return message;
+  },
+};
+
+function createBasess2cPlatformLinkCodeGenRes(): ss2cPlatformLinkCodeGenRes {
+  return { result: 0, genCode: "", remainTimeMS: 0 };
+}
+
+export const ss2cPlatformLinkCodeGenRes = {
+  encode(message: ss2cPlatformLinkCodeGenRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.result !== 0) {
+      writer.uint32(8).uint32(message.result);
+    }
+    if (message.genCode !== "") {
+      writer.uint32(18).string(message.genCode);
+    }
+    if (message.remainTimeMS !== 0) {
+      writer.uint32(24).int64(message.remainTimeMS);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cPlatformLinkCodeGenRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cPlatformLinkCodeGenRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.result = reader.uint32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.genCode = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.remainTimeMS = longToNumber(reader.int64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cPlatformLinkCodeGenRes {
+    return {
+      result: isSet(object.result) ? Number(object.result) : 0,
+      genCode: isSet(object.genCode) ? String(object.genCode) : "",
+      remainTimeMS: isSet(object.remainTimeMS) ? Number(object.remainTimeMS) : 0,
+    };
+  },
+
+  toJSON(message: ss2cPlatformLinkCodeGenRes): unknown {
+    const obj: any = {};
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.genCode !== "") {
+      obj.genCode = message.genCode;
+    }
+    if (message.remainTimeMS !== 0) {
+      obj.remainTimeMS = Math.round(message.remainTimeMS);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cPlatformLinkCodeGenRes>, I>>(base?: I): ss2cPlatformLinkCodeGenRes {
+    return ss2cPlatformLinkCodeGenRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cPlatformLinkCodeGenRes>, I>>(object: I): ss2cPlatformLinkCodeGenRes {
+    const message = createBasess2cPlatformLinkCodeGenRes();
+    message.result = object.result ?? 0;
+    message.genCode = object.genCode ?? "";
+    message.remainTimeMS = object.remainTimeMS ?? 0;
+    return message;
+  },
+};
+
+function createBasesc2sPlatformLinkCodeActiveReq(): sc2sPlatformLinkCodeActiveReq {
+  return { code: "" };
+}
+
+export const sc2sPlatformLinkCodeActiveReq = {
+  encode(message: sc2sPlatformLinkCodeActiveReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.code !== "") {
+      writer.uint32(10).string(message.code);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sPlatformLinkCodeActiveReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sPlatformLinkCodeActiveReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.code = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): sc2sPlatformLinkCodeActiveReq {
+    return { code: isSet(object.code) ? String(object.code) : "" };
+  },
+
+  toJSON(message: sc2sPlatformLinkCodeActiveReq): unknown {
+    const obj: any = {};
+    if (message.code !== "") {
+      obj.code = message.code;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sPlatformLinkCodeActiveReq>, I>>(base?: I): sc2sPlatformLinkCodeActiveReq {
+    return sc2sPlatformLinkCodeActiveReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sPlatformLinkCodeActiveReq>, I>>(
+    object: I,
+  ): sc2sPlatformLinkCodeActiveReq {
+    const message = createBasesc2sPlatformLinkCodeActiveReq();
+    message.code = object.code ?? "";
+    return message;
+  },
+};
+
+function createBasess2cPlatformLinkCodeActiveRes(): ss2cPlatformLinkCodeActiveRes {
+  return { result: 0 };
+}
+
+export const ss2cPlatformLinkCodeActiveRes = {
+  encode(message: ss2cPlatformLinkCodeActiveRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.result !== 0) {
+      writer.uint32(8).uint32(message.result);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cPlatformLinkCodeActiveRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cPlatformLinkCodeActiveRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.result = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cPlatformLinkCodeActiveRes {
+    return { result: isSet(object.result) ? Number(object.result) : 0 };
+  },
+
+  toJSON(message: ss2cPlatformLinkCodeActiveRes): unknown {
+    const obj: any = {};
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cPlatformLinkCodeActiveRes>, I>>(base?: I): ss2cPlatformLinkCodeActiveRes {
+    return ss2cPlatformLinkCodeActiveRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cPlatformLinkCodeActiveRes>, I>>(
+    object: I,
+  ): ss2cPlatformLinkCodeActiveRes {
+    const message = createBasess2cPlatformLinkCodeActiveRes();
+    message.result = object.result ?? 0;
+    return message;
+  },
+};
+
+function createBasesplatformLinkInfo(): splatformLinkInfo {
+  return { loginType: 0, platformId: "" };
+}
+
+export const splatformLinkInfo = {
+  encode(message: splatformLinkInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.loginType !== 0) {
+      writer.uint32(8).uint32(message.loginType);
+    }
+    if (message.platformId !== "") {
+      writer.uint32(18).string(message.platformId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): splatformLinkInfo {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesplatformLinkInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.loginType = reader.uint32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.platformId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): splatformLinkInfo {
+    return {
+      loginType: isSet(object.loginType) ? Number(object.loginType) : 0,
+      platformId: isSet(object.platformId) ? String(object.platformId) : "",
+    };
+  },
+
+  toJSON(message: splatformLinkInfo): unknown {
+    const obj: any = {};
+    if (message.loginType !== 0) {
+      obj.loginType = Math.round(message.loginType);
+    }
+    if (message.platformId !== "") {
+      obj.platformId = message.platformId;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<splatformLinkInfo>, I>>(base?: I): splatformLinkInfo {
+    return splatformLinkInfo.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<splatformLinkInfo>, I>>(object: I): splatformLinkInfo {
+    const message = createBasesplatformLinkInfo();
+    message.loginType = object.loginType ?? 0;
+    message.platformId = object.platformId ?? "";
+    return message;
+  },
+};
+
+function createBasesc2sPlatformLinkInfoListReq(): sc2sPlatformLinkInfoListReq {
+  return {};
+}
+
+export const sc2sPlatformLinkInfoListReq = {
+  encode(_: sc2sPlatformLinkInfoListReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sPlatformLinkInfoListReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sPlatformLinkInfoListReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): sc2sPlatformLinkInfoListReq {
+    return {};
+  },
+
+  toJSON(_: sc2sPlatformLinkInfoListReq): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sPlatformLinkInfoListReq>, I>>(base?: I): sc2sPlatformLinkInfoListReq {
+    return sc2sPlatformLinkInfoListReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sPlatformLinkInfoListReq>, I>>(_: I): sc2sPlatformLinkInfoListReq {
+    const message = createBasesc2sPlatformLinkInfoListReq();
+    return message;
+  },
+};
+
+function createBasess2cPlatformLinkInfoListRes(): ss2cPlatformLinkInfoListRes {
+  return { infos: [] };
+}
+
+export const ss2cPlatformLinkInfoListRes = {
+  encode(message: ss2cPlatformLinkInfoListRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.infos) {
+      splatformLinkInfo.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cPlatformLinkInfoListRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cPlatformLinkInfoListRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.infos.push(splatformLinkInfo.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cPlatformLinkInfoListRes {
+    return { infos: Array.isArray(object?.infos) ? object.infos.map((e: any) => splatformLinkInfo.fromJSON(e)) : [] };
+  },
+
+  toJSON(message: ss2cPlatformLinkInfoListRes): unknown {
+    const obj: any = {};
+    if (message.infos?.length) {
+      obj.infos = message.infos.map((e) => splatformLinkInfo.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cPlatformLinkInfoListRes>, I>>(base?: I): ss2cPlatformLinkInfoListRes {
+    return ss2cPlatformLinkInfoListRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cPlatformLinkInfoListRes>, I>>(object: I): ss2cPlatformLinkInfoListRes {
+    const message = createBasess2cPlatformLinkInfoListRes();
+    message.infos = object.infos?.map((e) => splatformLinkInfo.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBasesc2sPlatformLinkFaqUrlReq(): sc2sPlatformLinkFaqUrlReq {
+  return {};
+}
+
+export const sc2sPlatformLinkFaqUrlReq = {
+  encode(_: sc2sPlatformLinkFaqUrlReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sPlatformLinkFaqUrlReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sPlatformLinkFaqUrlReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): sc2sPlatformLinkFaqUrlReq {
+    return {};
+  },
+
+  toJSON(_: sc2sPlatformLinkFaqUrlReq): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sPlatformLinkFaqUrlReq>, I>>(base?: I): sc2sPlatformLinkFaqUrlReq {
+    return sc2sPlatformLinkFaqUrlReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sPlatformLinkFaqUrlReq>, I>>(_: I): sc2sPlatformLinkFaqUrlReq {
+    const message = createBasesc2sPlatformLinkFaqUrlReq();
+    return message;
+  },
+};
+
+function createBasess2cPlatformLinkFaqUrlRes(): ss2cPlatformLinkFaqUrlRes {
+  return { faqUrl: "" };
+}
+
+export const ss2cPlatformLinkFaqUrlRes = {
+  encode(message: ss2cPlatformLinkFaqUrlRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.faqUrl !== "") {
+      writer.uint32(10).string(message.faqUrl);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cPlatformLinkFaqUrlRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cPlatformLinkFaqUrlRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.faqUrl = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cPlatformLinkFaqUrlRes {
+    return { faqUrl: isSet(object.faqUrl) ? String(object.faqUrl) : "" };
+  },
+
+  toJSON(message: ss2cPlatformLinkFaqUrlRes): unknown {
+    const obj: any = {};
+    if (message.faqUrl !== "") {
+      obj.faqUrl = message.faqUrl;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cPlatformLinkFaqUrlRes>, I>>(base?: I): ss2cPlatformLinkFaqUrlRes {
+    return ss2cPlatformLinkFaqUrlRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cPlatformLinkFaqUrlRes>, I>>(object: I): ss2cPlatformLinkFaqUrlRes {
+    const message = createBasess2cPlatformLinkFaqUrlRes();
+    message.faqUrl = object.faqUrl ?? "";
+    return message;
+  },
+};
+
+function createBasess2cClientPopupMessageNot(): ss2cClientPopupMessageNot {
+  return { message: "" };
+}
+
+export const ss2cClientPopupMessageNot = {
+  encode(message: ss2cClientPopupMessageNot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.message !== "") {
+      writer.uint32(10).string(message.message);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cClientPopupMessageNot {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cClientPopupMessageNot();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.message = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cClientPopupMessageNot {
+    return { message: isSet(object.message) ? String(object.message) : "" };
+  },
+
+  toJSON(message: ss2cClientPopupMessageNot): unknown {
+    const obj: any = {};
+    if (message.message !== "") {
+      obj.message = message.message;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cClientPopupMessageNot>, I>>(base?: I): ss2cClientPopupMessageNot {
+    return ss2cClientPopupMessageNot.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cClientPopupMessageNot>, I>>(object: I): ss2cClientPopupMessageNot {
+    const message = createBasess2cClientPopupMessageNot();
+    message.message = object.message ?? "";
+    return message;
+  },
+};
+
+function createBasess2cSquireStatusRestrictedContentNot(): ss2cSquireStatusRestrictedContentNot {
+  return { limitedDungeons: [], IsAllowedEnterTradingPost: 0, IsAllowedListingMarketplace: 0 };
+}
+
+export const ss2cSquireStatusRestrictedContentNot = {
+  encode(message: ss2cSquireStatusRestrictedContentNot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    writer.uint32(10).fork();
+    for (const v of message.limitedDungeons) {
+      writer.int32(v);
+    }
+    writer.ldelim();
+    if (message.IsAllowedEnterTradingPost !== 0) {
+      writer.uint32(16).int32(message.IsAllowedEnterTradingPost);
+    }
+    if (message.IsAllowedListingMarketplace !== 0) {
+      writer.uint32(24).int32(message.IsAllowedListingMarketplace);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cSquireStatusRestrictedContentNot {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cSquireStatusRestrictedContentNot();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag === 8) {
+            message.limitedDungeons.push(reader.int32());
+
+            continue;
+          }
+
+          if (tag === 10) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.limitedDungeons.push(reader.int32());
+            }
+
+            continue;
+          }
+
+          break;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.IsAllowedEnterTradingPost = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.IsAllowedListingMarketplace = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cSquireStatusRestrictedContentNot {
+    return {
+      limitedDungeons: Array.isArray(object?.limitedDungeons) ? object.limitedDungeons.map((e: any) => Number(e)) : [],
+      IsAllowedEnterTradingPost: isSet(object.IsAllowedEnterTradingPost) ? Number(object.IsAllowedEnterTradingPost) : 0,
+      IsAllowedListingMarketplace: isSet(object.IsAllowedListingMarketplace)
+        ? Number(object.IsAllowedListingMarketplace)
+        : 0,
+    };
+  },
+
+  toJSON(message: ss2cSquireStatusRestrictedContentNot): unknown {
+    const obj: any = {};
+    if (message.limitedDungeons?.length) {
+      obj.limitedDungeons = message.limitedDungeons.map((e) => Math.round(e));
+    }
+    if (message.IsAllowedEnterTradingPost !== 0) {
+      obj.IsAllowedEnterTradingPost = Math.round(message.IsAllowedEnterTradingPost);
+    }
+    if (message.IsAllowedListingMarketplace !== 0) {
+      obj.IsAllowedListingMarketplace = Math.round(message.IsAllowedListingMarketplace);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cSquireStatusRestrictedContentNot>, I>>(
+    base?: I,
+  ): ss2cSquireStatusRestrictedContentNot {
+    return ss2cSquireStatusRestrictedContentNot.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cSquireStatusRestrictedContentNot>, I>>(
+    object: I,
+  ): ss2cSquireStatusRestrictedContentNot {
+    const message = createBasess2cSquireStatusRestrictedContentNot();
+    message.limitedDungeons = object.limitedDungeons?.map((e) => e) || [];
+    message.IsAllowedEnterTradingPost = object.IsAllowedEnterTradingPost ?? 0;
+    message.IsAllowedListingMarketplace = object.IsAllowedListingMarketplace ?? 0;
+    return message;
+  },
+};
+
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
+
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
@@ -1619,6 +3396,18 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function longToNumber(long: Long): number {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
+}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

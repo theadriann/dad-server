@@ -1,0 +1,150 @@
+syntax = "proto3";
+
+package DC.Packet;
+
+option java_package = "com.packets.marketPlace";
+option java_outer_classname = "marketPlace";
+option java_multiple_files = false;
+
+import "_Item.proto";
+import "_Character.proto";
+
+message SMARKETPLACE_FILTER_INFO {
+  int32 filterType = 1;
+  repeated string filters = 2;
+}
+
+message SC2S_MARKETPLACE_ITEM_LIST_REQ {
+  repeated .DC.Packet.SMARKETPLACE_FILTER_INFO filterInfos = 1;
+  int32 sortType = 3;
+  int32 sortMethod = 2;
+  int32 currentPage = 4;
+}
+
+message SMARKETPLACE_ITEM_INFO {
+  int64 listingId = 1;
+  .DC.Packet.SItem item = 2;
+  int32 price = 3;
+  int64 remainExpirationTime = 4;
+  .DC.Packet.SACCOUNT_NICKNAME nickname = 5;
+}
+
+message SS2C_MARKETPLACE_ITEM_LIST_RES {
+  repeated .DC.Packet.SMARKETPLACE_ITEM_INFO itemInfos = 1;
+  int32 currentPage = 2;
+  int32 maxPage = 3;
+}
+
+message SC2S_MARKETPLACE_MY_ITEM_LIST_REQ {
+}
+
+message SMARKETPLACE_PRICE_INFO {
+  string itemId = 1;
+  uint32 price = 2;
+}
+
+message SMARKETPLACE_MY_ITEM_INFO {
+  .DC.Packet.SMARKETPLACE_ITEM_INFO itemInfo = 1;
+  int64 remainExpirationTime = 2;
+  int32 myItemState = 3;
+  repeated .DC.Packet.SMARKETPLACE_PRICE_INFO priceInfos = 4;
+}
+
+message SS2C_MARKETPLACE_MY_ITEM_LIST_RES {
+  repeated .DC.Packet.SMARKETPLACE_MY_ITEM_INFO myItemInfos = 1;
+}
+
+message SMARKETPLACE_TRADE_ITEM_INFO {
+  uint64 itemUniqueId = 1;
+  uint32 itemCount = 2;
+  uint32 itemContentsCount = 3;
+  int32 slotId = 4;
+}
+
+message SC2S_MARKETPLACE_ITEM_BUY_REQ {
+  int64 listingId = 1;
+  repeated .DC.Packet.SMARKETPLACE_TRADE_ITEM_INFO tradeInfos = 2;
+}
+
+message SS2C_MARKETPLACE_ITEM_BUY_RES {
+  int32 result = 1;
+}
+
+message SMARKETPLACE_REGISTER_INFO {
+  int64 uniqueId = 1;
+  uint32 itemCount = 2;
+  uint32 itemContentsCount = 3;
+}
+
+message SC2S_MARKETPLACE_ITEM_REGISTER_REQ {
+  .DC.Packet.SMARKETPLACE_REGISTER_INFO registerInfo = 1;
+  repeated .DC.Packet.SMARKETPLACE_PRICE_INFO priceInfos = 2;
+}
+
+message SS2C_MARKETPLACE_ITEM_REGISTER_RES {
+  int32 result = 1;
+}
+
+message SC2S_MARKETPLACE_ITEM_CANCEL_REQ {
+  int64 listingId = 1;
+}
+
+message SS2C_MARKETPLACE_ITEM_CANCEL_RES {
+  int32 result = 1;
+}
+
+message SMARKETPLACE_TRADE_SLOT_INFO {
+  uint32 inventoryId = 1;
+  uint32 slotId = 2;
+  string itemId = 3;
+  uint64 itemUniqueId = 4;
+  uint32 itemCount = 5;
+  uint32 itemContentsCount = 6;
+}
+
+message SC2S_MARKETPLACE_TRANSFER_ITEMS_REQ {
+  int64 listingId = 1;
+  repeated .DC.Packet.SMARKETPLACE_TRADE_SLOT_INFO slotInfos = 2;
+}
+
+message SS2C_MARKETPLACE_TRANSFER_ITEMS_RES {
+  int32 result = 1;
+}
+
+message SS2C_MARKETPLACE_ITEM_HAS_SOLD_NOT {
+  int32 isSold = 1;
+}
+
+message SC2S_MARKETPLACE_ENTER_REQ {
+}
+
+message SS2C_MARKETPLACE_ENTER_RES {
+  int32 result = 1;
+}
+
+enum MARKETPLACE_FILTER {
+  FILTER_NONE = 0;
+  NAME = 1;
+  RARITY = 2;
+  SLOT = 3;
+  TYPE = 4;
+  STATIC_ATTRIBUTE = 5;
+  RANDOM_ATTRIBUTE = 6;
+  PRICE = 7;
+  CLASS = 8;
+}
+
+enum MARKETPLACE_SORT {
+  MARKETPLACE_SORT_NONE = 0;
+  ASCENDING = 1;
+  DESCENDING = 2;
+}
+
+enum MARKETPLACE_MY_ITEM_STATE {
+  MY_ITEM_STATE_NONE = 0;
+  LISTING = 1;
+  LISTING_EXPIRED = 2;
+  SOLD = 3;
+  TRANSFER_EXPIRED = 4;
+}
+

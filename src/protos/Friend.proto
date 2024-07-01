@@ -8,6 +8,163 @@ option java_multiple_files = false;
 
 import "_Character.proto";
 
+message SC2S_FRIEND_CHECK_ACCOUNTNICKNAME_REQ {
+  string accountNickname = 1;
+}
+
+message SS2C_FRIEND_CHECK_ACCOUNTNICKNAME_RES {
+  uint32 result = 1;
+}
+
+message SC2S_FRIEND_CREATE_ACCOUNTNICKNAME_REQ {
+  string accountNickname = 1;
+}
+
+message SS2C_FRIEND_CREATE_ACCOUNTNICKNAME_RES {
+  uint32 result = 1;
+  string accountNickname = 2;
+}
+
+message SC2S_FRIEND_SET_STATUS_REQ {
+  uint32 status = 1;
+  uint32 temporary = 2;
+}
+
+message SS2C_FRIEND_SET_STATUS_RES {
+  uint32 result = 1;
+  uint32 status = 2;
+}
+
+message SC2S_FRIEND_SET_PRIVACY_REQ {
+  uint32 privacy = 1;
+}
+
+message SS2C_FRIEND_SET_PRIVACY_RES {
+  uint32 result = 1;
+  uint32 privacy = 2;
+}
+
+message SC2S_FRIEND_INVITE_REQ {
+  string accountId = 1;
+}
+
+message SS2C_FRIEND_INVITE_RES {
+  uint32 result = 1;
+}
+
+message SC2S_FRIEND_INVITE_BY_ACCOUNTNICKNAME_REQ {
+  string accountNickname = 1;
+}
+
+message SS2C_FRIEND_INVITE_BY_ACCOUNTNICKNAME_RES {
+  uint32 result = 1;
+}
+
+message SC2S_FRIEND_INVITE_ACCEPT_REQ {
+  repeated string accountIds = 1;
+}
+
+message SS2C_FRIEND_INVITE_ACCEPT_RES {
+  uint32 result = 1;
+}
+
+message SC2S_FRIEND_INVITE_DECLINE_REQ {
+  repeated string accountIds = 1;
+}
+
+message SS2C_FRIEND_INVITE_DECLINE_RES {
+  uint32 result = 1;
+}
+
+message SC2S_FRIEND_INVITE_CANCEL_REQ {
+  repeated string accountIds = 1;
+}
+
+message SS2C_FRIEND_INVITE_CANCEL_RES {
+  uint32 result = 1;
+}
+
+message SC2S_FRIEND_DEL_FRIEND_REQ {
+  string accountId = 1;
+}
+
+message SS2C_FRIEND_DEL_FRIEND_RES {
+  uint32 result = 1;
+}
+
+message SFRIEND_ACCOUNT_INFO {
+  string accountId = 1;
+  string accountNickname = 2;
+}
+
+message SFRIEND_INFO {
+  .DC.Packet.SFRIEND_ACCOUNT_INFO accountInfo = 1;
+  string characterId = 2;
+  .DC.Packet.SACCOUNT_NICKNAME nickName = 3;
+  string characterClass = 4;
+  uint32 gender = 5;
+  uint32 level = 6;
+  uint32 status = 7;
+  uint32 locationStatus = 8;
+  uint32 PartyMemeberCount = 9;
+  uint32 PartyMaxMemeberCount = 10;
+}
+
+message SFRIEND_ACCEPT_INFO {
+  .DC.Packet.SFRIEND_ACCOUNT_INFO accountInfo = 1;
+  string characterId = 2;
+  .DC.Packet.SACCOUNT_NICKNAME nickName = 3;
+  string characterClass = 4;
+  uint32 gender = 5;
+  uint32 level = 6;
+  uint32 status = 7;
+}
+
+message SFRIEND_REQUEST_INFO {
+  .DC.Packet.SFRIEND_ACCOUNT_INFO accountInfo = 1;
+  string characterId = 2;
+  .DC.Packet.SACCOUNT_NICKNAME nickName = 3;
+  string characterClass = 4;
+  uint32 gender = 5;
+  uint32 level = 6;
+  uint32 status = 7;
+}
+
+message SS2C_FRIEND_INFO_NOT {
+  string accountNickname = 1;
+  uint32 status = 2;
+  uint32 privacy = 3;
+}
+
+message SS2C_FRIEND_SET_FRIEND_INFOS_NOT {
+  repeated .DC.Packet.SFRIEND_INFO infos = 1;
+}
+
+message SS2C_FRIEND_DEL_FRIEND_INFOS_NOT {
+  repeated string accountIds = 1;
+}
+
+message SS2C_FRIEND_SET_ACCEPT_INFOS_NOT {
+  repeated .DC.Packet.SFRIEND_ACCEPT_INFO infos = 1;
+}
+
+message SS2C_FRIEND_DEL_ACCEPT_INFOS_NOT {
+  repeated string accountIds = 1;
+}
+
+message SS2C_FRIEND_SET_INVITE_INFOS_NOT {
+  repeated .DC.Packet.SFRIEND_REQUEST_INFO infos = 1;
+}
+
+message SS2C_FRIEND_DEL_INVITE_INFOS_NOT {
+  repeated string accountIds = 1;
+}
+
+message SS2C_FRIEND_SET_STATUS_NOT {
+  string accountId = 1;
+  uint32 status = 2;
+}
+
 message SC2S_FRIEND_LIST_REQ {
   uint32 pageIndex = 1;
   uint32 pageCapacity = 2;
@@ -33,7 +190,7 @@ message SS2C_FRIEND_LIST_ALL_RES {
 }
 
 message SC2S_FRIEND_FIND_REQ {
-  .DC.Packet.SACCOUNT_NICKNAME nickName = 1;
+  string accountNickname = 1;
 }
 
 message SS2C_FRIEND_FIND_RES {

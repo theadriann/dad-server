@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package DC.Packet;
+
+option java_package = "com.packets.agent";
+option java_outer_classname = "agent";
+option java_multiple_files = false;
+
+message Agent_ServiceList {
+  string ipAddress = 1;
+  uint32 port = 2;
+  uint32 processId = 3;
+  uint32 userCount = 4;
+}
+

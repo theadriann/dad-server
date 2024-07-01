@@ -159,3 +159,11 @@ message SS2C_STORAGE_INFO_RES {
   repeated .DC.Packet.SItem storageItems = 2;
 }
 
+message SC2S_INVENTORY_EXPAND_STORAGE_REQ {
+  int32 buyInventoryId = 1;
+}
+
+message SS2C_INVENTORY_EXPAND_STORAGE_RES {
+  uint32 result = 1;
+}
+

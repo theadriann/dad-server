@@ -16,7 +16,7 @@ export interface ss2cEnterGameServerNot {
 export interface sc2sAutoMatchRegReq {
   mode: number;
   region: number;
-  difficultyType: number;
+  gameType: number;
 }
 
 export enum sc2sAutoMatchRegReq_MODE {
@@ -60,6 +60,7 @@ export function sc2sAutoMatchRegReq_MODEToJSON(object: sc2sAutoMatchRegReq_MODE)
 
 export interface ss2cAutoMatchRegRes {
   result: number;
+  restrictionMS: number;
 }
 
 export enum ss2cAutoMatchRegRes_RESULT {
@@ -75,6 +76,10 @@ export enum ss2cAutoMatchRegRes_RESULT {
   FAIL_SHORTAGE_LEVEL = 9,
   FAIL_MEMBER_EXCEEDED = 10,
   FAIL_PLAY_TIME_SHORTAGE = 11,
+  FAIL_RARITY_ITEM_TOO_HIGH = 12,
+  FAIL_REGION_LATENCY_LIMIT = 13,
+  FAIL_MATCH_RESTRICTION = 14,
+  FAIL_CAN_NOT_SQUIRE = 15,
   UNRECOGNIZED = -1,
 }
 
@@ -116,6 +121,18 @@ export function ss2cAutoMatchRegRes_RESULTFromJSON(object: any): ss2cAutoMatchRe
     case 11:
     case "FAIL_PLAY_TIME_SHORTAGE":
       return ss2cAutoMatchRegRes_RESULT.FAIL_PLAY_TIME_SHORTAGE;
+    case 12:
+    case "FAIL_RARITY_ITEM_TOO_HIGH":
+      return ss2cAutoMatchRegRes_RESULT.FAIL_RARITY_ITEM_TOO_HIGH;
+    case 13:
+    case "FAIL_REGION_LATENCY_LIMIT":
+      return ss2cAutoMatchRegRes_RESULT.FAIL_REGION_LATENCY_LIMIT;
+    case 14:
+    case "FAIL_MATCH_RESTRICTION":
+      return ss2cAutoMatchRegRes_RESULT.FAIL_MATCH_RESTRICTION;
+    case 15:
+    case "FAIL_CAN_NOT_SQUIRE":
+      return ss2cAutoMatchRegRes_RESULT.FAIL_CAN_NOT_SQUIRE;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -149,6 +166,14 @@ export function ss2cAutoMatchRegRes_RESULTToJSON(object: ss2cAutoMatchRegRes_RES
       return "FAIL_MEMBER_EXCEEDED";
     case ss2cAutoMatchRegRes_RESULT.FAIL_PLAY_TIME_SHORTAGE:
       return "FAIL_PLAY_TIME_SHORTAGE";
+    case ss2cAutoMatchRegRes_RESULT.FAIL_RARITY_ITEM_TOO_HIGH:
+      return "FAIL_RARITY_ITEM_TOO_HIGH";
+    case ss2cAutoMatchRegRes_RESULT.FAIL_REGION_LATENCY_LIMIT:
+      return "FAIL_REGION_LATENCY_LIMIT";
+    case ss2cAutoMatchRegRes_RESULT.FAIL_MATCH_RESTRICTION:
+      return "FAIL_MATCH_RESTRICTION";
+    case ss2cAutoMatchRegRes_RESULT.FAIL_CAN_NOT_SQUIRE:
+      return "FAIL_CAN_NOT_SQUIRE";
     case ss2cAutoMatchRegRes_RESULT.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -172,6 +197,17 @@ export interface sc2sReconnectIngameReq {
 export interface ss2cReconnectIngameRes {
   result: number;
   serviceUrl: string;
+}
+
+export interface sgearBaseScoreInfo {
+  gameType: number;
+  gearBaseIndex: number;
+  beginScore: number;
+  endScore: number;
+}
+
+export interface ss2cGearBaseScoreListNot {
+  infos: sgearBaseScoreInfo[];
 }
 
 function createBasess2cEnterGameServerNot(): ss2cEnterGameServerNot {
@@ -311,7 +347,7 @@ export const ss2cEnterGameServerNot = {
 };
 
 function createBasesc2sAutoMatchRegReq(): sc2sAutoMatchRegReq {
-  return { mode: 0, region: 0, difficultyType: 0 };
+  return { mode: 0, region: 0, gameType: 0 };
 }
 
 export const sc2sAutoMatchRegReq = {
@@ -322,8 +358,8 @@ export const sc2sAutoMatchRegReq = {
     if (message.region !== 0) {
       writer.uint32(16).uint32(message.region);
     }
-    if (message.difficultyType !== 0) {
-      writer.uint32(24).uint32(message.difficultyType);
+    if (message.gameType !== 0) {
+      writer.uint32(24).uint32(message.gameType);
     }
     return writer;
   },
@@ -354,7 +390,7 @@ export const sc2sAutoMatchRegReq = {
             break;
           }
 
-          message.difficultyType = reader.uint32();
+          message.gameType = reader.uint32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -369,7 +405,7 @@ export const sc2sAutoMatchRegReq = {
     return {
       mode: isSet(object.mode) ? Number(object.mode) : 0,
       region: isSet(object.region) ? Number(object.region) : 0,
-      difficultyType: isSet(object.difficultyType) ? Number(object.difficultyType) : 0,
+      gameType: isSet(object.gameType) ? Number(object.gameType) : 0,
     };
   },
 
@@ -381,8 +417,8 @@ export const sc2sAutoMatchRegReq = {
     if (message.region !== 0) {
       obj.region = Math.round(message.region);
     }
-    if (message.difficultyType !== 0) {
-      obj.difficultyType = Math.round(message.difficultyType);
+    if (message.gameType !== 0) {
+      obj.gameType = Math.round(message.gameType);
     }
     return obj;
   },
@@ -394,19 +430,22 @@ export const sc2sAutoMatchRegReq = {
     const message = createBasesc2sAutoMatchRegReq();
     message.mode = object.mode ?? 0;
     message.region = object.region ?? 0;
-    message.difficultyType = object.difficultyType ?? 0;
+    message.gameType = object.gameType ?? 0;
     return message;
   },
 };
 
 function createBasess2cAutoMatchRegRes(): ss2cAutoMatchRegRes {
-  return { result: 0 };
+  return { result: 0, restrictionMS: 0 };
 }
 
 export const ss2cAutoMatchRegRes = {
   encode(message: ss2cAutoMatchRegRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.result !== 0) {
       writer.uint32(8).uint32(message.result);
+    }
+    if (message.restrictionMS !== 0) {
+      writer.uint32(16).uint32(message.restrictionMS);
     }
     return writer;
   },
@@ -425,6 +464,13 @@ export const ss2cAutoMatchRegRes = {
 
           message.result = reader.uint32();
           continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.restrictionMS = reader.uint32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -435,13 +481,19 @@ export const ss2cAutoMatchRegRes = {
   },
 
   fromJSON(object: any): ss2cAutoMatchRegRes {
-    return { result: isSet(object.result) ? Number(object.result) : 0 };
+    return {
+      result: isSet(object.result) ? Number(object.result) : 0,
+      restrictionMS: isSet(object.restrictionMS) ? Number(object.restrictionMS) : 0,
+    };
   },
 
   toJSON(message: ss2cAutoMatchRegRes): unknown {
     const obj: any = {};
     if (message.result !== 0) {
       obj.result = Math.round(message.result);
+    }
+    if (message.restrictionMS !== 0) {
+      obj.restrictionMS = Math.round(message.restrictionMS);
     }
     return obj;
   },
@@ -452,6 +504,7 @@ export const ss2cAutoMatchRegRes = {
   fromPartial<I extends Exact<DeepPartial<ss2cAutoMatchRegRes>, I>>(object: I): ss2cAutoMatchRegRes {
     const message = createBasess2cAutoMatchRegRes();
     message.result = object.result ?? 0;
+    message.restrictionMS = object.restrictionMS ?? 0;
     return message;
   },
 };
@@ -733,6 +786,167 @@ export const ss2cReconnectIngameRes = {
     const message = createBasess2cReconnectIngameRes();
     message.result = object.result ?? 0;
     message.serviceUrl = object.serviceUrl ?? "";
+    return message;
+  },
+};
+
+function createBasesgearBaseScoreInfo(): sgearBaseScoreInfo {
+  return { gameType: 0, gearBaseIndex: 0, beginScore: 0, endScore: 0 };
+}
+
+export const sgearBaseScoreInfo = {
+  encode(message: sgearBaseScoreInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.gameType !== 0) {
+      writer.uint32(8).int32(message.gameType);
+    }
+    if (message.gearBaseIndex !== 0) {
+      writer.uint32(16).int32(message.gearBaseIndex);
+    }
+    if (message.beginScore !== 0) {
+      writer.uint32(24).int32(message.beginScore);
+    }
+    if (message.endScore !== 0) {
+      writer.uint32(32).int32(message.endScore);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sgearBaseScoreInfo {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesgearBaseScoreInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.gameType = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.gearBaseIndex = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.beginScore = reader.int32();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.endScore = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): sgearBaseScoreInfo {
+    return {
+      gameType: isSet(object.gameType) ? Number(object.gameType) : 0,
+      gearBaseIndex: isSet(object.gearBaseIndex) ? Number(object.gearBaseIndex) : 0,
+      beginScore: isSet(object.beginScore) ? Number(object.beginScore) : 0,
+      endScore: isSet(object.endScore) ? Number(object.endScore) : 0,
+    };
+  },
+
+  toJSON(message: sgearBaseScoreInfo): unknown {
+    const obj: any = {};
+    if (message.gameType !== 0) {
+      obj.gameType = Math.round(message.gameType);
+    }
+    if (message.gearBaseIndex !== 0) {
+      obj.gearBaseIndex = Math.round(message.gearBaseIndex);
+    }
+    if (message.beginScore !== 0) {
+      obj.beginScore = Math.round(message.beginScore);
+    }
+    if (message.endScore !== 0) {
+      obj.endScore = Math.round(message.endScore);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sgearBaseScoreInfo>, I>>(base?: I): sgearBaseScoreInfo {
+    return sgearBaseScoreInfo.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sgearBaseScoreInfo>, I>>(object: I): sgearBaseScoreInfo {
+    const message = createBasesgearBaseScoreInfo();
+    message.gameType = object.gameType ?? 0;
+    message.gearBaseIndex = object.gearBaseIndex ?? 0;
+    message.beginScore = object.beginScore ?? 0;
+    message.endScore = object.endScore ?? 0;
+    return message;
+  },
+};
+
+function createBasess2cGearBaseScoreListNot(): ss2cGearBaseScoreListNot {
+  return { infos: [] };
+}
+
+export const ss2cGearBaseScoreListNot = {
+  encode(message: ss2cGearBaseScoreListNot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.infos) {
+      sgearBaseScoreInfo.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cGearBaseScoreListNot {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cGearBaseScoreListNot();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.infos.push(sgearBaseScoreInfo.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cGearBaseScoreListNot {
+    return { infos: Array.isArray(object?.infos) ? object.infos.map((e: any) => sgearBaseScoreInfo.fromJSON(e)) : [] };
+  },
+
+  toJSON(message: ss2cGearBaseScoreListNot): unknown {
+    const obj: any = {};
+    if (message.infos?.length) {
+      obj.infos = message.infos.map((e) => sgearBaseScoreInfo.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cGearBaseScoreListNot>, I>>(base?: I): ss2cGearBaseScoreListNot {
+    return ss2cGearBaseScoreListNot.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cGearBaseScoreListNot>, I>>(object: I): ss2cGearBaseScoreListNot {
+    const message = createBasess2cGearBaseScoreListNot();
+    message.infos = object.infos?.map((e) => sgearBaseScoreInfo.fromPartial(e)) || [];
     return message;
   },
 };

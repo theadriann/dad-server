@@ -325,6 +325,14 @@ export function ss2cStorageInfoRes_resultStorageInfoToJSON(object: ss2cStorageIn
   }
 }
 
+export interface sc2sInventoryExpandStorageReq {
+  buyInventoryId: number;
+}
+
+export interface ss2cInventoryExpandStorageRes {
+  result: number;
+}
+
 function createBasesc2sInventoryInfoReq(): sc2sInventoryInfoReq {
   return {};
 }
@@ -2161,6 +2169,124 @@ export const ss2cStorageInfoRes = {
     const message = createBasess2cStorageInfoRes();
     message.result = object.result ?? 0;
     message.storageItems = object.storageItems?.map((e) => SItem.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBasesc2sInventoryExpandStorageReq(): sc2sInventoryExpandStorageReq {
+  return { buyInventoryId: 0 };
+}
+
+export const sc2sInventoryExpandStorageReq = {
+  encode(message: sc2sInventoryExpandStorageReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.buyInventoryId !== 0) {
+      writer.uint32(8).int32(message.buyInventoryId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sInventoryExpandStorageReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sInventoryExpandStorageReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.buyInventoryId = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): sc2sInventoryExpandStorageReq {
+    return { buyInventoryId: isSet(object.buyInventoryId) ? Number(object.buyInventoryId) : 0 };
+  },
+
+  toJSON(message: sc2sInventoryExpandStorageReq): unknown {
+    const obj: any = {};
+    if (message.buyInventoryId !== 0) {
+      obj.buyInventoryId = Math.round(message.buyInventoryId);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sInventoryExpandStorageReq>, I>>(base?: I): sc2sInventoryExpandStorageReq {
+    return sc2sInventoryExpandStorageReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sInventoryExpandStorageReq>, I>>(
+    object: I,
+  ): sc2sInventoryExpandStorageReq {
+    const message = createBasesc2sInventoryExpandStorageReq();
+    message.buyInventoryId = object.buyInventoryId ?? 0;
+    return message;
+  },
+};
+
+function createBasess2cInventoryExpandStorageRes(): ss2cInventoryExpandStorageRes {
+  return { result: 0 };
+}
+
+export const ss2cInventoryExpandStorageRes = {
+  encode(message: ss2cInventoryExpandStorageRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.result !== 0) {
+      writer.uint32(8).uint32(message.result);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cInventoryExpandStorageRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cInventoryExpandStorageRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.result = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cInventoryExpandStorageRes {
+    return { result: isSet(object.result) ? Number(object.result) : 0 };
+  },
+
+  toJSON(message: ss2cInventoryExpandStorageRes): unknown {
+    const obj: any = {};
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cInventoryExpandStorageRes>, I>>(base?: I): ss2cInventoryExpandStorageRes {
+    return ss2cInventoryExpandStorageRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cInventoryExpandStorageRes>, I>>(
+    object: I,
+  ): ss2cInventoryExpandStorageRes {
+    const message = createBasess2cInventoryExpandStorageRes();
+    message.result = object.result ?? 0;
     return message;
   },
 };

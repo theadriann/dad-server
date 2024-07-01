@@ -42,11 +42,12 @@ message Operate_userInfo {
 }
 
 message HackLogInfo {
-  string accountId = 1;
-  string characterId = 2;
-  string nickname = 3;
-  string reason = 4;
-  string registerTime = 5;
+  string logIdx = 1;
+  string accountId = 2;
+  string characterId = 3;
+  string nickname = 4;
+  string reason = 5;
+  string registerTime = 6;
 }
 
 message Operate_Hacklog {
@@ -178,6 +179,9 @@ message Operate_Ban_User2 {
   uint32 banType = 5;
   uint32 banTime_min = 6;
   string jiraId = 7;
+  uint32 isRankReset = 8;
+  uint32 isRankRecovery = 9;
+  uint64 logIdx = 10;
 }
 
 message Operate_Ban_Hardware {
@@ -223,11 +227,12 @@ message Operate_OperateIronShieldInfo {
 message Operate_OperateBanUserInfos {
   uint64 accountId = 1;
   int32 banType = 2;
-  string comment = 3;
-  string beginTime = 4;
-  string endTime = 5;
-  string registerTime = 6;
-  string isHardwareBan = 7;
+  uint64 logIdx = 3;
+  string comment = 4;
+  string beginTime = 5;
+  string endTime = 6;
+  string registerTime = 7;
+  string isHardwareBan = 8;
 }
 
 message Operate_OperateLoginLogInfo {
@@ -265,6 +270,8 @@ message Operate_OperateBanInfo {
   string banType = 2;
   string comment = 3;
   string registerTime = 4;
+  string beginTime = 5;
+  string endTime = 6;
 }
 
 message Operate_OperateBanHardwareInfo {
@@ -278,6 +285,7 @@ message Operate_OperatePlatformInfo {
   string ironmaceid = 1;
   string email = 2;
   string username = 3;
+  string accountNickName = 4;
 }
 
 message Operate_AllHackInfo {
@@ -314,21 +322,41 @@ message ReasonSearchBanUserInfo {
   string beginTime = 6;
   string endTime = 7;
   string registerTime = 8;
+  uint64 sortTime = 9;
 }
 
 message Operate_SearchHackReasonResult {
   repeated .DC.Packet.ReasonSearchBanUserInfo infos = 1;
+  int32 maxPageSize = 2;
+  int32 currentPage = 3;
+  int32 searchType = 4;
+}
+
+message Operate_BulkBanInfo {
+  uint64 accountId = 1;
+  string nickname = 2;
 }
 
 message Operate_HackUserBanBulk {
-  repeated string banAccountIds = 1;
+  repeated .DC.Packet.Operate_BulkBanInfo infos = 1;
   string reason = 2;
   uint32 banType = 3;
   uint32 banTime_min = 4;
+  string jiraId = 5;
+  uint32 withLoginHardwareBan = 6;
+  uint64 logIdx = 7;
 }
 
 message Operate_HackUserUnbanBulk {
-  repeated string unbanAccountIds = 1;
+  repeated .DC.Packet.Operate_BulkBanInfo infos = 1;
   string reason = 2;
+  string jiraId = 3;
+  uint32 withLoginHardwareBan = 4;
+}
+
+message Operate_Blacklist {
+  uint32 writeType = 1;
+  uint64 accountId = 2;
+  string reason = 3;
 }
 

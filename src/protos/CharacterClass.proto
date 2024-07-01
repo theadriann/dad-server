@@ -7,6 +7,90 @@ option java_outer_classname = "characterClass";
 option java_multiple_files = false;
 
 import "_Item.proto";
+import "_Character.proto";
+
+message STRAINING_REWARD_INFO {
+  int32 uniqueId = 1;
+  string rewardType = 2;
+  string rewardId = 3;
+  int32 rewardCount = 4;
+}
+
+message SCLASS_TRAINING_INFO {
+  enum STATE {
+    TRAINING_INFO_NONE = 0;
+    CLASS_ABILITY = 1;
+    REWARD = 2;
+  }
+
+  int32 state = 1;
+  repeated string classAbilityChoices = 2;
+  repeated .DC.Packet.STRAINING_REWARD_INFO rewardChoices = 3;
+  string characterClass = 4;
+  int32 isMaster = 5;
+}
+
+message STRAINING_CHARACTER_INFO {
+  string characterId = 1;
+  .DC.Packet.SACCOUNT_NICKNAME nickname = 2;
+  string characterClass = 3;
+  int32 gender = 4;
+  int32 level = 5;
+  int32 isMaster = 6;
+  int32 hasLearn = 7;
+}
+
+message SC2S_TRAINING_INFO_REQ {
+}
+
+message SS2C_TRAINING_INFO_RES {
+  .DC.Packet.SCLASS_TRAINING_INFO info = 1;
+  repeated .DC.Packet.STRAINING_CHARACTER_INFO characters = 2;
+}
+
+message SC2S_TRAINING_REDEEM_LEARNING_TOKEN_REQ {
+  string masterCharacterId = 1;
+}
+
+message SS2C_TRAINING_REDEEM_LEARNING_TOKEN_RES {
+  uint32 result = 1;
+  repeated string classAbilityIds = 2;
+  string masterCharacterClass = 3;
+}
+
+message SC2S_TRAINING_RECEIVE_CLASS_ABILITY_REQ {
+  string classAbilityId = 1;
+}
+
+message SS2C_TRAINING_RECEIVE_CLASS_ABILITY_RES {
+  uint32 result = 1;
+}
+
+message SC2S_TRAINING_REDEEM_REWARD_TOKEN_REQ {
+}
+
+message SS2C_TRAINING_REDEEM_REWARD_TOKEN_RES {
+  uint32 result = 1;
+  repeated .DC.Packet.STRAINING_REWARD_INFO rewards = 2;
+}
+
+message STRAINING_ITEM_SLOT_INFO {
+  uint32 inventoryId = 1;
+  uint32 slotId = 2;
+  string itemId = 3;
+  uint64 itemUniqueId = 4;
+  uint32 itemCount = 5;
+  uint32 itemContentsCount = 6;
+}
+
+message SC2S_TRAINING_RECEIVE_REWARD_REQ {
+  int32 uniqueId = 1;
+  repeated .DC.Packet.STRAINING_ITEM_SLOT_INFO slotInfos = 2;
+}
+
+message SS2C_TRAINING_RECEIVE_REWARD_RES {
+  int32 result = 1;
+}
 
 message SCLASS_EQUIP_INFO {
   uint32 index = 1;
@@ -32,6 +116,10 @@ message SS2C_CLASS_LEVEL_INFO_RES {
   uint32 expBegin = 3;
   uint32 expLimit = 4;
   uint32 rewardPoint = 5;
+  uint32 nextRewardLevel = 6;
+  uint32 learningPoint = 7;
+  uint32 nextLearningLevel = 8;
+  uint32 fame = 9;
 }
 
 message SC2S_CLASS_EQUIP_INFO_REQ {
@@ -68,6 +156,13 @@ message SC2S_CLASS_MUSIC_LIST_REQ {
 
 message SS2C_CLASS_MUSIC_LIST_RES {
   repeated .DC.Packet.SMusic musics = 1;
+}
+
+message SC2S_CLASS_SHAPESHIFT_LIST_REQ {
+}
+
+message SS2C_CLASS_SHAPESHIFT_LIST_RES {
+  repeated .DC.Packet.SShapeShift shapeShifts = 1;
 }
 
 message SC2S_CLASS_SPELL_SLOT_MOVE_REQ {
@@ -109,5 +204,35 @@ message SC2S_CLASS_MUSIC_SLOT_MOVE_REQ {
 message SS2C_CLASS_MUSIC_SLOT_MOVE_RES {
   uint32 result = 1;
   repeated .DC.Packet.SMusic equipMusicList = 2;
+}
+
+message SC2S_CLASS_MUSIC_SEQUENCE_CHANGE_REQ {
+  string musicId = 1;
+  uint32 dstSequenceIndex = 2;
+}
+
+message SS2C_CLASS_MUSIC_SEQUENCE_CHANGE_RES {
+  uint32 result = 1;
+  repeated .DC.Packet.SMusic equipMusicList = 2;
+}
+
+message SC2S_CLASS_SHAPESHIFT_SLOT_MOVE_REQ {
+  string shapeShiftId = 1;
+  int32 dstSlotIndex = 2;
+}
+
+message SS2C_CLASS_SHAPESHIFT_SLOT_MOVE_RES {
+  uint32 result = 1;
+  repeated .DC.Packet.SShapeShift equipShapeShiftList = 2;
+}
+
+message SC2S_CLASS_SHAPESHIFT_SEQUENCE_CHANGE_REQ {
+  string shapeShiftId = 1;
+  uint32 dstSequenceIndex = 2;
+}
+
+message SS2C_CLASS_SHAPESHIFT_SEQUENCE_CHANGE_RES {
+  uint32 result = 1;
+  repeated .DC.Packet.SShapeShift equipShapeShiftList = 2;
 }
 

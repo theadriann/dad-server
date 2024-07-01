@@ -26,6 +26,7 @@ message SDownItem {
   .DC.Packet.SItemMeta metaItem = 9;
   repeated .DC.Packet.SItemProperty primaryPropertyArray = 10;
   repeated .DC.Packet.SItemProperty secondaryPropertyArray = 11;
+  int32 lootState = 12;
 }
 
 message SItem {
@@ -38,6 +39,11 @@ message SItem {
   uint32 itemContentsCount = 8;
   repeated .DC.Packet.SItemProperty primaryPropertyArray = 9;
   repeated .DC.Packet.SItemProperty secondaryPropertyArray = 10;
+  int32 lootState = 11;
+}
+
+message SItemProperties {
+  repeated .DC.Packet.SItemProperty properties = 1;
 }
 
 message SItemProperty {
@@ -68,6 +74,13 @@ message SSpell {
 message SMusic {
   string musicId = 1;
   uint32 slotIndex = 2;
+  uint32 sequenceIndex = 3;
+}
+
+message SShapeShift {
+  string shapeShiftId = 1;
+  uint32 slotIndex = 2;
+  uint32 sequenceIndex = 3;
 }
 
 message SCUSTOMIZE_CHARACTER {
@@ -78,6 +91,12 @@ message SCUSTOMIZE_CHARACTER {
 
 message SCUSTOMIZE_ITEM {
   string customizeItemId = 1;
+  int32 isEquip = 2;
+  int32 isNew = 3;
+}
+
+message SCUSTOMIZE_ARMOR_SKIN {
+  string customizeArmorSkinId = 1;
   int32 isEquip = 2;
   int32 isNew = 3;
 }
