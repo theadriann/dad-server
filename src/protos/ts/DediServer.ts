@@ -123,6 +123,8 @@ export interface S2CGameStartServerJson {
   currentFloor: number;
   floorMatchmakingOnOff: number;
   matchmakingType: number;
+  region: string;
+  fleetId: string;
 }
 
 export enum S2CGameStartServerJson_matchMake {
@@ -1358,6 +1360,8 @@ function createBaseS2CGameStartServerJson(): S2CGameStartServerJson {
     currentFloor: 0,
     floorMatchmakingOnOff: 0,
     matchmakingType: 0,
+    region: "",
+    fleetId: "",
   };
 }
 
@@ -1410,6 +1414,12 @@ export const S2CGameStartServerJson = {
     }
     if (message.matchmakingType !== 0) {
       writer.uint32(144).uint32(message.matchmakingType);
+    }
+    if (message.region !== "") {
+      writer.uint32(154).string(message.region);
+    }
+    if (message.fleetId !== "") {
+      writer.uint32(162).string(message.fleetId);
     }
     return writer;
   },
@@ -1533,6 +1543,20 @@ export const S2CGameStartServerJson = {
 
           message.matchmakingType = reader.uint32();
           continue;
+        case 19:
+          if (tag !== 154) {
+            break;
+          }
+
+          message.region = reader.string();
+          continue;
+        case 20:
+          if (tag !== 162) {
+            break;
+          }
+
+          message.fleetId = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1566,6 +1590,8 @@ export const S2CGameStartServerJson = {
       currentFloor: isSet(object.currentFloor) ? Number(object.currentFloor) : 0,
       floorMatchmakingOnOff: isSet(object.floorMatchmakingOnOff) ? Number(object.floorMatchmakingOnOff) : 0,
       matchmakingType: isSet(object.matchmakingType) ? Number(object.matchmakingType) : 0,
+      region: isSet(object.region) ? String(object.region) : "",
+      fleetId: isSet(object.fleetId) ? String(object.fleetId) : "",
     };
   },
 
@@ -1619,6 +1645,12 @@ export const S2CGameStartServerJson = {
     if (message.matchmakingType !== 0) {
       obj.matchmakingType = Math.round(message.matchmakingType);
     }
+    if (message.region !== "") {
+      obj.region = message.region;
+    }
+    if (message.fleetId !== "") {
+      obj.fleetId = message.fleetId;
+    }
     return obj;
   },
 
@@ -1643,6 +1675,8 @@ export const S2CGameStartServerJson = {
     message.currentFloor = object.currentFloor ?? 0;
     message.floorMatchmakingOnOff = object.floorMatchmakingOnOff ?? 0;
     message.matchmakingType = object.matchmakingType ?? 0;
+    message.region = object.region ?? "";
+    message.fleetId = object.fleetId ?? "";
     return message;
   },
 };
