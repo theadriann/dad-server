@@ -262,8 +262,6 @@ export interface OperateOperateBanInfo {
   banType: string;
   comment: string;
   registerTime: string;
-  beginTime: string;
-  endTime: string;
 }
 
 export interface OperateOperateBanHardwareInfo {
@@ -4108,7 +4106,7 @@ export const OperateOperateFileInfo = {
 };
 
 function createBaseOperateOperateBanInfo(): OperateOperateBanInfo {
-  return { accountId: "", banType: "", comment: "", registerTime: "", beginTime: "", endTime: "" };
+  return { accountId: "", banType: "", comment: "", registerTime: "" };
 }
 
 export const OperateOperateBanInfo = {
@@ -4124,12 +4122,6 @@ export const OperateOperateBanInfo = {
     }
     if (message.registerTime !== "") {
       writer.uint32(34).string(message.registerTime);
-    }
-    if (message.beginTime !== "") {
-      writer.uint32(42).string(message.beginTime);
-    }
-    if (message.endTime !== "") {
-      writer.uint32(50).string(message.endTime);
     }
     return writer;
   },
@@ -4169,20 +4161,6 @@ export const OperateOperateBanInfo = {
 
           message.registerTime = reader.string();
           continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
-          message.beginTime = reader.string();
-          continue;
-        case 6:
-          if (tag !== 50) {
-            break;
-          }
-
-          message.endTime = reader.string();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -4198,8 +4176,6 @@ export const OperateOperateBanInfo = {
       banType: isSet(object.banType) ? String(object.banType) : "",
       comment: isSet(object.comment) ? String(object.comment) : "",
       registerTime: isSet(object.registerTime) ? String(object.registerTime) : "",
-      beginTime: isSet(object.beginTime) ? String(object.beginTime) : "",
-      endTime: isSet(object.endTime) ? String(object.endTime) : "",
     };
   },
 
@@ -4217,12 +4193,6 @@ export const OperateOperateBanInfo = {
     if (message.registerTime !== "") {
       obj.registerTime = message.registerTime;
     }
-    if (message.beginTime !== "") {
-      obj.beginTime = message.beginTime;
-    }
-    if (message.endTime !== "") {
-      obj.endTime = message.endTime;
-    }
     return obj;
   },
 
@@ -4235,8 +4205,6 @@ export const OperateOperateBanInfo = {
     message.banType = object.banType ?? "";
     message.comment = object.comment ?? "";
     message.registerTime = object.registerTime ?? "";
-    message.beginTime = object.beginTime ?? "";
-    message.endTime = object.endTime ?? "";
     return message;
   },
 };

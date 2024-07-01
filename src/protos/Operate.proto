@@ -265,8 +265,6 @@ message Operate_OperateBanInfo {
   string banType = 2;
   string comment = 3;
   string registerTime = 4;
-  string beginTime = 5;
-  string endTime = 6;
 }
 
 message Operate_OperateBanHardwareInfo {

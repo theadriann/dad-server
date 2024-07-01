@@ -99,8 +99,6 @@ message S2C_GameStartServer_Json {
   uint32 currentFloor = 16;
   uint32 floorMatchmakingOnOff = 17;
   uint32 matchmakingType = 18;
-  string region = 19;
-  string fleetId = 20;
 }
 
 message C2S_GameEndServer_POST {
