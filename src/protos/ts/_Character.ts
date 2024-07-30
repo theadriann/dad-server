@@ -95,6 +95,7 @@ export interface scharacterPartyInfo {
   equipItemList: SItem[];
   partyIdx: number;
   perks: SPerk[];
+  gearScore: number;
 }
 
 export interface scharacterTradeInfo {
@@ -674,6 +675,7 @@ function createBasescharacterPartyInfo(): scharacterPartyInfo {
     equipItemList: [],
     partyIdx: 0,
     perks: [],
+    gearScore: 0,
   };
 }
 
@@ -717,6 +719,9 @@ export const scharacterPartyInfo = {
     }
     for (const v of message.perks) {
       SPerk.encode(v!, writer.uint32(106).fork()).ldelim();
+    }
+    if (message.gearScore !== 0) {
+      writer.uint32(112).uint32(message.gearScore);
     }
     return writer;
   },
@@ -819,6 +824,13 @@ export const scharacterPartyInfo = {
 
           message.perks.push(SPerk.decode(reader, reader.uint32()));
           continue;
+        case 14:
+          if (tag !== 112) {
+            break;
+          }
+
+          message.gearScore = reader.uint32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -845,6 +857,7 @@ export const scharacterPartyInfo = {
         : [],
       partyIdx: isSet(object.partyIdx) ? Number(object.partyIdx) : 0,
       perks: Array.isArray(object?.perks) ? object.perks.map((e: any) => SPerk.fromJSON(e)) : [],
+      gearScore: isSet(object.gearScore) ? Number(object.gearScore) : 0,
     };
   },
 
@@ -889,6 +902,9 @@ export const scharacterPartyInfo = {
     if (message.perks?.length) {
       obj.perks = message.perks.map((e) => SPerk.toJSON(e));
     }
+    if (message.gearScore !== 0) {
+      obj.gearScore = Math.round(message.gearScore);
+    }
     return obj;
   },
 
@@ -912,6 +928,7 @@ export const scharacterPartyInfo = {
     message.equipItemList = object.equipItemList?.map((e) => SItem.fromPartial(e)) || [];
     message.partyIdx = object.partyIdx ?? 0;
     message.perks = object.perks?.map((e) => SPerk.fromPartial(e)) || [];
+    message.gearScore = object.gearScore ?? 0;
     return message;
   },
 };

@@ -138,6 +138,18 @@ export interface ss2cKnightProgramLinkSelectRes {
   url: string;
 }
 
+export interface sc2sGmTradeChatBanReq {
+  accountId: string;
+  characterId: string;
+  nickName: string;
+  lastChatMsg: string;
+  banType: number;
+}
+
+export interface ss2cGmTradeChatBanRes {
+  result: number;
+}
+
 function createBasesc2sCharacterSelectEnterReq(): sc2sCharacterSelectEnterReq {
   return {};
 }
@@ -1471,6 +1483,182 @@ export const ss2cKnightProgramLinkSelectRes = {
     const message = createBasess2cKnightProgramLinkSelectRes();
     message.result = object.result ?? 0;
     message.url = object.url ?? "";
+    return message;
+  },
+};
+
+function createBasesc2sGmTradeChatBanReq(): sc2sGmTradeChatBanReq {
+  return { accountId: "", characterId: "", nickName: "", lastChatMsg: "", banType: 0 };
+}
+
+export const sc2sGmTradeChatBanReq = {
+  encode(message: sc2sGmTradeChatBanReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.accountId !== "") {
+      writer.uint32(10).string(message.accountId);
+    }
+    if (message.characterId !== "") {
+      writer.uint32(18).string(message.characterId);
+    }
+    if (message.nickName !== "") {
+      writer.uint32(26).string(message.nickName);
+    }
+    if (message.lastChatMsg !== "") {
+      writer.uint32(34).string(message.lastChatMsg);
+    }
+    if (message.banType !== 0) {
+      writer.uint32(40).uint32(message.banType);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sGmTradeChatBanReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sGmTradeChatBanReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.accountId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.characterId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.nickName = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.lastChatMsg = reader.string();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.banType = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): sc2sGmTradeChatBanReq {
+    return {
+      accountId: isSet(object.accountId) ? String(object.accountId) : "",
+      characterId: isSet(object.characterId) ? String(object.characterId) : "",
+      nickName: isSet(object.nickName) ? String(object.nickName) : "",
+      lastChatMsg: isSet(object.lastChatMsg) ? String(object.lastChatMsg) : "",
+      banType: isSet(object.banType) ? Number(object.banType) : 0,
+    };
+  },
+
+  toJSON(message: sc2sGmTradeChatBanReq): unknown {
+    const obj: any = {};
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.nickName !== "") {
+      obj.nickName = message.nickName;
+    }
+    if (message.lastChatMsg !== "") {
+      obj.lastChatMsg = message.lastChatMsg;
+    }
+    if (message.banType !== 0) {
+      obj.banType = Math.round(message.banType);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sGmTradeChatBanReq>, I>>(base?: I): sc2sGmTradeChatBanReq {
+    return sc2sGmTradeChatBanReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sGmTradeChatBanReq>, I>>(object: I): sc2sGmTradeChatBanReq {
+    const message = createBasesc2sGmTradeChatBanReq();
+    message.accountId = object.accountId ?? "";
+    message.characterId = object.characterId ?? "";
+    message.nickName = object.nickName ?? "";
+    message.lastChatMsg = object.lastChatMsg ?? "";
+    message.banType = object.banType ?? 0;
+    return message;
+  },
+};
+
+function createBasess2cGmTradeChatBanRes(): ss2cGmTradeChatBanRes {
+  return { result: 0 };
+}
+
+export const ss2cGmTradeChatBanRes = {
+  encode(message: ss2cGmTradeChatBanRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.result !== 0) {
+      writer.uint32(8).uint32(message.result);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cGmTradeChatBanRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cGmTradeChatBanRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.result = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cGmTradeChatBanRes {
+    return { result: isSet(object.result) ? Number(object.result) : 0 };
+  },
+
+  toJSON(message: ss2cGmTradeChatBanRes): unknown {
+    const obj: any = {};
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cGmTradeChatBanRes>, I>>(base?: I): ss2cGmTradeChatBanRes {
+    return ss2cGmTradeChatBanRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cGmTradeChatBanRes>, I>>(object: I): ss2cGmTradeChatBanRes {
+    const message = createBasess2cGmTradeChatBanRes();
+    message.result = object.result ?? 0;
     return message;
   },
 };

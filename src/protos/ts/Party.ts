@@ -207,6 +207,12 @@ export interface ss2cPartyStartLobbyEmoteNot {
   lobbyEmoteId: string;
 }
 
+export interface ss2cPartyGearScoreChangeNot {
+  accountId: string;
+  characterId: string;
+  gearScore: number;
+}
+
 function createBasesc2sPartyInviteReq(): sc2sPartyInviteReq {
   return { findNickName: undefined, findAccountId: "", findCharacterId: "" };
 }
@@ -2584,6 +2590,95 @@ export const ss2cPartyStartLobbyEmoteNot = {
     message.accountId = object.accountId ?? "";
     message.characterId = object.characterId ?? "";
     message.lobbyEmoteId = object.lobbyEmoteId ?? "";
+    return message;
+  },
+};
+
+function createBasess2cPartyGearScoreChangeNot(): ss2cPartyGearScoreChangeNot {
+  return { accountId: "", characterId: "", gearScore: 0 };
+}
+
+export const ss2cPartyGearScoreChangeNot = {
+  encode(message: ss2cPartyGearScoreChangeNot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.accountId !== "") {
+      writer.uint32(10).string(message.accountId);
+    }
+    if (message.characterId !== "") {
+      writer.uint32(18).string(message.characterId);
+    }
+    if (message.gearScore !== 0) {
+      writer.uint32(24).uint32(message.gearScore);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cPartyGearScoreChangeNot {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cPartyGearScoreChangeNot();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.accountId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.characterId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.gearScore = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cPartyGearScoreChangeNot {
+    return {
+      accountId: isSet(object.accountId) ? String(object.accountId) : "",
+      characterId: isSet(object.characterId) ? String(object.characterId) : "",
+      gearScore: isSet(object.gearScore) ? Number(object.gearScore) : 0,
+    };
+  },
+
+  toJSON(message: ss2cPartyGearScoreChangeNot): unknown {
+    const obj: any = {};
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.characterId !== "") {
+      obj.characterId = message.characterId;
+    }
+    if (message.gearScore !== 0) {
+      obj.gearScore = Math.round(message.gearScore);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cPartyGearScoreChangeNot>, I>>(base?: I): ss2cPartyGearScoreChangeNot {
+    return ss2cPartyGearScoreChangeNot.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cPartyGearScoreChangeNot>, I>>(object: I): ss2cPartyGearScoreChangeNot {
+    const message = createBasess2cPartyGearScoreChangeNot();
+    message.accountId = object.accountId ?? "";
+    message.characterId = object.characterId ?? "";
+    message.gearScore = object.gearScore ?? 0;
     return message;
   },
 };

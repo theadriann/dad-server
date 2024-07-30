@@ -173,6 +173,7 @@ message S2C_GameCharacterInfo_Json {
   int32 level = 22;
   int32 fame = 23;
   int32 isBlackList = 24;
+  int32 gearScore = 25;
 }
 
 message C2S_GameAliveCheck_GET {
@@ -383,6 +384,7 @@ message C2S_IronShield_Report_POST {
   uint32 blockTime_min = 11;
   uint32 banType = 12;
   int32 blobType = 13;
+  string blobNameTag = 14;
 }
 
 message C2S_BanCheck_Hardware_POST {

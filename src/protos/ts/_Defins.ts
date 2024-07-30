@@ -1776,6 +1776,9 @@ export enum Operate_Policy {
   POLICY_UPGRADE_CREATION_HIGH_ROLLER_CHECK_SEC = 45,
   POLICY_UPGRADE_CREATION_TRADE_CHECK_SEC = 46,
   POLICY_UPGRADE_CREATION_LISTING_MARKETPLACE_SEC = 47,
+  POLICY_REPORT_IN_GAME_ON_OFF = 48,
+  POLICY_REPORT_BAN_APPEAL_TICKET_SEND_ON_OFF = 49,
+  POLICY_TRADE_CHAT_BAN_MIN = 50,
   UNRECOGNIZED = -1,
 }
 
@@ -1922,6 +1925,15 @@ export function operate_PolicyFromJSON(object: any): Operate_Policy {
     case 47:
     case "POLICY_UPGRADE_CREATION_LISTING_MARKETPLACE_SEC":
       return Operate_Policy.POLICY_UPGRADE_CREATION_LISTING_MARKETPLACE_SEC;
+    case 48:
+    case "POLICY_REPORT_IN_GAME_ON_OFF":
+      return Operate_Policy.POLICY_REPORT_IN_GAME_ON_OFF;
+    case 49:
+    case "POLICY_REPORT_BAN_APPEAL_TICKET_SEND_ON_OFF":
+      return Operate_Policy.POLICY_REPORT_BAN_APPEAL_TICKET_SEND_ON_OFF;
+    case 50:
+    case "POLICY_TRADE_CHAT_BAN_MIN":
+      return Operate_Policy.POLICY_TRADE_CHAT_BAN_MIN;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -2025,6 +2037,12 @@ export function operate_PolicyToJSON(object: Operate_Policy): string {
       return "POLICY_UPGRADE_CREATION_TRADE_CHECK_SEC";
     case Operate_Policy.POLICY_UPGRADE_CREATION_LISTING_MARKETPLACE_SEC:
       return "POLICY_UPGRADE_CREATION_LISTING_MARKETPLACE_SEC";
+    case Operate_Policy.POLICY_REPORT_IN_GAME_ON_OFF:
+      return "POLICY_REPORT_IN_GAME_ON_OFF";
+    case Operate_Policy.POLICY_REPORT_BAN_APPEAL_TICKET_SEND_ON_OFF:
+      return "POLICY_REPORT_BAN_APPEAL_TICKET_SEND_ON_OFF";
+    case Operate_Policy.POLICY_TRADE_CHAT_BAN_MIN:
+      return "POLICY_TRADE_CHAT_BAN_MIN";
     case Operate_Policy.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -2098,6 +2116,8 @@ export enum DefineHack_banType {
   RacistChat = 15,
   RacistVoip = 16,
   Refund_Abuse = 17,
+  AbnormalChat = 18,
+  Investigation = 19,
   UNRECOGNIZED = -1,
 }
 
@@ -2157,6 +2177,12 @@ export function defineHack_banTypeFromJSON(object: any): DefineHack_banType {
     case 17:
     case "Refund_Abuse":
       return DefineHack_banType.Refund_Abuse;
+    case 18:
+    case "AbnormalChat":
+      return DefineHack_banType.AbnormalChat;
+    case 19:
+    case "Investigation":
+      return DefineHack_banType.Investigation;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -2202,6 +2228,10 @@ export function defineHack_banTypeToJSON(object: DefineHack_banType): string {
       return "RacistVoip";
     case DefineHack_banType.Refund_Abuse:
       return "Refund_Abuse";
+    case DefineHack_banType.AbnormalChat:
+      return "AbnormalChat";
+    case DefineHack_banType.Investigation:
+      return "Investigation";
     case DefineHack_banType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -2608,6 +2638,33 @@ export function defineShop_SalesChannelTypeToJSON(object: DefineShop_SalesChanne
     case DefineShop_SalesChannelType.CHANNEL_FOUNDERS_PACK:
       return "CHANNEL_FOUNDERS_PACK";
     case DefineShop_SalesChannelType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum DefineShop_ChangeNickNameType {
+  ACCOUNT_NAME = 0,
+  UNRECOGNIZED = -1,
+}
+
+export function defineShop_ChangeNickNameTypeFromJSON(object: any): DefineShop_ChangeNickNameType {
+  switch (object) {
+    case 0:
+    case "ACCOUNT_NAME":
+      return DefineShop_ChangeNickNameType.ACCOUNT_NAME;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return DefineShop_ChangeNickNameType.UNRECOGNIZED;
+  }
+}
+
+export function defineShop_ChangeNickNameTypeToJSON(object: DefineShop_ChangeNickNameType): string {
+  switch (object) {
+    case DefineShop_ChangeNickNameType.ACCOUNT_NAME:
+      return "ACCOUNT_NAME";
+    case DefineShop_ChangeNickNameType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }

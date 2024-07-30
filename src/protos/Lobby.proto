@@ -105,3 +105,15 @@ message SS2C_KNIGHT_PROGRAM_LINK_SELECT_RES {
   string url = 2;
 }
 
+message SC2S_GM_TRADE_CHAT_BAN_REQ {
+  string accountId = 1;
+  string characterId = 2;
+  string nickName = 3;
+  string lastChatMsg = 4;
+  uint32 banType = 5;
+}
+
+message SS2C_GM_TRADE_CHAT_BAN_RES {
+  uint32 result = 1;
+}
+

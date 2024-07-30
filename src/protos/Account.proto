@@ -74,6 +74,7 @@ message SS2C_ACCOUNT_LOGIN_RES {
   uint64 totalPlaytime = 15;
   int32 userLoginInfo = 16;
   int32 usePlatformLink = 17;
+  .DC.Packet.ACCOUNT_REDIRECTION_INFO redirectionInfo = 18;
 }
 
 message SC2S_ACCOUNT_CHARACTER_CREATE_REQ {
@@ -145,5 +146,17 @@ message SC2S_USER_HW_INFO_REQ {
 }
 
 message SS2C_USER_HW_INFO_RES {
+}
+
+message ACCOUNT_REDIRECTION_INFO {
+  string generalReportUrl = 1;
+  string banAppealUrl = 2;
+  string knightLinkUrl = 3;
+  string supportFaqUrl = 4;
+  string homeUrl = 5;
+  string newsUrl = 6;
+  string suggestionUrl = 7;
+  string officialDiscordUrl = 8;
+  string bugReportUrl = 9;
 }
 

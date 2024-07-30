@@ -360,3 +360,8 @@ message Operate_Blacklist {
   string reason = 3;
 }
 
+message Operate_AccountNameChange {
+  uint64 accountId = 1;
+  string accountName = 2;
+}
+

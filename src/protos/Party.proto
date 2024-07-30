@@ -171,6 +171,12 @@ message SS2C_PARTY_START_LOBBY_EMOTE_NOT {
   string lobbyEmoteId = 3;
 }
 
+message SS2C_PARTY_GEAR_SCORE_CHANGE_NOT {
+  string accountId = 1;
+  string characterId = 2;
+  uint32 gearScore = 3;
+}
+
 enum PARTY_INVITE_ANSWER {
   INVITE_ANSWER_NONE = 0;
   INVITE_ANSWER_ACEEPT = 1;

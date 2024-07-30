@@ -109,3 +109,12 @@ message SC2S_REFRESH_RED_STONE_SHARD_REQ {
 message SS2C_REFRESH_RED_STONE_SHARD_RES {
 }
 
+message SC2S_SHOP_CHANGE_ACCOUNT_NAME_REQ {
+  string changeAccountName = 1;
+}
+
+message SS2C_SHOP_CHANGE_ACCOUNT_NAME_RES {
+  int32 result = 1;
+  string changeAccountName = 2;
+}
+

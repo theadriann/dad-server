@@ -236,6 +236,7 @@ export interface S2CGameCharacterInfoJson {
   level: number;
   fame: number;
   isBlackList: number;
+  gearScore: number;
 }
 
 export interface C2SGameAliveCheckGET {
@@ -446,6 +447,7 @@ export interface C2SIronShieldReportPOST {
   blockTimeMin: number;
   banType: number;
   blobType: number;
+  blobNameTag: string;
 }
 
 export interface C2SBanCheckHardwarePOST {
@@ -2486,6 +2488,7 @@ function createBaseS2CGameCharacterInfoJson(): S2CGameCharacterInfoJson {
     level: 0,
     fame: 0,
     isBlackList: 0,
+    gearScore: 0,
   };
 }
 
@@ -2559,6 +2562,9 @@ export const S2CGameCharacterInfoJson = {
     }
     if (message.isBlackList !== 0) {
       writer.uint32(192).int32(message.isBlackList);
+    }
+    if (message.gearScore !== 0) {
+      writer.uint32(200).int32(message.gearScore);
     }
     return writer;
   },
@@ -2731,6 +2737,13 @@ export const S2CGameCharacterInfoJson = {
 
           message.isBlackList = reader.int32();
           continue;
+        case 25:
+          if (tag !== 200) {
+            break;
+          }
+
+          message.gearScore = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2769,6 +2782,7 @@ export const S2CGameCharacterInfoJson = {
       level: isSet(object.level) ? Number(object.level) : 0,
       fame: isSet(object.fame) ? Number(object.fame) : 0,
       isBlackList: isSet(object.isBlackList) ? Number(object.isBlackList) : 0,
+      gearScore: isSet(object.gearScore) ? Number(object.gearScore) : 0,
     };
   },
 
@@ -2843,6 +2857,9 @@ export const S2CGameCharacterInfoJson = {
     if (message.isBlackList !== 0) {
       obj.isBlackList = Math.round(message.isBlackList);
     }
+    if (message.gearScore !== 0) {
+      obj.gearScore = Math.round(message.gearScore);
+    }
     return obj;
   },
 
@@ -2876,6 +2893,7 @@ export const S2CGameCharacterInfoJson = {
     message.level = object.level ?? 0;
     message.fame = object.fame ?? 0;
     message.isBlackList = object.isBlackList ?? 0;
+    message.gearScore = object.gearScore ?? 0;
     return message;
   },
 };
@@ -5860,6 +5878,7 @@ function createBaseC2SIronShieldReportPOST(): C2SIronShieldReportPOST {
     blockTimeMin: 0,
     banType: 0,
     blobType: 0,
+    blobNameTag: "",
   };
 }
 
@@ -5905,6 +5924,9 @@ export const C2SIronShieldReportPOST = {
     }
     if (message.blobType !== 0) {
       writer.uint32(104).int32(message.blobType);
+    }
+    if (message.blobNameTag !== "") {
+      writer.uint32(114).string(message.blobNameTag);
     }
     return writer;
   },
@@ -6017,6 +6039,13 @@ export const C2SIronShieldReportPOST = {
 
           message.blobType = reader.int32();
           continue;
+        case 14:
+          if (tag !== 114) {
+            break;
+          }
+
+          message.blobNameTag = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -6041,6 +6070,7 @@ export const C2SIronShieldReportPOST = {
       blockTimeMin: isSet(object.blockTimeMin) ? Number(object.blockTimeMin) : 0,
       banType: isSet(object.banType) ? Number(object.banType) : 0,
       blobType: isSet(object.blobType) ? Number(object.blobType) : 0,
+      blobNameTag: isSet(object.blobNameTag) ? String(object.blobNameTag) : "",
     };
   },
 
@@ -6085,6 +6115,9 @@ export const C2SIronShieldReportPOST = {
     if (message.blobType !== 0) {
       obj.blobType = Math.round(message.blobType);
     }
+    if (message.blobNameTag !== "") {
+      obj.blobNameTag = message.blobNameTag;
+    }
     return obj;
   },
 
@@ -6106,6 +6139,7 @@ export const C2SIronShieldReportPOST = {
     message.blockTimeMin = object.blockTimeMin ?? 0;
     message.banType = object.banType ?? 0;
     message.blobType = object.blobType ?? 0;
+    message.blobNameTag = object.blobNameTag ?? "";
     return message;
   },
 };

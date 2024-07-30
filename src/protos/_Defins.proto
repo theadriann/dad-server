@@ -354,6 +354,9 @@ message Operate {
     POLICY_UPGRADE_CREATION_HIGH_ROLLER_CHECK_SEC = 45;
     POLICY_UPGRADE_CREATION_TRADE_CHECK_SEC = 46;
     POLICY_UPGRADE_CREATION_LISTING_MARKETPLACE_SEC = 47;
+    POLICY_REPORT_IN_GAME_ON_OFF = 48;
+    POLICY_REPORT_BAN_APPEAL_TICKET_SEND_ON_OFF = 49;
+    POLICY_TRADE_CHAT_BAN_MIN = 50;
   }
 
 }
@@ -385,6 +388,8 @@ message Define_Hack {
     RacistChat = 15;
     RacistVoip = 16;
     Refund_Abuse = 17;
+    AbnormalChat = 18;
+    Investigation = 19;
   }
 
 }
@@ -461,6 +466,10 @@ message Define_Shop {
     CHANNEL_NONE = 0;
     CHANNEL_SHOP = 1;
     CHANNEL_FOUNDERS_PACK = 2;
+  }
+
+  enum ChangeNickNameType {
+    ACCOUNT_NAME = 0;
   }
 
 }

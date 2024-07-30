@@ -92,6 +92,7 @@ message SC2S_USER_CHARACTER_INFO_REQ {
   string accountId = 5;
   string characterId = 6;
   string originNickname = 7;
+  string blobTagName = 8;
 }
 
 message SS2C_USER_CHARACTER_INFO_RES {
@@ -219,5 +220,8 @@ message SS2C_SQUIRE_STATUS_RESTRICTED_CONTENT_NOT {
   repeated int32 limitedDungeons = 1;
   int32 IsAllowedEnterTradingPost = 2;
   int32 IsAllowedListingMarketplace = 3;
+}
+
+message SS2C_TERMINATE_NOT {
 }
 

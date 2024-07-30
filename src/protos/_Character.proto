@@ -54,6 +54,7 @@ message SCHARACTER_PARTY_INFO {
   repeated .DC.Packet.SItem equipItemList = 11;
   uint32 partyIdx = 12;
   repeated .DC.Packet.SPerk perks = 13;
+  uint32 gearScore = 14;
 }
 
 message SCHARACTER_TRADE_INFO {

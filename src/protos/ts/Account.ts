@@ -53,6 +53,7 @@ export interface ss2cAccountLoginRes {
   totalPlaytime: number;
   userLoginInfo: number;
   usePlatformLink: number;
+  redirectionInfo: accountRedirectionInfo | undefined;
 }
 
 export enum ss2cAccountLoginRes_RESULT {
@@ -235,6 +236,18 @@ export interface sc2sUserHwInfoReq {
 }
 
 export interface ss2cUserHwInfoRes {
+}
+
+export interface accountRedirectionInfo {
+  generalReportUrl: string;
+  banAppealUrl: string;
+  knightLinkUrl: string;
+  supportFaqUrl: string;
+  homeUrl: string;
+  newsUrl: string;
+  suggestionUrl: string;
+  officialDiscordUrl: string;
+  bugReportUrl: string;
 }
 
 function createBasesloginAccountInfo(): sloginAccountInfo {
@@ -717,6 +730,7 @@ function createBasess2cAccountLoginRes(): ss2cAccountLoginRes {
     totalPlaytime: 0,
     userLoginInfo: 0,
     usePlatformLink: 0,
+    redirectionInfo: undefined,
   };
 }
 
@@ -772,6 +786,9 @@ export const ss2cAccountLoginRes = {
     }
     if (message.usePlatformLink !== 0) {
       writer.uint32(136).int32(message.usePlatformLink);
+    }
+    if (message.redirectionInfo !== undefined) {
+      accountRedirectionInfo.encode(message.redirectionInfo, writer.uint32(146).fork()).ldelim();
     }
     return writer;
   },
@@ -902,6 +919,13 @@ export const ss2cAccountLoginRes = {
 
           message.usePlatformLink = reader.int32();
           continue;
+        case 18:
+          if (tag !== 146) {
+            break;
+          }
+
+          message.redirectionInfo = accountRedirectionInfo.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -930,6 +954,9 @@ export const ss2cAccountLoginRes = {
       totalPlaytime: isSet(object.totalPlaytime) ? Number(object.totalPlaytime) : 0,
       userLoginInfo: isSet(object.userLoginInfo) ? Number(object.userLoginInfo) : 0,
       usePlatformLink: isSet(object.usePlatformLink) ? Number(object.usePlatformLink) : 0,
+      redirectionInfo: isSet(object.redirectionInfo)
+        ? accountRedirectionInfo.fromJSON(object.redirectionInfo)
+        : undefined,
     };
   },
 
@@ -986,6 +1013,9 @@ export const ss2cAccountLoginRes = {
     if (message.usePlatformLink !== 0) {
       obj.usePlatformLink = Math.round(message.usePlatformLink);
     }
+    if (message.redirectionInfo !== undefined) {
+      obj.redirectionInfo = accountRedirectionInfo.toJSON(message.redirectionInfo);
+    }
     return obj;
   },
 
@@ -1013,6 +1043,9 @@ export const ss2cAccountLoginRes = {
     message.totalPlaytime = object.totalPlaytime ?? 0;
     message.userLoginInfo = object.userLoginInfo ?? 0;
     message.usePlatformLink = object.usePlatformLink ?? 0;
+    message.redirectionInfo = (object.redirectionInfo !== undefined && object.redirectionInfo !== null)
+      ? accountRedirectionInfo.fromPartial(object.redirectionInfo)
+      : undefined;
     return message;
   },
 };
@@ -2069,6 +2102,195 @@ export const ss2cUserHwInfoRes = {
   },
   fromPartial<I extends Exact<DeepPartial<ss2cUserHwInfoRes>, I>>(_: I): ss2cUserHwInfoRes {
     const message = createBasess2cUserHwInfoRes();
+    return message;
+  },
+};
+
+function createBaseaccountRedirectionInfo(): accountRedirectionInfo {
+  return {
+    generalReportUrl: "",
+    banAppealUrl: "",
+    knightLinkUrl: "",
+    supportFaqUrl: "",
+    homeUrl: "",
+    newsUrl: "",
+    suggestionUrl: "",
+    officialDiscordUrl: "",
+    bugReportUrl: "",
+  };
+}
+
+export const accountRedirectionInfo = {
+  encode(message: accountRedirectionInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.generalReportUrl !== "") {
+      writer.uint32(10).string(message.generalReportUrl);
+    }
+    if (message.banAppealUrl !== "") {
+      writer.uint32(18).string(message.banAppealUrl);
+    }
+    if (message.knightLinkUrl !== "") {
+      writer.uint32(26).string(message.knightLinkUrl);
+    }
+    if (message.supportFaqUrl !== "") {
+      writer.uint32(34).string(message.supportFaqUrl);
+    }
+    if (message.homeUrl !== "") {
+      writer.uint32(42).string(message.homeUrl);
+    }
+    if (message.newsUrl !== "") {
+      writer.uint32(50).string(message.newsUrl);
+    }
+    if (message.suggestionUrl !== "") {
+      writer.uint32(58).string(message.suggestionUrl);
+    }
+    if (message.officialDiscordUrl !== "") {
+      writer.uint32(66).string(message.officialDiscordUrl);
+    }
+    if (message.bugReportUrl !== "") {
+      writer.uint32(74).string(message.bugReportUrl);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): accountRedirectionInfo {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseaccountRedirectionInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.generalReportUrl = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.banAppealUrl = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.knightLinkUrl = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.supportFaqUrl = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.homeUrl = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.newsUrl = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.suggestionUrl = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.officialDiscordUrl = reader.string();
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.bugReportUrl = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): accountRedirectionInfo {
+    return {
+      generalReportUrl: isSet(object.generalReportUrl) ? String(object.generalReportUrl) : "",
+      banAppealUrl: isSet(object.banAppealUrl) ? String(object.banAppealUrl) : "",
+      knightLinkUrl: isSet(object.knightLinkUrl) ? String(object.knightLinkUrl) : "",
+      supportFaqUrl: isSet(object.supportFaqUrl) ? String(object.supportFaqUrl) : "",
+      homeUrl: isSet(object.homeUrl) ? String(object.homeUrl) : "",
+      newsUrl: isSet(object.newsUrl) ? String(object.newsUrl) : "",
+      suggestionUrl: isSet(object.suggestionUrl) ? String(object.suggestionUrl) : "",
+      officialDiscordUrl: isSet(object.officialDiscordUrl) ? String(object.officialDiscordUrl) : "",
+      bugReportUrl: isSet(object.bugReportUrl) ? String(object.bugReportUrl) : "",
+    };
+  },
+
+  toJSON(message: accountRedirectionInfo): unknown {
+    const obj: any = {};
+    if (message.generalReportUrl !== "") {
+      obj.generalReportUrl = message.generalReportUrl;
+    }
+    if (message.banAppealUrl !== "") {
+      obj.banAppealUrl = message.banAppealUrl;
+    }
+    if (message.knightLinkUrl !== "") {
+      obj.knightLinkUrl = message.knightLinkUrl;
+    }
+    if (message.supportFaqUrl !== "") {
+      obj.supportFaqUrl = message.supportFaqUrl;
+    }
+    if (message.homeUrl !== "") {
+      obj.homeUrl = message.homeUrl;
+    }
+    if (message.newsUrl !== "") {
+      obj.newsUrl = message.newsUrl;
+    }
+    if (message.suggestionUrl !== "") {
+      obj.suggestionUrl = message.suggestionUrl;
+    }
+    if (message.officialDiscordUrl !== "") {
+      obj.officialDiscordUrl = message.officialDiscordUrl;
+    }
+    if (message.bugReportUrl !== "") {
+      obj.bugReportUrl = message.bugReportUrl;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<accountRedirectionInfo>, I>>(base?: I): accountRedirectionInfo {
+    return accountRedirectionInfo.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<accountRedirectionInfo>, I>>(object: I): accountRedirectionInfo {
+    const message = createBaseaccountRedirectionInfo();
+    message.generalReportUrl = object.generalReportUrl ?? "";
+    message.banAppealUrl = object.banAppealUrl ?? "";
+    message.knightLinkUrl = object.knightLinkUrl ?? "";
+    message.supportFaqUrl = object.supportFaqUrl ?? "";
+    message.homeUrl = object.homeUrl ?? "";
+    message.newsUrl = object.newsUrl ?? "";
+    message.suggestionUrl = object.suggestionUrl ?? "";
+    message.officialDiscordUrl = object.officialDiscordUrl ?? "";
+    message.bugReportUrl = object.bugReportUrl ?? "";
     return message;
   },
 };

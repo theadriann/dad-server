@@ -357,6 +357,11 @@ export interface OperateBlacklist {
   reason: string;
 }
 
+export interface OperateAccountNameChange {
+  accountId: number;
+  accountName: string;
+}
+
 function createBaseOperateBadWordList(): OperateBadWordList {
   return { badWord: [] };
 }
@@ -5724,6 +5729,80 @@ export const OperateBlacklist = {
     message.writeType = object.writeType ?? 0;
     message.accountId = object.accountId ?? 0;
     message.reason = object.reason ?? "";
+    return message;
+  },
+};
+
+function createBaseOperateAccountNameChange(): OperateAccountNameChange {
+  return { accountId: 0, accountName: "" };
+}
+
+export const OperateAccountNameChange = {
+  encode(message: OperateAccountNameChange, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.accountId !== 0) {
+      writer.uint32(8).uint64(message.accountId);
+    }
+    if (message.accountName !== "") {
+      writer.uint32(18).string(message.accountName);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OperateAccountNameChange {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOperateAccountNameChange();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.accountId = longToNumber(reader.uint64() as Long);
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.accountName = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): OperateAccountNameChange {
+    return {
+      accountId: isSet(object.accountId) ? Number(object.accountId) : 0,
+      accountName: isSet(object.accountName) ? String(object.accountName) : "",
+    };
+  },
+
+  toJSON(message: OperateAccountNameChange): unknown {
+    const obj: any = {};
+    if (message.accountId !== 0) {
+      obj.accountId = Math.round(message.accountId);
+    }
+    if (message.accountName !== "") {
+      obj.accountName = message.accountName;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<OperateAccountNameChange>, I>>(base?: I): OperateAccountNameChange {
+    return OperateAccountNameChange.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<OperateAccountNameChange>, I>>(object: I): OperateAccountNameChange {
+    const message = createBaseOperateAccountNameChange();
+    message.accountId = object.accountId ?? 0;
+    message.accountName = object.accountName ?? "";
     return message;
   },
 };

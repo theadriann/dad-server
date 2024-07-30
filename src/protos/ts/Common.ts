@@ -89,6 +89,7 @@ export interface sc2sUserCharacterInfoReq {
   accountId: string;
   characterId: string;
   originNickname: string;
+  blobTagName: string;
 }
 
 export interface ss2cUserCharacterInfoRes {
@@ -216,6 +217,9 @@ export interface ss2cSquireStatusRestrictedContentNot {
   limitedDungeons: number[];
   IsAllowedEnterTradingPost: number;
   IsAllowedListingMarketplace: number;
+}
+
+export interface ss2cTerminateNot {
 }
 
 function createBasesc2sMetaLocationReq(): sc2sMetaLocationReq {
@@ -1326,7 +1330,16 @@ export const ss2cClosedGameNot = {
 };
 
 function createBasesc2sUserCharacterInfoReq(): sc2sUserCharacterInfoReq {
-  return { callbackType: 0, reportId: "", hIds: [], blob: [], accountId: "", characterId: "", originNickname: "" };
+  return {
+    callbackType: 0,
+    reportId: "",
+    hIds: [],
+    blob: [],
+    accountId: "",
+    characterId: "",
+    originNickname: "",
+    blobTagName: "",
+  };
 }
 
 export const sc2sUserCharacterInfoReq = {
@@ -1353,6 +1366,9 @@ export const sc2sUserCharacterInfoReq = {
     }
     if (message.originNickname !== "") {
       writer.uint32(58).string(message.originNickname);
+    }
+    if (message.blobTagName !== "") {
+      writer.uint32(66).string(message.blobTagName);
     }
     return writer;
   },
@@ -1423,6 +1439,13 @@ export const sc2sUserCharacterInfoReq = {
 
           message.originNickname = reader.string();
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.blobTagName = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1441,6 +1464,7 @@ export const sc2sUserCharacterInfoReq = {
       accountId: isSet(object.accountId) ? String(object.accountId) : "",
       characterId: isSet(object.characterId) ? String(object.characterId) : "",
       originNickname: isSet(object.originNickname) ? String(object.originNickname) : "",
+      blobTagName: isSet(object.blobTagName) ? String(object.blobTagName) : "",
     };
   },
 
@@ -1467,6 +1491,9 @@ export const sc2sUserCharacterInfoReq = {
     if (message.originNickname !== "") {
       obj.originNickname = message.originNickname;
     }
+    if (message.blobTagName !== "") {
+      obj.blobTagName = message.blobTagName;
+    }
     return obj;
   },
 
@@ -1482,6 +1509,7 @@ export const sc2sUserCharacterInfoReq = {
     message.accountId = object.accountId ?? "";
     message.characterId = object.characterId ?? "";
     message.originNickname = object.originNickname ?? "";
+    message.blobTagName = object.blobTagName ?? "";
     return message;
   },
 };
@@ -3363,6 +3391,49 @@ export const ss2cSquireStatusRestrictedContentNot = {
     message.limitedDungeons = object.limitedDungeons?.map((e) => e) || [];
     message.IsAllowedEnterTradingPost = object.IsAllowedEnterTradingPost ?? 0;
     message.IsAllowedListingMarketplace = object.IsAllowedListingMarketplace ?? 0;
+    return message;
+  },
+};
+
+function createBasess2cTerminateNot(): ss2cTerminateNot {
+  return {};
+}
+
+export const ss2cTerminateNot = {
+  encode(_: ss2cTerminateNot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cTerminateNot {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cTerminateNot();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): ss2cTerminateNot {
+    return {};
+  },
+
+  toJSON(_: ss2cTerminateNot): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cTerminateNot>, I>>(base?: I): ss2cTerminateNot {
+    return ss2cTerminateNot.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cTerminateNot>, I>>(_: I): ss2cTerminateNot {
+    const message = createBasess2cTerminateNot();
     return message;
   },
 };

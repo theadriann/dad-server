@@ -107,6 +107,15 @@ export interface sc2sRefreshRedStoneShardReq {
 export interface ss2cRefreshRedStoneShardRes {
 }
 
+export interface sc2sShopChangeAccountNameReq {
+  changeAccountName: string;
+}
+
+export interface ss2cShopChangeAccountNameRes {
+  result: number;
+  changeAccountName: string;
+}
+
 function createBasesshopItemBaseInfo(): sshopItemBaseInfo {
   return { shopType: 0, shopItemId: "", isHave: 0 };
 }
@@ -1635,6 +1644,137 @@ export const ss2cRefreshRedStoneShardRes = {
   },
   fromPartial<I extends Exact<DeepPartial<ss2cRefreshRedStoneShardRes>, I>>(_: I): ss2cRefreshRedStoneShardRes {
     const message = createBasess2cRefreshRedStoneShardRes();
+    return message;
+  },
+};
+
+function createBasesc2sShopChangeAccountNameReq(): sc2sShopChangeAccountNameReq {
+  return { changeAccountName: "" };
+}
+
+export const sc2sShopChangeAccountNameReq = {
+  encode(message: sc2sShopChangeAccountNameReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.changeAccountName !== "") {
+      writer.uint32(10).string(message.changeAccountName);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): sc2sShopChangeAccountNameReq {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasesc2sShopChangeAccountNameReq();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.changeAccountName = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): sc2sShopChangeAccountNameReq {
+    return { changeAccountName: isSet(object.changeAccountName) ? String(object.changeAccountName) : "" };
+  },
+
+  toJSON(message: sc2sShopChangeAccountNameReq): unknown {
+    const obj: any = {};
+    if (message.changeAccountName !== "") {
+      obj.changeAccountName = message.changeAccountName;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<sc2sShopChangeAccountNameReq>, I>>(base?: I): sc2sShopChangeAccountNameReq {
+    return sc2sShopChangeAccountNameReq.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<sc2sShopChangeAccountNameReq>, I>>(object: I): sc2sShopChangeAccountNameReq {
+    const message = createBasesc2sShopChangeAccountNameReq();
+    message.changeAccountName = object.changeAccountName ?? "";
+    return message;
+  },
+};
+
+function createBasess2cShopChangeAccountNameRes(): ss2cShopChangeAccountNameRes {
+  return { result: 0, changeAccountName: "" };
+}
+
+export const ss2cShopChangeAccountNameRes = {
+  encode(message: ss2cShopChangeAccountNameRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.result !== 0) {
+      writer.uint32(8).int32(message.result);
+    }
+    if (message.changeAccountName !== "") {
+      writer.uint32(18).string(message.changeAccountName);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cShopChangeAccountNameRes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasess2cShopChangeAccountNameRes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.result = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.changeAccountName = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ss2cShopChangeAccountNameRes {
+    return {
+      result: isSet(object.result) ? Number(object.result) : 0,
+      changeAccountName: isSet(object.changeAccountName) ? String(object.changeAccountName) : "",
+    };
+  },
+
+  toJSON(message: ss2cShopChangeAccountNameRes): unknown {
+    const obj: any = {};
+    if (message.result !== 0) {
+      obj.result = Math.round(message.result);
+    }
+    if (message.changeAccountName !== "") {
+      obj.changeAccountName = message.changeAccountName;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ss2cShopChangeAccountNameRes>, I>>(base?: I): ss2cShopChangeAccountNameRes {
+    return ss2cShopChangeAccountNameRes.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ss2cShopChangeAccountNameRes>, I>>(object: I): ss2cShopChangeAccountNameRes {
+    const message = createBasess2cShopChangeAccountNameRes();
+    message.result = object.result ?? 0;
+    message.changeAccountName = object.changeAccountName ?? "";
     return message;
   },
 };

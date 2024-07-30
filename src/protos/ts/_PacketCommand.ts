@@ -162,12 +162,15 @@ export enum PacketCommand {
   S2C_PARTY_START_LOBBY_EMOTE_NOT = 1030,
   S2C_PARTY_ARMOR_SKIN_LIST_NOT = 1031,
   S2C_PARTY_ARMOR_SKIN_CHANGE_NOT = 1032,
+  S2C_PARTY_GEAR_SCORE_CHANGE_NOT = 1033,
   MAX_PARTY_PACKET = 1150,
   MIN_GM_PACKET = 1200,
   C2S_GM_PARTY_ALL_RANDOM_REQ = 1201,
   S2C_GM_PARTY_ALL_RANDOM_RES = 1202,
   C2S_GM_ENTER_GAME_SPECTATOR_REQ = 1203,
   S2C_GM_ENTER_GAME_SPECTATOR_RES = 1204,
+  C2S_GM_TRADE_CHAT_BAN_REQ = 1205,
+  S2C_GM_TRADE_CHAT_BAN_RES = 1206,
   MAX_GM_PACKET = 1300,
   MIN_MERCHANT_PACKET = 1350,
   C2S_MERCHANT_LIST_REQ = 1351,
@@ -293,6 +296,8 @@ export enum PacketCommand {
   S2C_SHOP_RED_STONE_SHARD_BUY_CHECK_RES = 2561,
   C2S_SHOP_LEGEND_UPGRADE_REQ = 2562,
   S2C_SHOP_LEGEND_UPGRADE_RES = 2563,
+  C2S_SHOP_CHANGE_ACCOUNT_NAME_REQ = 2564,
+  S2C_SHOP_CHANGE_ACCOUNT_NAME_RES = 2565,
   MAX_SHOP_PACKET = 2600,
   MIN_CLASS_PACKET = 2700,
   C2S_TRAINING_INFO_REQ = 2701,
@@ -408,6 +413,7 @@ export enum PacketCommand {
   S2C_SQUIRE_STATUS_RESTRICTED_CONTENT_NOT = 10631,
   C2S_REFRESH_RED_STONE_SHARD_REQ = 10650,
   S2C_REFRESH_RED_STONE_SHARD_RES = 10651,
+  S2C_TERMINATE_NOT = 10660,
   MAX_META_PACKET = 11000,
   UNRECOGNIZED = -1,
 }
@@ -888,6 +894,9 @@ export function packetCommandFromJSON(object: any): PacketCommand {
     case 1032:
     case "S2C_PARTY_ARMOR_SKIN_CHANGE_NOT":
       return PacketCommand.S2C_PARTY_ARMOR_SKIN_CHANGE_NOT;
+    case 1033:
+    case "S2C_PARTY_GEAR_SCORE_CHANGE_NOT":
+      return PacketCommand.S2C_PARTY_GEAR_SCORE_CHANGE_NOT;
     case 1150:
     case "MAX_PARTY_PACKET":
       return PacketCommand.MAX_PARTY_PACKET;
@@ -906,6 +915,12 @@ export function packetCommandFromJSON(object: any): PacketCommand {
     case 1204:
     case "S2C_GM_ENTER_GAME_SPECTATOR_RES":
       return PacketCommand.S2C_GM_ENTER_GAME_SPECTATOR_RES;
+    case 1205:
+    case "C2S_GM_TRADE_CHAT_BAN_REQ":
+      return PacketCommand.C2S_GM_TRADE_CHAT_BAN_REQ;
+    case 1206:
+    case "S2C_GM_TRADE_CHAT_BAN_RES":
+      return PacketCommand.S2C_GM_TRADE_CHAT_BAN_RES;
     case 1300:
     case "MAX_GM_PACKET":
       return PacketCommand.MAX_GM_PACKET;
@@ -1281,6 +1296,12 @@ export function packetCommandFromJSON(object: any): PacketCommand {
     case 2563:
     case "S2C_SHOP_LEGEND_UPGRADE_RES":
       return PacketCommand.S2C_SHOP_LEGEND_UPGRADE_RES;
+    case 2564:
+    case "C2S_SHOP_CHANGE_ACCOUNT_NAME_REQ":
+      return PacketCommand.C2S_SHOP_CHANGE_ACCOUNT_NAME_REQ;
+    case 2565:
+    case "S2C_SHOP_CHANGE_ACCOUNT_NAME_RES":
+      return PacketCommand.S2C_SHOP_CHANGE_ACCOUNT_NAME_RES;
     case 2600:
     case "MAX_SHOP_PACKET":
       return PacketCommand.MAX_SHOP_PACKET;
@@ -1626,6 +1647,9 @@ export function packetCommandFromJSON(object: any): PacketCommand {
     case 10651:
     case "S2C_REFRESH_RED_STONE_SHARD_RES":
       return PacketCommand.S2C_REFRESH_RED_STONE_SHARD_RES;
+    case 10660:
+    case "S2C_TERMINATE_NOT":
+      return PacketCommand.S2C_TERMINATE_NOT;
     case 11000:
     case "MAX_META_PACKET":
       return PacketCommand.MAX_META_PACKET;
@@ -1954,6 +1978,8 @@ export function packetCommandToJSON(object: PacketCommand): string {
       return "S2C_PARTY_ARMOR_SKIN_LIST_NOT";
     case PacketCommand.S2C_PARTY_ARMOR_SKIN_CHANGE_NOT:
       return "S2C_PARTY_ARMOR_SKIN_CHANGE_NOT";
+    case PacketCommand.S2C_PARTY_GEAR_SCORE_CHANGE_NOT:
+      return "S2C_PARTY_GEAR_SCORE_CHANGE_NOT";
     case PacketCommand.MAX_PARTY_PACKET:
       return "MAX_PARTY_PACKET";
     case PacketCommand.MIN_GM_PACKET:
@@ -1966,6 +1992,10 @@ export function packetCommandToJSON(object: PacketCommand): string {
       return "C2S_GM_ENTER_GAME_SPECTATOR_REQ";
     case PacketCommand.S2C_GM_ENTER_GAME_SPECTATOR_RES:
       return "S2C_GM_ENTER_GAME_SPECTATOR_RES";
+    case PacketCommand.C2S_GM_TRADE_CHAT_BAN_REQ:
+      return "C2S_GM_TRADE_CHAT_BAN_REQ";
+    case PacketCommand.S2C_GM_TRADE_CHAT_BAN_RES:
+      return "S2C_GM_TRADE_CHAT_BAN_RES";
     case PacketCommand.MAX_GM_PACKET:
       return "MAX_GM_PACKET";
     case PacketCommand.MIN_MERCHANT_PACKET:
@@ -2216,6 +2246,10 @@ export function packetCommandToJSON(object: PacketCommand): string {
       return "C2S_SHOP_LEGEND_UPGRADE_REQ";
     case PacketCommand.S2C_SHOP_LEGEND_UPGRADE_RES:
       return "S2C_SHOP_LEGEND_UPGRADE_RES";
+    case PacketCommand.C2S_SHOP_CHANGE_ACCOUNT_NAME_REQ:
+      return "C2S_SHOP_CHANGE_ACCOUNT_NAME_REQ";
+    case PacketCommand.S2C_SHOP_CHANGE_ACCOUNT_NAME_RES:
+      return "S2C_SHOP_CHANGE_ACCOUNT_NAME_RES";
     case PacketCommand.MAX_SHOP_PACKET:
       return "MAX_SHOP_PACKET";
     case PacketCommand.MIN_CLASS_PACKET:
@@ -2446,6 +2480,8 @@ export function packetCommandToJSON(object: PacketCommand): string {
       return "C2S_REFRESH_RED_STONE_SHARD_REQ";
     case PacketCommand.S2C_REFRESH_RED_STONE_SHARD_RES:
       return "S2C_REFRESH_RED_STONE_SHARD_RES";
+    case PacketCommand.S2C_TERMINATE_NOT:
+      return "S2C_TERMINATE_NOT";
     case PacketCommand.MAX_META_PACKET:
       return "MAX_META_PACKET";
     case PacketCommand.UNRECOGNIZED:
@@ -2471,6 +2507,7 @@ export enum PacketResult {
   FAIL_ACCOUNT_LINK_GENERIC_ERROR = 20,
   FAIL_MAX_SQUIRE_CHARACTER_COUNT_EXCEEDED = 21,
   FAIL_CHARACTER_NICKNAME_INVALID = 22,
+  FAIL_CHARACTER_NEED_MORE_TIME = 23,
   FAIL_PARTY_INVITE_OFFLINE_CHARACTER = 25,
   FAIL_PARTY_INVITE_NO_LOBBY_CHARACTER = 26,
   FAIL_PARTY_INVITE_ALREADY_PARTY = 27,
@@ -2655,6 +2692,8 @@ export enum PacketResult {
   FAIL_ACCOUNT_LINK_ACCOUNT_ALREADY_LINKED = 877,
   FAIL_ACCOUNT_STATUS_UPGRADE_ALREADY = 900,
   FAIL_ACCOUNT_STATUS_UPGRADE_SHORTAGE_RED_STONE = 901,
+  FAIL_CHANGE_ACCOUNTNAME_SHORTAGE_RED_STONE = 1000,
+  FAIL_CHANGE_ACCOUNTNAME_ALREADY_EXISTED = 1001,
   UNRECOGNIZED = -1,
 }
 
@@ -2708,6 +2747,9 @@ export function packetResultFromJSON(object: any): PacketResult {
     case 22:
     case "FAIL_CHARACTER_NICKNAME_INVALID":
       return PacketResult.FAIL_CHARACTER_NICKNAME_INVALID;
+    case 23:
+    case "FAIL_CHARACTER_NEED_MORE_TIME":
+      return PacketResult.FAIL_CHARACTER_NEED_MORE_TIME;
     case 25:
     case "FAIL_PARTY_INVITE_OFFLINE_CHARACTER":
       return PacketResult.FAIL_PARTY_INVITE_OFFLINE_CHARACTER;
@@ -3260,6 +3302,12 @@ export function packetResultFromJSON(object: any): PacketResult {
     case 901:
     case "FAIL_ACCOUNT_STATUS_UPGRADE_SHORTAGE_RED_STONE":
       return PacketResult.FAIL_ACCOUNT_STATUS_UPGRADE_SHORTAGE_RED_STONE;
+    case 1000:
+    case "FAIL_CHANGE_ACCOUNTNAME_SHORTAGE_RED_STONE":
+      return PacketResult.FAIL_CHANGE_ACCOUNTNAME_SHORTAGE_RED_STONE;
+    case 1001:
+    case "FAIL_CHANGE_ACCOUNTNAME_ALREADY_EXISTED":
+      return PacketResult.FAIL_CHANGE_ACCOUNTNAME_ALREADY_EXISTED;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -3301,6 +3349,8 @@ export function packetResultToJSON(object: PacketResult): string {
       return "FAIL_MAX_SQUIRE_CHARACTER_COUNT_EXCEEDED";
     case PacketResult.FAIL_CHARACTER_NICKNAME_INVALID:
       return "FAIL_CHARACTER_NICKNAME_INVALID";
+    case PacketResult.FAIL_CHARACTER_NEED_MORE_TIME:
+      return "FAIL_CHARACTER_NEED_MORE_TIME";
     case PacketResult.FAIL_PARTY_INVITE_OFFLINE_CHARACTER:
       return "FAIL_PARTY_INVITE_OFFLINE_CHARACTER";
     case PacketResult.FAIL_PARTY_INVITE_NO_LOBBY_CHARACTER:
@@ -3669,6 +3719,10 @@ export function packetResultToJSON(object: PacketResult): string {
       return "FAIL_ACCOUNT_STATUS_UPGRADE_ALREADY";
     case PacketResult.FAIL_ACCOUNT_STATUS_UPGRADE_SHORTAGE_RED_STONE:
       return "FAIL_ACCOUNT_STATUS_UPGRADE_SHORTAGE_RED_STONE";
+    case PacketResult.FAIL_CHANGE_ACCOUNTNAME_SHORTAGE_RED_STONE:
+      return "FAIL_CHANGE_ACCOUNTNAME_SHORTAGE_RED_STONE";
+    case PacketResult.FAIL_CHANGE_ACCOUNTNAME_ALREADY_EXISTED:
+      return "FAIL_CHANGE_ACCOUNTNAME_ALREADY_EXISTED";
     case PacketResult.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
