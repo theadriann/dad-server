@@ -80,6 +80,8 @@ export enum ss2cAutoMatchRegRes_RESULT {
   FAIL_REGION_LATENCY_LIMIT = 13,
   FAIL_MATCH_RESTRICTION = 14,
   FAIL_CAN_NOT_SQUIRE = 15,
+  FAIL_INSUFFICIENT_GEAR_SCORE = 16,
+  FAIL_PARTY_SIZE_MISMATCH = 17,
   UNRECOGNIZED = -1,
 }
 
@@ -133,6 +135,12 @@ export function ss2cAutoMatchRegRes_RESULTFromJSON(object: any): ss2cAutoMatchRe
     case 15:
     case "FAIL_CAN_NOT_SQUIRE":
       return ss2cAutoMatchRegRes_RESULT.FAIL_CAN_NOT_SQUIRE;
+    case 16:
+    case "FAIL_INSUFFICIENT_GEAR_SCORE":
+      return ss2cAutoMatchRegRes_RESULT.FAIL_INSUFFICIENT_GEAR_SCORE;
+    case 17:
+    case "FAIL_PARTY_SIZE_MISMATCH":
+      return ss2cAutoMatchRegRes_RESULT.FAIL_PARTY_SIZE_MISMATCH;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -174,6 +182,10 @@ export function ss2cAutoMatchRegRes_RESULTToJSON(object: ss2cAutoMatchRegRes_RES
       return "FAIL_MATCH_RESTRICTION";
     case ss2cAutoMatchRegRes_RESULT.FAIL_CAN_NOT_SQUIRE:
       return "FAIL_CAN_NOT_SQUIRE";
+    case ss2cAutoMatchRegRes_RESULT.FAIL_INSUFFICIENT_GEAR_SCORE:
+      return "FAIL_INSUFFICIENT_GEAR_SCORE";
+    case ss2cAutoMatchRegRes_RESULT.FAIL_PARTY_SIZE_MISMATCH:
+      return "FAIL_PARTY_SIZE_MISMATCH";
     case ss2cAutoMatchRegRes_RESULT.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

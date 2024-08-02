@@ -1779,6 +1779,8 @@ export enum Operate_Policy {
   POLICY_REPORT_IN_GAME_ON_OFF = 48,
   POLICY_REPORT_BAN_APPEAL_TICKET_SEND_ON_OFF = 49,
   POLICY_TRADE_CHAT_BAN_MIN = 50,
+  POLICY_PREVENT_CROWS_HR_MIN_GEAR_SCORE = 51,
+  POLICY_PREVENT_CROWS_HR_PARTY_SIZE_LIMIT = 52,
   UNRECOGNIZED = -1,
 }
 
@@ -1934,6 +1936,12 @@ export function operate_PolicyFromJSON(object: any): Operate_Policy {
     case 50:
     case "POLICY_TRADE_CHAT_BAN_MIN":
       return Operate_Policy.POLICY_TRADE_CHAT_BAN_MIN;
+    case 51:
+    case "POLICY_PREVENT_CROWS_HR_MIN_GEAR_SCORE":
+      return Operate_Policy.POLICY_PREVENT_CROWS_HR_MIN_GEAR_SCORE;
+    case 52:
+    case "POLICY_PREVENT_CROWS_HR_PARTY_SIZE_LIMIT":
+      return Operate_Policy.POLICY_PREVENT_CROWS_HR_PARTY_SIZE_LIMIT;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -2043,6 +2051,10 @@ export function operate_PolicyToJSON(object: Operate_Policy): string {
       return "POLICY_REPORT_BAN_APPEAL_TICKET_SEND_ON_OFF";
     case Operate_Policy.POLICY_TRADE_CHAT_BAN_MIN:
       return "POLICY_TRADE_CHAT_BAN_MIN";
+    case Operate_Policy.POLICY_PREVENT_CROWS_HR_MIN_GEAR_SCORE:
+      return "POLICY_PREVENT_CROWS_HR_MIN_GEAR_SCORE";
+    case Operate_Policy.POLICY_PREVENT_CROWS_HR_PARTY_SIZE_LIMIT:
+      return "POLICY_PREVENT_CROWS_HR_PARTY_SIZE_LIMIT";
     case Operate_Policy.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

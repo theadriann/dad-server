@@ -216,12 +216,6 @@ message SS2C_CLIENT_POPUP_MESSAGE_NOT {
   string message = 1;
 }
 
-message SS2C_SQUIRE_STATUS_RESTRICTED_CONTENT_NOT {
-  repeated int32 limitedDungeons = 1;
-  int32 IsAllowedEnterTradingPost = 2;
-  int32 IsAllowedListingMarketplace = 3;
-}
-
 message SS2C_TERMINATE_NOT {
 }
 

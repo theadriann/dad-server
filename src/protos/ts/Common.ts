@@ -213,12 +213,6 @@ export interface ss2cClientPopupMessageNot {
   message: string;
 }
 
-export interface ss2cSquireStatusRestrictedContentNot {
-  limitedDungeons: number[];
-  IsAllowedEnterTradingPost: number;
-  IsAllowedListingMarketplace: number;
-}
-
 export interface ss2cTerminateNot {
 }
 
@@ -3284,113 +3278,6 @@ export const ss2cClientPopupMessageNot = {
   fromPartial<I extends Exact<DeepPartial<ss2cClientPopupMessageNot>, I>>(object: I): ss2cClientPopupMessageNot {
     const message = createBasess2cClientPopupMessageNot();
     message.message = object.message ?? "";
-    return message;
-  },
-};
-
-function createBasess2cSquireStatusRestrictedContentNot(): ss2cSquireStatusRestrictedContentNot {
-  return { limitedDungeons: [], IsAllowedEnterTradingPost: 0, IsAllowedListingMarketplace: 0 };
-}
-
-export const ss2cSquireStatusRestrictedContentNot = {
-  encode(message: ss2cSquireStatusRestrictedContentNot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    writer.uint32(10).fork();
-    for (const v of message.limitedDungeons) {
-      writer.int32(v);
-    }
-    writer.ldelim();
-    if (message.IsAllowedEnterTradingPost !== 0) {
-      writer.uint32(16).int32(message.IsAllowedEnterTradingPost);
-    }
-    if (message.IsAllowedListingMarketplace !== 0) {
-      writer.uint32(24).int32(message.IsAllowedListingMarketplace);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ss2cSquireStatusRestrictedContentNot {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasess2cSquireStatusRestrictedContentNot();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag === 8) {
-            message.limitedDungeons.push(reader.int32());
-
-            continue;
-          }
-
-          if (tag === 10) {
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
-              message.limitedDungeons.push(reader.int32());
-            }
-
-            continue;
-          }
-
-          break;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.IsAllowedEnterTradingPost = reader.int32();
-          continue;
-        case 3:
-          if (tag !== 24) {
-            break;
-          }
-
-          message.IsAllowedListingMarketplace = reader.int32();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ss2cSquireStatusRestrictedContentNot {
-    return {
-      limitedDungeons: Array.isArray(object?.limitedDungeons) ? object.limitedDungeons.map((e: any) => Number(e)) : [],
-      IsAllowedEnterTradingPost: isSet(object.IsAllowedEnterTradingPost) ? Number(object.IsAllowedEnterTradingPost) : 0,
-      IsAllowedListingMarketplace: isSet(object.IsAllowedListingMarketplace)
-        ? Number(object.IsAllowedListingMarketplace)
-        : 0,
-    };
-  },
-
-  toJSON(message: ss2cSquireStatusRestrictedContentNot): unknown {
-    const obj: any = {};
-    if (message.limitedDungeons?.length) {
-      obj.limitedDungeons = message.limitedDungeons.map((e) => Math.round(e));
-    }
-    if (message.IsAllowedEnterTradingPost !== 0) {
-      obj.IsAllowedEnterTradingPost = Math.round(message.IsAllowedEnterTradingPost);
-    }
-    if (message.IsAllowedListingMarketplace !== 0) {
-      obj.IsAllowedListingMarketplace = Math.round(message.IsAllowedListingMarketplace);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ss2cSquireStatusRestrictedContentNot>, I>>(
-    base?: I,
-  ): ss2cSquireStatusRestrictedContentNot {
-    return ss2cSquireStatusRestrictedContentNot.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<ss2cSquireStatusRestrictedContentNot>, I>>(
-    object: I,
-  ): ss2cSquireStatusRestrictedContentNot {
-    const message = createBasess2cSquireStatusRestrictedContentNot();
-    message.limitedDungeons = object.limitedDungeons?.map((e) => e) || [];
-    message.IsAllowedEnterTradingPost = object.IsAllowedEnterTradingPost ?? 0;
-    message.IsAllowedListingMarketplace = object.IsAllowedListingMarketplace ?? 0;
     return message;
   },
 };
